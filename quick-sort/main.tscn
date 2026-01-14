@@ -1,0 +1,99 @@
+[gd_scene load_steps=3 format=3 uid="uid://b0i32qltx7a0j"]
+
+[ext_resource type="Script" uid="uid://mgt2ms1kaa3e" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://cvdkwgyx827sf" path="res://bar.tscn" id="2_0xm2m"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_ig7tw")
+bar_scene = ExtResource("2_0xm2m")
+animation_speed = 0.7
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 526.0
+offset_top = 28.0
+offset_right = 566.0
+offset_bottom = 51.0
+text = "Welcome to QuickSort"
+
+[node name="ButtonContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 0
+offset_left = 30.0
+offset_top = 254.0
+offset_right = 164.0
+offset_bottom = 365.0
+theme_override_constants/separation = 9
+
+[node name="GenerateButton" type="Button" parent="ButtonContainer"]
+layout_mode = 2
+text = "GenerateButton"
+
+[node name="SortButton" type="Button" parent="ButtonContainer"]
+layout_mode = 2
+text = "SortButton"
+
+[node name="ManualCheckBox" type="CheckBox" parent="ButtonContainer"]
+layout_mode = 2
+text = "Manual Mode
+"
+
+[node name="StepButton" type="Button" parent="ButtonContainer"]
+layout_mode = 2
+text = "Next Step
+"
+
+[node name="ResetButton" type="Button" parent="ButtonContainer"]
+layout_mode = 2
+text = "ResetButton"
+
+[node name="TimelineButton" type="Button" parent="ButtonContainer"]
+layout_mode = 2
+text = "Timeline"
+
+[node name="NodeContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 240.0
+offset_top = 437.0
+offset_right = 280.0
+offset_bottom = 477.0
+
+[node name="MessageLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 203.0
+offset_top = 566.0
+offset_right = 243.0
+offset_bottom = 589.0
+
+[node name="TimelinePopup" type="Panel" parent="."]
+visible = false
+custom_minimum_size = Vector2(500, 400)
+layout_mode = 0
+offset_left = 337.0
+offset_top = 187.0
+offset_right = 837.0
+offset_bottom = 487.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TimelinePopup"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TimelineLabel" type="Label" parent="TimelinePopup/VBoxContainer"]
+layout_mode = 2
+text = "Sorting History"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TimelineText" type="RichTextLabel" parent="TimelinePopup/VBoxContainer"]
+custom_minimum_size = Vector2(500, 340)
+layout_mode = 2
+
+[node name="CloseTimelineButton" type="Button" parent="TimelinePopup/VBoxContainer"]
+layout_mode = 2
+text = "close
+"

@@ -1,0 +1,105 @@
+[gd_scene load_steps=2 format=3 uid="uid://cosbvvtto8ksr"]
+
+[ext_resource type="Script" uid="uid://b78vyt5n6foyp" path="res://BinarySearch.gd" id="1_l3rgk"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_l3rgk")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 1
+offset_left = 58.0
+offset_top = 188.0
+offset_right = 98.0
+offset_bottom = 228.0
+theme_override_constants/separation = 25
+
+[node name="GenerateButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Generate"
+
+[node name="SearchButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Search"
+
+[node name="ShowCodeButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "ShowCode"
+
+[node name="TimelineButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Timeline"
+
+[node name="ResetButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Reset"
+
+[node name="ArrayContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MessageLabel" type="Label" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="CodePopup" type="PopupPanel" parent="."]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CodePopup"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 96.0
+offset_bottom = 96.0
+
+[node name="CodeLabel" type="Label" parent="CodePopup/VBoxContainer"]
+layout_mode = 2
+
+[node name="CodeText" type="TextEdit" parent="CodePopup/VBoxContainer"]
+layout_mode = 2
+
+[node name="CloseCodeButton" type="Button" parent="CodePopup/VBoxContainer"]
+layout_mode = 2
+
+[node name="TimelinePopup" type="PopupPanel" parent="."]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TimelinePopup"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 96.0
+offset_bottom = 96.0
+
+[node name="TimelineLabel" type="Label" parent="TimelinePopup/VBoxContainer"]
+layout_mode = 2
+
+[node name="TimelineText" type="TextEdit" parent="TimelinePopup/VBoxContainer"]
+layout_mode = 2
+
+[node name="CloseTimelineButton" type="Button" parent="TimelinePopup/VBoxContainer"]
+layout_mode = 2
+
+[node name="PopupPanel" type="PopupPanel" parent="."]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PopupPanel"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 96.0
+offset_bottom = 96.0
+
+[node name="Label" type="Label" parent="PopupPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="SearchInput" type="LineEdit" parent="PopupPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ConfirmButton" type="Button" parent="PopupPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="CancelButton" type="Button" parent="PopupPanel/VBoxContainer"]
+layout_mode = 2
