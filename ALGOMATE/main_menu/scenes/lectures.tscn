@@ -1,0 +1,198 @@
+[gd_scene load_steps=14 format=3 uid="uid://oi4fv0417k3j"]
+
+[ext_resource type="Script" uid="uid://b5dsxh6txhven" path="res://scripts/lectures.gd" id="1_8jt5q"]
+[ext_resource type="Shader" uid="uid://dm5tlgdpgj58y" path="res://scripts/lectures_bg.gdshader" id="1_eou7u"]
+[ext_resource type="Texture2D" uid="uid://dsdm6spgv8vyx" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/UPPER_BAR_GREEN.png" id="2_idkt6"]
+[ext_resource type="Texture2D" uid="uid://conwlypp76q4" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/SIDEBAR_GREEN.png" id="3_ei730"]
+[ext_resource type="Texture2D" uid="uid://gusdopbthg2r" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/BACK_BUTTON_GREEN.png" id="4_4u4to"]
+[ext_resource type="Texture2D" uid="uid://dn7muod6q74cc" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/CONTAINER_GREEN.png" id="4_j55f8"]
+[ext_resource type="Texture2D" uid="uid://cbh1g3jy6a268" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/DATA_STRUCTURES_GREEN.png" id="5_4u4to"]
+[ext_resource type="Shader" uid="uid://bgxe5n6w2k0ku" path="res://scripts/lecture_floating_buttons.gdshader" id="7_4u4to"]
+[ext_resource type="Texture2D" uid="uid://cupumyx3dufdg" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/topic_selection.png" id="8_eou7u"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8jt5q"]
+shader = ExtResource("1_eou7u")
+shader_parameter/speed = -0.01
+shader_parameter/density = 5.26
+shader_parameter/min_size = 0.06
+shader_parameter/max_size = 0.67
+shader_parameter/min_alpha = 0.03
+shader_parameter/max_alpha = 0.26
+shader_parameter/bg_color = Color(0.0991255, 0.14671892, 0.02534871, 1)
+shader_parameter/block_color = Color(0.61546767, 0.94360113, 0.644786, 1)
+shader_parameter/accent_color = Color(0.8366481, 0.6679535, 0.3425281, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_eou7u"]
+shader = ExtResource("7_4u4to")
+shader_parameter/speed = 2.0
+shader_parameter/strength = 0.05
+shader_parameter/tilt_strength = 0.03
+
+[sub_resource type="SystemFont" id="SystemFont_j55f8"]
+font_names = PackedStringArray("Pixelify Sans")
+
+[sub_resource type="Theme" id="Theme_4u4to"]
+default_font = SubResource("SystemFont_j55f8")
+default_font_size = 0
+Label/fonts/font = SubResource("SystemFont_j55f8")
+
+[node name="lectures" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8jt5q")
+
+[node name="BG" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_8jt5q")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.47843137, 0.6627451, 0.22352941, 1)
+
+[node name="upper_bar" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 104.0
+grow_horizontal = 2
+
+[node name="top_bar" type="Sprite2D" parent="upper_bar"]
+position = Vector2(323, 53)
+scale = Vector2(1.57935, 1.57935)
+texture = ExtResource("2_idkt6")
+
+[node name="sidebar_button" type="TextureButton" parent="upper_bar"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.8935185
+anchor_top = 0.16346154
+anchor_right = 0.9842519
+anchor_bottom = 0.75572115
+offset_right = -16.795227
+offset_bottom = -17.595001
+grow_horizontal = 0
+grow_vertical = 2
+scale = Vector2(1.3998864, 1.3998864)
+texture_normal = ExtResource("3_ei730")
+metadata/_edit_use_anchors_ = true
+
+[node name="contents" type="Control" parent="."]
+layout_mode = 1
+anchor_top = 0.17274305
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="back_button" type="TextureButton" parent="contents"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.032407407
+anchor_top = -0.074501574
+anchor_right = 0.11364198
+anchor_bottom = 0.0014480558
+offset_right = -28.639996
+offset_bottom = -39.379997
+scale = Vector2(2.1933331, 2.1933331)
+texture_normal = ExtResource("4_4u4to")
+metadata/_edit_use_anchors_ = true
+
+[node name="container" type="TextureRect" parent="contents"]
+visible = false
+self_modulate = Color(0.72209996, 0.83, 0.74188167, 0.76862746)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -324.0
+offset_top = -438.5
+offset_right = 324.0
+offset_bottom = 476.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_j55f8")
+
+[node name="title_data__structures" type="Sprite2D" parent="contents"]
+self_modulate = Color(0, 1.4326539, 2.6126626, 1)
+position = Vector2(326, -28)
+texture = ExtResource("5_4u4to")
+
+[node name="array" type="TextureButton" parent="contents"]
+material = SubResource("ShaderMaterial_eou7u")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.047839507
+anchor_top = 0.09233998
+anchor_right = 0.47993827
+anchor_bottom = 0.20146905
+grow_vertical = 2
+theme = SubResource("Theme_4u4to")
+texture_normal = ExtResource("8_eou7u")
+metadata/_edit_use_anchors_ = true
+
+[node name="linked_list" type="TextureButton" parent="contents"]
+material = SubResource("ShaderMaterial_eou7u")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.4861111
+anchor_top = 0.23294853
+anchor_right = 0.4861111
+anchor_bottom = 0.23294853
+offset_left = 280.0
+offset_top = 104.000046
+offset_right = 560.0
+offset_bottom = 208.00006
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 3.1415927
+theme = SubResource("Theme_4u4to")
+texture_normal = ExtResource("8_eou7u")
+metadata/_edit_use_anchors_ = true
+
+[node name="stack" type="TextureButton" parent="contents"]
+material = SubResource("ShaderMaterial_eou7u")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.049382716
+anchor_top = 0.3336831
+anchor_right = 0.4814815
+anchor_bottom = 0.44281217
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_4u4to")
+texture_normal = ExtResource("8_eou7u")
+metadata/_edit_use_anchors_ = true
+
+[node name="queue" type="TextureButton" parent="contents"]
+material = SubResource("ShaderMaterial_eou7u")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.50771606
+anchor_top = 0.4428122
+anchor_right = 0.50771606
+anchor_bottom = 0.4428122
+offset_left = 280.0
+offset_top = 103.99997
+offset_right = 560.0
+offset_bottom = 207.99997
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -3.1415927
+theme = SubResource("Theme_4u4to")
+texture_normal = ExtResource("8_eou7u")
+metadata/_edit_use_anchors_ = true
+
+[connection signal="pressed" from="contents/back_button" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="contents/array" to="." method="_on_array_pressed"]
+[connection signal="pressed" from="contents/linked_list" to="." method="_on_linked_list_pressed"]
+[connection signal="pressed" from="contents/stack" to="." method="_on_stack_pressed"]
+[connection signal="pressed" from="contents/queue" to="." method="_on_queue_pressed"]
