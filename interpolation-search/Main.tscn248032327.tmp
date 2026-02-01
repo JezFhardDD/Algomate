@@ -1,0 +1,106 @@
+[gd_scene load_steps=3 format=3 uid="uid://cnlp6jn1v8wse"]
+
+[ext_resource type="Script" uid="uid://dx12ivb8i1dwd" path="res://QueueVisualizer.gd" id="1_glv2v"]
+[ext_resource type="Texture2D" uid="uid://cl7qhidtkk4eg" path="res://wp3621175.png" id="2_uu6xs"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1153.0
+offset_bottom = 646.0
+script = ExtResource("1_glv2v")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("2_uu6xs")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 25.0
+offset_top = 157.0
+offset_right = 176.0
+offset_bottom = 439.0
+theme_override_constants/separation = 15
+
+[node name="EnqueueButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Enqueue"
+
+[node name="DequeueButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Dequeue"
+
+[node name="DequeuedElements" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Dequeued
+Elements"
+
+[node name="WaitingElements" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Waiting 
+Elements"
+
+[node name="Timeline" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "TImeline
+"
+
+[node name="SimulateNew" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Simulate
+New"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 371.0
+offset_top = 583.0
+offset_right = 515.0
+offset_bottom = 626.0
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "Enqueue Counter: "
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 588.0
+offset_top = 585.0
+offset_right = 729.0
+offset_bottom = 625.0
+
+[node name="Label" type="Label" parent="HBoxContainer2"]
+layout_mode = 2
+text = "Dequeue Counter:"
+
+[node name="QueueContainer" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 0
+offset_right = 200.0
+offset_bottom = 200.0
+
+[node name="DequeuedContainer" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 0
+offset_left = 349.0
+offset_top = 5.0
+offset_right = 549.0
+offset_bottom = 224.0
+
+[node name="WaitingPopup" type="PopupPanel" parent="."]
+oversampling_override = 1.0
+size = Vector2i(200, 100)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="WaitingPopup"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 196.0
+offset_bottom = 96.0
+
+[node name="Label" type="Label" parent="WaitingPopup/VBoxContainer"]
+layout_mode = 2
+
+[connection signal="pressed" from="VBoxContainer/EnqueueButton" to="." method="_on_enqueue_pressed"]
+[connection signal="pressed" from="VBoxContainer/DequeueButton" to="." method="_on_dequeue_pressed"]
+[connection signal="pressed" from="VBoxContainer/WaitingElements" to="." method="_on_waiting_pressed"]
