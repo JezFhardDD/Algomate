@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://didhv1rmj3v4f" path="res://QueueBlock.gd" id="1_wl2ek"]
 [ext_resource type="Texture2D" uid="uid://dat8hni5cmx8c" path="res://assets/BLOCK_ORANGE.png" id="2_ss6g4"]
-[ext_resource type="FontFile" uid="uid://bvq3t3k08atlq" path="res://assets/font/Minecraftchmc-dBlX.ttf" id="3_561tx"]
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="3_561tx"]
 
 [node name="QueueBlock" type="Control"]
 custom_minimum_size = Vector2(80, 80)
