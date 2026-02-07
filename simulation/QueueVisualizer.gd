@@ -30,7 +30,7 @@ extends Control
 # C++ Popup
 @onready var cpp_popup: PopupPanel = get_node_or_null("CppPopup") as PopupPanel
 @onready var cpp_label: Label = get_node_or_null("CppPopup/VBoxContainer/Label") as Label
-@onready var cpp_text: TextEdit = get_node_or_null("CppPopup/VBoxContainer/TextEdit") as TextEdit
+@onready var cpp_text: TextEdit = get_node_or_null("CppPopup/VBoxContainer/ScrollContainer/TextEdit") as TextEdit
 @onready var cpp_close_btn: Button = get_node_or_null("CppPopup/VBoxContainer/Button") as Button
 
 # Top-right shortcut button (NEW)
@@ -311,7 +311,7 @@ func _show_config_elements_modal() -> void:
 		var line_edit = LineEdit.new()
 		line_edit.placeholder_text = "0-999"
 		line_edit.text = str(randi_range(1, 99))  # Random default value
-		line_edit.custom_minimum_size = Vector2(80, 30)
+		line_edit.custom_minimum_size = Vector2(100, 80)
 		line_edit.max_length = 3  # Maximum 3 digits
 		line_edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
 		
@@ -534,13 +534,15 @@ func start_tutorial() -> void:
 	print("Tutorial starting...")
 	btn_sound.play()
 	
+	# STOP THE SIMULATION AND CLEAR ALL DATA FIRST
+	_clear_simulation_data()
+	
 	# Initialize tutorial state
 	tutorial_in_progress = true
 	tutorial_sequence_index = 0
 	tutorial_overlay.show()
 	
 	dim_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	
 	dim_bg.show()
 	tutorial_box.show()
 	
@@ -553,7 +555,8 @@ func start_tutorial() -> void:
 			"action": "press",
 			"highlight_only": false,
 			"pointer_position": "center",
-			"popup_to_close": null
+			"popup_to_close": null,
+			"pre_action": "_setup_for_enqueue_tutorial"  # NEW: Prepare tutorial state
 		},
 		# Step 2: Dequeue button
 		{
@@ -562,7 +565,8 @@ func start_tutorial() -> void:
 			"action": "press",
 			"highlight_only": false,
 			"pointer_position": "center",
-			"popup_to_close": null
+			"popup_to_close": null,
+			"pre_action": "_setup_for_dequeue_tutorial"  # NEW: Prepare tutorial state
 		},
 		# Step 3: Dequeued Elements button
 		{
@@ -617,6 +621,11 @@ func show_tutorial_step() -> void:
 	var highlight_only = step["highlight_only"]
 	var pointer_pos = step["pointer_position"]
 	var popup_to_close = step["popup_to_close"]
+	var pre_action = step.get("pre_action", "")
+	
+	# Execute pre-action if exists
+	if pre_action != "" and has_method(pre_action):
+		call(pre_action)
 	
 	# Close any popup that should be closed for this step
 	if popup_to_close:
@@ -777,6 +786,7 @@ func end_tutorial() -> void:
 	pointer_sprite.hide()
 	current_popup = null
 	
+	
 	# Close any open popups
 	if dequeued_container and dequeued_container.visible:
 		dequeued_container.hide()
@@ -811,7 +821,7 @@ func end_tutorial() -> void:
 	_show_config_modal()
 	
 	# Re-enable all buttons
-	enable_all_buttons()
+	#enable_all_buttons()
 	
 	print("Tutorial completed - simulation reset to start fresh!")
 
@@ -824,11 +834,61 @@ func _on_enqueue_pressed() -> void:
 	if tutorial_in_progress and tutorial_sequence_index < tutorial_sequence.size():
 		var current_step = tutorial_sequence[tutorial_sequence_index]
 		if current_step["node"] == enqueue_btn and current_step["action"] == "press":
-			pass  # We'll do the enqueue action below
+			# Perform tutorial enqueue
+			_perform_tutorial_enqueue()
+			return
 		else:
 			print("Tutorial: Please press the highlighted button first")
 			return
 	
+	# Regular enqueue logic
+	_perform_regular_enqueue()
+
+func _perform_tutorial_enqueue() -> void:
+	"""Special enqueue for tutorial that always works"""
+	btn_sound.play()
+	
+	# Make sure we have waiting elements
+	if waiting_elements.is_empty():
+		waiting_elements = [10, 20, 30, 40, 50]
+	
+	# Make sure queue isn't full
+	if queue.size() >= MAX_QUEUE_SIZE:
+		queue.clear()
+		# Clear visual blocks
+		for child in queue_container.get_children():
+			child.queue_free()
+	
+	# Perform enqueue
+	var new_val: int = waiting_elements.pop_front()
+	queue.append(new_val)
+	enqueue_counter += 1
+	timeline_log.append("Enqueued %d" % new_val)
+
+	var new_block: Control = BLOCK_SCENE.instantiate() as Control
+	if new_block.has_method("set"): new_block.set("value", new_val)
+	
+	queue_container.add_child(new_block)
+	
+	# Animation
+	var target_x = START_POSITION.x + (queue.size() - 1) * (new_block.size.x + BLOCK_SPACING)
+	var final_pos = Vector2(target_x, START_POSITION.y)
+	
+	new_block.position = final_pos + Vector2(200, 0) 
+	new_block.modulate.a = 0
+	
+	var tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(new_block, "position", final_pos, 0.5)
+	tween.tween_property(new_block, "modulate:a", 1.0, 0.4)
+
+	_update_labels()
+	_update_front_rear_visibility()
+	
+	# Advance tutorial
+	tutorial_sequence_index += 1
+	show_tutorial_step()
+
+func _perform_regular_enqueue() -> void:
 	# Regular enqueue logic
 	if queue.size() >= MAX_QUEUE_SIZE:
 		print("❌ Queue full!")
@@ -860,13 +920,6 @@ func _on_enqueue_pressed() -> void:
 
 	_update_labels()
 	_update_front_rear_visibility()
-	
-	# Check if we need to advance tutorial
-	if tutorial_in_progress and tutorial_sequence_index < tutorial_sequence.size():
-		var current_step = tutorial_sequence[tutorial_sequence_index]
-		if current_step["node"] == enqueue_btn and current_step["action"] == "press":
-			tutorial_sequence_index += 1
-			show_tutorial_step()
 
 func _on_dequeue_pressed() -> void:
 	# Check if in tutorial
@@ -1489,7 +1542,16 @@ func _update_front_rear_visibility() -> void:
 # ==============================================
 
 func _on_simulate_new_pressed() -> void:
+	if tutorial_in_progress and tutorial_sequence_index < tutorial_sequence.size():
+		var current_step = tutorial_sequence[tutorial_sequence_index]
+		if current_step["node"] == simulate_new_btn and current_step["action"] == "press":
+			pass
+		else:
+			print("Tutorial: Please press the highlighted button first")
+			return
+	reset_cpp_tutorial_state()
 	sim_confirmation.show()
+	
 
 func _on_yes_pressed() -> void:
 	"""User confirmed they want to simulate new - reset everything"""
@@ -1505,13 +1567,7 @@ func _on_yes_pressed() -> void:
 	await timer.timeout
 	sim_success.hide()
 	
-	# Clear all data
-	queue.clear()
-	waiting_elements.clear()
-	dequeued_elements.clear()
-	timeline_log.clear()
-	enqueue_counter = 0
-	dequeue_counter = 0
+	_clear_simulation_data()
 
 	# Clear visual elements
 	for child in queue_container.get_children():
@@ -1523,7 +1579,7 @@ func _on_yes_pressed() -> void:
 	
 	if Queue_full and Queue_full.visible:
 		Queue_full.hide()
-	
+	reset_cpp_tutorial_state()
 	_update_labels()
 	_update_front_rear_visibility()
 	
@@ -1541,20 +1597,20 @@ func _on_cpp_code_button_pressed() -> void:
 func _on_close_pressed() -> void:
 	if cpp_popup:
 		cpp_popup.hide()
+		reset_cpp_tutorial_state()
 	btn_sound.play()
-
-# ==============================================
-# TUTORIAL AND HELP
-# ==============================================
 
 func _on_help_button_pressed() -> void:
 	btn_sound.play()
-	
+	get_node("HelpButton").disabled = true
+	get_node("CppCodeButton").disabled = true
 	# If tutorial is already running, restart it
 	if tutorial_in_progress:
 		end_tutorial()
 		await get_tree().create_timer(0.1).timeout
+	
 
+	
 	start_tutorial()
 
 func _on_next_button_pressed() -> void:
@@ -1704,48 +1760,201 @@ func _on_block_dropped(dropped_block: Control) -> void:
 
 func start_cpp_code_tutorial() -> void:
 	if not cpp_popup or not cpp_text or not cpp_tutorial_panel:
+		print("C++ tutorial: Missing required nodes")
 		return
-	cpp_tutorial_index = 0
+	
+	# Reset tutorial state
+	cpp_tutorialcode_index = 0
 	cpp_tutorial_panel.show()
+	
+	# Generate fresh code for the tutorial
+	var source_arr: Array = []
+	if dequeued_elements.size() > 0:
+		source_arr = dequeued_elements.duplicate()
+	elif queue.size() > 0:
+		source_arr = queue.duplicate()
+	elif waiting_elements.size() > 0:
+		source_arr = waiting_elements.duplicate()
+	else:
+		source_arr = [10, 20, 30]
+	
+	var code = generate_code_in_language(current_code_language, source_arr)
+	cpp_text.text = code
+	
 	highlight_cpp_code()
 	show_cpp_explanation()
+	
+	print("C++ tutorial started from step 0")
 
 func highlight_cpp_code() -> void:
+	if not cpp_text:
+		return
+	
+	# Clear any existing highlighting
+	cpp_text.remove_theme_stylebox_override("normal")
+	
 	var sb = StyleBoxFlat.new()
 	sb.bg_color = Color(1, 1, 0.8, 0.15)
 	sb.border_color = Color(1, 1, 0.2, 1)
 	sb.set_border_width_all(4)
 	cpp_text.add_theme_stylebox_override("normal", sb)
+	
+	# Clear any previous selection
+	cpp_text.deselect()
 
 func clear_cpp_highlight() -> void:
 	cpp_text.remove_theme_stylebox_override("normal")
 
 func show_cpp_explanation() -> void:
-	if cpp_tutorial_index >= cpp_tutorial_steps.size():
+	if not cpp_explanation_text:
+		return
+	
+	if cpp_tutorialcode_index >= cpp_tutorial_steps.size():
 		end_cpp_tutorial()
 		return
 	
-	var step = cpp_tutorial_steps[cpp_tutorial_index]
+	var step = cpp_tutorial_steps[cpp_tutorialcode_index]
 	var lines = step["lines"]
 	cpp_explanation_text.text = step["text"]
 	highlight_cpp_lines(lines.x, lines.y)
 
 func _on_cpp_next_button_pressed() -> void:
 	btn_sound.play()
-	cpp_tutorial_index += 1
-	show_cpp_explanation()
+	
+	if cpp_tutorialcode_index < cpp_tutorial_steps.size() - 1:
+		cpp_tutorialcode_index += 1
+		show_cpp_explanation()
+	else:
+		# End tutorial and show a completion message
+		end_cpp_tutorial()
+		
+		# Optional: Show a brief completion message
+		if cpp_explanation_text:
+			cpp_explanation_text.text = "🎉 Tutorial Complete!\n\nYou've learned about the C++ implementation. Feel free to explore other languages using the buttons above!"
+			
+			# Auto-hide after 3 seconds
+			await get_tree().create_timer(3.0).timeout
+			cpp_tutorial_panel.hide()
 
 func end_cpp_tutorial() -> void:
 	cpp_tutorial_panel.hide()
 	clear_cpp_highlight()
+	_set_main_ui_enabled(true)
+	enqueue_btn.disabled = true
+	dequeue_btn.disabled = true
 	print(" C++ tutorial finished.")
 
 func highlight_cpp_lines(start_line: int, end_line: int) -> void:
+	if not cpp_text:
+		return
+	
 	clear_cpp_highlight()
+	
+	# Create new highlighting style
 	var sb = StyleBoxFlat.new()
 	sb.bg_color = Color(1, 1, 0.8, 0.2)
 	sb.border_color = Color(1, 1, 0.2, 1)
 	sb.set_border_width_all(2)
 	cpp_text.add_theme_stylebox_override("normal", sb)
 	
-	cpp_text.select(start_line, 0, end_line, 0)
+	# Select the lines to highlight
+	if cpp_text.get_line_count() > end_line:
+		cpp_text.select(start_line, 0, end_line, 0)
+	else:
+		print("Warning: Cannot highlight lines %d-%d, text only has %d lines" % [start_line, end_line, cpp_text.get_line_count()])
+
+func _clear_simulation_data() -> void:
+	"""Clear all simulation data before starting tutorial"""
+	print("Clearing simulation data for tutorial...")
+	
+	# Clear arrays
+	queue.clear()
+	waiting_elements.clear()
+	dequeued_elements.clear()
+	timeline_log.clear()
+	
+	# Reset counters
+	enqueue_counter = 0
+	dequeue_counter = 0
+	
+	# Clear visual blocks
+	for child in queue_container.get_children():
+		child.queue_free()
+	
+	for child in dequeued_container.get_children():
+		if child != dequeued_close_btn:
+			child.queue_free()
+	
+	# Reset UI
+	_update_labels()
+	_update_front_rear_visibility()
+	
+	# Close any open popups
+	if dequeued_container and dequeued_container.visible:
+		dequeued_container.hide()
+		if front2_icon: front2_icon.hide()
+		if rear2_icon: rear2_icon.hide()
+	if waiting_popup and waiting_popup.visible:
+		waiting_popup.hide()
+	if timeline_popup and timeline_popup.visible:
+		timeline_popup.hide()
+	if complete_popup and complete_popup.visible:
+		complete_popup.hide()
+	if cpp_popup and cpp_popup.visible:
+		cpp_popup.hide()
+	
+	# Reset tutorial-specific state
+	current_popup = null
+
+func _setup_for_enqueue_tutorial() -> void:
+	"""Prepare tutorial state for enqueue step"""
+	# Ensure waiting elements exist for enqueue
+	if waiting_elements.is_empty():
+		waiting_elements = [10, 20, 30, 40, 50]  # Add some elements for tutorial
+	
+	# Ensure queue is not full
+	while queue.size() >= MAX_QUEUE_SIZE:
+		queue.pop_back()
+	
+	_update_labels()
+
+func _setup_for_dequeue_tutorial() -> void:
+	"""Prepare tutorial state for dequeue step"""
+	# Ensure queue has elements for dequeue
+	if queue.is_empty():
+		# Add some elements to the queue
+		queue = [10, 20, 30]
+		
+		# Create visual blocks for these elements
+		for child in queue_container.get_children():
+			child.queue_free()
+		
+		for i in range(queue.size()):
+			var new_block: Control = BLOCK_SCENE.instantiate() as Control
+			if new_block.has_method("set"): 
+				new_block.set("value", queue[i])
+			queue_container.add_child(new_block)
+		
+		_resnap_blocks()
+	
+	_update_labels()
+
+func reset_cpp_tutorial_state() -> void:
+	"""Reset C++ tutorial to initial state"""
+	print("Resetting C++ tutorial state...")
+	
+	cpp_tutorial_index = 0
+	cpp_tutorialcode_index = 0
+	
+	# Hide C++ tutorial panel if visible
+	if cpp_tutorial_panel and cpp_tutorial_panel.visible:
+		cpp_tutorial_panel.hide()
+	
+	# Clear any C++ code highlighting
+	if cpp_text:
+		cpp_text.remove_theme_stylebox_override("normal")
+		cpp_text.deselect()
+	
+	# Reset C++ tutorial explanations to show from beginning
+	if cpp_explanation_text:
+		cpp_explanation_text.text = " This is the **C++ code** automatically generated from your queue simulation."
