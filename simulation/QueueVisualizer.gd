@@ -115,10 +115,10 @@ var colors: Array[Color] = [
 
 var cpp_tutorial_index := 0
 var cpp_tutorial_texts := [
-	" This is the **C++ code** automatically generated from your queue simulation.",
-	" The **array and its size** are dynamically replaced based on your simulation data.",
-	" The **enqueue and dequeue operations** here follow the exact sequence of actions you performed in the simulation.",
-	" This feature helps you connect the visual process with the actual C++ implementation!"
+	" This is the **C++ code** automatically generated from your queue simulation. Click 'Next' to walk through each part!",
+	" The tutorial will loop back to the beginning when you reach the end.",
+	" Use the Next button to navigate through the code explanations.",
+	" This feature helps you connect the visual process with the actual implementation!"
 ]
 
 var cpp_tutorialcode_index := 0
@@ -185,6 +185,8 @@ var intro_texts = [
 var element_inputs: Array[LineEdit] = []
 var user_configuration_step = 1  # 1: Size, 2: Elements
 
+var is_dequeuing_active: bool = false
+
 # 🏁 Ready
 func _ready() -> void:
 	print(" Program started — initializing queue visualizer...")
@@ -218,9 +220,6 @@ func _ready() -> void:
 	if c_lang_btn and not c_lang_btn.is_connected("pressed", _on_c_lang_button_pressed):
 		c_lang_btn.pressed.connect(_on_c_lang_button_pressed)
 
-# ==============================================
-# CONFIGURATION SYSTEM - COMPLETE 3-STEP FLOW
-# ==============================================
 
 func _connect_configuration_buttons() -> void:
 	"""Connect all configuration modal buttons"""
@@ -269,10 +268,9 @@ func _show_config_size_modal() -> void:
 	if size_input:
 		size_input.min_value = 5
 		size_input.max_value = 7
-		size_input.value = 5  # Default value
+		size_input.value = 5
 		size_label.text = "Please enter array size"
-	
-	# Hide other modals, show size modal
+
 	config_modal.hide()
 	config_elements_modal.hide()
 	config_size_modal.show()
@@ -294,7 +292,7 @@ func _show_config_elements_modal() -> void:
 	
 	# Create input boxes in a grid (5 per row)
 	var grid = GridContainer.new()
-	grid.columns = min(5, array_size)  # Max 5 columns
+	grid.columns = min(5, array_size)
 	grid.custom_minimum_size = Vector2(500, 300)
 	
 	for i in range(array_size):
@@ -306,11 +304,10 @@ func _show_config_elements_modal() -> void:
 		var label = Label.new()
 		label.text = "Value %d" % (i + 1)
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		
-		# Create LineEdit for 3-digit input (0-999)
+
 		var line_edit = LineEdit.new()
 		line_edit.placeholder_text = "0-999"
-		line_edit.text = str(randi_range(1, 99))  # Random default value
+		line_edit.text = str(randi_range(1, 99))
 		line_edit.custom_minimum_size = Vector2(100, 80)
 		line_edit.max_length = 3  # Maximum 3 digits
 		line_edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -326,19 +323,17 @@ func _show_config_elements_modal() -> void:
 	
 	elements_container.add_child(grid)
 	
-	# Hide size modal, show elements modal
+
 	config_size_modal.hide()
 	config_elements_modal.show()
 
 func _on_element_input_changed(new_text: String, line_edit: LineEdit) -> void:
 	"""Validate that input contains only digits and is <= 999"""
-	# Allow empty for deletion
+
 	if new_text.is_empty():
 		return
-	
-	# Check if all characters are digits
+
 	if not new_text.is_valid_int():
-		# Remove non-digit characters
 		var digits_only = ""
 		for char in new_text:
 			if char.is_valid_int():
@@ -348,14 +343,13 @@ func _on_element_input_changed(new_text: String, line_edit: LineEdit) -> void:
 		line_edit.caret_column = line_edit.text.length()
 		return
 	
-	# Check if number exceeds 999
+
 	if new_text.is_valid_int():
 		var num = int(new_text)
 		if num > 999:
 			line_edit.text = "999"
 			line_edit.caret_column = 3
 
-# BUTTON HANDLERS FOR CONFIGURATION MODALS
 
 func _on_config_yes_pressed() -> void:
 	"""User wants to configure - show size configuration modal"""
@@ -452,16 +446,11 @@ func _on_elements_done_pressed() -> void:
 	
 	# Hide the modal
 	config_elements_modal.hide()
-	
-	# Enable main UI
+
 	_set_main_ui_enabled(true)
 	
 	# Initialize simulation with configured elements
 	_initialize_with_elements(elements_array)
-
-# ==============================================
-# MAIN INITIALIZATION
-# ==============================================
 
 func _initialize_with_elements(elements: Array[int]) -> void:
 	"""Initialize the simulation with specific elements"""
@@ -526,9 +515,6 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	_update_front_rear_visibility()
 	print(" Initialization complete — ready to simulate!\n")
 
-# ==============================================
-# TUTORIAL FUNCTIONS
-# ==============================================
 
 func start_tutorial() -> void:
 	print("Tutorial starting...")
@@ -798,12 +784,7 @@ func end_tutorial() -> void:
 		timeline_popup.hide()
 	
 	# Clear all simulation data
-	queue.clear()
-	waiting_elements.clear()
-	dequeued_elements.clear()
-	timeline_log.clear()
-	enqueue_counter = 0
-	dequeue_counter = 0
+	_clear_simulation_data()
 	
 	# Clear visual blocks
 	for child in queue_container.get_children():
@@ -812,22 +793,16 @@ func end_tutorial() -> void:
 	for child in dequeued_container.get_children():
 		if child != dequeued_close_btn:
 			child.queue_free()
-	
-	# Reset UI labels
+
 	_update_labels()
 	_update_front_rear_visibility()
-	
-	# Show the choice modal again to start fresh
+
 	_show_config_modal()
 	
-	# Re-enable all buttons
+
 	#enable_all_buttons()
 	
 	print("Tutorial completed - simulation reset to start fresh!")
-
-# ==============================================
-# QUEUE OPERATIONS
-# ==============================================
 
 func _on_enqueue_pressed() -> void:
 	# Check if in tutorial
@@ -922,7 +897,11 @@ func _perform_regular_enqueue() -> void:
 	_update_front_rear_visibility()
 
 func _on_dequeue_pressed() -> void:
-	# Check if in tutorial
+
+	if is_dequeuing_active:
+		return
+
+
 	if tutorial_in_progress and tutorial_sequence_index < tutorial_sequence.size():
 		var current_step = tutorial_sequence[tutorial_sequence_index]
 		if current_step["node"] == dequeue_btn and current_step["action"] == "press":
@@ -930,10 +909,11 @@ func _on_dequeue_pressed() -> void:
 		else:
 			print("Tutorial: Please press the highlighted button first")
 			return
-	
-	# Regular dequeue logic
+
 	if queue.is_empty():
 		return
+
+	is_dequeuing_active = true
 
 	btn_sound.play()
 	var removed_val: int = queue.pop_front()
@@ -942,20 +922,31 @@ func _on_dequeue_pressed() -> void:
 	timeline_log.append("Dequeued %d" % removed_val)
 
 	var front_block = queue_container.get_child(0)
-	
-	# Exit animation
+
 	var exit_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
 	exit_tween.tween_property(front_block, "position", front_block.position + Vector2(-200, 0), 0.4)
 	exit_tween.tween_property(front_block, "modulate:a", 0.0, 0.3)
 	
 	await exit_tween.finished
-	front_block.queue_free()
 
-	# Shift remaining blocks
+	if is_instance_valid(front_block):
+		front_block.queue_free()
+
 	_animate_queue_shift()
 	
 	_update_labels()
 	_update_front_rear_visibility()
+
+	if queue.is_empty() and waiting_elements.is_empty():
+		_show_complete_popup()
+	
+	if tutorial_in_progress and tutorial_sequence_index < tutorial_sequence.size():
+		var current_step = tutorial_sequence[tutorial_sequence_index]
+		if current_step["node"] == dequeue_btn and current_step["action"] == "press":
+			tutorial_sequence_index += 1
+			show_tutorial_step()
+			
+	is_dequeuing_active = false
 
 	if queue.is_empty() and waiting_elements.is_empty():
 		_show_complete_popup()
@@ -977,10 +968,6 @@ func _animate_queue_shift() -> void:
 		shift_tween.tween_property(child, "position", Vector2(x, START_POSITION.y), 0.4)
 		child.original_position = Vector2(x, START_POSITION.y)
 		x += child.size.x + BLOCK_SPACING
-
-# ==============================================
-# UI BUTTON HANDLERS
-# ==============================================
 
 func _on_WaitingElements_pressed() -> void:
 	# Check if in tutorial
@@ -1076,10 +1063,6 @@ func _on_dequeued_close_pressed() -> void:
 	if rear2_icon: rear2_icon.hide()
 	current_popup = null
 
-# ==============================================
-# SIMULATION COMPLETE
-# ==============================================
-
 func _show_complete_popup() -> void:
 	if complete_popup:
 		var total_processes = enqueue_counter + dequeue_counter
@@ -1106,12 +1089,11 @@ func _on_show_cpp_pressed() -> void:
 		complete_popup.hide()
 	_show_cpp_popup()
 
-# ==============================================
-# C++ CODE GENERATION
-# ==============================================
-
 func _show_cpp_popup() -> void:
 	btn_sound.play()
+	
+	# Reset tutorial state to ensure fresh start
+	cpp_tutorialcode_index = 0
 	
 	if cpp_popup and cpp_text:
 		# Generate code in current selected language
@@ -1139,6 +1121,22 @@ func _show_cpp_popup() -> void:
 			"javascript": "JavaScript Code"
 		}
 		cpp_popup.title = lang_names.get(current_code_language, "Code")
+		
+		# ENSURE TUTORIAL PANEL IS SHOWN
+		if cpp_tutorial_panel:
+			cpp_tutorial_panel.show()
+			
+		if cpp_explanation_text:
+			# Reset to first explanation
+			cpp_explanation_text.text = "💡 Click 'Next' to walk through this code explanation!"
+		
+		if cpp_next_button:
+			cpp_next_button.show()
+			cpp_next_button.text = "Next"
+		
+		# Reset highlighting and show first explanation
+		clear_cpp_highlight()
+		show_cpp_explanation()
 		
 		cpp_popup.popup_centered()
 		
@@ -1428,6 +1426,14 @@ func get_space_complexity() -> String:
 
 func _on_cpp_close_pressed() -> void:
 	btn_sound.play()
+	
+	# Reset tutorial state when closing
+	reset_cpp_tutorial_state()
+	
+	# Don't hide the tutorial panel, just reset it
+	if cpp_tutorial_panel:
+		cpp_tutorial_panel.show()
+	
 	if cpp_popup:
 		cpp_popup.hide()
 
@@ -1592,6 +1598,15 @@ func _on_no_pressed() -> void:
 
 func _on_cpp_code_button_pressed() -> void:
 	btn_sound.play()
+	
+	# Reset C++ tutorial state before showing popup
+	reset_cpp_tutorial_state()
+	
+	# Ensure tutorial panel will be visible
+	if cpp_tutorial_panel:
+		cpp_tutorial_panel.show()
+	
+	# Show the popup
 	_show_cpp_popup()
 
 func _on_close_pressed() -> void:
@@ -1633,10 +1648,6 @@ func _on_got_it_pressed() -> void:
 	if Queue_full:
 		Queue_full.hide()
 
-# ==============================================
-# INTRODUCTION
-# ==============================================
-
 func show_introduction() -> void:
 	"""Show the introduction popup when the game starts"""
 	print("Showing introduction popup...")
@@ -1658,14 +1669,13 @@ func show_introduction() -> void:
 	
 	if intro_prev_btn and not intro_prev_btn.is_connected("pressed", _on_intro_prev_pressed):
 		intro_prev_btn.pressed.connect(_on_intro_prev_pressed)
-	
-	# Update button text for last step
+
 	_update_intro_buttons()
 	
-	# Show the popup
+
 	intro_popup.show()
 	
-	# Disable main UI
+
 	_set_main_ui_enabled(false)
 
 func _update_intro_buttons() -> void:
@@ -1716,10 +1726,6 @@ func _on_intro_prev_pressed() -> void:
 
 func _on_ok_btn_pressed() -> void:
 	waiting_popup.hide()
-
-# ==============================================
-# UTILITY FUNCTIONS
-# ==============================================
 
 func _set_main_ui_enabled(enabled: bool) -> void:
 	"""Enable/disable main UI buttons"""
@@ -1810,31 +1816,47 @@ func show_cpp_explanation() -> void:
 		return
 	
 	if cpp_tutorialcode_index >= cpp_tutorial_steps.size():
-		end_cpp_tutorial()
-		return
+		cpp_tutorialcode_index = cpp_tutorial_steps.size() - 1
 	
 	var step = cpp_tutorial_steps[cpp_tutorialcode_index]
 	var lines = step["lines"]
 	cpp_explanation_text.text = step["text"]
 	highlight_cpp_lines(lines.x, lines.y)
+	
+	# Update button text based on position
+	if cpp_next_button:
+		if cpp_tutorialcode_index >= cpp_tutorial_steps.size() - 1:
+			cpp_next_button.text = "Next (Loop)"
+		else:
+			cpp_next_button.text = "Next"
 
 func _on_cpp_next_button_pressed() -> void:
 	btn_sound.play()
 	
-	if cpp_tutorialcode_index < cpp_tutorial_steps.size() - 1:
-		cpp_tutorialcode_index += 1
-		show_cpp_explanation()
-	else:
-		# End tutorial and show a completion message
-		end_cpp_tutorial()
-		
-		# Optional: Show a brief completion message
+	# Calculate next index with loop (using modulo operator)
+	cpp_tutorialcode_index = (cpp_tutorialcode_index + 1) % cpp_tutorial_steps.size()
+	
+	# Show the explanation for the new step
+	show_cpp_explanation()
+	
+	# Visual feedback when looping (when index goes from last to 0)
+	if cpp_tutorialcode_index == 0:
+		# Show loop message briefly
 		if cpp_explanation_text:
-			cpp_explanation_text.text = "🎉 Tutorial Complete!\n\nYou've learned about the C++ implementation. Feel free to explore other languages using the buttons above!"
+			var _original_text = cpp_explanation_text.text
+			cpp_explanation_text.text = "🔄 Looping back to start..."
 			
-			# Auto-hide after 3 seconds
-			await get_tree().create_timer(3.0).timeout
-			cpp_tutorial_panel.hide()
+			# Wait briefly before showing first step
+			await get_tree().create_timer(0.8).timeout
+			
+			# Now show the first explanation
+			show_cpp_explanation()
+		
+		# Flash the button to indicate loop
+		if cpp_next_button:
+			var tween = create_tween()
+			tween.tween_property(cpp_next_button, "modulate", Color(0.5, 1, 0.5, 1), 0.2)
+			tween.tween_property(cpp_next_button, "modulate", Color.WHITE, 0.2)
 
 func end_cpp_tutorial() -> void:
 	cpp_tutorial_panel.hide()
@@ -1946,15 +1968,21 @@ func reset_cpp_tutorial_state() -> void:
 	cpp_tutorial_index = 0
 	cpp_tutorialcode_index = 0
 	
-	# Hide C++ tutorial panel if visible
-	if cpp_tutorial_panel and cpp_tutorial_panel.visible:
-		cpp_tutorial_panel.hide()
+	# Don't hide the tutorial panel - just reset it
+	if cpp_tutorial_panel:
+		cpp_tutorial_panel.show()  # Ensure it's shown
 	
 	# Clear any C++ code highlighting
 	if cpp_text:
-		cpp_text.remove_theme_stylebox_override("normal")
+		clear_cpp_highlight()
 		cpp_text.deselect()
 	
 	# Reset C++ tutorial explanations to show from beginning
 	if cpp_explanation_text:
-		cpp_explanation_text.text = " This is the **C++ code** automatically generated from your queue simulation."
+		cpp_explanation_text.text = "💡 Click 'Next' to walk through this code explanation!"
+	
+	# Reset next button
+	if cpp_next_button:
+		cpp_next_button.text = "Next"
+		cpp_next_button.show()
+	
