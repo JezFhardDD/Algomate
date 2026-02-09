@@ -1,9 +1,5 @@
 extends Control
 
-# =======================================================
-#  BUBBLE SORT SIMULATION - FULL (Slow + Pointer + Intro)
-# =======================================================
-
 # --- MAIN BUTTONS ---
 @onready var sort_btn: Button = $VBoxContainer/SortButton
 @onready var auto_btn: Button = $VBoxContainer/WaitingElements
@@ -20,7 +16,7 @@ extends Control
 @onready var waiting_popup: Popup = $WaitingPopup
 @onready var waiting_label: Label = $WaitingPopup/VBoxContainer/Label
 
-# --- TIMELINE POPUP (With Close Button) ---
+# --- TIMELINE POPUP ---
 @onready var timeline_popup: Popup = $TimelinePopup
 @onready var timeline_label: Label = $TimelinePopup/MainVBox/ScrollContainer/VBoxContainer/Label
 @onready var timeline_close_btn: Button = get_node_or_null("TimelinePopup/MainVBox/CloseButton")
@@ -37,7 +33,8 @@ extends Control
 
 # --- C++ POPUP NODES ---
 @onready var cpp_popup: PopupPanel = get_node_or_null("CppPopup") as PopupPanel
-@onready var cpp_text: TextEdit = get_node_or_null("CppPopup/VBoxContainer/TextEdit") as TextEdit
+# NOTE: Ensure this node is a CodeEdit in your scene tree!
+@onready var cpp_text: CodeEdit = get_node_or_null("CppPopup/VBoxContainer/ScrollContainer/CodeEdit") as CodeEdit
 @onready var cpp_close_btn: Button = get_node_or_null("CppPopup/VBoxContainer/HBoxContainer2/close") as Button
 
 # Code Walkthrough Nodes
@@ -54,12 +51,8 @@ const BLOCK_SCENE := preload("res://BubbleBlock.tscn")
 const POINTER_TEX := preload("res://assets/point_left.png")
 
 # --- POINTERS ---
-# In Bubble Sort:
-# ptr_left -> Points to sort_j
-# ptr_right -> Points to sort_j + 1
 @onready var ptr_left: Node = $TextureRect/front  
 @onready var ptr_right: Node = $TextureRect/rear  
-
 @onready var unused_ptr1: Node = $TextureRect/front2
 @onready var unused_ptr2: Node = $TextureRect/rear2
 
@@ -99,6 +92,9 @@ const POINTER_TEX := preload("res://assets/point_left.png")
 
 @onready var sim_confirmation: Panel = $Simulate_new_confirmation
 @onready var sim_success: Panel = $"simulate_new success"
+@onready var sim_yes_btn: Button = $Simulate_new_confirmation/yes
+@onready var sim_no_btn: Button = $Simulate_new_confirmation/no
+
 @onready var q_mark_sprite: AnimatedSprite2D = $HelpButton/Q_mark_anim_sprites
 
 # --- LANGUAGE BUTTONS ---
@@ -123,7 +119,7 @@ var is_auto_playing: bool = false
 var BLOCK_WIDTH: float = 64.0 
 var BLOCK_SPACING: float = 15.0
 var START_POSITION: Vector2 = Vector2(50, 80)
-var ANIM_SPEED: float = 1.2 # SLOWER SPEED
+var ANIM_SPEED: float = 1.0 # Standard Speed
 
 # Tutorial Vars
 var tutorial_sequence = []
@@ -143,12 +139,14 @@ var intro_texts = [
 var current_code_language: String = "cpp"
 var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
+
 var cpp_tutorial_data = [
-	{ "lines": [0, 1, 2, 3], "text": "1. Imports & Setup:\nIncludes libraries for Input/Output." },
-	{ "lines": [5, 6, 7], "text": "2. Outer Loop:\nControls the number of passes through the array." },
-	{ "lines": [8, 9, 10], "text": "3. Inner Loop:\nCompares adjacent elements. It stops earlier each pass because the largest elements 'bubble' to the end." },
-	{ "lines": [11, 12, 13, 14], "text": "4. The Swap:\nIf the left element is larger than the right, they are swapped." },
-	{ "lines": [19, 20, 21, 22], "text": "5. Main Function:\nInitializes the array and calls the bubbleSort function." }
+	{ "lines": [0, 1, 2, 3], "text": "1. Complexity Analysis:\nBubble Sort has O(n^2) Time Complexity due to nested loops, and O(1) Space Complexity because it sorts in-place." },
+	{ "lines": [4, 5, 6, 7], "text": "2. Imports & Setup:\nIncludes standard libraries." },
+	{ "lines": [9, 10, 11], "text": "3. Outer Loop:\nControls the number of passes through the array." },
+	{ "lines": [12, 13, 14], "text": "4. Inner Loop:\nCompares adjacent elements. It stops earlier each pass because the largest elements 'bubble' to the end." },
+	{ "lines": [15, 16, 17, 18], "text": "5. The Swap:\nIf the left element is larger than the right, they are swapped." },
+	{ "lines": [23, 24, 25, 26], "text": "6. Main Function:\nInitializes the array and calls the bubbleSort function." }
 ]
 
 func _ready() -> void:
@@ -180,6 +178,19 @@ func _ready() -> void:
 	if code_anim: code_anim.play("default")
 	
 	_connect_language_buttons()
+	
+	# --- CONNECT MISSING SIGNALS ---
+	if tutorial_next:
+		if not tutorial_next.is_connected("pressed", _on_next_button_pressed):
+			tutorial_next.pressed.connect(_on_next_button_pressed)
+			
+	if sim_yes_btn:
+		if not sim_yes_btn.is_connected("pressed", _on_yes_pressed):
+			sim_yes_btn.pressed.connect(_on_yes_pressed)
+			
+	if sim_no_btn:
+		if not sim_no_btn.is_connected("pressed", _on_no_pressed):
+			sim_no_btn.pressed.connect(_on_no_pressed)
 
 func _connect_language_buttons():
 	if cpp_lang_btn: cpp_lang_btn.pressed.connect(func(): _set_language("cpp"))
@@ -193,7 +204,7 @@ func _set_language(lang: String):
 	_show_cpp_popup()
 
 # ==============================================
-#  INITIALIZATION
+#   INITIALIZATION
 # ==============================================
 
 func _initialize_with_elements(elements: Array[int]) -> void:
@@ -204,10 +215,8 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	block_nodes.clear()
 	timeline_log.clear()
 	
-	# Initialize Bubble Sort Vars
 	sort_i = 0 
 	sort_j = 0 
-	
 	comparison_counter = 0
 	swap_counter = 0
 	sorting_complete = false
@@ -253,10 +262,6 @@ func _ensure_connected(node: Node, signal_name: String, method: Callable):
 	if node and not node.is_connected(signal_name, method):
 		node.connect(signal_name, method)
 
-# ==============================================
-#  DRAG AND DROP LOGIC
-# ==============================================
-
 func _on_block_dropped(dropped_block: Control) -> void:
 	if is_sorting or comparison_counter > 0:
 		print(" Cannot drag blocks while sorting!")
@@ -292,7 +297,7 @@ func _resnap_blocks() -> void:
 		x += child.size.x + BLOCK_SPACING
 
 # ==============================================
-#  BUBBLE SORT LOGIC
+#   BUBBLE SORT LOGIC
 # ==============================================
 
 func _on_step_pressed() -> void:
@@ -306,7 +311,10 @@ func _on_auto_pressed() -> void:
 	btn_sound.play()
 	is_auto_playing = !is_auto_playing
 	auto_btn.text = "Pause" if is_auto_playing else "Auto Sort"
+	sort_btn.disabled = is_auto_playing # Disable step button during auto
+	
 	if is_auto_playing: _run_auto_sort()
+	else: sort_btn.disabled = false
 
 func _run_auto_sort() -> void:
 	while is_auto_playing and not sorting_complete:
@@ -319,7 +327,6 @@ func _perform_sort_step():
 	is_sorting = true
 	var n = main_array.size()
 	
-	# If fully sorted
 	if sort_i >= n - 1:
 		if block_nodes.size() > 0 and block_nodes[0].has_method("set_sorted_visual"):
 			block_nodes[0].set_sorted_visual()
@@ -327,14 +334,12 @@ func _perform_sort_step():
 		is_sorting = false
 		return
 
-	# End of pass check
 	if sort_j >= n - 1 - sort_i:
 		if block_nodes[n - 1 - sort_i].has_method("set_sorted_visual"):
 			block_nodes[n - 1 - sort_i].set_sorted_visual()
 		sort_j = 0
 		sort_i += 1
 		
-		# Check if done after incrementing pass
 		if sort_i >= n - 1:
 			if block_nodes.size() > 0 and block_nodes[0].has_method("set_sorted_visual"):
 				block_nodes[0].set_sorted_visual()
@@ -344,7 +349,6 @@ func _perform_sort_step():
 
 	_update_pointers(sort_j, sort_j + 1)
 	
-	# Highlight comparison
 	if block_nodes[sort_j].has_method("set_highlight"):
 		block_nodes[sort_j].set_highlight(true)
 	if block_nodes[sort_j + 1].has_method("set_highlight"):
@@ -360,7 +364,6 @@ func _perform_sort_step():
 	await get_tree().create_timer(ANIM_SPEED * 0.5).timeout
 	
 	if val_a > val_b:
-		# SWAP NEEDED
 		swap_counter += 1
 		status_label.text = "Swap! %d > %d" % [val_a, val_b]
 		timeline_log.append(" -> Swapped %d and %d" % [val_a, val_b])
@@ -379,8 +382,9 @@ func _perform_sort_step():
 	else:
 		status_label.text = "No Swap. %d <= %d" % [val_a, val_b]
 		timeline_log.append(" -> In correct order.")
+		# Added visual delay for no-swap so it isn't instant
+		await get_tree().create_timer(ANIM_SPEED * 0.5).timeout
 	
-	# Unhighlight
 	if block_nodes[sort_j].has_method("set_highlight"):
 		block_nodes[sort_j].set_highlight(false)
 	if block_nodes[sort_j + 1].has_method("set_highlight"):
@@ -434,10 +438,6 @@ func _finish_simulation():
 		cpp_code_button.show()
 		if code_anim: code_anim.play("default")
 
-# ==============================================
-#  UI & POPUPS
-# ==============================================
-
 func _update_ui_labels():
 	compare_label.text = "Comparisons: %d | Swaps: %d" % [comparison_counter, swap_counter]
 
@@ -460,9 +460,6 @@ func _on_timeline_close_pressed() -> void:
 	if timeline_popup:
 		timeline_popup.hide()
 
-# ==============================================
-#  CODE GENERATION & TUTORIAL
-# ==============================================
 
 func _on_show_cpp_pressed() -> void:
 	btn_sound.play()
@@ -473,20 +470,25 @@ func _on_show_cpp_pressed() -> void:
 func _show_cpp_popup() -> void:
 	var code = ""
 	var arr_str = ", ".join(main_array.map(func(x): return str(x)))
+	
 	match current_code_language:
 		"cpp": code = get_cpp_bubble_code(arr_str)
 		"python": code = get_python_bubble_code(arr_str)
 		"java": code = get_java_bubble_code(arr_str)
 		"c": code = get_c_bubble_code(arr_str)
+	
 	cpp_text.text = code
 	cpp_popup.popup_centered()
 	
 	if current_code_language == "cpp":
+		cpp_tutorial_panel.show()
 		cpp_tutorial_step = 0
 		if cpp_next_btn:
 			if not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
 				cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
 		_update_cpp_tutorial()
+	else:
+		cpp_tutorial_panel.hide()
 
 func _on_cpp_next_pressed() -> void:
 	btn_sound.play()
@@ -498,21 +500,25 @@ func _on_cpp_next_pressed() -> void:
 func _update_cpp_tutorial() -> void:
 	if cpp_tutorial_data.is_empty(): return
 	var data = cpp_tutorial_data[cpp_tutorial_step]
+	
 	if cpp_explanation_lbl:
 		cpp_explanation_lbl.text = data["text"]
+	
 	if cpp_text:
-		cpp_text.remove_theme_color_override("font_color")
-		cpp_text.add_theme_color_override("font_color", Color.WHITE)
+		cpp_text.deselect()
 		if data["lines"].size() > 0:
 			var start_line = data["lines"][0]
 			var end_line = data["lines"][-1]
+			cpp_text.set_caret_line(start_line)
+			cpp_text.center_viewport_to_caret()
 			cpp_text.select(start_line, 0, end_line + 1, 0)
-			cpp_text.scroll_vertical = start_line
 
-# --- BUBBLE SORT CODE STRINGS ---
+
 
 func get_cpp_bubble_code(arr: String) -> String:
-	return """#include <iostream>
+	return """/* Time Complexity: O(n^2)
+   Space Complexity: O(1) */
+#include <iostream>
 using namespace std;
 
 void bubbleSort(int arr[], int n) {
@@ -535,7 +541,10 @@ int main() {
 }""" % arr
 
 func get_python_bubble_code(arr: String) -> String:
-	return """def bubble_sort(arr):
+	return """# Time Complexity: O(n^2)
+# Space Complexity: O(1)
+
+def bubble_sort(arr):
 	n = len(arr)
 	for i in range(n):
 		for j in range(0, n - i - 1):
@@ -547,7 +556,8 @@ bubble_sort(arr)
 print("Sorted:", arr)""" % arr
 
 func get_java_bubble_code(arr: String) -> String:
-	return """class BubbleSort {
+	return """/* Time Complexity: O(n^2) */
+class BubbleSort {
 	void sort(int arr[]) {
 		int n = arr.length;
 		for (int i = 0; i < n - 1; i++)
@@ -566,7 +576,8 @@ func get_java_bubble_code(arr: String) -> String:
 }""" % arr
 
 func get_c_bubble_code(arr: String) -> String:
-	return """#include <stdio.h>
+	return """/* Time Complexity: O(n^2) */
+#include <stdio.h>
 void bubbleSort(int arr[], int n) {
 	int i, j, temp;
 	for (i = 0; i < n - 1; i++)
@@ -583,13 +594,14 @@ int main() {
 	return 0;
 }""" % arr
 
-# ==============================================
-#  TUTORIAL (Main)
-# ==============================================
+
 
 func start_tutorial() -> void:
 	tutorial_in_progress = true
 	tutorial_sequence_index = 0
+	
+	_set_main_ui_enabled(false) 
+	
 	tutorial_overlay.show()
 	tutorial_box.show()
 	
@@ -670,14 +682,14 @@ func _on_next_button_pressed():
 func end_tutorial():
 	tutorial_in_progress = false
 	tutorial_overlay.hide()
+	_set_main_ui_enabled(true)
+	
 	if pointer_sprite:
 		pointer_sprite.hide()
 		if pointer_sprite.has_meta("tween"):
 			pointer_sprite.get_meta("tween").kill()
 
-# ==============================================
-#  CONFIG HANDLERS
-# ==============================================
+
 
 func _connect_configuration_buttons() -> void:
 	_ensure_connected(yes_btn, "pressed", _on_config_yes_pressed)
@@ -713,24 +725,59 @@ func _on_size_next_pressed() -> void:
 	_show_config_elements_modal()
 
 func _show_config_elements_modal() -> void:
+	var array_size = int(size_input.value)
+	
 	element_inputs.clear()
-	for child in elements_container.get_children(): child.queue_free()
+	for child in elements_container.get_children():
+		child.queue_free()
+
 	var grid = GridContainer.new()
-	grid.columns = 5
+	grid.columns = min(5, array_size)
+	grid.add_theme_constant_override("h_separation", 10)
+	grid.add_theme_constant_override("v_separation", 10)
 	elements_container.add_child(grid)
-	var count = int(size_input.value)
-	for i in range(count):
-		var le = LineEdit.new()
-		le.placeholder_text = str(randi_range(1, 99))
-		element_inputs.append(le)
-		grid.add_child(le)
+	
+	for i in range(array_size):
+		var element_box = VBoxContainer.new()
+		
+		# Create label
+		var label = Label.new()
+		label.text = "Value %d" % (i + 1)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+
+		# Create input
+		var line_edit = LineEdit.new()
+		line_edit.placeholder_text = "0-999"
+		line_edit.text = str(randi_range(1, 99))
+		line_edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		line_edit.max_length = 3
+		line_edit.custom_minimum_size = Vector2(80, 80)
+
+		line_edit.text_changed.connect(_on_input_text_changed.bind(line_edit))
+		
+		element_box.add_child(label)
+		element_box.add_child(line_edit)
+		grid.add_child(element_box)
+		
+		element_inputs.append(line_edit)
+	
 	config_elements_modal.show()
+
+func _on_input_text_changed(new_text: String, line_edit: LineEdit) -> void:
+	if not new_text.is_valid_int() and new_text != "":
+		line_edit.text = new_text.trim_suffix(new_text[-1])
+		line_edit.set_caret_column(line_edit.text.length())
 
 func _on_elements_done_pressed() -> void:
 	btn_sound.play()
 	var arr: Array[int] = []
 	for le in element_inputs:
-		var val = int(le.text) if le.text.is_valid_int() else int(le.placeholder_text)
+		var val = 0
+		if le.text.is_valid_int():
+			val = int(le.text)
+		else:
+			
+			val = randi_range(1, 99) 
 		arr.append(val)
 	config_elements_modal.hide()
 	_set_main_ui_enabled(true)
@@ -748,9 +795,7 @@ func _on_config_no_pressed() -> void:
 func _on_size_back_pressed(): config_size_modal.hide(); config_modal.show()
 func _on_elements_back_pressed(): config_elements_modal.hide(); config_size_modal.show()
 
-# ==============================================
-#  INTRO LOGIC
-# ==============================================
+
 
 func show_introduction():
 	if not intro_popup: return
@@ -790,9 +835,7 @@ func _on_intro_skip_pressed():
 	intro_popup.hide()
 	_set_main_ui_enabled(true)
 
-# ==============================================
-#  HELPER / UTILS
-# ==============================================
+
 
 func _set_main_ui_enabled(enabled: bool) -> void:
 	if sort_btn: sort_btn.disabled = not enabled
