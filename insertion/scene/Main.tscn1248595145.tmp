@@ -1,6 +1,6 @@
 [gd_scene load_steps=150 format=3 uid="uid://cnlp6jn1v8wse"]
 
-[ext_resource type="Script" uid="uid://dx12ivb8i1dwd" path="res://Insertionmain.gd" id="1_s5yxy"]
+[ext_resource type="Script" uid="uid://dx12ivb8i1dwd" path="res://Mergemain.gd" id="1_s5yxy"]
 [ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="2_eik88"]
 [ext_resource type="Shader" uid="uid://b2q0owni5kbm8" path="res://scene/BG.gdshader" id="2_hrl0l"]
 [ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="3_08k7p"]
@@ -1154,15 +1154,14 @@ theme_override_font_sizes/font_size = 30
 
 [node name="CppPopup" type="PopupPanel" parent="."]
 oversampling_override = 1.0
-size = Vector2i(627, 650)
-visible = true
+size = Vector2i(627, 659)
 theme_override_styles/panel = SubResource("StyleBoxTexture_sqvbp")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CppPopup"]
 offset_left = 18.0
 offset_top = 40.0
 offset_right = 612.0
-offset_bottom = 650.0
+offset_bottom = 659.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 4
@@ -1215,8 +1214,6 @@ size_flags_vertical = 3
 
 [node name="CodeLabel" type="RichTextLabel" parent="CppPopup/VBoxContainer/CodeScroll"]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
 mouse_filter = 2
 bbcode_enabled = true
 fit_content = true
@@ -1259,7 +1256,6 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_6qs0r")
 text = "compile"
 
 [node name="TutorialPanel" type="Panel" parent="CppPopup/VBoxContainer"]
-custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 
 [node name="ExplanationText" type="RichTextLabel" parent="CppPopup/VBoxContainer/TutorialPanel"]
@@ -1268,10 +1264,10 @@ anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = 17.0
-offset_top = -25.0
-offset_right = -23.0
-offset_bottom = -22.0
+offset_left = 23.0
+offset_top = 43.0
+offset_right = -17.0
+offset_bottom = 46.0
 grow_horizontal = 2
 grow_vertical = 2
 fit_content = true

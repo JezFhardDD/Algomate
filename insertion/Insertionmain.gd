@@ -1,600 +1,850 @@
 extends Control
 
-# --- 1. NODE REFERENCES ---
-@onready var enqueue_btn: Button = $VBoxContainer/Addelement
-@onready var dequeue_btn: Button = $VBoxContainer/Sortelement
-@onready var waiting_btn: Button = $VBoxContainer/WaitingElements
+# =======================================================
+#  INSERTION SORT SIMULATION - FINAL (With Scroll & All Functions)
+# =======================================================
+
+# --- MAIN BUTTONS ---
+@onready var sort_btn: Button = $VBoxContainer/SortButton
+@onready var auto_btn: Button = $VBoxContainer/WaitingElements
 @onready var timeline_btn: Button = $VBoxContainer/TimelineButton
 @onready var simulate_new_btn: Button = $VBoxContainer/SimulateNew
 
-@onready var enqueue_label: Label = $HBoxContainer/Label
-@onready var dequeue_label: Label = $HBoxContainer2/Label
-@onready var queue_container: Control = $QueueContainer
+# --- LABELS & CONTAINERS ---
+@onready var status_label: Label = $HBoxContainer/Label
+@onready var compare_label: Label = $HBoxContainer2/Label
+@onready var array_container: Control = $QueueContainer
+@onready var dequeued_container: Control = $DequeuedContainer 
 
-# Popups
+# --- POPUPS ---
 @onready var waiting_popup: Popup = $WaitingPopup
 @onready var waiting_label: Label = $WaitingPopup/VBoxContainer/Label
+
+# --- TIMELINE POPUP ---
 @onready var timeline_popup: Popup = $TimelinePopup
-@onready var timeline_label: Label = $TimelinePopup/VBoxContainer/Label
+@onready var timeline_label: Label = $TimelinePopup/MainVBox/ScrollContainer/VBoxContainer/Label
+@onready var timeline_close_btn: Button = get_node_or_null("TimelinePopup/MainVBox/CloseButton")
+
+# Queue Full Warning
+@onready var Queue_full: Panel = get_node_or_null("Queue_full")
+@onready var anim_sprite: AnimatedSprite2D = get_node_or_null("Queue_full/AnimatedSprite2D")
+
+# Simulation Complete popup
 @onready var complete_popup: PopupPanel = get_node_or_null("SimulationCompletePopup") as PopupPanel
 @onready var complete_ok_btn: Button = get_node_or_null("SimulationCompletePopup/VBoxContainer/CloseButton") as Button
-@onready var process_label: Label = $SimulationCompletePopup/VBoxContainer/ProcessLabel
-
-# C++ Popup references
 @onready var show_cpp_btn: Button = get_node_or_null("SimulationCompletePopup/VBoxContainer/ShowCppButton") as Button
+@onready var process_label: Label = get_node_or_null("SimulationCompletePopup/VBoxContainer/ProcessLabel")
+
+# --- C++ POPUP NODES (SCROLLABLE SETUP) ---
 @onready var cpp_popup: PopupPanel = get_node_or_null("CppPopup") as PopupPanel
-@onready var cpp_text: TextEdit = get_node_or_null("CppPopup/VBoxContainer/TextEdit") as TextEdit
+# References for ScrollContainer + RichTextLabel
+@onready var cpp_scroll: ScrollContainer = get_node_or_null("CppPopup/VBoxContainer/CodeScroll")
+@onready var cpp_label: RichTextLabel = get_node_or_null("CppPopup/VBoxContainer/CodeScroll/CodeLabel")
+@onready var cpp_close_btn: Button = get_node_or_null("CppPopup/VBoxContainer/HBoxContainer2/close") as Button
 
-# --- FIX: Changed "Button" to "close" to match your Scene Tree ---
-@onready var cpp_close_btn: Button = get_node_or_null("CppPopup/VBoxContainer/close") as Button
-@onready var cpp_code_button: Button = get_node_or_null("CppCodeButton")
-
-# C++ Tutorial Nodes
+# Code Walkthrough Nodes
+@onready var cpp_next_btn: Button = get_node_or_null("CppPopup/VBoxContainer/HBoxContainer2/CppNextButton")
 @onready var cpp_tutorial_panel: Panel = get_node_or_null("CppPopup/VBoxContainer/TutorialPanel")
-@onready var cpp_explanation_text: RichTextLabel = get_node_or_null("CppPopup/VBoxContainer/TutorialPanel/ExplanationText")
-@onready var cpp_next_button: Button = get_node_or_null("CppPopup/VBoxContainer/TutorialPanel/CppNextButton") 
+@onready var cpp_explanation_lbl: RichTextLabel = get_node_or_null("CppPopup/VBoxContainer/TutorialPanel/ExplanationText")
 
-# Main Tutorial Nodes
+# Top Right Button
+@onready var cpp_code_button: Button = get_node_or_null("CppCodeButton")
+@onready var code_anim: AnimatedSprite2D = get_node_or_null("CppCodeButton/code_anim")
+
+# --- SCENE RESOURCES (Using InsertionBlock.tscn as per your tree) ---
+const BLOCK_SCENE := preload("res://InsertionBlock.tscn")
+const POINTER_TEX := preload("res://assets/point_left.png")
+
+# --- POINTERS ---
+@onready var ptr_left: Node = $TextureRect/front  
+@onready var ptr_right: Node = $TextureRect/rear  
+
+@onready var unused_ptr1: Node = $TextureRect/front2
+@onready var unused_ptr2: Node = $TextureRect/rear2
+
+# --- TUTORIAL OVERLAY ---
 @onready var tutorial_overlay: CanvasLayer = $TutorialOverlay
 @onready var dim_bg: ColorRect = $TutorialOverlay/DimBackground
 @onready var tutorial_box: Panel = $TutorialOverlay/TutorialBox
-@onready var tutorial_text: Label = $TutorialOverlay/TutorialBox/TutorialText
-@onready var tutorial_next: Button = $TutorialOverlay/TutorialBox/NextButton 
+@onready var tutorial_text: Label = $TutorialOverlay/TutorialBox/VBoxContainer/TutorialText
+@onready var tutorial_next: Button = $TutorialOverlay/TutorialBox/VBoxContainer/NextButton
 @onready var pointer_sprite: Sprite2D = $TutorialOverlay/PointerSprite
-@onready var help_btn: Button = get_node_or_null("HelpButton")
 
-# Config Modals
-@onready var config_modal: Panel = $ConfigChoiceModal
-@onready var size_input: SpinBox = $ConfigChoiceModal/SpinBox
-@onready var yes_btn: Button = $ConfigChoiceModal/yesButton
-@onready var no_btn: Button = $ConfigChoiceModal/NoButton
-@onready var config_size_elements_modal: Panel = $ConfigSizeElementsModal
-@onready var size_input_detailed: SpinBox = $ConfigSizeElementsModal/SizeSpinBox
-@onready var elements_input: TextEdit = $ConfigSizeElementsModal/ElementsTextEdit
-@onready var random_elements_btn: Button = $ConfigSizeElementsModal/RandomElementsButton
-@onready var confirm_btn: Button = $ConfigSizeElementsModal/ConfirmButton
-@onready var cancel_btn: Button = $ConfigSizeElementsModal/CancelButton
+# --- INTRO POPUP ---
+@onready var intro_popup: Panel = $TutorialOverlay/Intro_popup
+@onready var intro_label: Label = $TutorialOverlay/Intro_popup/Label
+@onready var intro_next_btn: Button = $TutorialOverlay/Intro_popup/next
+@onready var intro_skip_btn: Button = $TutorialOverlay/Intro_popup/skip
+@onready var intro_prev_btn: Button = $TutorialOverlay/Intro_popup/prev
 
-# Visual Assets
-@onready var rear_icon: Node = $TextureRect/rear
-@onready var front_icon: Node = $TextureRect/front
+# --- AUDIO ---
 @onready var audio_player = $bgm
 @onready var btn_sound = $btn_sound
 
-# --- 2. CONFIGURATION ---
-const BLOCK_SCENE := preload("res://InsertionBlock.tscn")
+# --- CONFIGURATION MODALS ---
+@onready var config_modal: Panel = $ConfigChoiceModal
+@onready var yes_btn: Button = $ConfigChoiceModal/yesButton
+@onready var no_btn: Button = $ConfigChoiceModal/NoButton
 
-var MAX_SIZE: int = 6
-var BLOCK_SPACING: float = 30.0 
-var START_POSITION: Vector2 = Vector2(80, 80)
+@onready var config_size_modal: Panel = $ConfigSizeModal
+@onready var size_input: SpinBox = $ConfigSizeModal/SizeSpinBox
+@onready var size_back_btn: Button = $ConfigSizeModal/BackButton
+@onready var size_next_btn: Button = $ConfigSizeModal/NextButton
 
-# --- 3. SORTING STATE VARIABLES ---
-var array_data: Array[int] = []          
-var waiting_data: Array[int] = []        
-var log_history: Array[String] = []      
-var comparison_count: int = 0
-var swap_count: int = 0
+@onready var config_elements_modal: Panel = $ConfigElementsModal
+@onready var elements_container: VBoxContainer = $ConfigElementsModal/ScrollContainer/VBoxContainer
+@onready var elements_back_btn: Button = $ConfigElementsModal/BackButton
+@onready var elements_done_btn: Button = $ConfigElementsModal/DoneButton
 
-# Insertion Sort specific
-var sort_i: int = 1          
-var sort_j: int = 0          
-var sort_key_val: int = 0    
-var sort_key_block: Control = null
+@onready var sim_confirmation: Panel = $Simulate_new_confirmation
+@onready var sim_success: Panel = $"simulate_new success"
+@onready var q_mark_sprite: AnimatedSprite2D = $HelpButton/Q_mark_anim_sprites
+
+# --- LANGUAGE BUTTONS ---
+@onready var cpp_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/Cpp_btn
+@onready var python_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/Py_btn
+@onready var java_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/Java_btn
+@onready var c_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/C_btn
+
+# --- INSERTION SORT VARIABLES ---
+var main_array: Array[int] = []
+var block_nodes: Array[Control] = []
+var timeline_log: Array[String] = []
+
+# Insertion Sort State
+var ins_i: int = 1
+var ins_j: int = 0
+var is_shifting: bool = false # DECLARATION ADDED HERE
+
+var comparison_counter: int = 0
+var swap_counter: int = 0
+var sorting_complete: bool = false
 var is_sorting: bool = false
+var is_auto_playing: bool = false
 
-# Tutorial State
+var BLOCK_WIDTH: float = 64.0 
+var BLOCK_SPACING: float = 15.0
+var START_POSITION: Vector2 = Vector2(50, 80)
+var ANIM_SPEED: float = 1.2 # Standard speed for Insertion Sort
+
+# Tutorial Vars
 var tutorial_sequence = []
 var tutorial_sequence_index = 0
 var tutorial_in_progress = false
-var cpp_tutorial_index := 0
-var cpp_tutorial_steps := []
 
-# State Machine
-enum SortState { PICK_KEY, COMPARE, SHIFT, INSERT }
-var current_state = SortState.PICK_KEY
+# Intro Text (UPDATED FOR INSERTION SORT)
+var intro_step: int = 0
+var intro_texts = [
+	"Welcome to Insertion Sort Simulation!\nInsertion Sort builds the sorted array one item at a time, similar to how you sort playing cards in your hand.",
+	"The Algorithm:\n\n1. Pick the next element (the key).\n2. Compare it with elements in the sorted sub-list to its left.\n3. Shift elements greater than the key to the right.\n4. Insert the key in its correct position.",
+	"Visual Elements:\n\n• The 'FRONT' pointer tracks the 'Key' element being inserted.\n• The 'REAR' pointer scans the sorted part to find the spot.",
+	"How to Use:\n\n1. Click 'NEXT STEP' to compare and shift.\n2. Click 'AUTO SORT' to watch it build the sorted list."
+]
 
-# --- 4. INITIALIZATION ---
+# Code Tutorial Data (UPDATED FOR INSERTION SORT)
+var current_code_language: String = "cpp"
+var element_inputs: Array[LineEdit] = []
+var cpp_tutorial_step: int = 0
+var cpp_tutorial_data = [
+	{ "lines": [0, 1, 2, 3], "text": "1. Imports & Setup:\nStandard Input/Output libraries." },
+	{ "lines": [5, 6, 7], "text": "2. Outer Loop:\nIterates from the second element (i=1) to the end. This element is the 'key' we want to insert." },
+	{ "lines": [8, 9, 10], "text": "3. The Key:\nStore the current element in a variable 'key'. 'j' points to the element before it." },
+	{ "lines": [11, 12, 13], "text": "4. Inner While Loop:\nMove elements of arr[0..i-1], that are greater than key, to one position ahead of their current position." },
+	{ "lines": [14, 15, 16], "text": "5. Insert:\nOnce the correct spot is found (or we hit the start), insert the 'key' at index j + 1." }
+]
+
 func _ready() -> void:
-	print("--- Insertion Sort Visualizer Started ---")
+	print(" Program started — initializing Insertion Sort visualizer...")
 	randomize()
 	
-	# RE-LABEL BUTTONS
-	if enqueue_btn: enqueue_btn.text = "ADD ELEMENT"
-	if dequeue_btn: dequeue_btn.text = "SORT STEP"
-	if waiting_btn: waiting_btn.text = "WAITING"
-	
-	# HIDE HISTORY BUTTON
-	var old_history_btn = get_node_or_null("VBoxContainer/DequeuedElements")
-	if old_history_btn: old_history_btn.hide()
-	
-	_connect_signals()
-	_ready_tutorial_connection()
-	
 	config_modal.hide()
-	if config_size_elements_modal: config_size_elements_modal.hide()
-	_show_config_modal()
-
-func _connect_signals() -> void:
-	if not enqueue_btn.is_connected("pressed", _on_add_element_pressed): enqueue_btn.pressed.connect(_on_add_element_pressed)
-	if not dequeue_btn.is_connected("pressed", _on_sort_step_pressed): dequeue_btn.pressed.connect(_on_sort_step_pressed)
-	if not waiting_btn.is_connected("pressed", _on_waiting_pressed): waiting_btn.pressed.connect(_on_waiting_pressed)
-	if not timeline_btn.is_connected("pressed", _on_timeline_pressed): timeline_btn.pressed.connect(_on_timeline_pressed)
-	if not simulate_new_btn.is_connected("pressed", _on_reset_pressed): simulate_new_btn.pressed.connect(_on_reset_pressed)
+	config_size_modal.hide()
+	config_elements_modal.hide()
+	if Queue_full: Queue_full.hide()
 	
-	if yes_btn: yes_btn.pressed.connect(_on_config_yes)
-	if no_btn: no_btn.pressed.connect(_on_config_no)
-	if random_elements_btn: random_elements_btn.pressed.connect(_gen_random_config)
-	if confirm_btn: confirm_btn.pressed.connect(_on_config_confirm)
-	if cancel_btn: cancel_btn.pressed.connect(_on_config_cancel)
+	if ptr_left: ptr_left.hide()
+	if ptr_right: ptr_right.hide()
+	if unused_ptr1: unused_ptr1.hide()
+	if unused_ptr2: unused_ptr2.hide()
 	
-	if size_input_detailed:
-		if not size_input_detailed.is_connected("value_changed", _on_size_spinbox_changed):
-			size_input_detailed.value_changed.connect(_on_size_spinbox_changed)
+	if cpp_code_button: cpp_code_button.hide()
 	
-	if complete_ok_btn: complete_ok_btn.pressed.connect(func(): complete_popup.hide())
-	if show_cpp_btn: show_cpp_btn.pressed.connect(_show_cpp_code)
-	if cpp_code_button: cpp_code_button.pressed.connect(_show_cpp_code)
+	if sort_btn: sort_btn.text = "Next Step"
+	if auto_btn: auto_btn.text = "Auto Sort"
 	
-	# --- FIX: Connect the corrected close button ---
-	if cpp_close_btn: 
-		cpp_close_btn.pressed.connect(func(): cpp_popup.hide())
-	else:
-		print("Error: Close button not found in CppPopup!")
+	_connect_configuration_buttons()
+	_show_config_modal() 
 	
-	if cpp_next_button:
-		if not cpp_next_button.is_connected("pressed", _on_cpp_next_button_pressed):
-			cpp_next_button.pressed.connect(_on_cpp_next_button_pressed)
-
-# --- 5. CONFIGURATION LOGIC ---
-func _show_config_modal(): config_modal.show()
-func _on_config_yes(): config_modal.hide(); _show_detailed_config()
-
-func _on_config_no(): 
-	MAX_SIZE = randi_range(5, 7) 
-	var rnd: Array[int] = [] 
-	for i in range(MAX_SIZE): 
-		rnd.append(randi_range(1, 99))
-	config_modal.hide()
-	_init_simulation(rnd)
-
-func _show_detailed_config():
-	size_input_detailed.min_value = 5
-	size_input_detailed.max_value = 7
-	size_input_detailed.value = 5
-	_gen_random_config()
-	config_size_elements_modal.show()
-
-func _on_size_spinbox_changed(new_val: float) -> void:
-	_gen_random_config()
-
-func _gen_random_config():
-	var sz = int(size_input_detailed.value)
-	var arr = []
-	for i in range(sz): arr.append(str(randi_range(1,99)))
-	elements_input.text = ", ".join(arr)
-
-func _on_config_confirm():
-	MAX_SIZE = int(size_input_detailed.value)
-	var txt = elements_input.text.split(",")
-	var arr: Array[int] = []
-	for t in txt: 
-		if t.strip_edges().is_valid_int(): 
-			arr.append(int(t.strip_edges()))
+	# Show Intro - Uses deferred call to ensure UI is ready
+	call_deferred("show_introduction")
 	
-	while arr.size() > 7: arr.pop_back()
-	while arr.size() < 5: arr.append(randi_range(1, 99))
+	if q_mark_sprite: q_mark_sprite.play("default")
+	if code_anim: code_anim.play("default")
 	
-	config_size_elements_modal.hide()
-	_init_simulation(arr)
+	_connect_language_buttons()
 
-func _on_config_cancel(): config_size_elements_modal.hide(); config_modal.show()
+func _connect_language_buttons():
+	if cpp_lang_btn: cpp_lang_btn.pressed.connect(func(): _set_language("cpp"))
+	if python_lang_btn: python_lang_btn.pressed.connect(func(): _set_language("python"))
+	if java_lang_btn: java_lang_btn.pressed.connect(func(): _set_language("java"))
+	if c_lang_btn: c_lang_btn.pressed.connect(func(): _set_language("c"))
 
-func _init_simulation(data: Array[int]):
-	if audio_player: audio_player.play()
-	waiting_data = data
-	_update_ui()
+func _set_language(lang: String):
+	btn_sound.play()
+	current_code_language = lang
+	_show_cpp_popup()
+
+# ==============================================
+#  INITIALIZATION
+# ==============================================
+
+func _initialize_with_elements(elements: Array[int]) -> void:
+	print(" Initializing Array with:", elements)
+	audio_player.play()
+	
+	main_array = elements.duplicate()
+	block_nodes.clear()
+	timeline_log.clear()
+	
+	# Initialize Insertion Sort Vars
+	ins_i = 1
+	ins_j = 0
+	is_shifting = false
+	
+	comparison_counter = 0
+	swap_counter = 0
+	sorting_complete = false
+	is_auto_playing = false
+	
+	for child in array_container.get_children():
+		child.queue_free()
+	
+	var current_x = START_POSITION.x
+	for val in main_array:
+		var new_block = BLOCK_SCENE.instantiate()
+		new_block.value = val
+		new_block.position = Vector2(current_x, START_POSITION.y)
+		
+		if new_block.has_signal("block_dropped"):
+			new_block.connect("block_dropped", _on_block_dropped)
+		
+		new_block.modulate.a = 0.0 
+		var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tween.tween_property(new_block, "modulate:a", 1.0, 0.5)
+		
+		array_container.add_child(new_block)
+		block_nodes.append(new_block)
+		current_x += new_block.size.x + BLOCK_SPACING
+	
+	_ensure_connected(sort_btn, "pressed", _on_step_pressed)
+	_ensure_connected(auto_btn, "pressed", _on_auto_pressed)
+	_ensure_connected(timeline_btn, "pressed", _on_timeline_pressed)
+	_ensure_connected(simulate_new_btn, "pressed", _on_simulate_new_pressed)
+	_ensure_connected(complete_ok_btn, "pressed", _on_complete_ok_pressed)
+	_ensure_connected(show_cpp_btn, "pressed", _on_show_cpp_pressed)
+	_ensure_connected(cpp_code_button, "pressed", _on_cpp_code_button_pressed)
+	_ensure_connected(cpp_close_btn, "pressed", _on_cpp_close_pressed)
+	
+	if timeline_close_btn:
+		if not timeline_close_btn.is_connected("pressed", _on_timeline_close_pressed):
+			timeline_close_btn.pressed.connect(_on_timeline_close_pressed)
+
+	_update_ui_labels()
 	if cpp_code_button: cpp_code_button.hide()
 
-# --- 6. MAIN SIMULATION LOGIC ---
+func _ensure_connected(node: Node, signal_name: String, method: Callable):
+	if node and not node.is_connected(signal_name, method):
+		node.connect(signal_name, method)
 
-func _on_add_element_pressed():
-	if is_sorting: return 
-	if array_data.size() >= MAX_SIZE or waiting_data.is_empty(): return
-	
-	btn_sound.play()
-	var val = waiting_data.pop_front()
-	array_data.append(val)
-	log_history.append("Added %d" % val)
-	
-	var blk = BLOCK_SCENE.instantiate()
-	blk.set("value", val)
-	
-	# Connect the Drag & Drop Signal from QueueBlock
-	if not blk.is_connected("block_dropped", _on_block_dropped):
-		blk.block_dropped.connect(_on_block_dropped)
-		
-	queue_container.add_child(blk)
-	
-	var idx = array_data.size() - 1
-	var target_pos = _get_block_pos(idx)
-	blk.position = target_pos + Vector2(200, 0)
-	blk.modulate.a = 0
-	
-	var tw = create_tween().set_parallel(true)
-	tw.tween_property(blk, "position", target_pos, 0.5).set_trans(Tween.TRANS_CUBIC)
-	tw.tween_property(blk, "modulate:a", 1.0, 0.4)
-	
-	_update_ui()
+# ==============================================
+#  DRAG AND DROP LOGIC
+# ==============================================
 
-func _on_sort_step_pressed():
-	if array_data.size() < 2: return
-	
-	if not is_sorting:
-		is_sorting = true
-		sort_i = 1 
-		sort_j = 0
-		current_state = SortState.PICK_KEY
-		enqueue_btn.disabled = true
-		log_history.append("--- Sorting Started ---")
-	
-	btn_sound.play()
-	_execute_sort_logic()
-
-func _execute_sort_logic():
-	if sort_i >= array_data.size():
-		_finish_simulation()
-		return
-
-	match current_state:
-		SortState.PICK_KEY:
-			sort_key_val = array_data[sort_i]
-			sort_key_block = queue_container.get_child(sort_i)
-			sort_j = sort_i - 1
-			
-			log_history.append("Selected Key: %d" % sort_key_val)
-			
-			var tw = create_tween()
-			tw.tween_property(sort_key_block, "position:y", START_POSITION.y - 50, 0.3)
-			sort_key_block.modulate = Color(2, 2, 0.5) 
-			
-			current_state = SortState.COMPARE
-
-		SortState.COMPARE:
-			comparison_count += 1
-			
-			if sort_j >= 0:
-				var compare_block = queue_container.get_child(sort_j)
-				compare_block.modulate = Color(1, 0.5, 0.5) 
-				
-				if array_data[sort_j] > sort_key_val:
-					log_history.append("%d > %d (Shift Right)" % [array_data[sort_j], sort_key_val])
-					dequeue_label.text = "Shift %d >>" % array_data[sort_j]
-					current_state = SortState.SHIFT
-				else:
-					log_history.append("%d <= %d (Place Key)" % [array_data[sort_j], sort_key_val])
-					compare_block.modulate = Color(1,1,1)
-					current_state = SortState.INSERT
-					_execute_sort_logic() 
-			else:
-				current_state = SortState.INSERT
-				_execute_sort_logic()
-
-		SortState.SHIFT:
-			swap_count += 1
-			array_data[sort_j + 1] = array_data[sort_j]
-			
-			var block_j = queue_container.get_child(sort_j)
-			var target_pos = _get_block_pos(sort_j + 1)
-			
-			var tw = create_tween()
-			tw.tween_property(block_j, "position", target_pos, 0.3)
-			
-			queue_container.move_child(block_j, sort_j + 1)
-			queue_container.move_child(sort_key_block, sort_j)
-			
-			block_j.modulate = Color(1,1,1)
-			sort_j -= 1
-			current_state = SortState.COMPARE
-
-		SortState.INSERT:
-			array_data[sort_j + 1] = sort_key_val
-			log_history.append("Inserted %d at pos %d" % [sort_key_val, sort_j+1])
-			
-			var tw = create_tween()
-			var target_pos = _get_block_pos(sort_j + 1)
-			target_pos.y = START_POSITION.y
-			
-			tw.tween_property(sort_key_block, "position", target_pos, 0.3)
-			sort_key_block.modulate = Color(1,1,1)
-			
-			sort_i += 1
-			current_state = SortState.PICK_KEY
-			_update_ui()
-
-# --- 7. MANUAL INTERACTION HANDLERS ---
 func _on_block_dropped(dropped_block: Control) -> void:
-	var children: Array = queue_container.get_children()
-	children.sort_custom(func(a, b): return a.position.x < b.position.x)
+	if is_sorting or comparison_counter > 0:
+		print(" Cannot drag blocks while sorting!")
+		_resnap_blocks()
+		return
+		
+	var children: Array = array_container.get_children()
+	var old_index: int = block_nodes.find(dropped_block)
+	var center_x: float = dropped_block.position.x + dropped_block.size.x * 0.5
+	var insert_index: int = 0
 	
-	for i in range(children.size()):
-		queue_container.move_child(children[i], i)
+	for c in block_nodes:
+		if c == dropped_block: continue
+		var c_center: float = c.position.x + c.size.x * 0.5
+		if center_x > c_center:
+			insert_index += 1
 	
-	array_data.clear()
-	for child in children:
-		if "value" in child:
-			array_data.append(child.value)
-			child.modulate = Color(1,1,1)
-			
+	if old_index != insert_index:
+		var val = main_array.pop_at(old_index)
+		main_array.insert(insert_index, val)
+		block_nodes.remove_at(old_index)
+		block_nodes.insert(insert_index, dropped_block)
+		timeline_log.append("User moved %d from index %d to %d" % [val, old_index, insert_index])
+	
 	_resnap_blocks()
-	
-	log_history.append("User moved block. Resetting state.")
-	is_sorting = false 
-	current_state = SortState.PICK_KEY
-	sort_i = 1
-	_update_ui()
 
 func _resnap_blocks() -> void:
-	for i in range(queue_container.get_child_count()):
-		var child = queue_container.get_child(i)
-		var target_pos = _get_block_pos(i)
-		var tw = create_tween()
-		tw.tween_property(child, "position", target_pos, 0.2).set_trans(Tween.TRANS_SINE)
+	var x = START_POSITION.x
+	for i in range(block_nodes.size()):
+		var node = block_nodes[i]
+		var target_pos = Vector2(x, START_POSITION.y)
+		create_tween().tween_property(node, "position", target_pos, ANIM_SPEED)
+		x += node.size.x + BLOCK_SPACING
 
-func _get_block_pos(index: int) -> Vector2:
-	var block_width = 64.0 
-	var x = START_POSITION.x + index * (block_width + BLOCK_SPACING)
-	return Vector2(x, START_POSITION.y)
+# ==============================================
+#  INSERTION SORT LOGIC (ITERATIVE)
+# ==============================================
+
+func _on_step_pressed() -> void:
+	if is_sorting or sorting_complete: return
+	if tutorial_in_progress: _handle_tutorial_step()
+	btn_sound.play()
+	_perform_sort_step()
+
+func _on_auto_pressed() -> void:
+	if sorting_complete: return
+	btn_sound.play()
+	is_auto_playing = !is_auto_playing
+	auto_btn.text = "Pause" if is_auto_playing else "Auto Sort"
+	if is_auto_playing: _run_auto_sort()
+
+func _run_auto_sort() -> void:
+	while is_auto_playing and not sorting_complete:
+		if is_sorting: await get_tree().process_frame 
+		else:
+			await _perform_sort_step()
+			await get_tree().create_timer(ANIM_SPEED).timeout
+
+func _perform_sort_step():
+	is_sorting = true
+	var n = main_array.size()
+	
+	# Check if outer loop is done
+	if ins_i >= n:
+		# Mark last element as sorted
+		for node in block_nodes:
+			if node.has_method("set_sorted_visual"): node.set_sorted_visual()
+		_finish_simulation()
+		is_sorting = false
+		return
+	
+	# Start of a new pass (ins_j reset)
+	if not is_shifting:
+		ins_j = ins_i
+		is_shifting = true
+		status_label.text = "Key: %d (Index %d)" % [main_array[ins_i], ins_i]
+		# Mark the key visually? Optional
+	
+	# Inner loop: Shifting elements
+	if ins_j > 0:
+		var idx_curr = ins_j
+		var idx_prev = ins_j - 1
+		
+		# Show pointers
+		_update_pointers(idx_curr, idx_prev)
+		
+		# Highlight
+		if block_nodes[idx_curr].has_method("set_highlight"): block_nodes[idx_curr].set_highlight(true)
+		if block_nodes[idx_prev].has_method("set_highlight"): block_nodes[idx_prev].set_highlight(true)
+		
+		comparison_counter += 1
+		var val_curr = main_array[idx_curr]
+		var val_prev = main_array[idx_prev]
+		
+		status_label.text = "Comparing: %d vs %d" % [val_curr, val_prev]
+		
+		await get_tree().create_timer(ANIM_SPEED * 0.5).timeout
+		
+		if val_curr < val_prev:
+			# Swap / Shift
+			swap_counter += 1
+			status_label.text = "%d < %d. Shifting left." % [val_curr, val_prev]
+			timeline_log.append("Shifting %d left past %d" % [val_curr, val_prev])
+			
+			var temp = main_array[idx_curr]
+			main_array[idx_curr] = main_array[idx_prev]
+			main_array[idx_prev] = temp
+			
+			var node_a = block_nodes[idx_curr]
+			var node_b = block_nodes[idx_prev]
+			block_nodes[idx_curr] = node_b
+			block_nodes[idx_prev] = node_a
+			
+			await _animate_swap(node_a, node_b)
+			
+			ins_j -= 1
+		else:
+			# Correct position found
+			status_label.text = "Correct position found."
+			is_shifting = false
+			ins_i += 1
+		
+		# Unhighlight
+		if block_nodes[idx_curr].has_method("set_highlight"): block_nodes[idx_curr].set_highlight(false)
+		if block_nodes[idx_prev].has_method("set_highlight"): block_nodes[idx_prev].set_highlight(false)
+		
+	else:
+		# Hit the start of the array
+		status_label.text = "Reached start. Inserted."
+		is_shifting = false
+		ins_i += 1
+	
+	_update_ui_labels()
+	is_sorting = false
+
+func _animate_swap(node_a: Control, node_b: Control):
+	var pos_a = node_a.position
+	var pos_b = node_b.position
+	var tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(node_a, "position", pos_b, ANIM_SPEED)
+	tween.tween_property(node_b, "position", pos_a, ANIM_SPEED)
+	await tween.finished
+	node_a.position = pos_b
+	node_b.position = pos_a
+
+func _update_pointers(left_idx: int, right_idx: int):
+	if block_nodes.is_empty(): return
+	if ptr_left: ptr_left.show()
+	if ptr_right: ptr_right.show()
+	
+	if left_idx < block_nodes.size() and left_idx >= 0:
+		var node = block_nodes[left_idx]
+		if ptr_left:
+			ptr_left.global_position = node.global_position + Vector2(16, node.size.y + 10) 
+	
+	if right_idx < block_nodes.size() and right_idx >= 0:
+		var node = block_nodes[right_idx]
+		if ptr_right:
+			ptr_right.global_position = node.global_position + Vector2(16, node.size.y + 10)
 
 func _finish_simulation():
-	var msg = "Sorting Complete!\nComparisons: %d\nShifts: %d" % [comparison_count, swap_count]
-	process_label.text = msg
-	complete_popup.popup_centered()
-	if cpp_code_button: cpp_code_button.show()
+	sorting_complete = true
+	is_auto_playing = false
+	status_label.text = "Sorted!"
+	auto_btn.text = "Auto Sort"
+	auto_btn.disabled = true
+	sort_btn.disabled = true
 	
-	for i in range(queue_container.get_child_count()):
-		var b = queue_container.get_child(i)
-		var tw = create_tween().set_trans(Tween.TRANS_SINE)
-		tw.tween_property(b, "modulate", Color(0.5, 2, 0.5), 0.1).set_delay(i * 0.05)
-		tw.tween_property(b, "modulate", Color(1, 1, 1), 0.1).set_delay((i * 0.05) + 0.1)
-
-# --- 8. HELPER FUNCTIONS ---
-func _update_ui():
-	enqueue_label.text = "Comparisons: %d" % comparison_count
-	dequeue_label.text = "Shifts: %d" % swap_count
-	enqueue_btn.disabled = (is_sorting or waiting_data.is_empty())
+	if ptr_left: ptr_left.hide()
+	if ptr_right: ptr_right.hide()
 	
-	if is_sorting:
-		front_icon.show() 
-		rear_icon.show()
-	else:
-		front_icon.hide()
-		rear_icon.hide()
+	timeline_log.append("--- SORTING COMPLETE ---")
+	_show_complete_popup()
+	
+	if cpp_code_button:
+		cpp_code_button.show()
+		if code_anim: code_anim.play("default")
 
-func _on_reset_pressed():
+# ==============================================
+#  UI & POPUPS
+# ==============================================
+
+func _update_ui_labels():
+	compare_label.text = "Comparisons: %d | Swaps: %d" % [comparison_counter, swap_counter]
+
+func _show_complete_popup() -> void:
+	if complete_popup:
+		var txt = "Sorting Finished!\n\nTotal Comparisons: %d\nTotal Swaps: %d" % [comparison_counter, swap_counter]
+		if process_label: process_label.text = txt
+		complete_popup.popup_centered()
+
+func _on_timeline_pressed() -> void:
 	btn_sound.play()
-	for c in queue_container.get_children(): c.queue_free()
-	array_data.clear(); waiting_data.clear(); log_history.clear()
-	comparison_count = 0; swap_count = 0; is_sorting = false
-	current_state = SortState.PICK_KEY
-	_on_config_no()
+	if timeline_popup.visible:
+		timeline_popup.hide()
+	else:
+		timeline_label.text = "Timeline:\n" + "\n".join(timeline_log)
+		timeline_popup.popup_centered()
 
-# --- 9. POPUPS & HISTORY ---
-func _on_waiting_pressed():
-	waiting_label.text = "Waiting Numbers:\n" + str(waiting_data)
-	waiting_popup.popup_centered()
+func _on_timeline_close_pressed() -> void:
+	btn_sound.play()
+	if timeline_popup:
+		timeline_popup.hide()
 
-func _on_timeline_pressed():
-	timeline_label.text = "Log:\n" + "\n".join(log_history)
-	timeline_popup.popup_centered()
+# ==============================================
+#  CODE GENERATION & TUTORIAL (INSERTION SORT STRINGS)
+# ==============================================
 
-# --- 10. C++ GENERATION ---
-func _show_cpp_code():
-	complete_popup.hide()
-	var arr_str = ", ".join(array_data.map(func(x): return str(x)))
+func _on_show_cpp_pressed() -> void:
+	btn_sound.play()
+	if complete_popup: complete_popup.hide()
+	await get_tree().process_frame
+	_show_cpp_popup()
+
+func _show_cpp_popup() -> void:
+	var code = ""
+	var arr_str = ", ".join(main_array.map(func(x): return str(x)))
+	match current_code_language:
+		"cpp": code = get_cpp_insertion_code(arr_str)
+		"python": code = get_python_insertion_code(arr_str)
+		"java": code = get_java_insertion_code(arr_str)
+		"c": code = get_c_insertion_code(arr_str)
 	
-	var code = """#include <iostream>
+	# UPDATED: Use RichTextLabel
+	if cpp_label:
+		cpp_label.text = code
+	
+	cpp_popup.popup_centered()
+	
+	if current_code_language == "cpp":
+		cpp_tutorial_step = 0
+		if cpp_next_btn:
+			if not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
+				cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
+		_update_cpp_tutorial()
+
+func _on_cpp_next_pressed() -> void:
+	btn_sound.play()
+	cpp_tutorial_step += 1
+	if cpp_tutorial_step >= cpp_tutorial_data.size():
+		cpp_tutorial_step = 0
+	_update_cpp_tutorial()
+
+func _update_cpp_tutorial() -> void:
+	if cpp_tutorial_data.is_empty(): return
+	var data = cpp_tutorial_data[cpp_tutorial_step]
+	if cpp_explanation_lbl:
+		cpp_explanation_lbl.text = data["text"]
+	
+	if cpp_label:
+		var code = ""
+		var arr_str = ", ".join(main_array.map(func(x): return str(x)))
+		match current_code_language:
+			"cpp": code = get_cpp_insertion_code(arr_str)
+			"python": code = get_python_insertion_code(arr_str)
+			"java": code = get_java_insertion_code(arr_str)
+			"c": code = get_c_insertion_code(arr_str)
+		
+		var lines = code.split("\n")
+		var highlighted_code = ""
+		var indices = data["lines"]
+		for i in range(lines.size()):
+			if i in indices:
+				highlighted_code += "[color=yellow]" + lines[i] + "[/color]\n"
+			else:
+				highlighted_code += lines[i] + "\n"
+		
+		cpp_label.text = highlighted_code
+		
+		if cpp_scroll and indices.size() > 0:
+			cpp_scroll.scroll_vertical = indices[0] * 25
+
+# --- INSERTION SORT CODE STRINGS ---
+
+func get_cpp_insertion_code(arr: String) -> String:
+	return """#include <iostream>
 using namespace std;
 
-// Function to perform Insertion Sort
 void insertionSort(int arr[], int n) {
-    for (int i = 1; i < n; i++) {
-        int key = arr[i];
-        int j = i - 1;
-
-        while (j >= 0 && arr[j] > key) {
-            arr[j + 1] = arr[j];
-            j = j - 1;
-        }
-        arr[j + 1] = key;
-    }
+	for (int i = 1; i < n; i++) {
+		int key = arr[i];
+		int j = i - 1;
+		while (j >= 0 && arr[j] > key) {
+			arr[j + 1] = arr[j];
+			j = j - 1;
+		}
+		arr[j + 1] = key;
+	}
 }
 
 int main() {
-    int arr[] = { %s };
-    int n = sizeof(arr) / sizeof(arr[0]);
+	int arr[] = { %s };
+	int n = sizeof(arr) / sizeof(arr[0]);
+	insertionSort(arr, n);
+	return 0;
+}""" % arr
 
-    cout << "Original Array: ";
-    for(int i=0; i<n; i++) cout << arr[i] << " ";
-    cout << endl;
+func get_python_insertion_code(arr: String) -> String:
+	return """def insertion_sort(arr):
+	for i in range(1, len(arr)):
+		key = arr[i]
+		j = i - 1
+		while j >= 0 and key < arr[j]:
+			arr[j + 1] = arr[j]
+			j -= 1
+		arr[j + 1] = key
 
-    insertionSort(arr, n);
+arr = [%s]
+insertion_sort(arr)
+print("Sorted:", arr)""" % arr
 
-    cout << "\\nSorted Array: ";
-    for(int i=0; i<n; i++) cout << arr[i] << " ";
-    return 0;
+func get_java_insertion_code(arr: String) -> String:
+	return """class InsertionSort {
+	void sort(int arr[]) {
+		int n = arr.length;
+		for (int i = 1; i < n; ++i) {
+			int key = arr[i];
+			int j = i - 1;
+			while (j >= 0 && arr[j] > key) {
+				arr[j + 1] = arr[j];
+				j = j - 1;
+			}
+			arr[j + 1] = key;
+		}
+	}
+	public static void main(String args[]) {
+		int arr[] = {%s};
+		InsertionSort ob = new InsertionSort();
+		ob.sort(arr);
+	}
+}""" % arr
+
+func get_c_insertion_code(arr: String) -> String:
+	return """#include <stdio.h>
+void insertionSort(int arr[], int n) {
+	int i, key, j;
+	for (i = 1; i < n; i++) {
+		key = arr[i];
+		j = i - 1;
+		while (j >= 0 && arr[j] > key) {
+			arr[j + 1] = arr[j];
+			j = j - 1;
+		}
+		arr[j + 1] = key;
+	}
 }
-""" % [arr_str]
-	
-	cpp_text.text = code
-	
-	cpp_tutorial_steps = [
-		{ "lines": Vector2i(0, 2), "text": "1. Standard imports. <iostream> is used for input/output." },
-		{ "lines": Vector2i(5, 6), "text": "2. Loop from i=1. The left side (0 to i-1) is sorted." },
-		{ "lines": Vector2i(7, 8), "text": "3. 'key' is the value to insert. 'j' tracks the sorted side." },
-		{ "lines": Vector2i(10, 13), "text": "4. Shift elements right while they are > key." },
-		{ "lines": Vector2i(15, 15), "text": "5. Insert the key into the correct spot." },
-		{ "lines": Vector2i(19, 21), "text": "6. In main(), we create the array from your data." }
-	]
-	
-	cpp_popup.popup_centered()
-	start_cpp_code_tutorial()
+int main() {
+	int arr[] = {%s};
+	int n = sizeof(arr) / sizeof(arr[0]);
+	insertionSort(arr, n);
+	return 0;
+}""" % arr
 
-func start_cpp_code_tutorial() -> void:
-	if not cpp_tutorial_panel: return
-	cpp_tutorial_index = 0
-	cpp_tutorial_panel.show()
-	highlight_cpp_code()
-	show_cpp_explanation()
+# ==============================================
+#  CONFIG HANDLERS
+# ==============================================
 
-func highlight_cpp_code() -> void:
-	var sb = StyleBoxFlat.new()
-	sb.bg_color = Color(1, 1, 0.8, 0.15)
-	sb.border_color = Color(1, 1, 0.2, 1)
-	sb.set_border_width_all(4) 
-	cpp_text.add_theme_stylebox_override("normal", sb)
+func _connect_configuration_buttons() -> void:
+	_ensure_connected(yes_btn, "pressed", _on_config_yes_pressed)
+	_ensure_connected(no_btn, "pressed", _on_config_no_pressed)
+	_ensure_connected(size_back_btn, "pressed", _on_size_back_pressed)
+	_ensure_connected(size_next_btn, "pressed", _on_size_next_pressed)
+	_ensure_connected(elements_back_btn, "pressed", _on_elements_back_pressed)
+	_ensure_connected(elements_done_btn, "pressed", _on_elements_done_pressed)
 
-func clear_cpp_highlight() -> void:
-	cpp_text.remove_theme_stylebox_override("normal")
+func _show_config_modal() -> void:
+	config_modal.show()
+	_set_main_ui_enabled(false)
 
-func show_cpp_explanation() -> void:
-	if cpp_tutorial_index >= cpp_tutorial_steps.size():
-		end_cpp_tutorial()
+func _on_config_yes_pressed() -> void:
+	btn_sound.play()
+	config_modal.hide()
+	_show_config_size_modal()
+
+func _show_config_size_modal() -> void:
+	config_size_modal.show()
+
+func _on_size_next_pressed() -> void:
+	btn_sound.play()
+	var size = int(size_input.value)
+	if size > 10: 
+		if Queue_full:
+			Queue_full.show()
+			if anim_sprite: anim_sprite.play("default")
+			await get_tree().create_timer(2.0).timeout
+			Queue_full.hide()
 		return
-	
-	var step = cpp_tutorial_steps[cpp_tutorial_index]
-	var lines = step["lines"]
-	
-	if cpp_explanation_text:
-		cpp_explanation_text.text = step["text"]
-	
-	highlight_cpp_lines(lines.x, lines.y)
+	config_size_modal.hide()
+	_show_config_elements_modal()
 
-func highlight_cpp_lines(start_line: int, end_line: int) -> void:
-	var sb = StyleBoxFlat.new()
-	sb.bg_color = Color(1, 1, 0.8, 0.1)
-	sb.border_color = Color(1, 1, 0.2, 1)
-	sb.set_border_width_all(2)
-	cpp_text.add_theme_stylebox_override("normal", sb)
-	cpp_text.select(start_line, 0, end_line, 0)
+func _show_config_elements_modal() -> void:
+	element_inputs.clear()
+	for child in elements_container.get_children(): child.queue_free()
+	var grid = GridContainer.new()
+	grid.columns = 5
+	elements_container.add_child(grid)
+	var count = int(size_input.value)
+	for i in range(count):
+		var le = LineEdit.new()
+		le.placeholder_text = str(randi_range(1, 99))
+		element_inputs.append(le)
+		grid.add_child(le)
+	config_elements_modal.show()
 
-func _on_cpp_next_button_pressed() -> void:
+func _on_elements_done_pressed() -> void:
 	btn_sound.play()
-	cpp_tutorial_index += 1
-	show_cpp_explanation()
+	var arr: Array[int] = []
+	for le in element_inputs:
+		var val = int(le.text) if le.text.is_valid_int() else int(le.placeholder_text)
+		arr.append(val)
+	config_elements_modal.hide()
+	_set_main_ui_enabled(true)
+	_initialize_with_elements(arr)
 
-func end_cpp_tutorial() -> void:
-	cpp_tutorial_panel.hide()
-	clear_cpp_highlight()
-	print("C++ tutorial finished.")
-
-# --- 11. MAIN HELP TUTORIAL ---
-
-func _ready_tutorial_connection():
-	if help_btn:
-		if not help_btn.is_connected("pressed", _on_help_button_pressed):
-			help_btn.pressed.connect(_on_help_button_pressed)
-	
-	if tutorial_next:
-		if not tutorial_next.is_connected("pressed", _on_tutorial_next_pressed):
-			tutorial_next.pressed.connect(_on_tutorial_next_pressed)
-
-func _on_help_button_pressed() -> void:
-	print("Starting Insertion Sort Tutorial...")
+func _on_config_no_pressed() -> void:
 	btn_sound.play()
-	start_main_tutorial()
+	config_modal.hide()
+	var count = randi_range(5, 7)
+	var arr: Array[int] = []
+	for i in count: arr.append(randi_range(1, 99))
+	_set_main_ui_enabled(true)
+	_initialize_with_elements(arr)
 
-func start_main_tutorial() -> void:
+func _on_size_back_pressed(): config_size_modal.hide(); config_modal.show()
+func _on_elements_back_pressed(): config_elements_modal.hide(); config_size_modal.show()
+
+# ==============================================
+#  INTRO LOGIC & TUTORIAL (CRITICAL)
+# ==============================================
+
+func show_introduction():
+	if tutorial_overlay: tutorial_overlay.show()
+	if not intro_popup: return
+	intro_popup.show()
+	_set_main_ui_enabled(false)
+	intro_step = 0
+	_update_intro_text()
+	_ensure_connected(intro_prev_btn, "pressed", _on_intro_prev_pressed)
+	_ensure_connected(intro_next_btn, "pressed", _on_intro_next_pressed)
+	_ensure_connected(intro_skip_btn, "pressed", _on_intro_skip_pressed)
+
+func _update_intro_text():
+	if intro_label and intro_texts.size() > 0:
+		intro_label.text = intro_texts[intro_step]
+	if intro_prev_btn:
+		intro_prev_btn.visible = (intro_step > 0)
+	if intro_next_btn:
+		intro_next_btn.text = "Finish" if intro_step >= intro_texts.size() - 1 else "Next"
+
+func _on_intro_next_pressed():
+	btn_sound.play()
+	if intro_step < intro_texts.size() - 1:
+		intro_step += 1
+		_update_intro_text()
+	else:
+		intro_popup.hide()
+		_set_main_ui_enabled(true)
+
+func _on_intro_prev_pressed():
+	btn_sound.play()
+	if intro_step > 0:
+		intro_step -= 1
+		_update_intro_text()
+
+func _on_intro_skip_pressed():
+	btn_sound.play()
+	intro_popup.hide()
+	_set_main_ui_enabled(true)
+
+# --- TUTORIAL MAIN ---
+
+func start_tutorial() -> void:
 	tutorial_in_progress = true
 	tutorial_sequence_index = 0
 	tutorial_overlay.show()
-	dim_bg.show()
 	tutorial_box.show()
 	
 	tutorial_sequence = [
 		{
-			"node": enqueue_btn,
-			"text": "This is the ADD ELEMENT button.\nBefore sorting, we need data! Click this to fill the array.",
-			"action": "next",
-			"pointer_pos": "center"
+			"node": sort_btn,
+			"title": "NEXT STEP",
+			"text": "Executes one step. It picks the next key and shifts larger elements to the right.",
+			"action": "highlight"
 		},
 		{
-			"node": dequeue_btn,
-			"text": "This is the SORT STEP button.\nThis acts as the 'Outer Loop' (i) and 'Inner Loop' (j). It performs the 'Compare' and 'Shift' operations.",
-			"action": "next",
-			"pointer_pos": "center"
-		},
-		{
-			"node": waiting_btn,
-			"text": "The WAITING button.\nSee the numbers waiting to be added to the array.",
-			"action": "next",
-			"pointer_pos": "center"
+			"node": auto_btn,
+			"title": "AUTO SORT",
+			"text": "Starts/Pauses the automatic insertion sort.",
+			"action": "highlight"
 		},
 		{
 			"node": timeline_btn,
-			"text": "The TIMELINE.\nUse this to review the full history of the sorting process step-by-step.",
-			"action": "next",
-			"pointer_pos": "center"
+			"title": "TIMELINE",
+			"text": "View a scrollable history of comparisons and swaps.",
+			"action": "highlight"
 		},
 		{
 			"node": simulate_new_btn,
-			"text": "SIMULATE NEW.\nDone sorting? Press this to clear the board and generate new random numbers.",
-			"action": "end",
-			"pointer_pos": "center"
+			"title": "SIMULATE NEW",
+			"text": "Resets the simulation to enter new numbers.",
+			"action": "highlight"
 		}
 	]
-	
 	show_tutorial_step()
 
 func show_tutorial_step() -> void:
 	if tutorial_sequence_index >= tutorial_sequence.size():
-		end_main_tutorial()
+		end_tutorial()
 		return
-	
+		
 	var step = tutorial_sequence[tutorial_sequence_index]
+	tutorial_text.text = step["title"] + "\n\n" + step["text"]
+	
 	var node = step["node"]
 	
-	tutorial_text.text = step["text"]
-	
-	if node:
+	if node and pointer_sprite:
+		pointer_sprite.texture = POINTER_TEX
 		pointer_sprite.show()
-		var ptr_pos = node.get_global_rect().position 
-		ptr_pos.x += 200 
-		ptr_pos.y += node.size.y / 2
-		pointer_sprite.global_position = ptr_pos
+		
+		var pos_x = node.global_position.x + node.size.x + 30 
+		var pos_y = node.global_position.y + (node.size.y / 2)
+		pointer_sprite.global_position = Vector2(pos_x, pos_y)
+		pointer_sprite.z_index = 100 
+		
+		if pointer_sprite.has_meta("tween"):
+			pointer_sprite.get_meta("tween").kill()
+		
+		var tween = create_tween().set_loops()
+		pointer_sprite.set_meta("tween", tween)
+		pointer_sprite.offset = Vector2.ZERO
+		tween.tween_property(pointer_sprite, "offset:x", -10.0, 0.5).set_trans(Tween.TRANS_SINE)
+		tween.tween_property(pointer_sprite, "offset:x", 0.0, 0.5).set_trans(Tween.TRANS_SINE)
 	else:
-		pointer_sprite.hide()
-
-	if step["action"] == "next":
+		if pointer_sprite: pointer_sprite.hide()
+	
+	if step["action"] == "press":
+		tutorial_next.hide()
+		node.disabled = false
+	else:
 		tutorial_next.show()
-		tutorial_next.text = "Next"
-		_highlight_node(node)
-	elif step["action"] == "end":
-		tutorial_next.show()
-		tutorial_next.text = "Finish"
-		_highlight_node(node)
 
-func _highlight_node(node: Control):
-	_clear_highlights()
-	if node:
-		var tw = create_tween().set_loops()
-		tw.tween_property(node, "modulate", Color(1.5, 1.5, 1.5), 0.5)
-		tw.tween_property(node, "modulate", Color(1, 1, 1), 0.5)
-		node.set_meta("tutorial_tween", tw)
+func _handle_tutorial_step():
+	var step = tutorial_sequence[tutorial_sequence_index]
+	if step["node"] == sort_btn:
+		tutorial_sequence_index += 1
+		show_tutorial_step()
 
-func _clear_highlights():
-	var buttons = [enqueue_btn, dequeue_btn, timeline_btn, simulate_new_btn, waiting_btn]
-	for b in buttons:
-		if b.has_meta("tutorial_tween"):
-			var tw = b.get_meta("tutorial_tween") as Tween
-			if tw: tw.kill()
-		b.modulate = Color(1, 1, 1)
-
-func _on_tutorial_next_pressed() -> void:
-	btn_sound.play()
+func _on_next_button_pressed():
 	tutorial_sequence_index += 1
 	show_tutorial_step()
 
-func end_main_tutorial() -> void:
+func end_tutorial():
 	tutorial_in_progress = false
 	tutorial_overlay.hide()
-	_clear_highlights()
+	if pointer_sprite:
+		pointer_sprite.hide()
+		if pointer_sprite.has_meta("tween"):
+			pointer_sprite.get_meta("tween").kill()
+
+# ==============================================
+#  HELPER / UTILS
+# ==============================================
+
+func _set_main_ui_enabled(enabled: bool) -> void:
+	if sort_btn: sort_btn.disabled = not enabled
+	if auto_btn: auto_btn.disabled = not enabled
+	if timeline_btn: timeline_btn.disabled = not enabled
+	if simulate_new_btn: simulate_new_btn.disabled = not enabled
+
+func _on_cpp_close_pressed(): btn_sound.play(); cpp_popup.hide()
+func _on_cpp_code_button_pressed(): btn_sound.play(); _show_cpp_popup()
+func _on_complete_ok_pressed(): btn_sound.play(); complete_popup.hide()
+
+func _on_simulate_new_pressed():
+	sim_confirmation.show()
+
+func _on_yes_pressed():
+	sim_confirmation.hide()
+	sim_success.show()
+	await get_tree().create_timer(1.0).timeout
+	sim_success.hide()
+	_show_config_modal()
+
+func _on_no_pressed():
+	sim_confirmation.hide()
+
+func _on_help_button_pressed():
+	start_tutorial()

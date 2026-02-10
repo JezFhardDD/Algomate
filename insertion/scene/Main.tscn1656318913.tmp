@@ -1,6 +1,6 @@
-[gd_scene load_steps=150 format=3 uid="uid://cnlp6jn1v8wse"]
+[gd_scene load_steps=147 format=3 uid="uid://cnlp6jn1v8wse"]
 
-[ext_resource type="Script" uid="uid://dx12ivb8i1dwd" path="res://Insertionmain.gd" id="1_s5yxy"]
+[ext_resource type="Script" uid="uid://dx12ivb8i1dwd" path="res://Bubblemain.gd" id="1_s5yxy"]
 [ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="2_eik88"]
 [ext_resource type="Shader" uid="uid://b2q0owni5kbm8" path="res://scene/BG.gdshader" id="2_hrl0l"]
 [ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="3_08k7p"]
@@ -227,15 +227,6 @@ texture = ExtResource("6_3sxgj")
 content_margin_top = 4.0
 content_margin_bottom = 9.0
 texture = ExtResource("2_eik88")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dt2wr"]
-texture = ExtResource("8_764rb")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q0hkp"]
-texture = ExtResource("6_3sxgj")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ei8tx"]
-texture = ExtResource("7_x4yfu")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hri7i"]
 texture = ExtResource("2_eik88")
@@ -738,14 +729,12 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="NextButton" type="Button" parent="TutorialOverlay/TutorialBox/VBoxContainer"]
-custom_minimum_size = Vector2(70, 50)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
 theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_constants/outline_size = 5
-theme_override_constants/h_separation = 4
 theme_override_fonts/font = ExtResource("3_pnqar")
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxTexture_mxvw5")
@@ -915,7 +904,7 @@ theme_override_font_sizes/font_size = 26
 theme_override_styles/normal = SubResource("StyleBoxTexture_r0du0")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_5tuhn")
 theme_override_styles/hover = SubResource("StyleBoxTexture_c6i3y")
-text = "Next Step"
+text = "Sort"
 
 [node name="WaitingElements" type="Button" parent="VBoxContainer"]
 layout_mode = 2
@@ -928,7 +917,8 @@ theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBoxTexture_3dxm6")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_devvj")
 theme_override_styles/hover = SubResource("StyleBoxTexture_j4qnp")
-text = "Auto Sort"
+text = "Waiting
+Elements"
 
 [node name="TimelineButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
@@ -959,9 +949,9 @@ New"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 310.0
+offset_left = 394.0
 offset_top = 585.0
-offset_right = 475.0
+offset_right = 559.0
 offset_bottom = 625.0
 
 [node name="Label" type="Label" parent="HBoxContainer"]
@@ -972,13 +962,13 @@ theme_override_constants/shadow_offset_y = 1
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_cm0pq")
-text = "Current Status:"
+text = "Enqueue Counter: "
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 660.0
+offset_left = 610.0
 offset_top = 585.0
-offset_right = 814.0
+offset_right = 766.0
 offset_bottom = 625.0
 
 [node name="Label" type="Label" parent="HBoxContainer2"]
@@ -989,7 +979,7 @@ theme_override_constants/shadow_offset_y = 1
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_fos0i")
-text = "Statistics:"
+text = "Dequeue Counter:"
 
 [node name="QueueContainer" type="Control" parent="."]
 custom_minimum_size = Vector2(200, 200)
@@ -1067,45 +1057,20 @@ text = "Okay"
 
 [node name="TimelinePopup" type="PopupPanel" parent="."]
 oversampling_override = 1.0
-size = Vector2i(850, 500)
+size = Vector2i(500, 500)
 theme_override_styles/panel = SubResource("StyleBoxTexture_20pc6")
 
-[node name="MainVBox" type="VBoxContainer" parent="TimelinePopup"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="VBoxContainer" type="VBoxContainer" parent="TimelinePopup"]
 offset_top = 4.0
-offset_right = 850.0
+offset_right = 500.0
 offset_bottom = 491.0
-grow_horizontal = 2
-grow_vertical = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="TimelinePopup/MainVBox"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="VBoxContainer" type="VBoxContainer" parent="TimelinePopup/MainVBox/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="Label" type="Label" parent="TimelinePopup/MainVBox/ScrollContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="TimelinePopup/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 26
-text = "fawgwg"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="CloseButton" type="Button" parent="TimelinePopup/MainVBox"]
-custom_minimum_size = Vector2(110, 60)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-theme_override_styles/normal = SubResource("StyleBoxTexture_dt2wr")
-theme_override_styles/hover = SubResource("StyleBoxTexture_q0hkp")
-theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_ei8tx")
-text = "Close"
 
 [node name="SimulationCompletePopup" type="PopupPanel" parent="."]
 oversampling_override = 1.0
@@ -1154,15 +1119,14 @@ theme_override_font_sizes/font_size = 30
 
 [node name="CppPopup" type="PopupPanel" parent="."]
 oversampling_override = 1.0
-size = Vector2i(627, 650)
-visible = true
+size = Vector2i(650, 700)
 theme_override_styles/panel = SubResource("StyleBoxTexture_sqvbp")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CppPopup"]
 offset_left = 18.0
 offset_top = 40.0
-offset_right = 612.0
-offset_bottom = 650.0
+offset_right = 635.0
+offset_bottom = 700.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 4
@@ -1209,17 +1173,9 @@ text = "C Language"
 [node name="HSeparator" type="HSeparator" parent="CppPopup/VBoxContainer"]
 layout_mode = 2
 
-[node name="CodeScroll" type="ScrollContainer" parent="CppPopup/VBoxContainer"]
+[node name="TextEdit" type="TextEdit" parent="CppPopup/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
-size_flags_vertical = 3
-
-[node name="CodeLabel" type="RichTextLabel" parent="CppPopup/VBoxContainer/CodeScroll"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-mouse_filter = 2
-bbcode_enabled = true
-fit_content = true
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="CppPopup/VBoxContainer"]
 clip_contents = true
@@ -1259,7 +1215,6 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_6qs0r")
 text = "compile"
 
 [node name="TutorialPanel" type="Panel" parent="CppPopup/VBoxContainer"]
-custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 
 [node name="ExplanationText" type="RichTextLabel" parent="CppPopup/VBoxContainer/TutorialPanel"]
@@ -1268,10 +1223,10 @@ anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = 17.0
-offset_top = -25.0
-offset_right = -23.0
-offset_bottom = -22.0
+offset_left = 18.0
+offset_top = 15.0
+offset_right = -22.0
+offset_bottom = 18.0
 grow_horizontal = 2
 grow_vertical = 2
 fit_content = true
@@ -1702,19 +1657,14 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_a6847")
 
 [node name="Label" type="Label" parent="ConfigElementsModal"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -194.5
-offset_right = 194.5
-offset_bottom = 28.0
-grow_horizontal = 2
+layout_mode = 0
+offset_left = 28.0
+offset_top = 28.0
+offset_right = 245.0
+offset_bottom = 51.0
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 28
 text = "Please enter array elements"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="ConfigElementsModal"]
 layout_mode = 0
