@@ -10,7 +10,7 @@ extends Control
 @onready var status_label: Label = $HBoxContainer/Label
 @onready var compare_label: Label = $HBoxContainer2/Label
 @onready var array_container: Control = $QueueContainer
-@onready var dequeued_container: Control = $DequeuedContainer 
+@onready var dequeued_container: Control = $DequeuedContainer
 
 # --- POPUPS ---
 @onready var waiting_popup: Popup = $WaitingPopup
@@ -31,7 +31,7 @@ extends Control
 @onready var show_cpp_btn: Button = get_node_or_null("SimulationCompletePopup/VBoxContainer/ShowCppButton") as Button
 @onready var process_label: Label = get_node_or_null("SimulationCompletePopup/VBoxContainer/ProcessLabel")
 
-# --- C++ POPUP NODES ---
+# --- CODE VIEW POPUP NODES ---
 @onready var cpp_popup: PopupPanel = get_node_or_null("CppPopup") as PopupPanel
 # NOTE: Ensure this node is a CodeEdit in your scene tree!
 @onready var cpp_text: CodeEdit = get_node_or_null("CppPopup/VBoxContainer/ScrollContainer/CodeEdit") as CodeEdit
@@ -51,8 +51,8 @@ const BLOCK_SCENE := preload("res://BubbleBlock.tscn")
 const POINTER_TEX := preload("res://assets/point_left.png")
 
 # --- POINTERS ---
-@onready var ptr_left: Node = $TextureRect/front  
-@onready var ptr_right: Node = $TextureRect/rear  
+@onready var ptr_left: Node = $TextureRect/front
+@onready var ptr_right: Node = $TextureRect/rear
 @onready var unused_ptr1: Node = $TextureRect/front2
 @onready var unused_ptr2: Node = $TextureRect/rear2
 
@@ -109,14 +109,14 @@ var block_nodes: Array[Control] = []
 var timeline_log: Array[String] = []
 
 var sort_i: int = 0
-var sort_j: int = 0 
+var sort_j: int = 0
 var comparison_counter: int = 0
 var swap_counter: int = 0
 var sorting_complete: bool = false
 var is_sorting: bool = false
 var is_auto_playing: bool = false
 
-var BLOCK_WIDTH: float = 64.0 
+var BLOCK_WIDTH: float = 64.0
 var BLOCK_SPACING: float = 15.0
 var START_POSITION: Vector2 = Vector2(50, 80)
 var ANIM_SPEED: float = 1.0 # Standard Speed
@@ -135,18 +135,50 @@ var intro_texts = [
 	"How to Use:\n\n1. Click 'NEXT STEP' to compare one pair.\n2. Click 'AUTO SORT' to watch the whole process."
 ]
 
-# Code Tutorial Data (BUBBLE SORT)
+# --- CODE TUTORIAL DATA ---
 var current_code_language: String = "cpp"
 var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
+var current_tutorial_data: Array = [] # Stores the active language data
 
+# 1. C++ DATA (FIXED ALIGNMENT)
 var cpp_tutorial_data = [
-	{ "lines": [0, 1, 2, 3], "text": "1. Complexity Analysis:\nBubble Sort has O(n^2) Time Complexity due to nested loops, and O(1) Space Complexity because it sorts in-place." },
-	{ "lines": [4, 5, 6, 7], "text": "2. Imports & Setup:\nIncludes standard libraries." },
-	{ "lines": [9, 10, 11], "text": "3. Outer Loop:\nControls the number of passes through the array." },
-	{ "lines": [12, 13, 14], "text": "4. Inner Loop:\nCompares adjacent elements. It stops earlier each pass because the largest elements 'bubble' to the end." },
-	{ "lines": [15, 16, 17, 18], "text": "5. The Swap:\nIf the left element is larger than the right, they are swapped." },
-	{ "lines": [23, 24, 25, 26], "text": "6. Main Function:\nInitializes the array and calls the bubbleSort function." }
+	{ "lines": [0, 1], "text": "1. Complexity Analysis:\nBubble Sort has O(n^2) Time Complexity due to nested loops, and O(1) Space Complexity because it sorts in-place." },
+	{ "lines": [2, 3], "text": "2. Imports & Setup:\nIncludes standard libraries and uses the standard namespace." },
+	{ "lines": [6], "text": "3. Outer Loop:\nIterates from 0 to n-1. This controls how many passes we make through the array." },
+	{ "lines": [7], "text": "4. Inner Loop:\nIterates through the unsorted part of the array. The range (n-i-1) decreases each time as large elements bubble to the end." },
+	{ "lines": [8, 9, 10, 11, 12], "text": "5. The Swap:\nWe check if the current element is larger than the next. If so, we swap them using a temporary variable." },
+	{ "lines": [17, 18, 19, 20, 21], "text": "6. Main Function:\nWe initialize the array, calculate its size, and call the bubbleSort function." }
+]
+
+# 2. PYTHON DATA
+var python_tutorial_data = [
+	{ "lines": [0, 1, 2], "text": "1. Complexity:\nTime is O(n^2). Space is O(1). Python handles memory automatically." },
+	{ "lines": [3, 4], "text": "2. Function Definition:\nDefines the function and gets the array length." },
+	{ "lines": [5], "text": "3. Outer Loop:\nIterates through the list 'n' times." },
+	{ "lines": [6], "text": "4. Inner Loop:\nThe range reduces by 'i' each time because the end of the list gets sorted first." },
+	{ "lines": [7, 8], "text": "5. Pythonic Swap:\nPython allows swapping two variables in one line without a temporary variable." },
+	{ "lines": [10, 11, 12], "text": "6. Execution:\nWe define the list and call the function." }
+]
+
+# 3. JAVA DATA
+var java_tutorial_data = [
+	{ "lines": [0, 1], "text": "1. Class Structure:\nIn Java, all code must reside inside a Class." },
+	{ "lines": [2, 3], "text": "2. Method Definition:\nWe define the sort method and get the array length." },
+	{ "lines": [4], "text": "3. Outer Loop:\nStandard loop to control passes (n-1 times)." },
+	{ "lines": [5], "text": "4. Inner Loop:\nCompares up to the last unsorted element (n-i-1)." },
+	{ "lines": [6, 7, 8, 9, 10], "text": "5. The Swap:\nIf left > right, we swap them using a temporary integer." },
+	{ "lines": [12, 13, 14, 15, 16], "text": "6. Main Method:\nCreates the BubbleSort object and calls the sort method." }
+]
+
+# 4. C DATA
+var c_tutorial_data = [
+	{ "lines": [0, 1], "text": "1. Setup:\nIncludes standard I/O for printing output." },
+	{ "lines": [2, 3], "text": "2. Function Start:\nIn C, variables are often declared at the start of the function scope." },
+	{ "lines": [4], "text": "3. Outer Loop:\nIterates 'n-1' times to control passes." },
+	{ "lines": [5], "text": "4. Inner Loop:\nIterates through unsorted elements." },
+	{ "lines": [6, 7, 8, 9, 10], "text": "5. The Swap:\nUses a temp variable to swap memory values." },
+	{ "lines": [12, 13, 14, 15], "text": "6. Main:\nPasses the array and its size (calculated via sizeof) to the function." }
 ]
 
 func _ready() -> void:
@@ -171,7 +203,7 @@ func _ready() -> void:
 	if auto_btn: auto_btn.text = "Auto Sort"
 	
 	_connect_configuration_buttons()
-	_show_config_modal() 
+	_show_config_modal()
 	
 	call_deferred("show_introduction")
 	if q_mark_sprite: q_mark_sprite.play("default")
@@ -215,8 +247,8 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	block_nodes.clear()
 	timeline_log.clear()
 	
-	sort_i = 0 
-	sort_j = 0 
+	sort_i = 0
+	sort_j = 0
 	comparison_counter = 0
 	swap_counter = 0
 	sorting_complete = false
@@ -234,7 +266,7 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 		if new_block.has_signal("block_dropped"):
 			new_block.connect("block_dropped", _on_block_dropped)
 		
-		new_block.modulate.a = 0.0 
+		new_block.modulate.a = 0.0
 		var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 		tween.tween_property(new_block, "modulate:a", 1.0, 0.5)
 		
@@ -318,7 +350,7 @@ func _on_auto_pressed() -> void:
 
 func _run_auto_sort() -> void:
 	while is_auto_playing and not sorting_complete:
-		if is_sorting: await get_tree().process_frame 
+		if is_sorting: await get_tree().process_frame
 		else:
 			await _perform_sort_step()
 			await get_tree().create_timer(ANIM_SPEED).timeout
@@ -390,7 +422,7 @@ func _perform_sort_step():
 	if block_nodes[sort_j + 1].has_method("set_highlight"):
 		block_nodes[sort_j + 1].set_highlight(false)
 		
-	sort_j += 1 
+	sort_j += 1
 	
 	_update_ui_labels()
 	is_sorting = false
@@ -413,7 +445,7 @@ func _update_pointers(left_idx: int, right_idx: int):
 	if left_idx < block_nodes.size():
 		var node = block_nodes[left_idx]
 		if ptr_left:
-			ptr_left.global_position = node.global_position + Vector2(16, node.size.y + 10) 
+			ptr_left.global_position = node.global_position + Vector2(16, node.size.y + 10)
 	
 	if right_idx < block_nodes.size():
 		var node_next = block_nodes[right_idx]
@@ -460,46 +492,61 @@ func _on_timeline_close_pressed() -> void:
 	if timeline_popup:
 		timeline_popup.hide()
 
-
 func _on_show_cpp_pressed() -> void:
 	btn_sound.play()
 	if complete_popup: complete_popup.hide()
 	await get_tree().process_frame
 	_show_cpp_popup()
 
+# ==============================================
+#   CODE VISUALIZER & TUTORIAL LOGIC
+# ==============================================
+
 func _show_cpp_popup() -> void:
 	var code = ""
 	var arr_str = ", ".join(main_array.map(func(x): return str(x)))
 	
+	# Select Code and Tutorial Data based on Language
 	match current_code_language:
-		"cpp": code = get_cpp_bubble_code(arr_str)
-		"python": code = get_python_bubble_code(arr_str)
-		"java": code = get_java_bubble_code(arr_str)
-		"c": code = get_c_bubble_code(arr_str)
+		"cpp":
+			code = get_cpp_bubble_code(arr_str)
+			current_tutorial_data = cpp_tutorial_data
+		"python":
+			code = get_python_bubble_code(arr_str)
+			current_tutorial_data = python_tutorial_data
+		"java":
+			code = get_java_bubble_code(arr_str)
+			current_tutorial_data = java_tutorial_data
+		"c":
+			code = get_c_bubble_code(arr_str)
+			current_tutorial_data = c_tutorial_data
 	
 	cpp_text.text = code
 	cpp_popup.popup_centered()
 	
-	if current_code_language == "cpp":
-		cpp_tutorial_panel.show()
-		cpp_tutorial_step = 0
-		if cpp_next_btn:
-			if not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
-				cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
-		_update_cpp_tutorial()
-	else:
-		cpp_tutorial_panel.hide()
+	# Reset tutorial step
+	cpp_tutorial_step = 0
+	
+	# Connect Button if needed
+	if cpp_next_btn:
+		if not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
+			cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
+	
+	# Always show tutorial panel now
+	cpp_tutorial_panel.show()
+	_update_cpp_tutorial()
 
 func _on_cpp_next_pressed() -> void:
 	btn_sound.play()
 	cpp_tutorial_step += 1
-	if cpp_tutorial_step >= cpp_tutorial_data.size():
+	# Use current_tutorial_data.size() to support all languages
+	if cpp_tutorial_step >= current_tutorial_data.size():
 		cpp_tutorial_step = 0
 	_update_cpp_tutorial()
 
 func _update_cpp_tutorial() -> void:
-	if cpp_tutorial_data.is_empty(): return
-	var data = cpp_tutorial_data[cpp_tutorial_step]
+	if current_tutorial_data.is_empty(): return
+	var data = current_tutorial_data[cpp_tutorial_step]
 	
 	if cpp_explanation_lbl:
 		cpp_explanation_lbl.text = data["text"]
@@ -509,11 +556,14 @@ func _update_cpp_tutorial() -> void:
 		if data["lines"].size() > 0:
 			var start_line = data["lines"][0]
 			var end_line = data["lines"][-1]
-			cpp_text.set_caret_line(start_line)
-			cpp_text.center_viewport_to_caret()
-			cpp_text.select(start_line, 0, end_line + 1, 0)
+			
+			# Safety check
+			if end_line < cpp_text.get_line_count():
+				cpp_text.set_caret_line(start_line)
+				cpp_text.center_viewport_to_caret()
+				cpp_text.select(start_line, 0, end_line + 1, 0)
 
-
+# --- CODE GENERATION FUNCTIONS (FIXED) ---
 
 func get_cpp_bubble_code(arr: String) -> String:
 	return """/* Time Complexity: O(n^2)
@@ -594,13 +644,15 @@ int main() {
 	return 0;
 }""" % arr
 
-
+# ==============================================
+#   APP TUTORIAL
+# ==============================================
 
 func start_tutorial() -> void:
 	tutorial_in_progress = true
 	tutorial_sequence_index = 0
 	
-	_set_main_ui_enabled(false) 
+	_set_main_ui_enabled(false)
 	
 	tutorial_overlay.show()
 	tutorial_box.show()
@@ -647,10 +699,10 @@ func show_tutorial_step() -> void:
 		pointer_sprite.texture = POINTER_TEX
 		pointer_sprite.show()
 		
-		var pos_x = node.global_position.x + node.size.x + 30 
+		var pos_x = node.global_position.x + node.size.x + 30
 		var pos_y = node.global_position.y + (node.size.y / 2)
 		pointer_sprite.global_position = Vector2(pos_x, pos_y)
-		pointer_sprite.z_index = 100 
+		pointer_sprite.z_index = 100
 		
 		if pointer_sprite.has_meta("tween"):
 			pointer_sprite.get_meta("tween").kill()
@@ -689,7 +741,9 @@ func end_tutorial():
 		if pointer_sprite.has_meta("tween"):
 			pointer_sprite.get_meta("tween").kill()
 
-
+# ==============================================
+#   CONFIG & INTRO
+# ==============================================
 
 func _connect_configuration_buttons() -> void:
 	_ensure_connected(yes_btn, "pressed", _on_config_yes_pressed)
@@ -714,7 +768,7 @@ func _show_config_size_modal() -> void:
 func _on_size_next_pressed() -> void:
 	btn_sound.play()
 	var size = int(size_input.value)
-	if size > 10: 
+	if size > 10:
 		if Queue_full:
 			Queue_full.show()
 			if anim_sprite: anim_sprite.play("default")
@@ -776,8 +830,7 @@ func _on_elements_done_pressed() -> void:
 		if le.text.is_valid_int():
 			val = int(le.text)
 		else:
-			
-			val = randi_range(1, 99) 
+			val = randi_range(1, 99)
 		arr.append(val)
 	config_elements_modal.hide()
 	_set_main_ui_enabled(true)
@@ -794,8 +847,6 @@ func _on_config_no_pressed() -> void:
 
 func _on_size_back_pressed(): config_size_modal.hide(); config_modal.show()
 func _on_elements_back_pressed(): config_elements_modal.hide(); config_size_modal.show()
-
-
 
 func show_introduction():
 	if not intro_popup: return
@@ -834,8 +885,6 @@ func _on_intro_skip_pressed():
 	btn_sound.play()
 	intro_popup.hide()
 	_set_main_ui_enabled(true)
-
-
 
 func _set_main_ui_enabled(enabled: bool) -> void:
 	if sort_btn: sort_btn.disabled = not enabled
