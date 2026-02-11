@@ -139,10 +139,10 @@ var tutorial_in_progress = false
 # Intro Text (UPDATED FOR QUICK SORT)
 var intro_step: int = 0
 var intro_texts = [
-	"Welcome to Quick Sort Simulation!\nQuick Sort is a highly efficient 'Divide and Conquer' algorithm. It picks an element as a 'Pivot' and partitions the given array around the picked pivot.",
-	"The Algorithm:\n\n1. Pick a Pivot (we'll use the last element).\n2. Move items smaller than Pivot to the left.\n3. Move items larger than Pivot to the right.\n4. Repeat for sub-arrays.",
-	"Visual Elements:\n\n• The 'REAR' pointer scans for numbers smaller than the Pivot.\n• The 'FRONT' pointer tracks where the next small number goes.\n• Pivot is usually highlighted.",
-	"How to Use:\n\n1. Click 'NEXT STEP' to partition the array.\n2. Click 'AUTO SORT' to watch it speed through."
+	"Welcome to Quick Sort!\n\nThis is a 'Divide and Conquer' algorithm. It's much faster than Insertion Sort for large lists.",
+	"The Pivot:\n\nWe pick an element (usually the last one) to be the 'Pivot'.",
+	"Partitioning:\n\nWe rearrange the array so that everything smaller than the Pivot goes to the left, and everything larger goes to the right.",
+	"Complexity:\n\nTime: O(n log n) on average.\nSpace: O(log n) for stack space."
 ]
 
 # Code Tutorial Data (UPDATED FOR QUICK SORT)
@@ -150,11 +150,12 @@ var current_code_language: String = "cpp"
 var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
 var cpp_tutorial_data = [
-	{ "lines": [0, 1, 2, 3], "text": "1. Imports & Setup:\nStandard Input/Output libraries." },
-	{ "lines": [5, 6, 7], "text": "2. The Swap Function:\nA utility to swap two elements in memory." },
-	{ "lines": [9, 10, 11], "text": "3. Partition Function:\nThis picks the last element as pivot and places smaller elements to the left, larger to the right." },
-	{ "lines": [13, 14, 15, 16], "text": "4. Scanning:\nLoop through the array. If current element < pivot, swap it to the 'small' side (index i)." },
-	{ "lines": [23, 24, 25, 26], "text": "5. QuickSort Function:\nRecursive calls to sort the partitions created by the logic above." }
+	{ "lines": [4, 5, 6, 7, 8], "text": "[b]Complexity Analysis:[/b]\n• [b]Time:[/b] [color=green]O(n log n)[/color] (Avg), [color=red]O(n²)[/color] (Worst).\n• [b]Space:[/b] [color=orange]O(log n)[/color] due to recursion stack." },
+	{ "lines": [10, 11, 12], "text": "1. Partition Function:\nTakes the last element as the 'pivot'. The goal is to place the pivot in its correct sorted position." },
+	{ "lines": [13, 14, 15], "text": "2. Pointers:\n'i' tracks the boundary of smaller elements. 'j' scans the array." },
+	{ "lines": [16, 17, 18, 19], "text": "3. The Swap:\nIf arr[j] is smaller than pivot, we swap it with arr[i] to move it to the 'small' side." },
+	{ "lines": [23, 24, 25], "text": "4. Place Pivot:\nFinally, swap the pivot into the slot after 'i'. It is now sorted." },
+	{ "lines": [28, 29, 30, 31], "text": "5. Recursive Calls:\nSort the sub-array to the left of the pivot, and then the sub-array to the right." }
 ]
 
 func _ready() -> void:
@@ -553,31 +554,30 @@ func _on_cpp_next_pressed() -> void:
 func _update_cpp_tutorial() -> void:
 	if cpp_tutorial_data.is_empty(): return
 	var data = cpp_tutorial_data[cpp_tutorial_step]
-	if cpp_explanation_lbl:
-		cpp_explanation_lbl.text = data["text"]
+	cpp_explanation_lbl.bbcode_enabled = true
+	cpp_explanation_lbl.text = data["text"]
 	
-	if cpp_label:
-		var code = ""
-		var arr_str = ", ".join(main_array.map(func(x): return str(x)))
-		match current_code_language:
-			"cpp": code = get_cpp_quick_code(arr_str)
-			"python": code = get_python_quick_code(arr_str)
-			"java": code = get_java_quick_code(arr_str)
-			"c": code = get_c_quick_code(arr_str)
-		
-		var lines = code.split("\n")
-		var highlighted_code = ""
-		var indices = data["lines"]
-		for i in range(lines.size()):
-			if i in indices:
-				highlighted_code += "[color=yellow]" + lines[i] + "[/color]\n"
-			else:
-				highlighted_code += lines[i] + "\n"
-		
-		cpp_label.text = highlighted_code
-		
-		if cpp_scroll and indices.size() > 0:
-			cpp_scroll.scroll_vertical = indices[0] * 25
+	var code = ""
+	var arr_str = ", ".join(main_array.map(func(x): return str(x)))
+	match current_code_language:
+		"cpp": code = get_cpp_quick_code(arr_str)
+		"python": code = get_python_quick_code(arr_str)
+		"java": code = get_java_quick_code(arr_str)
+		"c": code = get_c_quick_code(arr_str)
+	
+	var lines = code.split("\n")
+	var highlighted_code = ""
+	var indices = data["lines"]
+	for i in range(lines.size()):
+		if i in indices:
+			highlighted_code += "[color=yellow]" + lines[i] + "[/color]\n"
+		else:
+			highlighted_code += lines[i] + "\n"
+	
+	cpp_label.bbcode_enabled = true
+	cpp_label.text = highlighted_code
+	if cpp_scroll and indices.size() > 0:
+		cpp_scroll.scroll_vertical = indices[0] * 20
 
 # --- QUICK SORT CODE STRINGS ---
 
@@ -585,6 +585,11 @@ func get_cpp_quick_code(arr: String) -> String:
 	return """#include <iostream>
 using namespace std;
 
+/*
+ * COMPLEXITY:
+ * Time: O(n log n) (Avg), O(n^2) (Worst)
+ * Space: O(log n) (Stack)
+ */
 void swap(int* a, int* b) {
 	int t = *a; *a = *b; *b = t;
 }
@@ -618,7 +623,8 @@ int main() {
 }""" % arr
 
 func get_python_quick_code(arr: String) -> String:
-	return """def partition(arr, low, high):
+	return """# Time: O(n log n) | Space: O(log n)
+def partition(arr, low, high):
 	pivot = arr[high]
 	i = low - 1
 	for j in range(low, high):
@@ -635,12 +641,11 @@ def quick_sort(arr, low, high):
 		quick_sort(arr, pi + 1, high)
 
 arr = [%s]
-n = len(arr)
-quick_sort(arr, 0, n - 1)
-print("Sorted:", arr)""" % arr
+quick_sort(arr, 0, len(arr) - 1)""" % arr
 
 func get_java_quick_code(arr: String) -> String:
-	return """class QuickSort {
+	return """// Time: O(n log n) | Space: O(log n)
+class QuickSort {
 	int partition(int arr[], int low, int high) {
 		int pivot = arr[high];
 		int i = (low-1);
@@ -666,13 +671,13 @@ func get_java_quick_code(arr: String) -> String:
 	}
 	public static void main(String args[]) {
 		int arr[] = {%s};
-		int n = arr.length;
-		new QuickSort().sort(arr, 0, n-1);
+		new QuickSort().sort(arr, 0, arr.length-1);
 	}
 }""" % arr
 
 func get_c_quick_code(arr: String) -> String:
 	return """#include <stdio.h>
+// Time: O(n log n) | Space: O(log n)
 void swap(int* a, int* b) {
 	int t = *a; *a = *b; *b = t;
 }
@@ -740,18 +745,48 @@ func _on_size_next_pressed() -> void:
 	_show_config_elements_modal()
 
 func _show_config_elements_modal() -> void:
+	var array_size = int(size_input.value)
+	
 	element_inputs.clear()
-	for child in elements_container.get_children(): child.queue_free()
+	for child in elements_container.get_children():
+		child.queue_free()
+
 	var grid = GridContainer.new()
-	grid.columns = 5
+	grid.columns = min(5, array_size)
+	grid.add_theme_constant_override("h_separation", 35)
+	grid.add_theme_constant_override("v_separation", 10)
 	elements_container.add_child(grid)
-	var count = int(size_input.value)
-	for i in range(count):
-		var le = LineEdit.new()
-		le.placeholder_text = str(randi_range(1, 99))
-		element_inputs.append(le)
-		grid.add_child(le)
+	
+	for i in range(array_size):
+		var element_box = VBoxContainer.new()
+		
+		# Create label
+		var label = Label.new()
+		label.text = "Value %d" % (i + 1)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+
+		# Create input
+		var line_edit = LineEdit.new()
+		line_edit.placeholder_text = "0-999"
+		line_edit.text = str(randi_range(1, 99))
+		line_edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		line_edit.max_length = 3
+		line_edit.custom_minimum_size = Vector2(80, 80)
+
+		line_edit.text_changed.connect(_on_input_text_changed.bind(line_edit))
+		
+		element_box.add_child(label)
+		element_box.add_child(line_edit)
+		grid.add_child(element_box)
+		
+		element_inputs.append(line_edit)
+	
 	config_elements_modal.show()
+
+func _on_input_text_changed(new_text: String, line_edit: LineEdit) -> void:
+	if not new_text.is_valid_int() and new_text != "":
+		line_edit.text = new_text.trim_suffix(new_text[-1])
+		line_edit.set_caret_column(line_edit.text.length())
 
 func _on_elements_done_pressed() -> void:
 	btn_sound.play()

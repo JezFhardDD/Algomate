@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://ckfa6tiy3o68s" path="res://source/interpolation.gd" id="1_2dcjj"]
 
+
 [node name="Control" type="Control"]
 layout_mode = 3
 anchors_preset = 15

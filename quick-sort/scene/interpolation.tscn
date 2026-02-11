@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bitegkylvjirc" path="res://scene/parallax_background.tscn" id="4_lvnec"]
 [ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="5_wo6mf"]
 
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wo6mf"]
 texture = ExtResource("3_wo6mf")
 
