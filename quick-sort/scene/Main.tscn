@@ -1,4 +1,4 @@
-[gd_scene load_steps=165 format=3 uid="uid://cnlp6jn1v8wse"]
+[gd_scene load_steps=173 format=3 uid="uid://cnlp6jn1v8wse"]
 
 [ext_resource type="Script" uid="uid://dx12ivb8i1dwd" path="res://QuickMain.gd" id="1_s5yxy"]
 [ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="2_eik88"]
@@ -294,15 +294,89 @@ texture_margin_right = 15.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wosyn"]
 bg_color = Color(0, 0.736222, 0.483527, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gjnlk"]
+bg_color = Color(0, 0.737255, 0.482353, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kxuod"]
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uiejy"]
 bg_color = Color(0, 0.737255, 0.482353, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cg3r1"]
+bg_color = Color(0, 0.737255, 0.482353, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1dr5g"]
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dq3mc"]
 bg_color = Color(0, 0.737255, 0.482353, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tgqhd"]
+bg_color = Color(0, 0.737255, 0.482353, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_puvaq"]
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hmh3n"]
 bg_color = Color(0, 0.737255, 0.482353, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lcaa3"]
+bg_color = Color(0, 0.737255, 0.482353, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vq81u"]
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gjnlk"]
 texture = ExtResource("6_3sxgj")
@@ -1178,8 +1252,8 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_hri7i")
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = 25.0
-offset_right = 469.0
+offset_left = -225.0
+offset_right = 219.0
 offset_bottom = 300.0
 grow_horizontal = 2
 alignment = 1
@@ -1223,13 +1297,14 @@ theme_override_fonts/font = ExtResource("3_pnqar")
 theme_override_font_sizes/font_size = 30
 
 [node name="CppPopup" type="PopupPanel" parent="."]
-size = Vector2i(627, 650)
+size = Vector2i(631, 650)
+visible = true
 theme_override_styles/panel = SubResource("StyleBoxTexture_sqvbp")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CppPopup"]
 offset_left = 18.0
 offset_top = 40.0
-offset_right = 612.0
+offset_right = 616.0
 offset_bottom = 650.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -1237,6 +1312,8 @@ theme_override_constants/separation = 4
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CppPopup/VBoxContainer"]
 layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 1
 
 [node name="Label" type="Label" parent="CppPopup/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -1255,6 +1332,8 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = SubResource("StyleBoxFlat_wosyn")
+theme_override_styles/hover = SubResource("StyleBoxFlat_gjnlk")
+theme_override_styles/normal = SubResource("StyleBoxFlat_kxuod")
 text = "C++"
 
 [node name="Py_btn" type="Button" parent="CppPopup/VBoxContainer/HBoxContainer"]
@@ -1262,6 +1341,8 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = SubResource("StyleBoxFlat_uiejy")
+theme_override_styles/hover = SubResource("StyleBoxFlat_cg3r1")
+theme_override_styles/normal = SubResource("StyleBoxFlat_1dr5g")
 text = "Python"
 
 [node name="Java_btn" type="Button" parent="CppPopup/VBoxContainer/HBoxContainer"]
@@ -1269,6 +1350,8 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = SubResource("StyleBoxFlat_dq3mc")
+theme_override_styles/hover = SubResource("StyleBoxFlat_tgqhd")
+theme_override_styles/normal = SubResource("StyleBoxFlat_puvaq")
 text = "Java"
 
 [node name="C_btn" type="Button" parent="CppPopup/VBoxContainer/HBoxContainer"]
@@ -1276,6 +1359,8 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = SubResource("StyleBoxFlat_hmh3n")
+theme_override_styles/hover = SubResource("StyleBoxFlat_lcaa3")
+theme_override_styles/normal = SubResource("StyleBoxFlat_vq81u")
 text = "C Language"
 
 [node name="HSeparator" type="HSeparator" parent="CppPopup/VBoxContainer"]
