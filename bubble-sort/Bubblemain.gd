@@ -34,7 +34,7 @@ extends Control
 # --- CODE VIEW POPUP NODES ---
 @onready var cpp_popup: PopupPanel = get_node_or_null("CppPopup") as PopupPanel
 # NOTE: Ensure this node is a CodeEdit in your scene tree!
-@onready var cpp_text: CodeEdit = get_node_or_null("CppPopup/VBoxContainer/ScrollContainer/CodeEdit") as CodeEdit
+@onready var cpp_text: RichTextLabel = get_node_or_null("CppPopup/VBoxContainer/ScrollContainer/RichTextLabel") as RichTextLabel
 @onready var cpp_close_btn: Button = get_node_or_null("CppPopup/VBoxContainer/HBoxContainer2/close") as Button
 
 # Code Walkthrough Nodes
@@ -94,7 +94,7 @@ const POINTER_TEX := preload("res://assets/point_left.png")
 @onready var sim_success: Panel = $"simulate_new success"
 @onready var sim_yes_btn: Button = $Simulate_new_confirmation/yes
 @onready var sim_no_btn: Button = $Simulate_new_confirmation/no
-
+@onready var help_btn:Button = $HelpButton
 @onready var q_mark_sprite: AnimatedSprite2D = $HelpButton/Q_mark_anim_sprites
 
 # --- LANGUAGE BUTTONS ---
@@ -545,23 +545,48 @@ func _on_cpp_next_pressed() -> void:
 	_update_cpp_tutorial()
 
 func _update_cpp_tutorial() -> void:
-	if current_tutorial_data.is_empty(): return
+	if current_tutorial_data.is_empty(): 
+		return
+	
 	var data = current_tutorial_data[cpp_tutorial_step]
 	
+	# 1. Update the explanation text
 	if cpp_explanation_lbl:
 		cpp_explanation_lbl.text = data["text"]
 	
+	# 2. Handle the Code Highlighting
 	if cpp_text:
-		cpp_text.deselect()
+		# We start with a fresh copy of the code from the generator 
+		# based on the current language, so highlights don't "stack"
+		var base_code = ""
+		var arr_str = ", ".join(main_array.map(func(x): return str(x)))
+		
+		match current_code_language:
+			"cpp": base_code = get_cpp_bubble_code(arr_str)
+			"python": base_code = get_python_bubble_code(arr_str)
+			"java": base_code = get_java_bubble_code(arr_str)
+			"c": base_code = get_c_bubble_code(arr_str)
+
+		# Split into lines to inject BBCode
+		var lines = base_code.split("\n")
+		
+		# Apply background color to specific lines from tutorial data
+		for line_idx in data["lines"]:
+			if line_idx >= 0 and line_idx < lines.size():
+				# [bgcolor] highlights the background. 
+				# You can also use [b] for bold or [color=yellow]
+				lines[line_idx] = "[bgcolor=#444400]" + lines[line_idx] + "[/bgcolor]"
+		
+		# Re-enable BBCode and join the strings back together
+		cpp_text.bbcode_enabled = true
+		cpp_text.text = "\n".join(lines)
+		
+		# 3. Scroll to the first highlighted line
 		if data["lines"].size() > 0:
-			var start_line = data["lines"][0]
-			var end_line = data["lines"][-1]
-			
-			# Safety check
-			if end_line < cpp_text.get_line_count():
-				cpp_text.set_caret_line(start_line)
-				cpp_text.center_viewport_to_caret()
-				cpp_text.select(start_line, 0, end_line + 1, 0)
+			var target_line = data["lines"][0]
+			# Small delay helps ensure the UI has updated its layout before scrolling
+			await get_tree().process_frame 
+			cpp_text.scroll_to_line(target_line)
 
 # --- CODE GENERATION FUNCTIONS (FIXED) ---
 
@@ -834,6 +859,7 @@ func _on_elements_done_pressed() -> void:
 		arr.append(val)
 	config_elements_modal.hide()
 	_set_main_ui_enabled(true)
+	help_btn.show()
 	_initialize_with_elements(arr)
 
 func _on_config_no_pressed() -> void:
@@ -843,6 +869,7 @@ func _on_config_no_pressed() -> void:
 	var arr: Array[int] = []
 	for i in count: arr.append(randi_range(1, 99))
 	_set_main_ui_enabled(true)
+	help_btn.show()
 	_initialize_with_elements(arr)
 
 func _on_size_back_pressed(): config_size_modal.hide(); config_modal.show()

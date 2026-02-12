@@ -1,4 +1,4 @@
-[gd_scene load_steps=153 format=3 uid="uid://cnlp6jn1v8wse"]
+[gd_scene load_steps=177 format=3 uid="uid://cnlp6jn1v8wse"]
 
 [ext_resource type="Script" uid="uid://dx12ivb8i1dwd" path="res://Bubblemain.gd" id="1_s5yxy"]
 [ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="2_eik88"]
@@ -131,17 +131,41 @@ shader_parameter/accent_color = Color(0, 0.659627, 0.685006, 1)
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hhcpw"]
 texture = ExtResource("2_eik88")
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3np2r"]
+texture = ExtResource("6_3sxgj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jkxv2"]
+texture = ExtResource("7_x4yfu")
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mxvw5"]
 texture = ExtResource("8_764rb")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ene7r"]
 texture = ExtResource("2_eik88")
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iylwy"]
+texture = ExtResource("6_3sxgj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8k277"]
+texture = ExtResource("7_x4yfu")
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_goqcv"]
 texture = ExtResource("8_764rb")
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yw08f"]
+texture = ExtResource("6_3sxgj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0auj7"]
+texture = ExtResource("7_x4yfu")
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lk2p4"]
 texture = ExtResource("8_764rb")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_141t2"]
+texture = ExtResource("6_3sxgj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2pgkw"]
+texture = ExtResource("7_x4yfu")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wren1"]
 texture = ExtResource("8_764rb")
@@ -268,6 +292,119 @@ texture_margin_left = 18.0
 texture_margin_top = 40.0
 texture_margin_right = 15.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kxuod"]
+bg_color = Color(0, 0.776601, 0.482813, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1dr5g"]
+bg_color = Color(0, 0.776471, 0.482353, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wosyn"]
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uiejy"]
+bg_color = Color(0, 0.776471, 0.482353, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dq3mc"]
+bg_color = Color(0, 0.776471, 0.482353, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hmh3n"]
+bg_color = Color(0, 0.776471, 0.482353, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tgqhd"]
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_puvaq"]
+bg_color = Color(0, 0.776471, 0.482353, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lcaa3"]
+bg_color = Color(0, 0.776471, 0.482353, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vq81u"]
+bg_color = Color(0, 0.776471, 0.482353, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cg3r1"]
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_72c0u"]
+bg_color = Color(0, 0.776471, 0.482353, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pn0cg"]
+bg_color = Color(0, 0.776471, 0.482353, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cqmtw"]
+bg_color = Color(0, 0.776471, 0.482353, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_65lg3"]
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gjnlk"]
 texture = ExtResource("6_3sxgj")
 
@@ -294,6 +431,8 @@ texture = ExtResource("7_x4yfu")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_oin8c"]
 texture = ExtResource("8_764rb")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gjnlk"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xrxkg"]
 texture = ExtResource("8_764rb")
@@ -735,6 +874,8 @@ theme_override_constants/separation = 20
 layout_mode = 2
 size_flags_vertical = 6
 theme_override_colors/font_color = Color(0.145098, 0.823529, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 20
 horizontal_alignment = 1
@@ -750,6 +891,8 @@ theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_constants/h_separation = 4
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 30
+theme_override_styles/hover = SubResource("StyleBoxTexture_3np2r")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_jkxv2")
 theme_override_styles/normal = SubResource("StyleBoxTexture_mxvw5")
 text = "next"
 
@@ -785,13 +928,11 @@ offset_right = 215.0
 offset_bottom = 322.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.145098, 0.823529, 0, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/line_spacing = 2
-theme_override_constants/paragraph_spacing = 2
-theme_override_constants/shadow_offset_x = 4
-theme_override_constants/shadow_offset_y = 1
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
+text = "yfyfyfyf"
 horizontal_alignment = 3
 autowrap_mode = 3
 justification_flags = 161
@@ -805,6 +946,8 @@ offset_bottom = 405.0
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 28
+theme_override_styles/hover = SubResource("StyleBoxTexture_iylwy")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_8k277")
 theme_override_styles/normal = SubResource("StyleBoxTexture_goqcv")
 text = "Prev"
 
@@ -819,6 +962,8 @@ grow_vertical = 0
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 28
+theme_override_styles/hover = SubResource("StyleBoxTexture_yw08f")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_0auj7")
 theme_override_styles/normal = SubResource("StyleBoxTexture_lk2p4")
 text = "Skip"
 
@@ -832,6 +977,8 @@ grow_vertical = 0
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 28
+theme_override_styles/hover = SubResource("StyleBoxTexture_141t2")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_2pgkw")
 theme_override_styles/normal = SubResource("StyleBoxTexture_wren1")
 text = "Next"
 
@@ -1129,8 +1276,8 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_hri7i")
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = 25.0
-offset_right = 469.0
+offset_left = -225.0
+offset_right = 219.0
 offset_bottom = 300.0
 grow_horizontal = 2
 alignment = 1
@@ -1138,6 +1285,8 @@ alignment = 1
 [node name="Label" type="Label" parent="SimulationCompletePopup/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.145167, 0.823731, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 30
 text = "Simulation Complete!"
@@ -1166,12 +1315,13 @@ text = "Close"
 [node name="ProcessLabel" type="Label" parent="SimulationCompletePopup/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.145098, 0.823529, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 30
 
 [node name="CppPopup" type="PopupPanel" parent="."]
 size = Vector2i(627, 659)
-visible = true
 theme_override_styles/panel = SubResource("StyleBoxTexture_sqvbp")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CppPopup"]
@@ -1185,6 +1335,8 @@ theme_override_constants/separation = 4
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CppPopup/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 9
 
 [node name="Label" type="Label" parent="CppPopup/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -1202,24 +1354,39 @@ layout_mode = 2
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxFlat_kxuod")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_1dr5g")
+theme_override_styles/normal = SubResource("StyleBoxFlat_wosyn")
 text = "C++"
 
 [node name="Py_btn" type="Button" parent="CppPopup/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxFlat_uiejy")
+theme_override_styles/hover = SubResource("StyleBoxFlat_dq3mc")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_hmh3n")
+theme_override_styles/normal = SubResource("StyleBoxFlat_tgqhd")
 text = "Python"
 
 [node name="Java_btn" type="Button" parent="CppPopup/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxFlat_puvaq")
+theme_override_styles/hover = SubResource("StyleBoxFlat_lcaa3")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_vq81u")
+theme_override_styles/normal = SubResource("StyleBoxFlat_cg3r1")
 text = "Java"
 
 [node name="C_btn" type="Button" parent="CppPopup/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxFlat_72c0u")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pn0cg")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_cqmtw")
+theme_override_styles/normal = SubResource("StyleBoxFlat_65lg3")
 text = "C Language"
 
 [node name="HSeparator" type="HSeparator" parent="CppPopup/VBoxContainer"]
@@ -1269,15 +1436,23 @@ icon = ExtResource("14_1dr5g")
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CodeEdit" type="CodeEdit" parent="CppPopup/VBoxContainer/ScrollContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="CppPopup/VBoxContainer/ScrollContainer"]
 custom_minimum_size = Vector2(0, 350)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-editable = false
+bbcode_enabled = true
 
 [node name="TutorialPanel" type="Panel" parent="CppPopup/VBoxContainer"]
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_gjnlk")
+
+[node name="HSeparator2" type="HSeparator" parent="CppPopup/VBoxContainer/TutorialPanel"]
+layout_mode = 2
+offset_left = -2.0
+offset_top = -155.0
+offset_right = 592.0
+offset_bottom = -151.0
 
 [node name="ExplanationText" type="RichTextLabel" parent="CppPopup/VBoxContainer/TutorialPanel"]
 layout_mode = 1
@@ -1285,10 +1460,10 @@ anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = 30.0
-offset_top = -131.0
-offset_right = -10.0
-offset_bottom = -128.0
+offset_left = 22.0
+offset_top = -123.0
+offset_right = -18.0
+offset_bottom = -120.0
 grow_horizontal = 2
 grow_vertical = 2
 fit_content = true
@@ -1317,6 +1492,7 @@ sprite_frames = SubResource("SpriteFrames_6xsba")
 frame_progress = 0.472316
 
 [node name="HelpButton" type="Button" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
