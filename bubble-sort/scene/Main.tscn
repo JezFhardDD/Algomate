@@ -1,4 +1,4 @@
-[gd_scene load_steps=177 format=3 uid="uid://cnlp6jn1v8wse"]
+[gd_scene load_steps=178 format=3 uid="uid://cnlp6jn1v8wse"]
 
 [ext_resource type="Script" uid="uid://dx12ivb8i1dwd" path="res://Bubblemain.gd" id="1_s5yxy"]
 [ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="2_eik88"]
@@ -300,6 +300,13 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 expand_margin_left = 2.0
 expand_margin_right = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ene7r"]
+bg_color = Color(0, 0.776471, 0.482353, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1dr5g"]
 bg_color = Color(0, 0.776471, 0.482353, 1)
@@ -1355,6 +1362,7 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = SubResource("StyleBoxFlat_kxuod")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ene7r")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_1dr5g")
 theme_override_styles/normal = SubResource("StyleBoxFlat_wosyn")
 text = "C++"
@@ -1563,6 +1571,8 @@ offset_top = 30.0
 offset_right = 381.5
 offset_bottom = 92.0
 theme_override_colors/font_color = Color(0.145098, 0.823529, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 22
 text = "Do you want to configure array size and its element ?"
@@ -1738,6 +1748,8 @@ offset_right = 220.0
 offset_bottom = 88.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.145098, 0.823529, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 20
 text = "Do you really want to simulate new?"
@@ -1796,6 +1808,8 @@ offset_top = 73.0
 offset_right = 289.5
 offset_bottom = 97.0
 theme_override_colors/font_color = Color(0.145098, 0.823529, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
 text = "Simulate new success !"
@@ -1823,6 +1837,8 @@ offset_top = 41.0
 offset_right = 216.5
 offset_bottom = 64.0
 theme_override_colors/font_color = Color(0.145098, 0.823529, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 30
 text = "Please enter array size"
@@ -1909,6 +1925,7 @@ offset_right = 194.5
 offset_bottom = 28.0
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.145098, 0.823529, 0, 1)
+theme_override_constants/outline_size = 8
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 28
 text = "Please enter array elements"
