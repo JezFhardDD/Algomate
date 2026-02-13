@@ -1,7 +1,7 @@
 extends Control
 
 # =======================================================
-#  SELECTION SORT SIMULATION - FINAL (With Scroll & All Functions)
+#   SELECTION SORT SIMULATION - FINAL COMPLETE VERSION
 # =======================================================
 
 # --- MAIN BUTTONS ---
@@ -17,10 +17,6 @@ extends Control
 @onready var dequeued_container: Control = $DequeuedContainer 
 
 # --- POPUPS ---
-@onready var waiting_popup: Popup = $WaitingPopup
-@onready var waiting_label: Label = $WaitingPopup/VBoxContainer/Label
-
-# --- TIMELINE POPUP ---
 @onready var timeline_popup: Popup = $TimelinePopup
 @onready var timeline_label: Label = $TimelinePopup/MainVBox/ScrollContainer/VBoxContainer/Label
 @onready var timeline_close_btn: Button = get_node_or_null("TimelinePopup/MainVBox/CloseButton")
@@ -37,7 +33,6 @@ extends Control
 
 # --- C++ POPUP NODES (SCROLLABLE SETUP) ---
 @onready var cpp_popup: PopupPanel = get_node_or_null("CppPopup") as PopupPanel
-# References for ScrollContainer + RichTextLabel
 @onready var cpp_scroll: ScrollContainer = get_node_or_null("CppPopup/VBoxContainer/CodeScroll")
 @onready var cpp_label: RichTextLabel = get_node_or_null("CppPopup/VBoxContainer/CodeScroll/CodeLabel")
 @onready var cpp_close_btn: Button = get_node_or_null("CppPopup/VBoxContainer/HBoxContainer2/close") as Button
@@ -51,7 +46,7 @@ extends Control
 @onready var cpp_code_button: Button = get_node_or_null("CppCodeButton")
 @onready var code_anim: AnimatedSprite2D = get_node_or_null("CppCodeButton/code_anim")
 
-# --- SCENE RESOURCES (Using SelectionBlock.tscn as per your tree) ---
+# --- SCENE RESOURCES ---
 const BLOCK_SCENE := preload("res://SelectionBlock.tscn")
 const POINTER_TEX := preload("res://assets/point_left.png")
 
@@ -64,7 +59,6 @@ const POINTER_TEX := preload("res://assets/point_left.png")
 
 # --- TUTORIAL OVERLAY ---
 @onready var tutorial_overlay: CanvasLayer = $TutorialOverlay
-@onready var dim_bg: ColorRect = $TutorialOverlay/DimBackground
 @onready var tutorial_box: Panel = $TutorialOverlay/TutorialBox
 @onready var tutorial_text: Label = $TutorialOverlay/TutorialBox/VBoxContainer/TutorialText
 @onready var tutorial_next: Button = $TutorialOverlay/TutorialBox/VBoxContainer/NextButton
@@ -132,31 +126,69 @@ var tutorial_sequence = []
 var tutorial_sequence_index = 0
 var tutorial_in_progress = false
 
-# Intro Text (UPDATED FOR SELECTION SORT)
+# Intro Text (CORRECTED FOR SELECTION SORT)
 var intro_step: int = 0
 var intro_texts = [
 	"Welcome to Selection Sort Simulation!\nSelection Sort works by repeatedly finding the minimum element from the unsorted part and putting it at the beginning.",
 	"The Algorithm:\n\n1. Find the smallest number in the list.\n2. Swap it with the first unsorted element.\n3. Move the boundary of the sorted subarray one step to the right.\n4. Repeat until sorted.",
-	"Visual Elements:\n\n• The 'FRONT' pointer tracks the current minimum found so far.\n• The 'REAR' pointer scans through the rest of the list.",
-	"How to Use:\n\n1. Click 'NEXT STEP' to scan and swap.\n2. Click 'AUTO SORT' to watch the process."
+	"Complexity Analysis:\n\nTime: O(n²) - It is slow because it always scans the entire remaining list, even if sorted.\nSpace: O(1) - In-place.",
+	"Visual Elements:\n\n• The 'FRONT' pointer tracks the current minimum found so far.\n• The 'REAR' pointer scans through the rest of the list."
 ]
 
-# Code Tutorial Data (UPDATED FOR SELECTION SORT)
+# --- CODE TUTORIAL DATA (FIXED FOR SELECTION SORT) ---
 var current_code_language: String = "cpp"
 var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
+var current_tutorial_data: Array = [] # Stores the active language data
+
+# 1. C++ DATA
 var cpp_tutorial_data = [
-	{ "lines": [0, 1, 2, 3], "text": "1. Imports & Setup:\nStandard Input/Output libraries." },
-	{ "lines": [5, 6, 7], "text": "2. Outer Loop:\nIterates through the array. The part to the left of 'i' is already sorted." },
-	{ "lines": [8, 9, 10], "text": "3. Inner Loop:\nScans from 'i+1' to the end to find the smallest element (min_idx)." },
-	{ "lines": [11, 12, 13], "text": "4. Comparison:\nIf we find a smaller element than current min, we update min_idx." },
-	{ "lines": [15, 16, 17], "text": "5. Swap:\nAfter scanning, we swap the found minimum element with the element at index 'i'." }
+	{ "lines": [0, 1], "text": "1. Imports & Setup:\nIncludes standard libraries and uses the standard namespace." },
+	{ "lines": [3, 4, 5, 6, 7], "text": "2. Complexity Analysis:\nSelection Sort has [color=red]O(n^2)[/color] Time Complexity (Best/Avg/Worst) and [color=green]O(1)[/color] Space Complexity." },
+	{ "lines": [8], "text": "3. Function Definition:\nTakes the array and its size 'n'." },
+	{ "lines": [9], "text": "4. Outer Loop:\nIterates from 0 to n-1. Index 'i' tracks the boundary of the sorted portion." },
+	{ "lines": [10], "text": "5. Init Min:\nAssume the current element (arr[i]) is the minimum." },
+	{ "lines": [11, 12, 13, 14], "text": "6. Inner Loop:\nScans the remaining unsorted array (i+1 to n). If a smaller element is found, update min_idx." },
+	{ "lines": [15, 16, 17], "text": "7. The Swap:\nSwap the found minimum element with the element at index 'i'." },
+	{ "lines": [21, 22, 23, 24, 25], "text": "8. Main:\nInitialize array and call selectionSort." }
+]
+
+# 2. PYTHON DATA
+var python_tutorial_data = [
+	{ "lines": [0], "text": "1. Complexity:\nTime is O(n^2). Space is O(1)." },
+	{ "lines": [1, 2], "text": "2. Function Definition:\nDefines the function and gets array length." },
+	{ "lines": [3], "text": "3. Outer Loop:\nIterates through the list." },
+	{ "lines": [4], "text": "4. Init Min:\nAssume current index 'i' is minimum." },
+	{ "lines": [5, 6, 7], "text": "5. Inner Loop:\nScans from i+1. Updates min_idx if a smaller value is found." },
+	{ "lines": [8], "text": "6. Swap:\nSwaps the found minimum with the current element." },
+	{ "lines": [10, 11], "text": "7. Execution:\nDefine list and call sort." }
+]
+
+# 3. JAVA DATA
+var java_tutorial_data = [
+	{ "lines": [0], "text": "1. Complexity Comment." },
+	{ "lines": [1, 2], "text": "2. Class & Method:\nStandard Java structure." },
+	{ "lines": [4], "text": "3. Outer Loop:\nControl passes (0 to n-1)." },
+	{ "lines": [5, 6, 7, 8], "text": "4. Inner Loop:\nFinds index of minimum element in unsorted part." },
+	{ "lines": [9, 10, 11], "text": "5. Swap:\nSwaps arr[min_idx] with arr[i]." },
+	{ "lines": [14, 15, 16, 17], "text": "6. Main:\nCreates object and calls sort." }
+]
+
+# 4. C DATA
+var c_tutorial_data = [
+	{ "lines": [0, 1], "text": "1. Setup:\nStandard I/O include." },
+	{ "lines": [2], "text": "2. Complexity Comment." },
+	{ "lines": [3, 4], "text": "3. Function & Vars:\nDeclare variables at start." },
+	{ "lines": [5], "text": "4. Outer Loop:\nControls the sorted boundary." },
+	{ "lines": [6, 7, 8, 9], "text": "5. Inner Loop:\nFinds the minimum element index." },
+	{ "lines": [10, 11, 12], "text": "6. Swap:\nStandard swap using temp variable." },
+	{ "lines": [14, 15, 16], "text": "7. Main:\nPasses array size explicitly." }
 ]
 
 func _ready() -> void:
 	print(" Program started — initializing Selection Sort visualizer...")
 	randomize()
-	
+	get_node("HelpButton").hide()
 	config_modal.hide()
 	config_size_modal.hide()
 	config_elements_modal.hide()
@@ -473,36 +505,48 @@ func _on_show_cpp_pressed() -> void:
 func _show_cpp_popup() -> void:
 	var code = ""
 	var arr_str = ", ".join(main_array.map(func(x): return str(x)))
-	match current_code_language:
-		"cpp": code = get_cpp_selection_code(arr_str)
-		"python": code = get_python_selection_code(arr_str)
-		"java": code = get_java_selection_code(arr_str)
-		"c": code = get_c_selection_code(arr_str)
 	
-	# UPDATED: Use RichTextLabel
+	# Select Code and Tutorial Data based on Language
+	match current_code_language:
+		"cpp":
+			code = get_cpp_selection_code(arr_str)
+			current_tutorial_data = cpp_tutorial_data
+		"python":
+			code = get_python_selection_code(arr_str)
+			current_tutorial_data = python_tutorial_data
+		"java":
+			code = get_java_selection_code(arr_str)
+			current_tutorial_data = java_tutorial_data
+		"c":
+			code = get_c_selection_code(arr_str)
+			current_tutorial_data = c_tutorial_data
+	
+	# Use RichTextLabel
 	if cpp_label:
 		cpp_label.text = code
 	
 	cpp_popup.popup_centered()
 	
-	if current_code_language == "cpp":
-		cpp_tutorial_step = 0
-		if cpp_next_btn:
-			if not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
-				cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
-		_update_cpp_tutorial()
+	# Reset step for new language
+	cpp_tutorial_step = 0
+	if cpp_next_btn and not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
+		cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
+	_update_cpp_tutorial()
 
 func _on_cpp_next_pressed() -> void:
 	btn_sound.play()
 	cpp_tutorial_step += 1
-	if cpp_tutorial_step >= cpp_tutorial_data.size():
+	if cpp_tutorial_step >= current_tutorial_data.size():
 		cpp_tutorial_step = 0
 	_update_cpp_tutorial()
 
 func _update_cpp_tutorial() -> void:
-	if cpp_tutorial_data.is_empty(): return
-	var data = cpp_tutorial_data[cpp_tutorial_step]
+	if current_tutorial_data.is_empty(): return
+	var data = current_tutorial_data[cpp_tutorial_step]
+	
+	# ENABLE BBCODE FOR EXPLANATION
 	if cpp_explanation_lbl:
+		cpp_explanation_lbl.bbcode_enabled = true
 		cpp_explanation_lbl.text = data["text"]
 	
 	if cpp_label:
@@ -519,14 +563,17 @@ func _update_cpp_tutorial() -> void:
 		var indices = data["lines"]
 		for i in range(lines.size()):
 			if i in indices:
+				# HIGHLIGHT LOGIC
 				highlighted_code += "[color=yellow]" + lines[i] + "[/color]\n"
 			else:
 				highlighted_code += lines[i] + "\n"
 		
+		# ENABLE BBCODE FOR CODE LABEL
+		cpp_label.bbcode_enabled = true
 		cpp_label.text = highlighted_code
 		
 		if cpp_scroll and indices.size() > 0:
-			cpp_scroll.scroll_vertical = indices[0] * 25
+			cpp_scroll.scroll_vertical = indices[0] * 20
 
 # --- SELECTION SORT CODE STRINGS ---
 
@@ -534,6 +581,11 @@ func get_cpp_selection_code(arr: String) -> String:
 	return """#include <iostream>
 using namespace std;
 
+/*
+ * COMPLEXITY:
+ * Time: O(n^2) (Always - Best/Avg/Worst)
+ * Space: O(1)
+ */
 void selectionSort(int arr[], int n) {
 	for (int i = 0; i < n - 1; i++) {
 		int min_idx = i;
@@ -555,7 +607,8 @@ int main() {
 }""" % arr
 
 func get_python_selection_code(arr: String) -> String:
-	return """def selection_sort(arr):
+	return """# Time: O(n^2) | Space: O(1)
+def selection_sort(arr):
 	n = len(arr)
 	for i in range(n):
 		min_idx = i
@@ -565,11 +618,11 @@ func get_python_selection_code(arr: String) -> String:
 		arr[i], arr[min_idx] = arr[min_idx], arr[i]
 
 arr = [%s]
-selection_sort(arr)
-print("Sorted:", arr)""" % arr
+selection_sort(arr)""" % arr
 
 func get_java_selection_code(arr: String) -> String:
-	return """class SelectionSort {
+	return """// Time: O(n^2) | Space: O(1)
+class SelectionSort {
 	void sort(int arr[]) {
 		int n = arr.length;
 		for (int i = 0; i < n-1; i++) {
@@ -584,13 +637,13 @@ func get_java_selection_code(arr: String) -> String:
 	}
 	public static void main(String args[]) {
 		int arr[] = {%s};
-		SelectionSort ob = new SelectionSort();
-		ob.sort(arr);
+		new SelectionSort().sort(arr);
 	}
 }""" % arr
 
 func get_c_selection_code(arr: String) -> String:
 	return """#include <stdio.h>
+// Time: O(n^2) | Space: O(1)
 void selectionSort(int arr[], int n) {
 	int i, j, min_idx, temp;
 	for (i = 0; i < n - 1; i++) {
@@ -647,18 +700,48 @@ func _on_size_next_pressed() -> void:
 	_show_config_elements_modal()
 
 func _show_config_elements_modal() -> void:
+	var array_size = int(size_input.value)
+	
 	element_inputs.clear()
-	for child in elements_container.get_children(): child.queue_free()
+	for child in elements_container.get_children():
+		child.queue_free()
+
 	var grid = GridContainer.new()
-	grid.columns = 5
+	grid.columns = min(5, array_size)
+	grid.add_theme_constant_override("h_separation", 10)
+	grid.add_theme_constant_override("v_separation", 10)
 	elements_container.add_child(grid)
-	var count = int(size_input.value)
-	for i in range(count):
-		var le = LineEdit.new()
-		le.placeholder_text = str(randi_range(1, 99))
-		element_inputs.append(le)
-		grid.add_child(le)
+	
+	for i in range(array_size):
+		var element_box = VBoxContainer.new()
+		
+		# Create label
+		var label = Label.new()
+		label.text = "Value %d" % (i + 1)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+
+		# Create input
+		var line_edit = LineEdit.new()
+		line_edit.placeholder_text = "0-999"
+		line_edit.text = str(randi_range(1, 99))
+		line_edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		line_edit.max_length = 3
+		line_edit.custom_minimum_size = Vector2(80, 80)
+
+		line_edit.text_changed.connect(_on_input_text_changed.bind(line_edit))
+		
+		element_box.add_child(label)
+		element_box.add_child(line_edit)
+		grid.add_child(element_box)
+		
+		element_inputs.append(line_edit)
+	
 	config_elements_modal.show()
+
+func _on_input_text_changed(new_text: String, line_edit: LineEdit) -> void:
+	if not new_text.is_valid_int() and new_text != "":
+		line_edit.text = new_text.trim_suffix(new_text[-1])
+		line_edit.set_caret_column(line_edit.text.length())
 
 func _on_elements_done_pressed() -> void:
 	btn_sound.play()
@@ -669,6 +752,7 @@ func _on_elements_done_pressed() -> void:
 	config_elements_modal.hide()
 	_set_main_ui_enabled(true)
 	_initialize_with_elements(arr)
+	get_node("HelpButton").show()
 
 func _on_config_no_pressed() -> void:
 	btn_sound.play()
@@ -678,6 +762,7 @@ func _on_config_no_pressed() -> void:
 	for i in count: arr.append(randi_range(1, 99))
 	_set_main_ui_enabled(true)
 	_initialize_with_elements(arr)
+	get_node("HelpButton").show()
 
 func _on_size_back_pressed(): config_size_modal.hide(); config_modal.show()
 func _on_elements_back_pressed(): config_elements_modal.hide(); config_size_modal.show()
@@ -838,6 +923,7 @@ func _on_yes_pressed():
 	await get_tree().create_timer(1.0).timeout
 	sim_success.hide()
 	_show_config_modal()
+	
 
 func _on_no_pressed():
 	sim_confirmation.hide()
