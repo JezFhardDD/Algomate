@@ -1,0 +1,91 @@
+[gd_scene load_steps=12 format=3 uid="uid://4r8qcy6os4i7"]
+
+[ext_resource type="Shader" uid="uid://djtrt387a1e54" path="res://scripts/bg.gdshader" id="1_kp6es"]
+[ext_resource type="Shader" uid="uid://cm2hk0yvdl6c8" path="res://scripts/logoshader.gdshader" id="2_xa3k8"]
+[ext_resource type="Texture2D" uid="uid://dh4yfhfe0xnpv" path="res://assets/MAIN_MENU/ALGOMATE_LOGO.png" id="3_ahe6p"]
+[ext_resource type="Texture2D" uid="uid://dtehmphbsj3qk" path="res://assets/MAIN_MENU/Lectures_button.png" id="4_yl83p"]
+[ext_resource type="Texture2D" uid="uid://4563ktoso53q" path="res://assets/MAIN_MENU/Lectures_button_pressed.png" id="5_nqr0u"]
+[ext_resource type="Texture2D" uid="uid://k5a6ikvsy6ei" path="res://assets/MAIN_MENU/Assessment_button.png" id="6_yukwn"]
+[ext_resource type="Texture2D" uid="uid://b3uejus8pk7ys" path="res://assets/MAIN_MENU/Assessment_button_pressed.png" id="7_sen54"]
+[ext_resource type="Texture2D" uid="uid://ceyolldgyrgd4" path="res://assets/MAIN_MENU/Back_button.png" id="8_thv47"]
+[ext_resource type="Texture2D" uid="uid://dgufech2qdi4y" path="res://assets/MAIN_MENU/Back_button_pressed.png" id="9_r204f"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4vfjc"]
+shader = ExtResource("1_kp6es")
+shader_parameter/base_color = Vector3(0.478, 0.663, 0.224)
+shader_parameter/speed = 0.2
+shader_parameter/wave_strength = 0.9
+shader_parameter/noise_strength = 0.8
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sjef4"]
+shader = ExtResource("2_xa3k8")
+shader_parameter/speed = 2.0
+shader_parameter/strength = 0.01
+shader_parameter/tilt_strength = 0.03
+
+[node name="Selection" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FadeRect" type="ColorRect" parent="."]
+z_index = 100
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="BG" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_4vfjc")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.47843137, 0.6627451, 0.22352941, 1)
+
+[node name="Logo" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_sjef4")
+position = Vector2(316, 369)
+scale = Vector2(1.0236912, 1.0236913)
+texture = ExtResource("3_ahe6p")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -165.0
+offset_top = -21.0
+offset_right = 165.0
+offset_bottom = 353.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Lectures_button" type="TextureButton" parent="VBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("4_yl83p")
+texture_pressed = ExtResource("5_nqr0u")
+
+[node name="Assessment_button" type="TextureButton" parent="VBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("6_yukwn")
+texture_pressed = ExtResource("7_sen54")
+
+[node name="Back_button" type="TextureButton" parent="VBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("8_thv47")
+texture_pressed = ExtResource("9_r204f")
+
+[connection signal="pressed" from="VBoxContainer/Lectures_button" to="." method="_on_lectures_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Assessment_button" to="." method="_on_assessment_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Back_button" to="." method="_on_back_button_pressed"]
