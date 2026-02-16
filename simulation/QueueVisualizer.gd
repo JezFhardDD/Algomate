@@ -30,7 +30,7 @@ extends Control
 # C++ Popup
 @onready var cpp_popup: PopupPanel = get_node_or_null("CppPopup") as PopupPanel
 @onready var cpp_label: Label = get_node_or_null("CppPopup/VBoxContainer/Label") as Label
-@onready var cpp_text: TextEdit = get_node_or_null("CppPopup/VBoxContainer/ScrollContainer/TextEdit") as TextEdit
+@onready var cpp_text: RichTextLabel = get_node_or_null("CppPopup/VBoxContainer/ScrollContainer/RichTextLabel") as RichTextLabel
 @onready var cpp_close_btn: Button = get_node_or_null("CppPopup/VBoxContainer/Button") as Button
 
 # Top-right shortcut button (NEW)
@@ -122,31 +122,43 @@ var cpp_tutorial_texts := [
 ]
 
 var cpp_tutorialcode_index := 0
+var current_tutorial_data: Array = [] 
+
+# --- CODE TUTORIAL STEPS ---
 var cpp_tutorial_steps := [
-	{
-		"lines": Vector2i(0, 2),
-		"text": " These are the library imports. <iostream> is for input/output, and <queue> is for the queue container."
-	},
-	{
-		"lines": Vector2i(3, 6),
-		"text": " Here, the `main()` function starts. The array is filled with your simulation's data."
-	},
-	{
-		"lines": Vector2i(7, 11),
-		"text": " This section enqueues the elements into the queue using a for loop."
-	},
-	{
-		"lines": Vector2i(12, 16),
-		"text": " This part prints the current queue contents to visualize the initial state."
-	},
-	{
-		"lines": Vector2i(17, 23),
-		"text": " This loop dequeues and displays each element — matching your simulation sequence!"
-	},
-	{
-		"lines": Vector2i(24, 28),
-		"text": " The program ends after showing that the queue is empty — simulation complete!"
-	}
+	{"lines": Vector2i(0, 2), "text": "1. Imports: <iostream> for I/O and <queue> for the standard container."},
+	{"lines": Vector2i(3, 6), "text": "2. Main Setup: We define the array and initialize a standard `queue<int>`."},
+	{"lines": Vector2i(7, 11), "text": "3. Enqueue Loop: We iterate through the array and `push()` elements into the queue."},
+	{"lines": Vector2i(12, 16), "text": "4. Print Initial: We display the queue state (using a copy to avoid modifying the real one)."},
+	{"lines": Vector2i(17, 23), "text": "5. Dequeue Loop: We `pop()` elements from the front one by one until empty."},
+	{"lines": Vector2i(24, 28), "text": "6. End: The simulation finishes when the queue is empty."}
+]
+
+var python_tutorial_steps := [
+	{"lines": Vector2i(0, 1), "text": "1. Imports: We import `deque` from collections for an efficient queue."},
+	{"lines": Vector2i(3, 5), "text": "2. Main Setup: Define the list and create an empty deque."},
+	{"lines": Vector2i(8, 9), "text": "3. Enqueue: Use `append()` to add elements to the right side."},
+	{"lines": Vector2i(11, 14), "text": "4. Print: Display the queue contents without removing them."},
+	{"lines": Vector2i(16, 19), "text": "5. Dequeue: Use `popleft()` to remove elements from the front."},
+	{"lines": Vector2i(21, 24), "text": "6. Execution: Run the main function."}
+]
+
+var java_tutorial_steps := [
+	{"lines": Vector2i(0, 4), "text": "1. Imports & Class: Java uses `LinkedList` as a Queue implementation."},
+	{"lines": Vector2i(5, 7), "text": "2. Setup: Initialize the array and the Queue object."},
+	{"lines": Vector2i(10, 12), "text": "3. Enqueue: Use `q.add(value)` to insert elements at the rear."},
+	{"lines": Vector2i(14, 19), "text": "4. Print: Create a copy to traverse and print the queue."},
+	{"lines": Vector2i(22, 25), "text": "5. Dequeue: Use `q.poll()` to remove and return the front element."},
+	{"lines": Vector2i(27, 28), "text": "6. End: Simulation complete."}
+]
+
+var c_tutorial_steps := [
+	{"lines": Vector2i(0, 9), "text": "1. Struct Definition: In C, we manually define a Queue struct with an array and pointers."},
+	{"lines": Vector2i(11, 45), "text": "2. Helper Functions: Logic for `enqueue`, `dequeue`, `isEmpty`, and `isFull`."},
+	{"lines": Vector2i(47, 52), "text": "3. Main: Initialize the queue struct and array."},
+	{"lines": Vector2i(55, 57), "text": "4. Enqueue Loop: Add items using our helper function."},
+	{"lines": Vector2i(60, 63), "text": "5. Print: Iterate from `front` to `rear` index."},
+	{"lines": Vector2i(66, 69), "text": "6. Dequeue Loop: Remove items until `isEmpty` returns true."}
 ]
 
 # 🧮 Complexity display
@@ -1108,7 +1120,7 @@ func _show_cpp_popup() -> void:
 			source_arr = [10, 20, 30]
 			
 		var code = generate_code_in_language(current_code_language, source_arr)
-		cpp_text.editable = false
+		
 		cpp_text.text = code
 		cpp_text.custom_minimum_size = Vector2(700, 420)
 		
@@ -1407,22 +1419,34 @@ func refresh_code_display() -> void:
 		var code = generate_code_in_language(current_code_language, source_arr)
 		cpp_text.text = code
 		update_language_button_states()
+		
+		# Reset tutorial and highlighting
+		cpp_tutorialcode_index = 0
+		clear_cpp_highlight()
+		if cpp_explanation_text:
+			cpp_explanation_text.text = "💡 Click 'Next' to walk through this code explanation!"
 
 func get_time_complexity() -> String:
 	var ops = []
+	# Basic Queue operations are always O(1)
 	if enqueue_counter > 0:
 		ops.append("• Enqueue (push): O(1)")
 	if dequeue_counter > 0:
 		ops.append("• Dequeue (pop): O(1)")
 	if not queue.is_empty():
 		ops.append("• Front/Rear access: O(1)")
+	# Printing the whole queue takes O(n)
 	if timeline_log.size() > 0:
 		ops.append("• Traversal (printing): O(n)")
+	
+	if ops.is_empty():
+		return "• Enqueue/Dequeue: O(1)"
+		
 	return "\n".join(ops)
 
 func get_space_complexity() -> String:
 	var total_elements = queue.size() + waiting_elements.size() + dequeued_elements.size()
-	return "O(n) — where n = %d (total elements handled in this simulation)" % total_elements
+	return "O(n) — where n = %d (total elements handled)" % total_elements
 
 func _on_cpp_close_pressed() -> void:
 	btn_sound.play()
@@ -1809,32 +1833,81 @@ func highlight_cpp_code() -> void:
 	cpp_text.deselect()
 
 func clear_cpp_highlight() -> void:
-	cpp_text.remove_theme_stylebox_override("normal")
+	if not cpp_text:
+		return
+	
+	# Regenerate the original code
+	var source_arr: Array = []
+	if dequeued_elements.size() > 0:
+		source_arr = dequeued_elements.duplicate()
+	elif queue.size() > 0:
+		source_arr = queue.duplicate()
+	elif waiting_elements.size() > 0:
+		source_arr = waiting_elements.duplicate()
+	else:
+		source_arr = [10, 20, 30]
+	
+	var code = generate_code_in_language(current_code_language, source_arr)
+	cpp_text.text = code
 
 func show_cpp_explanation() -> void:
 	if not cpp_explanation_text:
 		return
 	
-	if cpp_tutorialcode_index >= cpp_tutorial_steps.size():
-		cpp_tutorialcode_index = cpp_tutorial_steps.size() - 1
+	# Get the appropriate tutorial steps for current language
+	var tutorial_steps = _get_tutorial_steps_for_language()
 	
-	var step = cpp_tutorial_steps[cpp_tutorialcode_index]
-	var lines = step["lines"]
-	cpp_explanation_text.text = step["text"]
-	highlight_cpp_lines(lines.x, lines.y)
+	if tutorial_steps.is_empty():
+		return
+	
+	if cpp_tutorialcode_index >= tutorial_steps.size():
+		cpp_tutorialcode_index = tutorial_steps.size() - 1
+	
+	var step = tutorial_steps[cpp_tutorialcode_index]
+	
+	# Handle both Vector2i and dictionary with "lines" field
+	if step is Dictionary and step.has("lines"):
+		var lines = step["lines"]
+		if lines is Vector2i:
+			highlight_cpp_lines(lines.x, lines.y)
+		elif lines is Array:
+			# If it's an array of line numbers, highlight the range from first to last
+			if lines.size() > 0:
+				var start_line = lines[0] if lines[0] is int else 0
+				var end_line = lines[lines.size() - 1] if lines[lines.size() - 1] is int else 0
+				highlight_cpp_lines(start_line, end_line)
+		
+		# Update explanation text
+		if step.has("text"):
+			cpp_explanation_text.text = step["text"]
 	
 	# Update button text based on position
 	if cpp_next_button:
-		if cpp_tutorialcode_index >= cpp_tutorial_steps.size() - 1:
+		if cpp_tutorialcode_index >= tutorial_steps.size() - 1:
 			cpp_next_button.text = "Next (Loop)"
 		else:
 			cpp_next_button.text = "Next"
 
+func _get_tutorial_steps_for_language() -> Array:
+	match current_code_language:
+		"cpp":
+			return cpp_tutorial_steps
+		"python":
+			return python_tutorial_steps
+		"java":
+			return java_tutorial_steps
+		"c":
+			return c_tutorial_steps
+		_:
+			return cpp_tutorial_steps
+
 func _on_cpp_next_button_pressed() -> void:
 	btn_sound.play()
 	
+	var tutorial_steps = _get_tutorial_steps_for_language()
+	
 	# Calculate next index with loop (using modulo operator)
-	cpp_tutorialcode_index = (cpp_tutorialcode_index + 1) % cpp_tutorial_steps.size()
+	cpp_tutorialcode_index = (cpp_tutorialcode_index + 1) % tutorial_steps.size()
 	
 	# Show the explanation for the new step
 	show_cpp_explanation()
@@ -1872,18 +1945,31 @@ func highlight_cpp_lines(start_line: int, end_line: int) -> void:
 	
 	clear_cpp_highlight()
 	
-	# Create new highlighting style
-	var sb = StyleBoxFlat.new()
-	sb.bg_color = Color(1, 1, 0.8, 0.2)
-	sb.border_color = Color(1, 1, 0.2, 1)
-	sb.set_border_width_all(2)
-	cpp_text.add_theme_stylebox_override("normal", sb)
+	cpp_text.bbcode_enabled = true
 	
-	# Select the lines to highlight
-	if cpp_text.get_line_count() > end_line:
-		cpp_text.select(start_line, 0, end_line, 0)
-	else:
-		print("Warning: Cannot highlight lines %d-%d, text only has %d lines" % [start_line, end_line, cpp_text.get_line_count()])
+	var full_text = cpp_text.text
+	
+	var lines = full_text.split("\n")
+	
+
+	if start_line < 0 or end_line >= lines.size():
+		print("Warning: Cannot highlight lines %d-%d, text only has %d lines" % [start_line, end_line, lines.size()])
+		return
+	
+
+	var new_text = ""
+	for i in range(lines.size()):
+		var line = lines[i]
+		if i >= start_line and i <= end_line:
+			new_text += "[bgcolor=#25d200]" + line + "[/bgcolor]"
+		else:
+			new_text += line
+		
+		if i < lines.size() - 1:
+			new_text += "\n"
+	
+	cpp_text.text = new_text
+
 
 func _clear_simulation_data() -> void:
 	"""Clear all simulation data before starting tutorial"""
