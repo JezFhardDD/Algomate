@@ -12,5 +12,5 @@ config_version=5
 
 config/name="bfs"
 run/main_scene="uid://cnlp6jn1v8wse"
-config/features=PackedStringArray("4.5", "Forward Plus")
+config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
