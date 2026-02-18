@@ -1,7 +1,7 @@
 extends Control
 
 # =======================================================
-#  MERGE SORT SIMULATION - FINAL (With Scroll & All Functions)
+#   MERGE SORT SIMULATION - FINAL COMPLETE CODE
 # =======================================================
 
 # --- MAIN BUTTONS ---
@@ -17,10 +17,6 @@ extends Control
 @onready var dequeued_container: Control = $DequeuedContainer 
 
 # --- POPUPS ---
-@onready var waiting_popup: Popup = $WaitingPopup
-@onready var waiting_label: Label = $WaitingPopup/VBoxContainer/Label
-
-# --- TIMELINE POPUP ---
 @onready var timeline_popup: Popup = $TimelinePopup
 @onready var timeline_label: Label = $TimelinePopup/MainVBox/ScrollContainer/VBoxContainer/Label
 @onready var timeline_close_btn: Button = get_node_or_null("TimelinePopup/MainVBox/CloseButton")
@@ -137,25 +133,55 @@ var tutorial_sequence = []
 var tutorial_sequence_index = 0
 var tutorial_in_progress = false
 
-# Intro Text
+# Intro Text (CORRECTED FOR MERGE SORT)
 var intro_step: int = 0
 var intro_texts = [
 	"Welcome to Merge Sort Simulation!\nMerge Sort is a 'Divide and Conquer' algorithm. It divides the list into smaller sub-lists, sorts them, and then merges them back together.",
 	"The Algorithm (Iterative):\n\n1. Start with sub-arrays of size 1.\n2. Merge adjacent sub-arrays to form sorted lists of size 2.\n3. Repeat for size 4, 8, etc., until the whole list is merged.",
-	"Visual Elements:\n\n• Active groups will FLOAT UP while being merged.\n• 'FRONT' pointer: Left sub-array item.\n• 'REAR' pointer: Right sub-array item.",
-	"How to Use:\n\n1. Click 'NEXT STEP' to compare and merge.\n2. Click 'AUTO SORT' to watch the process."
+	"Complexity Analysis:\n\nTime: O(n log n) - Very efficient, even for large datasets.\nSpace: O(n) - Requires extra memory for the temporary merge array.",
+	"Visual Elements:\n\n• Active groups will FLOAT UP while being merged.\n• 'FRONT' pointer: Left sub-array item.\n• 'REAR' pointer: Right sub-array item."
 ]
 
-# Code Tutorial Data
+# --- CODE TUTORIAL DATA (FIXED FOR MERGE SORT) ---
 var current_code_language: String = "cpp"
 var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
+var current_tutorial_data: Array = [] # Stores the active language data
+
+# 1. C++ DATA
 var cpp_tutorial_data = [
-	{ "lines": [0, 1, 2, 3], "text": "1. Imports & Setup:\nStandard Input/Output libraries." },
-	{ "lines": [5, 6, 7], "text": "2. The Merge Function:\nThis function takes two sorted sub-arrays and combines them into a single sorted array." },
-	{ "lines": [10, 11, 12, 13], "text": "3. Comparison Loop:\nWe iterate through both sub-arrays. We compare elements pointed to by 'i' (left) and 'j' (right)." },
-	{ "lines": [14, 15, 16], "text": "4. Picking Smaller:\nIf the left element is smaller, it stays. If the right element is smaller, we move it in front of the left element." },
-	{ "lines": [25, 26, 27], "text": "5. Iterative Sort:\nInstead of recursion, we use loops to merge sub-arrays of width 1, then 2, then 4, etc." }
+	{ "lines": [0, 1], "text": "1. Imports & Setup:\nStandard Input/Output libraries." },
+	{ "lines": [3, 4, 5, 6, 7], "text": "2. Complexity Analysis:\nTime is [color=green]O(n log n)[/color] (Excellent) but Space is [color=orange]O(n)[/color] (needs extra memory)." },
+	{ "lines": [8], "text": "3. Merge Function:\nTakes two sorted sub-arrays and merges them into one." },
+	{ "lines": [11, 12, 13, 14], "text": "4. Comparison Loop:\nCompare elements from Left and Right sub-arrays. Pick the smaller one." },
+	{ "lines": [18, 19, 20, 21, 22], "text": "5. Shifting:\nIf element from right is smaller, we shift elements to make space." },
+	{ "lines": [28, 29, 30], "text": "6. MergeSort (Iterative):\nOuter loops control the width (1, 2, 4...) and the starting positions." }
+]
+
+# 2. PYTHON DATA
+var python_tutorial_data = [
+	{ "lines": [0], "text": "1. Complexity:\nTime: O(n log n). Space: O(n)." },
+	{ "lines": [1, 2, 3], "text": "2. Merge Function:\nCreate temporary copies of Left (L) and Right (R) sub-arrays." },
+	{ "lines": [6, 7, 8, 9, 10], "text": "3. Comparison Loop:\nPick smaller element from L or R and put into main array." },
+	{ "lines": [12, 13], "text": "4. Cleanup:\nCopy any remaining elements from L or R into the array." },
+	{ "lines": [15, 16], "text": "5. Merge Sort Driver:\nIteratively increase width (1, 2, 4...) and call merge on segments." }
+]
+
+# 3. JAVA DATA
+var java_tutorial_data = [
+	{ "lines": [0, 1], "text": "1. Class Structure:\nStandard Java class setup." },
+	{ "lines": [2, 3], "text": "2. Merge Function:\nCreates temp arrays L[] and R[] to hold data." },
+	{ "lines": [7, 8, 9, 10], "text": "3. Comparison Logic:\nWhile both temp arrays have data, pick smaller and increment index." },
+	{ "lines": [16, 17, 18], "text": "4. Sort Function:\nIterative approach using loops for width and start index." },
+	{ "lines": [24, 25, 26], "text": "5. Main:\nInitializes array and calls sort." }
+]
+
+# 4. C DATA
+var c_tutorial_data = [
+	{ "lines": [0, 1], "text": "1. Setup:\nIncludes stdio and stdlib." },
+	{ "lines": [4, 5, 6, 7], "text": "2. Merge Function:\nCreate temp arrays L and R and copy data." },
+	{ "lines": [9, 10, 11, 12], "text": "3. Comparison Loop:\nStandard merge logic: compare L[i] and R[j], place smaller in arr[k]." },
+	{ "lines": [19, 20], "text": "4. Iterative Structure:\nLoops for `curr_size` and `left_start` replace recursion." }
 ]
 
 func _ready() -> void:
@@ -485,7 +511,7 @@ func _on_timeline_close_pressed() -> void:
 		timeline_popup.hide()
 
 # ==============================================
-#  CODE GENERATION & TUTORIAL (FIXED & SCROLLABLE)
+#  CODE GENERATION & TUTORIAL
 # ==============================================
 
 func _on_show_cpp_pressed() -> void:
@@ -497,19 +523,28 @@ func _on_show_cpp_pressed() -> void:
 func _show_cpp_popup() -> void:
 	var code = ""
 	var arr_str = ", ".join(main_array.map(func(x): return str(x)))
-	match current_code_language:
-		"cpp": code = get_cpp_merge_code(arr_str)
-		"python": code = get_python_merge_code(arr_str)
-		"java": code = get_java_merge_code(arr_str)
-		"c": code = get_c_merge_code(arr_str)
 	
-	# UPDATED: Use RichTextLabel
+	# Select Data based on Language
+	match current_code_language:
+		"cpp":
+			code = get_cpp_merge_code(arr_str)
+			current_tutorial_data = cpp_tutorial_data
+		"python":
+			code = get_python_merge_code(arr_str)
+			current_tutorial_data = python_tutorial_data
+		"java":
+			code = get_java_merge_code(arr_str)
+			current_tutorial_data = java_tutorial_data
+		"c":
+			code = get_c_merge_code(arr_str)
+			current_tutorial_data = c_tutorial_data
+	
 	if cpp_label:
 		cpp_label.text = code
 	
 	cpp_popup.popup_centered()
 	
-	# Reset tutorial step regardless of language
+	# Reset tutorial step
 	cpp_tutorial_step = 0
 	if cpp_next_btn:
 		if not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
@@ -519,17 +554,18 @@ func _show_cpp_popup() -> void:
 func _on_cpp_next_pressed() -> void:
 	btn_sound.play()
 	cpp_tutorial_step += 1
-	if cpp_tutorial_step >= cpp_tutorial_data.size():
+	if cpp_tutorial_step >= current_tutorial_data.size():
 		cpp_tutorial_step = 0
 	_update_cpp_tutorial()
 
 func _update_cpp_tutorial() -> void:
-	if cpp_tutorial_data.is_empty(): return
-	var data = cpp_tutorial_data[cpp_tutorial_step]
+	if current_tutorial_data.is_empty(): return
+	var data = current_tutorial_data[cpp_tutorial_step]
+	
 	if cpp_explanation_lbl:
+		cpp_explanation_lbl.bbcode_enabled = true
 		cpp_explanation_lbl.text = data["text"]
 	
-	# FIX: Added language checks so code appears for all languages
 	if cpp_label:
 		var code = ""
 		var arr_str = ", ".join(main_array.map(func(x): return str(x)))
@@ -544,16 +580,16 @@ func _update_cpp_tutorial() -> void:
 		var highlight_indices = data["lines"]
 		
 		for i in range(lines.size()):
-			var line = lines[i]
 			if i in highlight_indices:
-				highlighted_code += "[color=yellow]" + line + "[/color]\n"
+				highlighted_code += "[color=yellow]" + lines[i] + "[/color]\n"
 			else:
-				highlighted_code += line + "\n"
+				highlighted_code += lines[i] + "\n"
 		
+		cpp_label.bbcode_enabled = true
 		cpp_label.text = highlighted_code
 		
 		if cpp_scroll and highlight_indices.size() > 0:
-			cpp_scroll.scroll_vertical = highlight_indices[0] * 25
+			cpp_scroll.scroll_vertical = highlight_indices[0] * 20
 
 # --- MERGE SORT CODE STRINGS ---
 
@@ -561,6 +597,11 @@ func get_cpp_merge_code(arr: String) -> String:
 	return """#include <iostream>
 using namespace std;
 
+/*
+ * COMPLEXITY:
+ * Time: O(n log n)
+ * Space: O(n)
+ */
 void merge(int arr[], int start, int mid, int end) {
 	int start2 = mid + 1;
 	if (arr[mid] <= arr[start2]) return;
@@ -598,7 +639,8 @@ int main() {
 }""" % arr
 
 func get_python_merge_code(arr: String) -> String:
-	return """def merge(arr, l, m, r):
+	return """# Time: O(n log n) | Space: O(n)
+def merge(arr, l, m, r):
 	n1, n2 = m - l + 1, r - m
 	L = arr[l:m+1]
 	R = arr[m+1:r+1]
@@ -626,11 +668,11 @@ def merge_sort(arr):
 		width *= 2
 
 arr = [%s]
-merge_sort(arr)
-print("Sorted:", arr)""" % arr
+merge_sort(arr)""" % arr
 
 func get_java_merge_code(arr: String) -> String:
-	return """class MergeSort {
+	return """// Time: O(n log n) | Space: O(n)
+class MergeSort {
 	void merge(int arr[], int l, int m, int r) {
 		int n1 = m - l + 1, n2 = r - m;
 		int L[] = new int[n1], R[] = new int[n2];
@@ -663,6 +705,7 @@ func get_java_merge_code(arr: String) -> String:
 func get_c_merge_code(arr: String) -> String:
 	return """#include <stdio.h>
 #include <stdlib.h>
+// Time: O(n log n) | Space: O(n)
 
 void merge(int arr[], int l, int m, int r) {
 	int i, j, k;
@@ -734,18 +777,48 @@ func _on_size_next_pressed() -> void:
 	_show_config_elements_modal()
 
 func _show_config_elements_modal() -> void:
+	var array_size = int(size_input.value)
+	
 	element_inputs.clear()
-	for child in elements_container.get_children(): child.queue_free()
+	for child in elements_container.get_children():
+		child.queue_free()
+
 	var grid = GridContainer.new()
-	grid.columns = 5
+	grid.columns = min(5, array_size)
+	grid.add_theme_constant_override("h_separation", 10)
+	grid.add_theme_constant_override("v_separation", 10)
 	elements_container.add_child(grid)
-	var count = int(size_input.value)
-	for i in range(count):
-		var le = LineEdit.new()
-		le.placeholder_text = str(randi_range(1, 99))
-		element_inputs.append(le)
-		grid.add_child(le)
+	
+	for i in range(array_size):
+		var element_box = VBoxContainer.new()
+		
+		# Create label
+		var label = Label.new()
+		label.text = "Value %d" % (i + 1)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+
+		# Create input
+		var line_edit = LineEdit.new()
+		line_edit.placeholder_text = "0-999"
+		line_edit.text = str(randi_range(1, 99))
+		line_edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		line_edit.max_length = 3
+		line_edit.custom_minimum_size = Vector2(80, 80)
+
+		line_edit.text_changed.connect(_on_input_text_changed.bind(line_edit))
+		
+		element_box.add_child(label)
+		element_box.add_child(line_edit)
+		grid.add_child(element_box)
+		
+		element_inputs.append(line_edit)
+	
 	config_elements_modal.show()
+
+func _on_input_text_changed(new_text: String, line_edit: LineEdit) -> void:
+	if not new_text.is_valid_int() and new_text != "":
+		line_edit.text = new_text.trim_suffix(new_text[-1])
+		line_edit.set_caret_column(line_edit.text.length())
 
 func _on_elements_done_pressed() -> void:
 	btn_sound.play()
@@ -770,7 +843,7 @@ func _on_size_back_pressed(): config_size_modal.hide(); config_modal.show()
 func _on_elements_back_pressed(): config_elements_modal.hide(); config_size_modal.show()
 
 # ==============================================
-#  INTRO LOGIC & TUTORIAL FUNCTIONS (CRITICAL)
+#  INTRO LOGIC & TUTORIAL (CRITICAL)
 # ==============================================
 
 func show_introduction():
