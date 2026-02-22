@@ -1,4 +1,4 @@
-[gd_scene load_steps=154 format=3 uid="uid://cnlp6jn1v8wse"]
+[gd_scene load_steps=157 format=3 uid="uid://cnlp6jn1v8wse"]
 
 [ext_resource type="Script" uid="uid://dx12ivb8i1dwd" path="res://bfsmain.gd" id="1_s5yxy"]
 [ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="2_eik88"]
@@ -267,6 +267,30 @@ texture = ExtResource("6_764rb")
 texture_margin_left = 18.0
 texture_margin_top = 40.0
 texture_margin_right = 15.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gjnlk"]
+bg_color = Color(0, 0.803922, 0.639216, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kxuod"]
+bg_color = Color(6.64204e-06, 0.803183, 0.641091, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1dr5g"]
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gjnlk"]
 texture = ExtResource("6_3sxgj")
@@ -914,7 +938,7 @@ text = "Rear"
 layout_mode = 0
 offset_left = 50.0
 offset_top = 96.0
-offset_right = 201.0
+offset_right = 219.0
 offset_bottom = 558.0
 theme_override_constants/separation = 26
 alignment = 1
@@ -985,7 +1009,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 3
 theme_override_constants/shadow_offset_y = 1
 theme_override_fonts/font = ExtResource("3_08k7p")
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxFlat_cm0pq")
 text = "Current Status:"
 
@@ -1002,7 +1026,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 3
 theme_override_constants/shadow_offset_y = 1
 theme_override_fonts/font = ExtResource("3_08k7p")
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxFlat_fos0i")
 text = "Statistics:"
 
@@ -1046,9 +1070,8 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -175.0
-offset_top = -200.0
-offset_right = 175.0
+offset_right = 350.0
+offset_bottom = 200.0
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -1082,7 +1105,8 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = 4.0
-offset_bottom = -9.0
+offset_right = 850.0
+offset_bottom = 491.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -1127,8 +1151,8 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_hri7i")
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -225.0
-offset_right = 219.0
+offset_left = 25.0
+offset_right = 469.0
 offset_bottom = 300.0
 grow_horizontal = 2
 alignment = 1
@@ -1202,24 +1226,36 @@ layout_mode = 2
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = SubResource("StyleBoxFlat_gjnlk")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_kxuod")
+theme_override_styles/normal = SubResource("StyleBoxFlat_1dr5g")
 text = "C++"
 
 [node name="Py_btn" type="Button" parent="CppPopup/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = SubResource("StyleBoxFlat_gjnlk")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_kxuod")
+theme_override_styles/normal = SubResource("StyleBoxFlat_1dr5g")
 text = "Python"
 
 [node name="Java_btn" type="Button" parent="CppPopup/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = SubResource("StyleBoxFlat_gjnlk")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_kxuod")
+theme_override_styles/normal = SubResource("StyleBoxFlat_1dr5g")
 text = "Java"
 
 [node name="C_btn" type="Button" parent="CppPopup/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = SubResource("StyleBoxFlat_gjnlk")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_kxuod")
+theme_override_styles/normal = SubResource("StyleBoxFlat_1dr5g")
 text = "C Language"
 
 [node name="HSeparator" type="HSeparator" parent="CppPopup/VBoxContainer"]
@@ -1280,6 +1316,9 @@ mouse_filter = 2
 bbcode_enabled = true
 fit_content = true
 
+[node name="HSeparator2" type="HSeparator" parent="CppPopup/VBoxContainer"]
+layout_mode = 2
+
 [node name="TutorialPanel" type="Panel" parent="CppPopup/VBoxContainer"]
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
@@ -1300,6 +1339,7 @@ grow_vertical = 2
 fit_content = true
 horizontal_alignment = 3
 vertical_alignment = 3
+justification_flags = 160
 
 [node name="CppCodeButton" type="Button" parent="."]
 visible = false
@@ -1370,6 +1410,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="ConfigChoiceModal" type="Panel" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1755,13 +1796,14 @@ vertical_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="ConfigElementsModal"]
 layout_mode = 0
-offset_left = 24.0
+offset_left = 70.0
 offset_top = 68.0
-offset_right = 586.5
+offset_right = 560.0
 offset_bottom = 488.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ConfigElementsModal/ScrollContainer"]
 layout_mode = 2
+alignment = 1
 
 [node name="BackButton" type="Button" parent="ConfigElementsModal"]
 layout_mode = 1

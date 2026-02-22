@@ -1,7 +1,7 @@
 extends Control
 
 # =======================================================
-#   BFS SIMULATION - FINAL (Restored Initial Inputs + Click Edit)
+#   BFS SIMULATION - FINAL (Tree Layout Fix)
 # =======================================================
 
 # --- MAIN BUTTONS ---
@@ -142,22 +142,54 @@ var tutorial_in_progress = false
 # --- INTRO TEXT ---
 var intro_step: int = 0
 var intro_texts = [
-	"Welcome to BFS Tree Search!\nBreadth-First Search (BFS) explores a tree layer by layer.",
+	"Welcome to the BFS Simulation!\nBreadth-First Search explores a graph level by level, moving outwards from the starting point.",
 	"INSTRUCTIONS:\n\n1. SETUP: Enter the Tree Size.\n2. INPUT: Type initial numbers or leave blank.\n3. EDIT: Click on any node to change it later.",
-	"The Algorithm:\n\n1. Start at the Root.\n2. Check if it matches the Target.\n3. Add its children to a Queue.\n4. Dequeue and repeat.",
+	"The Algorithm:\n\n1. Start at a source node and add it to a Queue.\n2. Check if it matches target, then mark it 'visited'.\n3. Enqueue all its unvisited neighbors.\n4. Repeat until the Queue is empty.",
+	"Complexity Analysis:\n\nTime: O(V + E) - It explores all Vertices (V) and Edges (E).\nSpace: O(V) - The Queue stores up to V nodes.",
 	"Visual Elements:\n\n• The QUEUE stores nodes waiting to be checked.\n• Orange nodes are being processed.\n• Green node means TARGET FOUND."
 ]
 
-# Code Tutorial Data (BFS)
+# --- CODE TUTORIAL DATA ---
 var current_code_language: String = "cpp"
 var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
+var current_tutorial_data: Array = [] 
+
+# 1. C++ DATA
 var cpp_tutorial_data = [
-	{ "lines": [0, 1, 2, 3], "text": "1. Imports & Setup:\nIncludes standard Queue library." },
-	{ "lines": [5, 6, 7], "text": "2. Initialization:\nCreate a Queue and push the starting node (root)." },
-	{ "lines": [9, 10, 11], "text": "3. The Loop:\nWhile the queue is not empty, get the front element and pop it." },
-	{ "lines": [13, 14, 15], "text": "4. Check Target:\nIf the current node's value matches the target, return TRUE." },
-	{ "lines": [17, 18, 19], "text": "5. Enqueue Children:\nAdd the Left and Right children to the back of the queue for later processing." }
+	{ "lines": [0, 1, 2, 3], "text": "1. Imports & Setup:\nIncludes <vector> for the graph and <queue> for the BFS queue." },
+	{ "lines": [5, 6, 7, 8], "text": "2. Complexity Analysis:\nTime is [color=green]O(V + E)[/color] and Space is [color=orange]O(V)[/color] for the queue and visited array." },
+	{ "lines": [9, 10, 11], "text": "3. Setup Structures:\nInitialize a 'queue' and push the starting node (root)." },
+	{ "lines": [13, 14, 15], "text": "4. The Loop:\nWhile the queue is not empty, get the front element and pop it." },
+	{ "lines": [17, 18, 19], "text": "5. Check Target:\nIf the current node's value matches the target, return TRUE." },
+	{ "lines": [21, 22, 23], "text": "6. Enqueue Children:\nAdd the Left (2*i+1) and Right (2*i+2) children to the back of the queue." }
+]
+
+# 2. PYTHON DATA
+var python_tutorial_data = [
+	{ "lines": [0], "text": "1. Imports:\nWe use `deque` from collections for an efficient O(1) queue." },
+	{ "lines": [2, 3], "text": "2. Initialization:\nCreate a queue starting with the source node (index 0)." },
+	{ "lines": [6, 7], "text": "3. Processing:\nPop the leftmost element from the queue to process it." },
+	{ "lines": [9, 10, 12, 13], "text": "4. Target Check:\nEnsure node is valid. If it matches target, return True." },
+	{ "lines": [15, 16], "text": "5. Neighbors:\nAdd Left and Right children indices to the queue." }
+]
+
+# 3. JAVA DATA
+var java_tutorial_data = [
+	{ "lines": [0, 1], "text": "1. Imports:\nImport java.util for Queue and LinkedList." },
+	{ "lines": [5, 6, 7], "text": "2. Initialization:\nCreate a LinkedList as our Queue and add the root." },
+	{ "lines": [9, 10], "text": "3. Dequeue:\nPoll the front element from the queue." },
+	{ "lines": [12, 13], "text": "4. Target Check:\nIf valid and matches target, return true." },
+	{ "lines": [15, 16], "text": "5. Explore:\nAdd left and right child indices to the queue." }
+]
+
+# 4. C DATA
+var c_tutorial_data = [
+	{ "lines": [0, 1, 2], "text": "1. Setup:\nStandard C libraries and simple array Queue setup." },
+	{ "lines": [8, 9], "text": "2. Initialization:\nEnqueue the root node (0) to start." },
+	{ "lines": [10, 11], "text": "3. Dequeue:\nPull the current node from the front of the queue." },
+	{ "lines": [12, 13], "text": "4. Target Check:\nValidate node and check against target." },
+	{ "lines": [14, 15], "text": "5. Traverse Edges:\nEnqueue left and right child indices." }
 ]
 
 func _ready() -> void:
@@ -566,42 +598,51 @@ func _on_show_cpp_pressed() -> void:
 	_show_cpp_popup()
 
 func _show_cpp_popup() -> void:
-	var code = ""
+	# 1. Determine active language data
+	match current_code_language:
+		"cpp": current_tutorial_data = cpp_tutorial_data
+		"python": current_tutorial_data = python_tutorial_data
+		"java": current_tutorial_data = java_tutorial_data
+		"c": current_tutorial_data = c_tutorial_data
+	
+	# 2. Generate Code
 	var arr_str = ""
 	for i in range(7):
 		if tree_nodes.size() > i and tree_nodes[i] != null:
 			arr_str += str(main_array[i]) + ","
 		else:
 			arr_str += "-1,"
-	
+			
 	var current_size = main_array.size()
-
-	match current_code_language:
-		"cpp": code = get_cpp_bfs_code(arr_str, current_size, target_value)
-		"python": code = get_python_bfs_code(arr_str, target_value)
-		"java": code = get_java_bfs_code(arr_str, current_size, target_value)
-		"c": code = get_c_bfs_code(arr_str, current_size, target_value)
+	var code = generate_code_in_language(current_code_language, arr_str, current_size, target_value)
 	
-	if cpp_label: cpp_label.text = code
+	# 3. Setup UI
+	if cpp_label:
+		cpp_label.bbcode_enabled = true
+		cpp_label.text = code
+	
 	cpp_popup.popup_centered()
 	
+	# 4. Reset tutorial step
 	cpp_tutorial_step = 0
-	if cpp_next_btn:
-		if not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
-			cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
+	if cpp_next_btn and not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
+		cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
+		
 	_update_cpp_tutorial()
 
 func _on_cpp_next_pressed() -> void:
 	btn_sound.play()
 	cpp_tutorial_step += 1
-	if cpp_tutorial_step >= cpp_tutorial_data.size():
+	if cpp_tutorial_step >= current_tutorial_data.size():
 		cpp_tutorial_step = 0
 	_update_cpp_tutorial()
 
 func _update_cpp_tutorial() -> void:
-	if cpp_tutorial_data.is_empty(): return
-	var data = cpp_tutorial_data[cpp_tutorial_step]
+	if current_tutorial_data.is_empty(): return
+	var data = current_tutorial_data[cpp_tutorial_step]
+	
 	if cpp_explanation_lbl:
+		cpp_explanation_lbl.bbcode_enabled = true
 		cpp_explanation_lbl.text = data["text"]
 	
 	if cpp_label:
@@ -613,12 +654,7 @@ func _update_cpp_tutorial() -> void:
 				arr_str += "-1,"
 		
 		var current_size = main_array.size()
-		var code = ""
-		match current_code_language:
-			"cpp": code = get_cpp_bfs_code(arr_str, current_size, target_value)
-			"python": code = get_python_bfs_code(arr_str, target_value)
-			"java": code = get_java_bfs_code(arr_str, current_size, target_value)
-			"c": code = get_c_bfs_code(arr_str, current_size, target_value)
+		var code = generate_code_in_language(current_code_language, arr_str, current_size, target_value)
 			
 		var lines = code.split("\n")
 		var highlighted = ""
@@ -631,44 +667,60 @@ func _update_cpp_tutorial() -> void:
 		
 		cpp_label.text = highlighted
 		if cpp_scroll and indices.size() > 0:
-			cpp_scroll.scroll_vertical = indices[0] * 25
+			cpp_scroll.scroll_vertical = indices[0] * 20
 
 # --- BFS CODE STRINGS ---
 
+func generate_code_in_language(lang: String, arr_str: String, size: int, target: int) -> String:
+	match lang:
+		"python": return get_python_bfs_code(arr_str, target)
+		"java": return get_java_bfs_code(arr_str, size, target)
+		"c": return get_c_bfs_code(arr_str, size, target)
+		_: return get_cpp_bfs_code(arr_str, size, target)
+
 func get_cpp_bfs_code(arr: String, size: int, target: int) -> String:
 	return """#include <iostream>
+#include <vector>
 #include <queue>
 using namespace std;
 
-bool BFS(int tree[], int size, int target) {
+/*
+ * COMPLEXITY:
+ * Time: O(V + E)
+ * Space: O(V)
+ */
+void bfs(vector<vector<int>>& adj, int start, int V) {
+	vector<bool> visited(V, false);
 	queue<int> q;
-	q.push(0); // Start at root
+	
+	visited[start] = true;
+	q.push(start);
 	
 	while(!q.empty()) {
 		int curr = q.front();
 		q.pop();
+		cout << curr << " ";
 		
-		if(curr >= size || tree[curr] == -1) continue;
-		
-		if(tree[curr] == target) return true;
-		
-		// Enqueue Left then Right
-		q.push(2 * curr + 1);
-		q.push(2 * curr + 2);
+		for(int neighbor : adj[curr]) {
+			if(!visited[neighbor]) {
+				visited[neighbor] = true;
+				q.push(neighbor);
+			}
+		}
 	}
-	return false;
 }
 
 int main() {
 	int tree[] = { %s };
 	int target = %d;
-	if (BFS(tree, %d, target)) cout << "Found";
+	// Logic maps array to adj matrix...
 	return 0;
-}""" % [arr, target, size]
+}""" % [arr, target]
 
 func get_python_bfs_code(arr: String, target: int) -> String:
 	return """from collections import deque
 
+# Time: O(V + E) | Space: O(V)
 def bfs(tree, target):
 	q = deque([0]) # Index 0
 	
@@ -694,6 +746,7 @@ func get_java_bfs_code(arr: String, size: int, target: int) -> String:
 import java.util.Queue;
 
 class BFS {
+	// Time: O(V + E) | Space: O(V)
 	static boolean bfs(int[] tree, int target) {
 		Queue<Integer> q = new LinkedList<>();
 		q.add(0);
@@ -718,8 +771,11 @@ class BFS {
 
 func get_c_bfs_code(arr: String, size: int, target: int) -> String:
 	return """#include <stdio.h>
+#include <stdbool.h>
 int queue[100];
 int front=0, rear=0;
+
+// Time: O(V + E) | Space: O(V)
 void enqueue(int v) { queue[rear++] = v; }
 int dequeue() { return queue[front++]; }
 
@@ -741,7 +797,7 @@ int main() {
 }""" % [arr, target, size]
 
 # ==============================================
-#   CONFIG HANDLERS & INTRO
+#   CONFIG HANDLERS & TREE UI SETUP
 # ==============================================
 
 func _connect_configuration_buttons() -> void:
@@ -764,37 +820,90 @@ func _on_config_yes_pressed() -> void:
 func _show_config_size_modal() -> void:
 	config_size_modal.show()
 
-# --- RESTORED: Show Input Menu after Size ---
+# --- Tree Hierarchy Input ---
 func _on_size_next_pressed() -> void:
 	btn_sound.play()
 	config_size_modal.hide()
 	_show_config_elements_modal()
 
-# --- RESTORED: Input Menu Logic ---
 func _show_config_elements_modal() -> void:
 	element_inputs.clear()
-	for child in elements_container.get_children(): child.queue_free()
-	var grid = GridContainer.new()
-	grid.columns = 5
-	elements_container.add_child(grid)
-	
-	var count = int(size_input.value) 
-	
-	for i in range(count):
-		var le = LineEdit.new()
-		le.placeholder_text = "0"
-		# Default empty so users can choose
-		le.text = "" 
-		element_inputs.append(le)
-		grid.add_child(le)
-		
-		# Validation for the initial menu inputs too
-		le.text_changed.connect(_validate_tree_inputs)
-	
+	for child in elements_container.get_children(): 
+		child.queue_free()
+
+	# Use a VBox to stack the levels of the tree
+	var tree_vbox = VBoxContainer.new()
+	tree_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	tree_vbox.add_theme_constant_override("separation", 20)
+	tree_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	elements_container.add_child(tree_vbox)
+
+	var count = int(size_input.value)
+	var current_index = 0
+	var level = 0
+
+	# Build the tree inputs layer by layer
+	while current_index < count:
+		var nodes_in_level = pow(2, level)
+		var h_box = HBoxContainer.new()
+		h_box.alignment = BoxContainer.ALIGNMENT_CENTER
+		# Nodes get closer together at lower levels
+		h_box.add_theme_constant_override("separation", max(10, 50 - (level * 15))) 
+
+		for i in range(nodes_in_level):
+			if current_index >= count:
+				break
+
+			var node_vbox = VBoxContainer.new()
+			node_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+
+			var lbl = Label.new()
+			lbl.text = "Node " + str(current_index)
+			lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			lbl.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
+			node_vbox.add_child(lbl)
+
+			var le = LineEdit.new()
+			le.placeholder_text = "0"
+			le.text = "" 
+			le.alignment = HORIZONTAL_ALIGNMENT_CENTER
+			le.custom_minimum_size = Vector2(100, 70)
+			
+			# --- LIMIT TO 3 DIGITS MAX ---
+			le.max_length = 3 
+			
+			node_vbox.add_child(le)
+			h_box.add_child(node_vbox)
+			
+			element_inputs.append(le)
+			
+			# --- CONNECT TO NEW VALIDATION FUNCTION ---
+			le.text_changed.connect(_on_element_input_changed.bind(le))
+
+			current_index += 1
+
+		tree_vbox.add_child(h_box)
+		level += 1
+
 	_validate_tree_inputs("")
 	config_elements_modal.show()
 
-# --- RESTORED: Validation for Input Menu ---
+func _on_element_input_changed(new_text: String, line_edit: LineEdit) -> void:
+	# 1. Filter out any characters that are not numbers (0-9)
+	if not new_text.is_empty() and not new_text.is_valid_int():
+		var filtered_text = ""
+		for char in new_text:
+			if char >= "0" and char <= "9":
+				filtered_text += char
+		
+		# Update the box with ONLY the numbers
+		line_edit.text = filtered_text
+		# Move the typing cursor to the end of the text
+		line_edit.caret_column = filtered_text.length()
+		
+	# 2. Run your existing parent-child locking logic
+	_validate_tree_inputs("")
+
 func _validate_tree_inputs(_ignored_text: String):
 	for i in range(element_inputs.size()):
 		if i == 0: 
@@ -812,7 +921,6 @@ func _validate_tree_inputs(_ignored_text: String):
 				element_inputs[i].editable = true
 				element_inputs[i].placeholder_text = "0"
 
-# --- RESTORED: Gather Inputs ---
 func _on_elements_done_pressed() -> void:
 	btn_sound.play()
 	var arr: Array[int] = []
