@@ -40,7 +40,7 @@ func set_random_texture() -> void:
 
 func set_highlight(active: bool):
 	# Makes the block glow when being compared
-	var bg = get_node_or_null("Bg")
+	var _bg = get_node_or_null("Bg")
 	if active:
 		modulate = Color(1.5, 1.5, 1.5, 1.0) # Brighten
 		scale = Vector2(1.1, 1.1)

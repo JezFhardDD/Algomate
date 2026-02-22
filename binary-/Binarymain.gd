@@ -745,18 +745,48 @@ func _on_size_next_pressed() -> void:
 	_show_config_elements_modal()
 
 func _show_config_elements_modal() -> void:
+	var array_size = int(size_input.value)
+	
 	element_inputs.clear()
-	for child in elements_container.get_children(): child.queue_free()
+	for child in elements_container.get_children():
+		child.queue_free()
+
 	var grid = GridContainer.new()
-	grid.columns = 5
+	grid.columns = min(5, array_size)
+	grid.add_theme_constant_override("h_separation", 10)
+	grid.add_theme_constant_override("v_separation", 10)
 	elements_container.add_child(grid)
-	var count = int(size_input.value)
-	for i in range(count):
-		var le = LineEdit.new()
-		le.placeholder_text = str(randi_range(1, 99))
-		element_inputs.append(le)
-		grid.add_child(le)
+	
+	for i in range(array_size):
+		var element_box = VBoxContainer.new()
+		
+		# Create label
+		var label = Label.new()
+		label.text = "Value %d" % (i + 1)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+
+		# Create input
+		var line_edit = LineEdit.new()
+		line_edit.placeholder_text = "0-999"
+		line_edit.text = str(randi_range(1, 99))
+		line_edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		line_edit.max_length = 3
+		line_edit.custom_minimum_size = Vector2(80, 80)
+
+		line_edit.text_changed.connect(_on_input_text_changed.bind(line_edit))
+		
+		element_box.add_child(label)
+		element_box.add_child(line_edit)
+		grid.add_child(element_box)
+		
+		element_inputs.append(line_edit)
+	
 	config_elements_modal.show()
+
+func _on_input_text_changed(new_text: String, line_edit: LineEdit) -> void:
+	if not new_text.is_valid_int() and new_text != "":
+		line_edit.text = new_text.trim_suffix(new_text[-1])
+		line_edit.set_caret_column(line_edit.text.length())
 
 func _on_elements_done_pressed() -> void:
 	btn_sound.play()
@@ -817,7 +847,7 @@ func _on_intro_prev_pressed():
 func _on_intro_skip_pressed():
 	btn_sound.play()
 	intro_popup.hide()
-	_set_main_ui_enabled(true)
+	_set_main_ui_enabled(false)
 
 func start_tutorial() -> void:
 	tutorial_in_progress = true
