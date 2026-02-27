@@ -6,7 +6,7 @@ extends Control
 
 # --- MAIN BUTTONS ---
 @onready var sort_btn: Button = $VBoxContainer/SortButton          # "Find Element"
-@onready var auto_btn: Button = $VBoxContainer/LinearStep     # "Linear Step"
+@onready var auto_btn: Button = $VBoxContainer/LinearStep      # "Linear Step"
 @onready var timeline_btn: Button = $VBoxContainer/TimelineButton
 @onready var simulate_new_btn: Button = $VBoxContainer/SimulateNew
 
@@ -129,7 +129,7 @@ var BLOCK_SPACING: float = 15.0
 var START_POSITION: Vector2 = Vector2(50, 80)
 var ANIM_SPEED: float = 1.0
 
-# --- NEW: Target Input Dialog ---
+# --- Target Input Dialog ---
 var target_input_dialog: ConfirmationDialog
 var target_spinbox: SpinBox
 
@@ -143,6 +143,7 @@ var intro_step: int = 0
 var intro_texts = [
 	"Welcome to Linear Search Simulation!\nLinear Search is the simplest searching algorithm. It checks each element in the list sequentially until a match is found.",
 	"The Algorithm:\n\n1. Start from the first element.\n2. Compare the current element with the Target Value.\n3. If it matches, STOP (Found).\n4. If not, move to the next element.",
+	"Complexity Analysis:\n\nTime: O(n) - In the worst case, it checks every item.\nSpace: O(1) - Uses a constant amount of memory.",
 	"Visual Elements:\n\n• The 'FRONT' pointer tracks the current element being checked.\n• We are searching for a specific target value.",
 	"How to Use:\n\n1. Click 'FIND ELEMENT' to set target.\n2. Click 'LINEAR STEP' for manual check.\n3. Click 'AUTO SEARCH' to run automatically."
 ]
@@ -151,12 +152,38 @@ var intro_texts = [
 var current_code_language: String = "cpp"
 var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
+var current_tutorial_data: Array = [] 
+
 var cpp_tutorial_data = [
-	{ "lines": [0, 1, 2, 3], "text": "1. Imports & Setup:\nStandard Input/Output libraries." },
-	{ "lines": [5, 6, 7], "text": "2. The Loop:\nIterate through the array from index 0 to n-1 using a for loop." },
-	{ "lines": [8, 9, 10], "text": "3. The Check:\nInside the loop, compare the current element (arr[i]) with the target value (x)." },
-	{ "lines": [11, 12, 13], "text": "4. Found Case:\nIf arr[i] == x, we return the index 'i' immediately. The search is successful." },
-	{ "lines": [15, 16], "text": "5. Not Found:\nIf the loop finishes without returning, the element is not in the array. Return -1." }
+	{ "lines": [0, 1], "text": "1. Imports & Setup: Include iostream for standard input/output." },
+	{ "lines": [3, 4, 5, 6, 7], "text": "2. Complexity: [color=yellow]Time: O(n)[/color] (linear scan) and [color=green]Space: O(1)[/color] (in-place)." },
+	{ "lines": [8], "text": "3. The Loop: Use a for-loop to iterate from index 0 to n-1." },
+	{ "lines": [9, 10], "text": "4. Comparison: Check if current element matches the target value 'x'." },
+	{ "lines": [11], "text": "5. Match Found: Return the current index immediately." },
+	{ "lines": [13], "text": "6. Not Found: If the loop finishes, return -1." }
+]
+
+var python_tutorial_data = [
+	{ "lines": [0, 1], "text": "1. Complexity: [color=yellow]Time: O(n)[/color], [color=green]Space: O(1)[/color]." },
+	{ "lines": [2], "text": "2. Function: Define search taking the list and target value." },
+	{ "lines": [3], "text": "3. Loop: Standard Python loop using range and length of array." },
+	{ "lines": [4, 5], "text": "4. Check: If the element at index 'i' equals target 'x', return index." },
+	{ "lines": [6], "text": "5. Return: Give back -1 if not found." }
+]
+
+var java_tutorial_data = [
+	{ "lines": [0, 1, 2, 3], "text": "1. Complexity: [color=yellow]Time: O(n)[/color], [color=green]Space: O(1)[/color]." },
+	{ "lines": [4, 5], "text": "2. Method: Create a static method that returns an integer index." },
+	{ "lines": [6], "text": "3. Loop: Iterate through the array using 'arr.length'." },
+	{ "lines": [7, 8, 9], "text": "4. Logic: Use '==' to compare primitive integers." },
+	{ "lines": [11], "text": "5. Result: Return -1 if the search concludes without a match." }
+]
+
+var c_tutorial_data = [
+	{ "lines": [0], "text": "1. Setup: Include stdio.h for printing." },
+	{ "lines": [1, 2, 3, 4], "text": "2. Complexity: [color=yellow]Time: O(n)[/color], [color=green]Space: O(1)[/color]." },
+	{ "lines": [6], "text": "3. Logic: Standard C for-loop iterating over the array size." },
+	{ "lines": [7, 8], "text": "4. Return: Return index immediately upon finding the target." }
 ]
 
 func _ready() -> void:
@@ -220,20 +247,80 @@ func _run_auto_sort() -> void:
 
 # --- POPUP CREATION ---
 func _create_target_input_dialog():
+	# --- 0. LOAD YOUR CUSTOM FONT ---
+	# Replace "res://path/to/your_font.ttf" with your actual font path
+	var my_font = load("res://assets/font/Planes_ValMore.ttf") 
+	
 	target_input_dialog = ConfirmationDialog.new()
 	target_input_dialog.title = "Find Element"
-	target_input_dialog.min_size = Vector2(300, 150)
+	target_input_dialog.add_theme_font_size_override("title_font_size", 24)
+	target_input_dialog.add_theme_font_override("title_font", my_font)
+	target_input_dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
+	target_input_dialog.min_size = Vector2(450, 220) 
+	
+	target_input_dialog.close_requested.connect(func(): pass) 
+
+	# 1. Buttons: Custom Font, Size, and Text
+	var ok_btn = target_input_dialog.get_ok_button()
+	var cancel_btn = target_input_dialog.get_cancel_button()
+	
+	ok_btn.text = "Search"
+	
+	# Apply Font and Font Size to Buttons
+	for btn in [ok_btn, cancel_btn]:
+		btn.custom_minimum_size = Vector2(140, 80)
+		btn.add_theme_font_override("font", my_font)
+		btn.add_theme_font_size_override("font_size", 22)
+
+
+	var margin_container = MarginContainer.new()
+	margin_container.add_theme_constant_override("margin_top", 20)
+	margin_container.add_theme_constant_override("margin_left", 25)
+	margin_container.add_theme_constant_override("margin_right", 25)
+	margin_container.add_theme_constant_override("margin_bottom", 10)
+	target_input_dialog.add_child(margin_container)
+
 	var vbox = VBoxContainer.new()
-	target_input_dialog.add_child(vbox)
+	vbox.add_theme_constant_override("separation", 15)
+	margin_container.add_child(vbox)
+
+	# 3. Label: Custom Font
 	var lbl = Label.new()
-	lbl.text = "Enter value to search:"
+	lbl.text = "Enter value (0-999):"
+	lbl.add_theme_font_override("font", my_font)
+	lbl.add_theme_font_size_override("font_size", 24)
 	vbox.add_child(lbl)
+
+	# 4. SpinBox: Custom Font for the input field
 	target_spinbox = SpinBox.new()
 	target_spinbox.min_value = 0
-	target_spinbox.max_value = 100
-	target_spinbox.value = 0
-	target_spinbox.custom_minimum_size = Vector2(0, 40)
+	target_spinbox.max_value = 999
+	target_spinbox.custom_minimum_size = Vector2(0, 60)
 	vbox.add_child(target_spinbox)
+
+	var line_edit = target_spinbox.get_line_edit()
+	line_edit.max_length = 3
+	line_edit.select_all_on_focus = true
+	
+	# Apply Font to the text inside the SpinBox
+	line_edit.add_theme_font_override("font", my_font)
+	line_edit.add_theme_font_size_override("font_size", 26)
+	
+	# Real-time number filtering (no letters allowed)
+	line_edit.text_changed.connect(func(new_text: String):
+		var regex = RegEx.new()
+		regex.compile("[^0-9]") 
+		var filtered = regex.sub(new_text, "", true)
+		if new_text != filtered:
+			line_edit.text = filtered
+			line_edit.caret_column = filtered.length()
+	)
+
+	line_edit.text_submitted.connect(func(_text): 
+		_on_target_confirmed()
+		target_input_dialog.hide()
+	)
+
 	add_child(target_input_dialog)
 	target_input_dialog.confirmed.connect(_on_target_confirmed)
 
@@ -501,40 +588,52 @@ func _on_show_cpp_pressed() -> void:
 func _show_cpp_popup() -> void:
 	var code = ""
 	var arr_str = ", ".join(main_array.map(func(x): return str(x)))
+	
 	match current_code_language:
-		"cpp": code = get_cpp_linear_code(arr_str, search_target)
-		"python": code = get_python_linear_code(arr_str, search_target)
-		"java": code = get_java_linear_code(arr_str, search_target)
-		"c": code = get_c_linear_code(arr_str, search_target)
+		"cpp":
+			code = get_cpp_linear_code(arr_str, search_target)
+			current_tutorial_data = cpp_tutorial_data
+		"python":
+			code = get_python_linear_code(arr_str, search_target)
+			current_tutorial_data = python_tutorial_data
+		"java":
+			code = get_java_linear_code(arr_str, search_target)
+			current_tutorial_data = java_tutorial_data
+		"c":
+			code = get_c_linear_code(arr_str, search_target)
+			current_tutorial_data = c_tutorial_data
 	
 	if cpp_label:
+		cpp_label.bbcode_enabled = true
 		cpp_label.text = code
 	
 	cpp_popup.popup_centered()
 	
-	if current_code_language == "cpp":
-		cpp_tutorial_step = 0
-		if cpp_next_btn:
-			if not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
-				cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
-		_update_cpp_tutorial()
+	cpp_tutorial_step = 0
+	if cpp_next_btn:
+		if not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
+			cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
+	_update_cpp_tutorial()
 
 func _on_cpp_next_pressed() -> void:
 	btn_sound.play()
 	cpp_tutorial_step += 1
-	if cpp_tutorial_step >= cpp_tutorial_data.size():
+	if cpp_tutorial_step >= current_tutorial_data.size():
 		cpp_tutorial_step = 0
 	_update_cpp_tutorial()
 
 func _update_cpp_tutorial() -> void:
-	if cpp_tutorial_data.is_empty(): return
-	var data = cpp_tutorial_data[cpp_tutorial_step]
+	if current_tutorial_data.is_empty(): return
+	var data = current_tutorial_data[cpp_tutorial_step]
+	
 	if cpp_explanation_lbl:
+		cpp_explanation_lbl.bbcode_enabled = true
 		cpp_explanation_lbl.text = data["text"]
 	
 	if cpp_label:
 		var code = ""
 		var arr_str = ", ".join(main_array.map(func(x): return str(x)))
+		
 		match current_code_language:
 			"cpp": code = get_cpp_linear_code(arr_str, search_target)
 			"python": code = get_python_linear_code(arr_str, search_target)
@@ -544,6 +643,7 @@ func _update_cpp_tutorial() -> void:
 		var lines = code.split("\n")
 		var highlighted_code = ""
 		var indices = data["lines"]
+		
 		for i in range(lines.size()):
 			if i in indices:
 				highlighted_code += "[color=yellow]" + lines[i] + "[/color]\n"
@@ -561,7 +661,12 @@ func get_cpp_linear_code(arr: String, target: int) -> String:
 	return """#include <iostream>
 using namespace std;
 
-int linearSearch(int arr[], int n, int x) {
+/*
+ * COMPLEXITY:
+ * Time: O(n)
+ * Space: O(1)
+ */
+int search(int arr[], int n, int x) {
 	for (int i = 0; i < n; i++) {
 		if (arr[i] == x) {
 			return i;
@@ -574,12 +679,14 @@ int main() {
 	int arr[] = { %s };
 	int x = %d;
 	int n = sizeof(arr) / sizeof(arr[0]);
-	int result = linearSearch(arr, n, x);
+	int result = search(arr, n, x);
 	return 0;
 }""" % [arr, target]
 
 func get_python_linear_code(arr: String, target: int) -> String:
-	return """def linear_search(arr, x):
+	return """# Time: O(n)
+# Space: O(1)
+def search(arr, x):
 	for i in range(len(arr)):
 		if arr[i] == x:
 			return i
@@ -587,11 +694,15 @@ func get_python_linear_code(arr: String, target: int) -> String:
 
 arr = [%s]
 x = %d
-result = linear_search(arr, x)
+result = search(arr, x)
 print("Element found at index:", result)""" % [arr, target]
 
 func get_java_linear_code(arr: String, target: int) -> String:
-	return """class LinearSearch {
+	return """/*
+ * Time: O(n)
+ * Space: O(1)
+ */
+class LinearSearch {
 	public static int search(int arr[], int x) {
 		int n = arr.length;
 		for (int i = 0; i < n; i++) {
@@ -609,6 +720,7 @@ func get_java_linear_code(arr: String, target: int) -> String:
 
 func get_c_linear_code(arr: String, target: int) -> String:
 	return """#include <stdio.h>
+/* Time: O(n) | Space: O(1) */
 int search(int arr[], int n, int x) {
 	for (int i = 0; i < n; i++)
 		if (arr[i] == x)
@@ -661,18 +773,48 @@ func _on_size_next_pressed() -> void:
 	_show_config_elements_modal()
 
 func _show_config_elements_modal() -> void:
+	var array_size = int(size_input.value)
+	
 	element_inputs.clear()
-	for child in elements_container.get_children(): child.queue_free()
+	for child in elements_container.get_children():
+		child.queue_free()
+
 	var grid = GridContainer.new()
-	grid.columns = 5
+	grid.columns = min(5, array_size)
+	grid.add_theme_constant_override("h_separation", 10)
+	grid.add_theme_constant_override("v_separation", 10)
 	elements_container.add_child(grid)
-	var count = int(size_input.value)
-	for i in range(count):
-		var le = LineEdit.new()
-		le.placeholder_text = str(randi_range(1, 99))
-		element_inputs.append(le)
-		grid.add_child(le)
+	
+	for i in range(array_size):
+		var element_box = VBoxContainer.new()
+		
+		# Create label
+		var label = Label.new()
+		label.text = "Value %d" % (i + 1)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+
+		# Create input
+		var line_edit = LineEdit.new()
+		line_edit.placeholder_text = "0-999"
+		line_edit.text = str(randi_range(1, 99))
+		line_edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		line_edit.max_length = 3
+		line_edit.custom_minimum_size = Vector2(80, 80)
+
+		line_edit.text_changed.connect(_on_input_text_changed.bind(line_edit))
+		
+		element_box.add_child(label)
+		element_box.add_child(line_edit)
+		grid.add_child(element_box)
+		
+		element_inputs.append(line_edit)
+	
 	config_elements_modal.show()
+
+func _on_input_text_changed(new_text: String, line_edit: LineEdit) -> void:
+	if not new_text.is_valid_int() and new_text != "":
+		line_edit.text = new_text.trim_suffix(new_text[-1])
+		line_edit.set_caret_column(line_edit.text.length())
 
 func _on_elements_done_pressed() -> void:
 	btn_sound.play()

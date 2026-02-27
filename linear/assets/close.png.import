@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://g3gxwo4kpabr"
-path="res://.godot/imported/SCS LOGO 2.png-1db312463fcb17ea4c07d84e301ffe1b.ctex"
+uid="uid://cltelsuydc2bh"
+path="res://.godot/imported/close.png-5dfda58792925f4ecef1b7dd0e814906.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/SCS LOGO 2.png"
-dest_files=["res://.godot/imported/SCS LOGO 2.png-1db312463fcb17ea4c07d84e301ffe1b.ctex"]
+source_file="res://assets/close.png"
+dest_files=["res://.godot/imported/close.png-5dfda58792925f4ecef1b7dd0e814906.ctex"]
 
 [params]
 
