@@ -139,25 +139,59 @@ var tutorial_sequence = []
 var tutorial_sequence_index = 0
 var tutorial_in_progress = false
 
-# --- INTRO TEXT (DFS) ---
+# --- INTRO TEXT (DFS WITH COMPLEXITY) ---
 var intro_step: int = 0
 var intro_texts = [
 	"Welcome to DFS Tree Search!\nDepth-First Search (DFS) explores as deep as possible along each branch before backtracking.",
 	"INSTRUCTIONS:\n\n1. SETUP: Enter the Tree Size.\n2. INPUT: Type initial numbers or leave blank.\n3. EDIT: Click on any node to change it later.",
 	"The Algorithm:\n\n1. Start at the Root.\n2. Check if it matches the Target.\n3. Push children to a Stack (Right then Left).\n4. Pop (LIFO) and repeat.",
+	"Complexity Analysis:\n\n• Time: [color=yellow]O(V + E)[/color] - Explores all Vertices and Edges.\n• Space: [color=green]O(V)[/color] - Stack stores up to V nodes.",
 	"Visual Elements:\n\n• The STACK stores nodes waiting to be checked.\n• Orange nodes are being processed.\n• Green node means TARGET FOUND."
 ]
 
-# Code Tutorial Data (DFS)
+# --- CODE TUTORIAL DATA (DFS MULTI-LANGUAGE) ---
 var current_code_language: String = "cpp"
 var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
+var current_tutorial_data: Array = [] 
+
+# 1. C++ DATA
 var cpp_tutorial_data = [
 	{ "lines": [0, 1, 2, 3], "text": "1. Imports & Setup:\nIncludes standard Stack library." },
-	{ "lines": [5, 6, 7], "text": "2. Initialization:\nCreate a Stack and push the starting node (root)." },
-	{ "lines": [9, 10, 11], "text": "3. The Loop:\nWhile the stack is not empty, get the top element and pop it." },
-	{ "lines": [13, 14, 15], "text": "4. Check Target:\nIf the current node's value matches the target, return TRUE." },
-	{ "lines": [17, 18, 19], "text": "5. Push Children:\nPush Right then Left child so Left is processed next (LIFO)." }
+	{ "lines": [5, 6, 7, 8, 9], "text": "2. Complexity Analysis:\n[color=yellow]Time: O(V + E)[/color] and [color=green]Space: O(V)[/color]." },
+	{ "lines": [10, 11, 12], "text": "3. Initialization:\nCreate a Stack and push the root index (0)." },
+	{ "lines": [14, 15, 16], "text": "4. The Loop:\nWhile stack isn't empty, pop the top element." },
+	{ "lines": [18, 19], "text": "5. Check Target:\nIf current node matches target, return TRUE." },
+	{ "lines": [21, 22, 23], "text": "6. Push Children:\nPush Right then Left child so Left is processed next (LIFO)." }
+]
+
+# 2. PYTHON DATA
+var python_tutorial_data = [
+	{ "lines": [0], "text": "1. Function:\nDefine DFS taking tree list and target." },
+	{ "lines": [1], "text": "2. Complexity:\n[color=yellow]Time: O(V + E)[/color] | [color=green]Space: O(V)[/color]." },
+	{ "lines": [2], "text": "3. Initialization:\nStart stack with root index 0." },
+	{ "lines": [4, 5], "text": "4. Processing:\nPop the last element (LIFO) from stack." },
+	{ "lines": [6, 7, 8, 9], "text": "5. Target Check:\nSkip invalid nodes, return True if found." },
+	{ "lines": [11, 12, 13], "text": "6. Push Children:\nAppend Right then Left so Left is popped first." }
+]
+
+# 3. JAVA DATA
+var java_tutorial_data = [
+	{ "lines": [0], "text": "1. Imports:\nImport java.util.Stack." },
+	{ "lines": [3, 4, 5, 6], "text": "2. Complexity:\n[color=yellow]Time: O(V + E)[/color] | [color=green]Space: O(V)[/color]." },
+	{ "lines": [7, 8, 9], "text": "3. Initialization:\nCreate Stack and push root." },
+	{ "lines": [11, 12], "text": "4. Dequeue:\nPop the top element." },
+	{ "lines": [14, 15], "text": "5. Target Check:\nReturn true if target is found." },
+	{ "lines": [17, 18], "text": "6. Push Children:\nPush Right then Left child indices." }
+]
+
+# 4. C DATA
+var c_tutorial_data = [
+	{ "lines": [2], "text": "1. Complexity:\n[color=yellow]Time: O(V + E)[/color] | [color=green]Space: O(V)[/color]." },
+	{ "lines": [3, 4, 5, 6], "text": "2. Stack Setup:\nArray-based stack implementation." },
+	{ "lines": [8, 9], "text": "3. Initialization:\nPush root index (0) to start." },
+	{ "lines": [10, 11, 12, 13], "text": "4. Pop & Check:\nPop top node and check if it matches target." },
+	{ "lines": [15, 16], "text": "5. Push Children:\nPush right child, then left child." }
 ]
 
 func _ready() -> void:
@@ -205,40 +239,135 @@ func _ready() -> void:
 	
 	_connect_language_buttons()
 
-# --- CREATE DIALOGS ---
 func _create_target_input_dialog():
+	var my_font = load("res://assets/font/Planes_ValMore.ttf") 
+	
 	target_input_dialog = ConfirmationDialog.new()
 	target_input_dialog.title = "Find Element"
-	target_input_dialog.min_size = Vector2(300, 150)
+	target_input_dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
+	target_input_dialog.min_size = Vector2(450, 220) 
+	if my_font: target_input_dialog.add_theme_font_override("title_font", my_font)
+	target_input_dialog.add_theme_font_size_override("title_font_size", 24)
+	
+	var ok_btn = target_input_dialog.get_ok_button()
+	var cancel_btn = target_input_dialog.get_cancel_button()
+	ok_btn.text = "Search"
+	for btn in [ok_btn, cancel_btn]:
+		btn.custom_minimum_size = Vector2(140, 50)
+		if my_font: btn.add_theme_font_override("font", my_font)
+		btn.add_theme_font_size_override("font_size", 22)
+		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+
+	var margin_container = MarginContainer.new()
+	margin_container.add_theme_constant_override("margin_top", 20)
+	margin_container.add_theme_constant_override("margin_left", 30)
+	margin_container.add_theme_constant_override("margin_right", 30)
+	margin_container.add_theme_constant_override("margin_bottom", 20)
+	target_input_dialog.add_child(margin_container)
+
 	var vbox = VBoxContainer.new()
-	target_input_dialog.add_child(vbox)
+	vbox.add_theme_constant_override("separation", 15)
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	margin_container.add_child(vbox)
+
 	var lbl = Label.new()
 	lbl.text = "Enter value to search:"
+	if my_font: lbl.add_theme_font_override("font", my_font)
+	lbl.add_theme_font_size_override("font_size", 26)
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(lbl)
+
 	target_spinbox = SpinBox.new()
 	target_spinbox.min_value = 0
-	target_spinbox.max_value = 100
-	target_spinbox.value = 0
-	target_spinbox.custom_minimum_size = Vector2(0, 40)
+	target_spinbox.max_value = 999
+	target_spinbox.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(target_spinbox)
+
+	var line_edit = target_spinbox.get_line_edit()
+	line_edit.custom_minimum_size = Vector2(0, 60)
+	if my_font: line_edit.add_theme_font_override("font", my_font)
+	line_edit.add_theme_font_size_override("font_size", 30)
+	
+	line_edit.max_length = 3
+	line_edit.text_changed.connect(_on_dialog_input_changed.bind(line_edit))
+	
+	line_edit.text_submitted.connect(func(_text): 
+		_on_target_confirmed()
+		target_input_dialog.hide()
+	)
+
 	add_child(target_input_dialog)
 	target_input_dialog.confirmed.connect(_on_target_confirmed)
 
+func _on_dialog_input_changed(new_text: String, line_edit: LineEdit) -> void:
+	if not new_text.is_empty() and not new_text.is_valid_int():
+		var filtered_text = ""
+		for char in new_text:
+
+			if char >= "0" and char <= "9":
+				filtered_text += char
+		
+		line_edit.text = filtered_text
+		line_edit.caret_column = filtered_text.length()
+
 func _create_node_input_dialog():
+	var my_font = load("res://assets/font/Planes_ValMore.ttf") 
+	
+
 	node_input_dialog = ConfirmationDialog.new()
-	node_input_dialog.title = "Edit Node Value"
-	node_input_dialog.min_size = Vector2(300, 150)
+	node_input_dialog.title = "Edit Node"
+	node_input_dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
+	node_input_dialog.min_size = Vector2(450, 220) 
+	if my_font: node_input_dialog.add_theme_font_override("title_font", my_font)
+	node_input_dialog.add_theme_font_size_override("title_font_size", 24)
+	
+	var ok_btn = node_input_dialog.get_ok_button()
+	var cancel_btn = node_input_dialog.get_cancel_button()
+	ok_btn.text = "Update"
+	for btn in [ok_btn, cancel_btn]:
+		btn.custom_minimum_size = Vector2(140, 50)
+		if my_font: btn.add_theme_font_override("font", my_font)
+		btn.add_theme_font_size_override("font_size", 22)
+		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+
+	var margin_container = MarginContainer.new()
+	margin_container.add_theme_constant_override("margin_top", 20)
+	margin_container.add_theme_constant_override("margin_left", 30)
+	margin_container.add_theme_constant_override("margin_right", 30)
+	margin_container.add_theme_constant_override("margin_bottom", 20)
+	node_input_dialog.add_child(margin_container)
+
 	var vbox = VBoxContainer.new()
-	node_input_dialog.add_child(vbox)
+	vbox.add_theme_constant_override("separation", 15)
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	margin_container.add_child(vbox)
+
 	var lbl = Label.new()
-	lbl.text = "Enter value for this node (0 = Empty):"
+	lbl.text = "Set new value :"
+	if my_font: lbl.add_theme_font_override("font", my_font)
+	lbl.add_theme_font_size_override("font_size", 26)
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(lbl)
+
 	node_spinbox = SpinBox.new()
 	node_spinbox.min_value = 0
 	node_spinbox.max_value = 999
-	node_spinbox.value = 0
-	node_spinbox.custom_minimum_size = Vector2(0, 40)
+	node_spinbox.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(node_spinbox)
+
+	var line_edit = node_spinbox.get_line_edit()
+	line_edit.custom_minimum_size = Vector2(0, 60)
+	if my_font: line_edit.add_theme_font_override("font", my_font)
+	line_edit.add_theme_font_size_override("font_size", 30)
+	
+	line_edit.max_length = 3
+	line_edit.text_changed.connect(_on_dialog_input_changed.bind(line_edit))
+	
+	line_edit.text_submitted.connect(func(_text): 
+		_on_node_value_confirmed()
+		node_input_dialog.hide()
+	)
+
 	add_child(node_input_dialog)
 	node_input_dialog.confirmed.connect(_on_node_value_confirmed)
 
@@ -253,7 +382,6 @@ func _on_node_value_confirmed():
 		var val = int(node_spinbox.value)
 		main_array[current_editing_index] = val
 		
-		# Update Visuals
 		var node = tree_nodes[current_editing_index]
 		if node:
 			if val != 0:
@@ -269,7 +397,6 @@ func _on_node_value_confirmed():
 				
 		status_label.text = "Node %d set to %d." % [current_editing_index, val]
 
-# --- RESET LOGIC ---
 func _reset_search_for_new_target(new_val: int):
 	target_value = new_val
 	status_label.text = "Target: %d" % target_value
@@ -571,7 +698,12 @@ func _on_show_cpp_pressed() -> void:
 	_show_cpp_popup()
 
 func _show_cpp_popup() -> void:
-	var code = ""
+	match current_code_language:
+		"cpp": current_tutorial_data = cpp_tutorial_data
+		"python": current_tutorial_data = python_tutorial_data
+		"java": current_tutorial_data = java_tutorial_data
+		"c": current_tutorial_data = c_tutorial_data
+	
 	var arr_str = ""
 	for i in range(7):
 		if tree_nodes.size() > i and tree_nodes[i] != null:
@@ -580,14 +712,12 @@ func _show_cpp_popup() -> void:
 			arr_str += "-1,"
 	
 	var current_size = main_array.size()
-
-	match current_code_language:
-		"cpp": code = get_cpp_dfs_code(arr_str, current_size, target_value)
-		"python": code = get_python_dfs_code(arr_str, target_value)
-		"java": code = get_java_dfs_code(arr_str, current_size, target_value)
-		"c": code = get_c_dfs_code(arr_str, current_size, target_value)
+	var code = generate_code_in_language(current_code_language, arr_str, current_size, target_value)
 	
-	if cpp_label: cpp_label.text = code
+	if cpp_label: 
+		cpp_label.bbcode_enabled = true
+		cpp_label.text = code
+		
 	cpp_popup.popup_centered()
 	
 	cpp_tutorial_step = 0
@@ -599,14 +729,15 @@ func _show_cpp_popup() -> void:
 func _on_cpp_next_pressed() -> void:
 	btn_sound.play()
 	cpp_tutorial_step += 1
-	if cpp_tutorial_step >= cpp_tutorial_data.size():
+	if cpp_tutorial_step >= current_tutorial_data.size():
 		cpp_tutorial_step = 0
 	_update_cpp_tutorial()
 
 func _update_cpp_tutorial() -> void:
-	if cpp_tutorial_data.is_empty(): return
-	var data = cpp_tutorial_data[cpp_tutorial_step]
+	if current_tutorial_data.is_empty(): return
+	var data = current_tutorial_data[cpp_tutorial_step]
 	if cpp_explanation_lbl:
+		cpp_explanation_lbl.bbcode_enabled = true
 		cpp_explanation_lbl.text = data["text"]
 	
 	if cpp_label:
@@ -618,12 +749,7 @@ func _update_cpp_tutorial() -> void:
 				arr_str += "-1,"
 		
 		var current_size = main_array.size()
-		var code = ""
-		match current_code_language:
-			"cpp": code = get_cpp_dfs_code(arr_str, current_size, target_value)
-			"python": code = get_python_dfs_code(arr_str, target_value)
-			"java": code = get_java_dfs_code(arr_str, current_size, target_value)
-			"c": code = get_c_dfs_code(arr_str, current_size, target_value)
+		var code = generate_code_in_language(current_code_language, arr_str, current_size, target_value)
 			
 		var lines = code.split("\n")
 		var highlighted = ""
@@ -634,17 +760,30 @@ func _update_cpp_tutorial() -> void:
 			else:
 				highlighted += lines[i] + "\n"
 		
+		cpp_label.bbcode_enabled = true
 		cpp_label.text = highlighted
 		if cpp_scroll and indices.size() > 0:
-			cpp_scroll.scroll_vertical = indices[0] * 25
+			cpp_scroll.scroll_vertical = indices[0] * 20
 
 # --- DFS CODE STRINGS (Iterative) ---
+
+func generate_code_in_language(lang: String, arr_str: String, size: int, target: int) -> String:
+	match lang:
+		"python": return get_python_dfs_code(arr_str, target)
+		"java": return get_java_dfs_code(arr_str, size, target)
+		"c": return get_c_dfs_code(arr_str, size, target)
+		_: return get_cpp_dfs_code(arr_str, size, target)
 
 func get_cpp_dfs_code(arr: String, size: int, target: int) -> String:
 	return """#include <iostream>
 #include <stack>
 using namespace std;
 
+/*
+ * COMPLEXITY:
+ * Time: O(V + E)
+ * Space: O(V)
+ */
 bool DFS(int tree[], int size, int target) {
 	stack<int> s;
 	s.push(0); // Start at root
@@ -654,7 +793,6 @@ bool DFS(int tree[], int size, int target) {
 		s.pop();
 		
 		if(curr >= size || tree[curr] == -1) continue;
-		
 		if(tree[curr] == target) return true;
 		
 		// Push Right then Left
@@ -673,14 +811,13 @@ int main() {
 
 func get_python_dfs_code(arr: String, target: int) -> String:
 	return """def dfs(tree, target):
+	# Time: O(V + E) | Space: O(V)
 	stack = [0] # Index 0
 	
 	while stack:
 		curr = stack.pop()
-		
 		if curr >= len(tree) or tree[curr] == -1:
 			continue
-			
 		if tree[curr] == target:
 			return True
 		
@@ -697,6 +834,10 @@ func get_java_dfs_code(arr: String, size: int, target: int) -> String:
 	return """import java.util.Stack;
 
 class DFS {
+	/*
+	 * Time: O(V + E)
+	 * Space: O(V)
+	 */
 	static boolean dfs(int[] tree, int target) {
 		Stack<Integer> s = new Stack<>();
 		s.push(0);
@@ -721,6 +862,8 @@ class DFS {
 
 func get_c_dfs_code(arr: String, size: int, target: int) -> String:
 	return """#include <stdio.h>
+
+/* Time: O(V+E) | Space: O(V) */
 int stack[100];
 int top = -1;
 void push(int v) { stack[++top] = v; }
@@ -768,37 +911,81 @@ func _on_config_yes_pressed() -> void:
 func _show_config_size_modal() -> void:
 	config_size_modal.show()
 
-# --- RESTORED: Show Input Menu after Size ---
 func _on_size_next_pressed() -> void:
 	btn_sound.play()
 	config_size_modal.hide()
 	_show_config_elements_modal()
 
-# --- RESTORED: Input Menu Logic ---
 func _show_config_elements_modal() -> void:
 	element_inputs.clear()
-	for child in elements_container.get_children(): child.queue_free()
-	var grid = GridContainer.new()
-	grid.columns = 5
-	elements_container.add_child(grid)
-	
-	var count = int(size_input.value) 
-	
-	for i in range(count):
-		var le = LineEdit.new()
-		le.placeholder_text = "0"
-		# Default empty so users can choose
-		le.text = "" 
-		element_inputs.append(le)
-		grid.add_child(le)
-		
-		# Validation for the initial menu inputs too
-		le.text_changed.connect(_validate_tree_inputs)
-	
+	for child in elements_container.get_children(): 
+		child.queue_free()
+
+	# Use a VBox to stack the levels of the tree
+	var tree_vbox = VBoxContainer.new()
+	tree_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	tree_vbox.add_theme_constant_override("separation", 20)
+	tree_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	elements_container.add_child(tree_vbox)
+
+	var count = int(size_input.value)
+	var current_index = 0
+	var level = 0
+
+	# Build the tree inputs layer by layer
+	while current_index < count:
+		var nodes_in_level = pow(2, level)
+		var h_box = HBoxContainer.new()
+		h_box.alignment = BoxContainer.ALIGNMENT_CENTER
+		# Nodes get closer together at lower levels
+		h_box.add_theme_constant_override("separation", max(10, 50 - (level * 15))) 
+
+		for i in range(nodes_in_level):
+			if current_index >= count:
+				break
+
+			var node_vbox = VBoxContainer.new()
+			node_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+
+			var lbl = Label.new()
+			lbl.text = "Node " + str(current_index)
+			lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			lbl.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
+			node_vbox.add_child(lbl)
+
+			var le = LineEdit.new()
+			le.placeholder_text = "0"
+			le.text = "" 
+			le.alignment = HORIZONTAL_ALIGNMENT_CENTER
+			le.custom_minimum_size = Vector2(100, 70)
+			
+			le.max_length = 3 
+			
+			node_vbox.add_child(le)
+			h_box.add_child(node_vbox)
+			
+			element_inputs.append(le)
+			
+			le.text_changed.connect(_on_element_input_changed.bind(le))
+
+			current_index += 1
+
+		tree_vbox.add_child(h_box)
+		level += 1
+
 	_validate_tree_inputs("")
 	config_elements_modal.show()
 
-# --- RESTORED: Validation for Input Menu ---
+func _on_element_input_changed(new_text: String, line_edit: LineEdit) -> void:
+	if not new_text.is_empty() and not new_text.is_valid_int():
+		var filtered_text = ""
+		for char in new_text:
+			if char >= "0" and char <= "9":
+				filtered_text += char
+		line_edit.text = filtered_text
+		line_edit.caret_column = filtered_text.length()
+	_validate_tree_inputs("")
+
 func _validate_tree_inputs(_ignored_text: String):
 	for i in range(element_inputs.size()):
 		if i == 0: 
@@ -816,7 +1003,6 @@ func _validate_tree_inputs(_ignored_text: String):
 				element_inputs[i].editable = true
 				element_inputs[i].placeholder_text = "0"
 
-# --- RESTORED: Gather Inputs ---
 func _on_elements_done_pressed() -> void:
 	btn_sound.play()
 	var arr: Array[int] = []
@@ -897,7 +1083,7 @@ func start_tutorial() -> void:
 	
 	tutorial_sequence = [
 		{
-			"node": array_container, # Points to tree area
+			"node": array_container,
 			"title": "TREE EDITOR",
 			"text": "Click on any node to change its number.\nREMEMBER: You must set the parent node first!",
 			"action": "highlight"
