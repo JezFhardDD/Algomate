@@ -1,0 +1,121 @@
+{
+  "intro": {
+	"title": "Introduction to Data Structures",
+	"content": "[b]What Is Data?[/b]\n[i]Data[/i] refers to raw facts and values that represent information. These can be numbers, text, symbols, or measurements. Examples include a student’s age, a name, a test score, or a true or false value.\n\n[b]Data Types[/b]\nIn programming, data is classified into [i]data types[/i]. Common data types include integers, floating point numbers, characters, strings, and boolean values. Data types tell the computer how much memory to use and what operations are allowed.\n\n[b]Basic Operations on Data[/b]\nPrograms perform operations such as creating data, reading data, updating values, and deleting data. These operations are essential for any software system.\n\n[b]Why Do We Need to Organize Data?[/b]\nPrograms handle large amounts of data such as records, messages, scores, and transactions. If data is not organized properly, programs become slow, difficult to maintain, and prone to errors.\n\n[b]What Is a Data Structure?[/b]\nA [i]data structure[/i] is a method of storing and organizing data in memory so it can be accessed and modified efficiently. It defines how data is stored, how it is accessed, and how operations are performed.\n\n[b]Real-Life Analogy[/b]\nThink of data like books. If books are scattered randomly, finding one is difficult. When books are arranged on shelves by category, searching becomes easier. A data structure works like this shelf system.\n\n[b]Importance of Data Structures[/b]\nData structures help programmers write faster programs, use memory efficiently, and manage large amounts of data. Many systems such as databases, search engines, games, and navigation apps rely heavily on data structures.\n\n[b]Summary[/b]\nData is raw information. Data types define how data is used. Data structures organize data efficiently and make programs easier to understand and maintain.",
+	"simulation_scene": ""
+  },
+
+  "array": {
+	"title": "Arrays",
+	"content": "[b]What Is an Array?[/b]\nAn [i]array[/i] is a data structure that stores multiple elements of the same data type in contiguous memory locations.\n\n[b]Array Representation[/b]\nEach element in an array is accessed using an index. Indexing usually starts at zero, meaning the first element is at index zero.\n\n[b]Basic Operations[/b]\nCommon array operations include traversal, insertion, deletion, searching, and updating elements.\n\n[b]Insertion[/b]\nInsertion means adding a new element at a specific position. Existing elements may need to shift to make space.\n\n[b]Deletion[/b]\nDeletion removes an element from a given index. Remaining elements shift to fill the gap.\n\n[b]Searching[/b]\nSearching involves finding the position of a specific value in the array.\n\n[b]Updating[/b]\nUpdating replaces the value stored at a specific index.\n\n[b]Summary[/b]\nArrays are simple and fast for accessing elements but have fixed size limitations.",
+	"simulation_scene": "res://Simulations/ArraySimulation.tscn"
+  },
+
+  "linked_list": {
+	"title": "Linked List",
+	"content": "[b]What Is a Linked List?[/b]\nA [i]linked list[/i] is a data structure where elements are stored as nodes. Each node contains data and a reference to the next node.\n\n[b]Representation[/b]\nUnlike arrays, linked lists do not store elements in contiguous memory.\n\n[b]Types of Linked Lists[/b]\nCommon types include singly linked lists, doubly linked lists, and circular linked lists.\n\n[b]Basic Operations[/b]\nOperations include insertion, deletion, traversal, and searching.\n\n[b]Summary[/b]\nLinked lists allow dynamic memory usage but require more memory for references.",
+	"simulation_scene": "res://Simulations/LinkedListSimulation.tscn"
+  },
+
+  "doubly_linked_list": {
+	"title": "Doubly Linked List",
+	"content": "[b]What Is a Doubly Linked List?[/b]\nA [i]doubly linked list[/i] is a linked list where each node has references to both the next and previous nodes.\n\n[b]Advantages[/b]\nIt allows traversal in both forward and backward directions.\n\n[b]Disadvantages[/b]\nIt uses more memory due to extra pointers.\n\n[b]Summary[/b]\nDoubly linked lists provide flexibility at the cost of additional memory usage.",
+	"simulation_scene": ""
+  },
+
+  "circular_linked_list": {
+	"title": "Circular Linked List",
+	"content": "[b]What Is a Circular Linked List?[/b]\nA [i]circular linked list[/i] is a linked list where the last node points back to the first node.\n\n[b]Key Feature[/b]\nThere is no null reference at the end of the list.\n\n[b]Use Cases[/b]\nCircular linked lists are useful in scheduling and continuous data processing.\n\n[b]Summary[/b]\nThis structure allows efficient looping through data.",
+	"simulation_scene": ""
+  },
+
+  "stack": {
+	"title": "Stacks",
+	"content": "[b]What Is a Stack?[/b]\nA [i]stack[/i] is a linear data structure that follows the Last In, First Out principle.\n\n[b]Basic Operations[/b]\nPush adds an element to the top. Pop removes the top element. Peek views the top element.\n\n[b]Real-Life Example[/b]\nA stack of plates is a common analogy.\n\n[b]Summary[/b]\nStacks are widely used in function calls, undo operations, and expression evaluation.",
+	"simulation_scene": "res://Simulations/StackSimulation.tscn"
+  },
+
+  "queue": {
+	"title": "Queues",
+	"content": "[b]What Is a Queue?[/b]\nA [i]queue[/i] is a linear data structure that follows the First In, First Out principle.\n\n[b]Basic Operations[/b]\nEnqueue adds an element to the rear. Dequeue removes an element from the front.\n\n[b]Real-Life Example[/b]\nPeople lining up in a queue follow the same rule.\n\n[b]Summary[/b]\nQueues are useful in scheduling, buffering, and task management.",
+	"simulation_scene": "res://Simulations/QueueSimulation.tscn"
+  },
+
+  "tree": {
+	"title": "Trees",
+	"content": "[b]What Is a Tree?[/b]\nA [i]tree[/i] is a hierarchical data structure consisting of nodes connected by edges.\n\n[b]Binary Search Tree[/b]\nA [i]binary search tree[/i] stores data such that the left subtree contains smaller values and the right subtree contains larger values.\n\n[b]BST Operations[/b]\nCommon operations include insertion, deletion, and searching.\n\n[b]Tree Traversals[/b]\nTraversal methods include inorder, preorder, and postorder.\n\n[b]Graph Traversals[/b]\nBreadth First Search and Depth First Search are used to explore tree structures.\n\n[b]Summary[/b]\nTrees are powerful for representing hierarchical relationships.",
+	"simulation_scene": ""
+  },
+
+  "algo_intro_search": {
+	"title": "Introduction to Algorithms",
+	"content": "[b]What Is an Algorithm?[/b]\nAn [i]algorithm[/i] is a step by step procedure for solving a problem.\n\n[b]Searching Algorithms[/b]\nSearching algorithms are used to locate a specific element in a data structure.\n\n[b]Importance[/b]\nEfficient algorithms reduce execution time and resource usage.\n\n[b]Summary[/b]\nUnderstanding algorithms is essential for problem solving in computer science.",
+	"simulation_scene": ""
+  },
+
+  "linear_search": {
+	"title": "Linear Search",
+	"content": "[b]Linear Search[/b]\nLinear search checks each element one by one until the target value is found or the list ends.\n\n[b]Characteristics[/b]\nIt is simple but inefficient for large datasets.\n\n[b]Summary[/b]\nLinear search works on both sorted and unsorted data.",
+	"simulation_scene": ""
+  },
+
+  "binary_search": {
+	"title": "Binary Search",
+	"content": "[b]Binary Search[/b]\nBinary search repeatedly divides a sorted list in half to locate a value.\n\n[b]Requirement[/b]\nThe data must be sorted.\n\n[b]Summary[/b]\nBinary search is faster than linear search.",
+	"simulation_scene": ""
+  },
+
+  "interpolation_search": {
+	"title": "Interpolation Search",
+	"content": "[b]Interpolation Search[/b]\nInterpolation search estimates the position of the target based on value distribution.\n\n[b]Best Case[/b]\nIt works best on uniformly distributed data.\n\n[b]Summary[/b]\nThis search can be faster than binary search in specific cases.",
+	"simulation_scene": ""
+  },
+
+  "hash_table": {
+	"title": "Hash Table",
+	"content": "[b]What Is a Hash Table?[/b]\nA [i]hash table[/i] stores data using key value pairs.\n\n[b]Hash Function[/b]\nA hash function converts a key into an index.\n\n[b]Summary[/b]\nHash tables provide very fast data access.",
+	"simulation_scene": ""
+  },
+
+  "algo_intro_sort": {
+	"title": "Introduction to Sorting Algorithms",
+	"content": "[b]Sorting Algorithms[/b]\nSorting algorithms arrange data in a specific order such as ascending or descending.\n\n[b]Why Sorting Matters[/b]\nSorting improves searching efficiency and data organization.\n\n[b]Summary[/b]\nDifferent sorting methods suit different scenarios.",
+	"simulation_scene": ""
+  },
+
+  "bubble_sort": {
+	"title": "Bubble Sort",
+	"content": "[b]Bubble Sort[/b]\nBubble sort repeatedly swaps adjacent elements if they are in the wrong order.\n\n[b]Summary[/b]\nIt is easy to understand but inefficient for large datasets.",
+	"simulation_scene": ""
+  },
+
+  "insertion_sort": {
+	"title": "Insertion Sort",
+	"content": "[b]Insertion Sort[/b]\nInsertion sort builds a sorted list one element at a time.\n\n[b]Summary[/b]\nIt works well for small or nearly sorted data.",
+	"simulation_scene": ""
+  },
+
+  "selection_sort": {
+	"title": "Selection Sort",
+	"content": "[b]Selection Sort[/b]\nSelection sort repeatedly selects the smallest element and places it in the correct position.\n\n[b]Summary[/b]\nIt is simple but not very efficient.",
+	"simulation_scene": ""
+  },
+
+  "merge_sort": {
+	"title": "Merge Sort",
+	"content": "[b]Merge Sort[/b]\nMerge sort divides data into smaller parts, sorts them, and merges them back together.\n\n[b]Summary[/b]\nIt is efficient and uses the divide and conquer approach.",
+	"simulation_scene": ""
+  },
+
+  "quick_sort": {
+	"title": "Quick Sort",
+	"content": "[b]Quick Sort[/b]\nQuick sort selects a pivot and partitions data around it.\n\n[b]Summary[/b]\nIt is very fast on average but performance depends on pivot selection.",
+	"simulation_scene": ""
+  },
+
+  "shell_sort": {
+	"title": "Shell Sort",
+	"content": "[b]Shell Sort[/b]\nShell sort improves insertion sort by allowing comparisons over larger gaps.\n\n[b]Summary[/b]\nIt is faster than simple insertion sort for large datasets.",
+	"simulation_scene": ""
+  }
+}
