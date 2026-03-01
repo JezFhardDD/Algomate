@@ -1,5 +1,8 @@
 extends Control
 
+# --- ADD YOUR SCENE PATH HERE ---
+const BLOCK_SCENE = preload("res://ArrayBlock.tscn") 
+
 @onready var sort_button: Button = $ButtonsContainer/SortButton
 @onready var search_button: Button = $ButtonsContainer/SearchButton
 @onready var next_step_button: Button = $ButtonsContainer/NextButton
@@ -14,8 +17,8 @@ extends Control
 @onready var action_label: Label = $VBoxContainer/ActionLabel
 
 @onready var array_container: HBoxContainer = $ArrayContainer
-@onready var probe_container: HBoxContainer = $probeContainer
 @onready var disabled_popup: PopupPanel = $PopupPanel
+
 # Search variables
 var array: Array = []
 var target_value: int = 0
@@ -24,20 +27,11 @@ var high: int = 0
 var probe: int = 0
 var is_sorted: bool = false
 var search_active: bool = false
-var array_blocks: Array = []
-var value_labels: Array = []
-var indicator_blocks: Array = []
 
-# Colors
-const BLOCK_COLOR = Color.WHITE
-const LOW_COLOR = Color.BLUE
-const HIGH_COLOR = Color.RED
-const PROBE_COLOR = Color.YELLOW
-const FOUND_COLOR = Color.GREEN
+# Array to hold the instantiated block scenes
+var array_blocks: Array = []
 
 func _ready():
-
-	
 	generate_new_array()
 	update_ui()
 	search_input.visible = false
@@ -62,53 +56,26 @@ func create_array_blocks():
 	# Clear existing blocks properly
 	for child in array_container.get_children():
 		child.queue_free()
-	for child in probe_container.get_children():
-		child.queue_free()
 	
 	array_blocks.clear()
-	value_labels.clear()
-	indicator_blocks.clear()
 	
-	# Create array blocks
+	# Instantiate custom block scenes
 	for i in range(array.size()):
-		# Create container for block and label
-		var block_container = VBoxContainer.new()
-		block_container.alignment = BoxContainer.ALIGNMENT_CENTER
+		var block_instance = BLOCK_SCENE.instantiate()
+		block_instance.value = array[i]
 		
-		# Create the colored block
-		var block = ColorRect.new()
-		block.custom_minimum_size = Vector2(60, 60)
-		block.color = BLOCK_COLOR
-		
-		# Create value label
-		var label = Label.new()
-		label.text = str(array[i])
-		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		label.add_theme_font_size_override("font_size", 16)
-		
-		block_container.add_child(block)
-		block_container.add_child(label)
-		array_container.add_child(block_container)
-		
-		array_blocks.append(block)
-		value_labels.append(label)
-	
-	# Create indicator blocks
-	for i in range(array.size()):
-		var indicator = ColorRect.new()
-		indicator.custom_minimum_size = Vector2(60, 20)
-		indicator.color = Color.TRANSPARENT
-		probe_container.add_child(indicator)
-		indicator_blocks.append(indicator)
+		array_container.add_child(block_instance)
+		array_blocks.append(block_instance)
 
 func sort_array():
 	if array.size() > 0:
 		array.sort()
 		is_sorted = true
-		# Update the labels with sorted values
+		
+		# Sync the visual blocks with the sorted array data
 		for i in range(array.size()):
-			value_labels[i].text = str(array[i])
+			array_blocks[i].value = array[i]
+			
 		update_visual_indicators()
 		update_ui()
 		print("Array sorted! You can now search.")
@@ -137,11 +104,10 @@ func update_search_state():
 	
 	# Calculate probe position using interpolation formula
 	if low <= high and target_value >= array[low] and target_value <= array[high]:
-		var numerator = float(target_value - array[low]) * (high - low)
-		var denominator = array[high] - array[low]
-		
-		if denominator != 0:
-			probe = low + int(numerator / denominator)
+		var range_diff = array[high] - array[low]
+		if range_diff != 0:
+			var numerator = float(target_value - array[low]) * (high - low)
+			probe = low + int(numerator / range_diff)
 		else:
 			probe = low
 	else:
@@ -149,10 +115,8 @@ func update_search_state():
 		search_active = false
 	
 	# Ensure probe is within bounds
-	if probe < low:
-		probe = low
-	if probe > high:
-		probe = high
+	if probe < low: probe = low
+	if probe > high: probe = high
 	
 	# Update visual indicators
 	update_visual_indicators()
@@ -167,7 +131,7 @@ func update_search_state():
 		if array[probe] == target_value:
 			comparison_label.text = "Comparison: Found!"
 			action_label.text = "Action: Terminate"
-			array_blocks[probe].color = FOUND_COLOR
+			array_blocks[probe].set_status("found")
 			search_active = false
 			print("Found target value at index ", probe)
 		elif array[probe] < target_value:
@@ -187,63 +151,48 @@ func update_search_state():
 		print("Target value not found")
 
 func update_visual_indicators():
-	# Reset all blocks to white
+	# Reset all blocks and apply states
 	for i in range(array_blocks.size()):
-		array_blocks[i].color = BLOCK_COLOR
-		indicator_blocks[i].color = Color.TRANSPARENT
-	
-	# Highlight low, high, and probe if search is active
-	if search_active:
-		if low < array_blocks.size():
-			array_blocks[low].color = LOW_COLOR
-			indicator_blocks[low].color = LOW_COLOR
+		var block = array_blocks[i]
 		
-		if high < array_blocks.size():
-			array_blocks[high].color = HIGH_COLOR
-			indicator_blocks[high].color = HIGH_COLOR
-		
-		if probe >= 0 and probe < array_blocks.size():
-			array_blocks[probe].color = PROBE_COLOR
-			indicator_blocks[probe].color = PROBE_COLOR
+		if search_active:
+			# Dim blocks outside the current searchable bounds
+			if i < low or i > high:
+				block.set_status("inactive")
+			else:
+				block.set_status("default")
+				
+			# Highlight pointers
+			if i == low: block.set_status("low")
+			if i == high: block.set_status("high")
+			if i == probe: block.set_status("probe")
+		else:
+			# If search is off, make sure everything looks normal (unless found)
+			if block.modulate != Color.GREEN:
+				block.set_status("default")
 
 func update_ui():
-	# Update button states
 	search_button.disabled = not is_sorted
 	next_step_button.disabled = not search_active
-	
-	# Show current state in console
-	print("UI Update - Sorted: ", is_sorted, " Search Active: ", search_active)
 
-func _on_sort_button_pressed():
-	sort_array()
+func _on_sort_button_pressed(): sort_array()
 
 func _on_search_button_pressed():
 	search_input.visible = true
 	search_input.grab_focus()
 	search_input.text = ""
-	print("Search input shown - enter a number and press Enter")
-	if not is_sorted:
-		disabled_popup.popup()
-	else:
-		disabled_popup.hide()
-
+	if not is_sorted: disabled_popup.popup()
+	else: disabled_popup.hide()
 
 func _on_next_button_pressed():
 	if search_active:
-		print("Next step pressed")
 		update_search_state()
 		update_ui()
 
-func _on_generate_button_pressed():
-	generate_new_array()
-	print("New array generated")
+func _on_generate_button_pressed(): generate_new_array()
 
 func _on_search_input_text_submitted(text):
-	print("Search input submitted: ", text)
 	if text.is_valid_int():
-		var value = int(text)
-		start_search(value)
+		start_search(int(text))
 		search_input.visible = false
 		search_input.text = ""
-	else:
-		print("Please enter a valid number")

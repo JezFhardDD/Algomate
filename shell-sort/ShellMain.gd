@@ -1,7 +1,7 @@
 extends Control
 
 # =======================================================
-#  SHELL SORT SIMULATION - FINAL (With Scroll & All Functions)
+#   SHELL SORT SIMULATION - FINAL (With Scroll & All Functions)
 # =======================================================
 
 # --- MAIN BUTTONS ---
@@ -106,7 +106,7 @@ const POINTER_TEX := preload("res://assets/point_left.png")
 @onready var java_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/Java_btn
 @onready var c_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/C_btn
 
-# --- SHELL SORT VARIABLES (REPLACED QUICK) ---
+# --- SHELL SORT VARIABLES ---
 var main_array: Array[int] = []
 var block_nodes: Array[Control] = []
 var timeline_log: Array[String] = []
@@ -133,26 +133,52 @@ var tutorial_sequence = []
 var tutorial_sequence_index = 0
 var tutorial_in_progress = false
 
-# Intro Text (UPDATED FOR SHELL SORT)
+# Intro Text (UPDATED WITH COMPLEXITY)
 var intro_step: int = 0
 var intro_texts = [
 	"Welcome to Shell Sort Simulation!\nShell Sort is an optimization of Insertion Sort that allows the exchange of items that are far apart.",
 	"The Algorithm:\n\n1. Start with a large 'gap' (e.g., n/2).\n2. Compare elements separated by this gap.\n3. If they are in the wrong order, swap them.\n4. Reduce the gap and repeat until gap is 1.",
+	"Complexity Analysis:\n\n• Time: O(n²) worst case, but often much faster (O(n log n)) depending on the gap sequence.\n• Space: O(1) - Sorting is done in-place.",
 	"Visual Elements:\n\n• The 'FRONT' and 'REAR' pointers show the pair being compared across the gap.\n• Watch as elements jump across the array to get closer to their final spot.",
 	"How to Use:\n\n1. Click 'NEXT STEP' to compare pairs.\n2. Click 'AUTO SORT' to watch the gaps shrink."
 ]
 
-# Code Tutorial Data (UPDATED FOR SHELL SORT)
+# --- CODE TUTORIAL DATA ---
 var current_code_language: String = "cpp"
 var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
+var current_tutorial_data: Array = [] # <--- ADD THIS LINE
+
 var cpp_tutorial_data = [
-	{ "lines": [0, 1, 2, 3], "text": "1. Imports & Setup:\nStandard Input/Output libraries." },
-	{ "lines": [5, 6, 7], "text": "2. Gap Loop:\nWe start with a large gap (usually n/2) and reduce it by half each time until it becomes 0." },
-	{ "lines": [8, 9, 10], "text": "3. Outer Loop (i):\nIterate from 'gap' to the end of the array. This picks the element to be inserted." },
-	{ "lines": [11, 12, 13, 14], "text": "4. Inner Loop (j):\nCompare and shift elements that are 'gap' distance apart, just like Insertion Sort but with bigger steps." },
-	{ "lines": [20, 21, 22, 23], "text": "5. Main Function:\nInitializes the array and calls shellSort." }
+	{ "lines": [0, 1], "text": "1. Imports & Setup:\nStandard Input/Output libraries." },
+	{ "lines": [3, 4, 5, 6, 7], "text": "2. Complexity Analysis:\n[color=yellow]Time: O(n^2)[/color] worst case, [color=green]Space: O(1)[/color] in-place." },
+	{ "lines": [9], "text": "3. Gap Loop:\nStart with a large gap (n/2) and reduce it by half each iteration." },
+	{ "lines": [10], "text": "4. Outer Loop (i):\nIterate from 'gap' to the end of the array." },
+	{ "lines": [11, 12, 13, 14, 15], "text": "5. Inner Loop (j):\nCompare and shift elements that are 'gap' distance apart." }
 ]
+
+var python_tutorial_data = [
+	{ "lines": [0, 1], "text": "1. Complexity Analysis:\n[color=yellow]Time: O(n^2)[/color] worst case, [color=green]Space: O(1)[/color]." },
+	{ "lines": [2, 3, 4], "text": "2. Setup:\nGet array length and set initial gap to n // 2." },
+	{ "lines": [5, 6], "text": "3. Outer Loops:\nWhile gap > 0, loop through elements starting from the gap index." },
+	{ "lines": [7, 8, 9, 10, 11, 12], "text": "4. Inner Loop & Shift:\nShift elements gap distance apart if they are out of order." },
+	{ "lines": [13], "text": "5. Reduce Gap:\nDivide gap by 2 for the next pass." }
+]
+
+var java_tutorial_data = [
+	{ "lines": [0, 1, 2], "text": "1. Complexity Analysis:\n[color=yellow]Time: O(n^2)[/color] worst case, [color=green]Space: O(1)[/color]." },
+	{ "lines": [3, 4], "text": "2. Class & Method:\nDefine ShellSort class and sort method." },
+	{ "lines": [5, 6], "text": "3. Gap Initialization:\nSet n to array length, start gap at n/2, dividing by 2 each pass." },
+	{ "lines": [7, 8, 9, 10, 11, 12], "text": "4. Compare & Shift:\nIterate elements and shift them gap distance apart if out of order." }
+]
+
+var c_tutorial_data = [
+	{ "lines": [0], "text": "1. Imports:\nInclude stdio.h." },
+	{ "lines": [1, 2], "text": "2. Complexity Analysis:\n[color=yellow]Time: O(n^2)[/color] worst case, [color=green]Space: O(1)[/color]." },
+	{ "lines": [4], "text": "3. Gap Loop:\nReduce gap by half each pass." },
+	{ "lines": [5, 6, 7, 8, 9, 10, 11], "text": "4. Compare & Shift:\nShift elements gap distance apart if needed." }
+]
+
 
 func _ready() -> void:
 	print(" Program started — initializing Shell Sort visualizer...")
@@ -473,7 +499,7 @@ func _on_timeline_close_pressed() -> void:
 		timeline_popup.hide()
 
 # ==============================================
-#  CODE GENERATION & TUTORIAL (SHELL SORT STRINGS)
+#  CODE GENERATION & TUTORIAL
 # ==============================================
 
 func _on_show_cpp_pressed() -> void:
@@ -485,36 +511,64 @@ func _on_show_cpp_pressed() -> void:
 func _show_cpp_popup() -> void:
 	var code = ""
 	var arr_str = ", ".join(main_array.map(func(x): return str(x)))
-	match current_code_language:
-		"cpp": code = get_cpp_shell_code(arr_str)
-		"python": code = get_python_shell_code(arr_str)
-		"java": code = get_java_shell_code(arr_str)
-		"c": code = get_c_shell_code(arr_str)
 	
-	# UPDATED: Use RichTextLabel
+	match current_code_language:
+		"cpp":
+			code = get_cpp_shell_code(arr_str)
+			current_tutorial_data = cpp_tutorial_data
+		"python":
+			code = get_python_shell_code(arr_str)
+			current_tutorial_data = python_tutorial_data
+		"java":
+			code = get_java_shell_code(arr_str)
+			current_tutorial_data = java_tutorial_data
+		"c":
+			code = get_c_shell_code(arr_str)
+			current_tutorial_data = c_tutorial_data
+	
 	if cpp_label:
+		cpp_label.bbcode_enabled = true
 		cpp_label.text = code
 	
 	cpp_popup.popup_centered()
 	
-	if current_code_language == "cpp":
-		cpp_tutorial_step = 0
-		if cpp_next_btn:
-			if not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
-				cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
-		_update_cpp_tutorial()
+	cpp_tutorial_step = 0
+	if cpp_next_btn:
+		if not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
+			cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
+	_update_cpp_tutorial()
 
 func _on_cpp_next_pressed() -> void:
 	btn_sound.play()
 	cpp_tutorial_step += 1
-	if cpp_tutorial_step >= cpp_tutorial_data.size():
+	var active_data = []
+	match current_code_language:
+		"cpp": active_data = cpp_tutorial_data
+		"python": active_data = python_tutorial_data
+		"java": active_data = java_tutorial_data
+		"c": active_data = c_tutorial_data
+		
+	if cpp_tutorial_step >= active_data.size():
 		cpp_tutorial_step = 0
 	_update_cpp_tutorial()
 
 func _update_cpp_tutorial() -> void:
-	if cpp_tutorial_data.is_empty(): return
-	var data = cpp_tutorial_data[cpp_tutorial_step]
+	var active_data = []
+	match current_code_language:
+		"cpp": active_data = cpp_tutorial_data
+		"python": active_data = python_tutorial_data
+		"java": active_data = java_tutorial_data
+		"c": active_data = c_tutorial_data
+		
+	if active_data.is_empty(): return
+	
+	if cpp_tutorial_step >= active_data.size():
+		cpp_tutorial_step = 0
+		
+	var data = active_data[cpp_tutorial_step]
+	
 	if cpp_explanation_lbl:
+		cpp_explanation_lbl.bbcode_enabled = true
 		cpp_explanation_lbl.text = data["text"]
 	
 	if cpp_label:
@@ -535,10 +589,11 @@ func _update_cpp_tutorial() -> void:
 			else:
 				highlighted_code += lines[i] + "\n"
 		
+		cpp_label.bbcode_enabled = true
 		cpp_label.text = highlighted_code
 		
 		if cpp_scroll and indices.size() > 0:
-			cpp_scroll.scroll_vertical = indices[0] * 25
+			cpp_scroll.scroll_vertical = indices[0] * 20
 
 # --- SHELL SORT CODE STRINGS ---
 
@@ -546,6 +601,11 @@ func get_cpp_shell_code(arr: String) -> String:
 	return """#include <iostream>
 using namespace std;
 
+/*
+ * COMPLEXITY:
+ * Time: O(n^2) worst case
+ * Space: O(1)
+ */
 void shellSort(int arr[], int n) {
 	for (int gap = n/2; gap > 0; gap /= 2) {
 		for (int i = gap; i < n; i += 1) {
@@ -566,7 +626,8 @@ int main() {
 }""" % arr
 
 func get_python_shell_code(arr: String) -> String:
-	return """def shellSort(arr):
+	return """# Time: O(n^2) | Space: O(1)
+def shellSort(arr):
 	n = len(arr)
 	gap = n // 2
 	while gap > 0:
@@ -584,7 +645,10 @@ shellSort(arr)
 print("Sorted:", arr)""" % arr
 
 func get_java_shell_code(arr: String) -> String:
-	return """class ShellSort {
+	return """/*
+ * Time: O(n^2) | Space: O(1)
+ */
+class ShellSort {
 	void sort(int arr[]) {
 		int n = arr.length;
 		for (int gap = n/2; gap > 0; gap /= 2) {
@@ -606,6 +670,8 @@ func get_java_shell_code(arr: String) -> String:
 
 func get_c_shell_code(arr: String) -> String:
 	return """#include <stdio.h>
+// Time: O(n^2) | Space: O(1)
+
 void shellSort(int arr[], int n) {
 	for (int gap = n/2; gap > 0; gap /= 2) {
 		for (int i = gap; i < n; i += 1) {
@@ -662,18 +728,48 @@ func _on_size_next_pressed() -> void:
 	_show_config_elements_modal()
 
 func _show_config_elements_modal() -> void:
+	var array_size = int(size_input.value)
+	
 	element_inputs.clear()
-	for child in elements_container.get_children(): child.queue_free()
+	for child in elements_container.get_children():
+		child.queue_free()
+
 	var grid = GridContainer.new()
-	grid.columns = 5
+	grid.columns = min(5, array_size)
+	grid.add_theme_constant_override("h_separation", 10)
+	grid.add_theme_constant_override("v_separation", 10)
 	elements_container.add_child(grid)
-	var count = int(size_input.value)
-	for i in range(count):
-		var le = LineEdit.new()
-		le.placeholder_text = str(randi_range(1, 99))
-		element_inputs.append(le)
-		grid.add_child(le)
+	
+	for i in range(array_size):
+		var element_box = VBoxContainer.new()
+		
+		# Create label
+		var label = Label.new()
+		label.text = "Value %d" % (i + 1)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+
+		# Create input
+		var line_edit = LineEdit.new()
+		line_edit.placeholder_text = "0-999"
+		line_edit.text = str(randi_range(1, 99))
+		line_edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		line_edit.max_length = 3
+		line_edit.custom_minimum_size = Vector2(80, 80)
+
+		line_edit.text_changed.connect(_on_input_text_changed.bind(line_edit))
+		
+		element_box.add_child(label)
+		element_box.add_child(line_edit)
+		grid.add_child(element_box)
+		
+		element_inputs.append(line_edit)
+	
 	config_elements_modal.show()
+
+func _on_input_text_changed(new_text: String, line_edit: LineEdit) -> void:
+	if not new_text.is_valid_int() and new_text != "":
+		line_edit.text = new_text.trim_suffix(new_text[-1])
+		line_edit.set_caret_column(line_edit.text.length())
 
 func _on_elements_done_pressed() -> void:
 	btn_sound.play()

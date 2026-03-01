@@ -1,0 +1,5 @@
+res://scene/interpolation.tscn
+res://ArrayBlock.tscn
+res://ShellBlock.tscn
+res://scene/Main.tscn
+res://ShellMain.gd

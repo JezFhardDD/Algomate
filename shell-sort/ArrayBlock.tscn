@@ -1,17 +1,39 @@
-[gd_scene format=3 uid="uid://bmnnv5g4xb015"]
+[gd_scene load_steps=4 format=3 uid="uid://ces2ytqo6nr6j"]
 
-[node name="Control" type="Control"]
+[ext_resource type="Script" uid="uid://bbqdqwtx2ri6f" path="res://source/array_block.gd" id="1_ifdei"]
+[ext_resource type="Texture2D" uid="uid://b57has60ggg6e" path="res://assets/BLOCK_RED.png" id="2_uj32m"]
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="3_32ngq"]
+
+[node name="ArrayBlock" type="Control"]
 layout_mode = 3
-anchors_preset = 0
-offset_left = 38.0
-offset_top = 40.0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -1.0
+offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ifdei")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(396, 227)
+[node name="Bg" type="Sprite2D" parent="."]
+position = Vector2(18, 16)
+texture = ExtResource("2_uj32m")
 
-[node name="Label" type="Label" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="NumberLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -7.5
+offset_top = -15.5
+offset_right = 7.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_32ngq")
+theme_override_font_sizes/font_size = 30
+text = "2"
