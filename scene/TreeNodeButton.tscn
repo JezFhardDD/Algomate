@@ -1,0 +1,20 @@
+[gd_scene load_steps=6 format=3 uid="uid://11nga85ev4ds"]
+
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="1_lcpln"]
+[ext_resource type="Texture2D" uid="uid://dhkga8tjxyuej" path="res://assets/BLOCK_GREEN.png" id="2_lcpln"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4paj6"]
+texture = ExtResource("2_lcpln")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xrns3"]
+texture = ExtResource("2_lcpln")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_v0vs5"]
+texture = ExtResource("2_lcpln")
+
+[node name="TreeNodeButton" type="Button"]
+theme_override_fonts/font = ExtResource("1_lcpln")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = SubResource("StyleBoxTexture_4paj6")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_xrns3")
+theme_override_styles/normal = SubResource("StyleBoxTexture_v0vs5")
