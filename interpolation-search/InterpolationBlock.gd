@@ -23,10 +23,11 @@ var original_position := Vector2.ZERO
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	# FORCE ORANGE BASE
+	
 	var bg = get_node_or_null("Bg")
 	if bg and (bg is TextureRect or bg is Sprite2D):
-		bg.texture = TEXTURE_POOL[0] 
+		# This will grab a random texture from your TEXTURE_POOL array
+		bg.texture = TEXTURE_POOL.pick_random() 
 	
 	_update_text()
 
@@ -36,8 +37,7 @@ func _update_text() -> void:
 		label.text = str(value)
 
 func set_base_color(col: Color) -> void:
-	base_color = col
-	modulate = base_color
+	pass
 
 func reset_color() -> void:
 	modulate = base_color

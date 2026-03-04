@@ -1,0 +1,827 @@
+[gd_scene load_steps=53 format=3 uid="uid://cnlp6jn1v8wse"]
+
+[ext_resource type="Script" uid="uid://dx12ivb8i1dwd" path="res://Interpolation.gd" id="1_s5yxy"]
+[ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="2_eik88"]
+[ext_resource type="FontFile" uid="uid://bvq3t3k08atlq" path="res://assets/font/Minecraftchmc-dBlX.ttf" id="3_pnqar"]
+[ext_resource type="Texture2D" uid="uid://bc2istcv326c0" path="res://assets/QUEUE_BUTTONS.png" id="4_3sxgj"]
+[ext_resource type="Texture2D" uid="uid://doo4unotakvkq" path="res://assets/point_left.png" id="5_764rb"]
+[ext_resource type="Texture2D" uid="uid://dcxstyoycht1w" path="res://assets/BUTTON_HOVERED.png" id="6_3sxgj"]
+[ext_resource type="Texture2D" uid="uid://c7pesy50pmngs" path="res://assets/C++_CONTAINER.png" id="6_764rb"]
+[ext_resource type="Texture2D" uid="uid://da727bni2nuy8" path="res://assets/pointerpivot.png" id="6_aex65"]
+[ext_resource type="PackedScene" uid="uid://bitegkylvjirc" path="res://scene/parallax_background.tscn" id="7_aex65"]
+[ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="7_x4yfu"]
+[ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="8_764rb"]
+[ext_resource type="AudioStream" uid="uid://da13h00j85al" path="res://assets/sfx/bgm.mp3" id="11_x4yfu"]
+[ext_resource type="AudioStream" uid="uid://c20huhk71ynr4" path="res://assets/sfx/b1.mp3" id="12_764rb"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_aex65"]
+texture = ExtResource("2_eik88")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hhcpw"]
+texture = ExtResource("2_eik88")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mxvw5"]
+texture = ExtResource("4_3sxgj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hrl0l"]
+texture = ExtResource("2_eik88")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tuai4"]
+texture = ExtResource("8_764rb")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ob58h"]
+texture = ExtResource("8_764rb")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3hqfm"]
+texture = ExtResource("8_764rb")
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_x4yfu"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5vvyt"]
+texture = ExtResource("6_3sxgj")
+modulate_color = Color(0.54902, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kjvhd"]
+texture = ExtResource("7_x4yfu")
+modulate_color = Color(0.713726, 0.388235, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cm0pq"]
+texture = ExtResource("8_764rb")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c6i3y"]
+texture = ExtResource("6_3sxgj")
+modulate_color = Color(0.54902, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5tuhn"]
+texture = ExtResource("7_x4yfu")
+modulate_color = Color(0.713726, 0.388235, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r0du0"]
+texture = ExtResource("8_764rb")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j4qnp"]
+texture = ExtResource("6_3sxgj")
+modulate_color = Color(0.54902, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_devvj"]
+texture = ExtResource("7_x4yfu")
+modulate_color = Color(0.713726, 0.388235, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3dxm6"]
+texture = ExtResource("8_764rb")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fpfj3"]
+texture = ExtResource("6_3sxgj")
+modulate_color = Color(0.54902, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3b0ty"]
+texture = ExtResource("7_x4yfu")
+modulate_color = Color(0.713726, 0.388235, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lgr22"]
+texture = ExtResource("8_764rb")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sc1dx"]
+texture = ExtResource("6_3sxgj")
+modulate_color = Color(0.54902, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bg4s2"]
+texture = ExtResource("7_x4yfu")
+modulate_color = Color(0.713726, 0.388235, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_trn2v"]
+texture = ExtResource("8_764rb")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cm0pq"]
+bg_color = Color(0.145098, 0.729412, 0.823529, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fos0i"]
+bg_color = Color(0.143844, 0.727507, 0.82336, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wkp8b"]
+texture = ExtResource("2_eik88")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_20pc6"]
+content_margin_top = 4.0
+content_margin_bottom = 9.0
+texture = ExtResource("2_eik88")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hri7i"]
+texture = ExtResource("2_eik88")
+texture_margin_left = 25.0
+texture_margin_right = 31.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w3rk5"]
+texture = ExtResource("4_3sxgj")
+modulate_color = Color(0.54902, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5mvff"]
+texture = ExtResource("4_3sxgj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_oye8v"]
+texture = ExtResource("4_3sxgj")
+modulate_color = Color(0.54902, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_40n85"]
+texture = ExtResource("4_3sxgj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sqvbp"]
+texture = ExtResource("6_764rb")
+texture_margin_left = 18.0
+texture_margin_top = 40.0
+texture_margin_right = 15.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gb15f"]
+texture = ExtResource("4_3sxgj")
+modulate_color = Color(0.54902, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sph85"]
+texture = ExtResource("4_3sxgj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_o7g6l"]
+texture = ExtResource("4_3sxgj")
+modulate_color = Color(0.54902, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vi5kq"]
+texture = ExtResource("4_3sxgj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xrxkg"]
+texture = ExtResource("8_764rb")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_03owx"]
+texture = ExtResource("8_764rb")
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 4.0
+offset_right = 1157.0
+offset_bottom = 646.0
+mouse_filter = 1
+script = ExtResource("1_s5yxy")
+
+[node name="Queue_full" type="Panel" parent="."]
+visible = false
+z_index = 4
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -150.0
+offset_right = 250.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_aex65")
+
+[node name="Label" type="Label" parent="Queue_full"]
+layout_mode = 1
+offset_left = 37.5
+offset_top = 35.0
+offset_right = 111.5
+offset_bottom = 58.0
+text = "Warning !"
+
+[node name="Label2" type="Label" parent="Queue_full"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -46.0
+offset_top = -44.0
+offset_right = 38.0
+offset_bottom = -21.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Queue Full"
+
+[node name="TutorialOverlay" type="CanvasLayer" parent="."]
+
+[node name="DimBackground" type="ColorRect" parent="TutorialOverlay"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0.278431, 0.443137)
+
+[node name="TutorialBox" type="Panel" parent="TutorialOverlay"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -204.0
+offset_top = -216.0
+offset_right = 160.0
+offset_bottom = -13.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.2, 1.2)
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxTexture_hhcpw")
+
+[node name="TutorialText" type="Label" parent="TutorialOverlay/TutorialBox"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -151.0
+offset_top = -66.5
+offset_right = 157.0
+offset_bottom = 70.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="NextButton" type="Button" parent="TutorialOverlay/TutorialBox"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -31.5
+offset_top = -65.3333
+offset_right = 33.5
+offset_bottom = -27.3333
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxTexture_mxvw5")
+text = "next"
+
+[node name="PointerSprite" type="Sprite2D" parent="TutorialOverlay"]
+visible = false
+position = Vector2(236, 125)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5_764rb")
+
+[node name="Intro_popup" type="Panel" parent="TutorialOverlay"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -175.0
+offset_right = 250.0
+offset_bottom = 175.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_hrl0l")
+
+[node name="Label" type="Label" parent="TutorialOverlay/Intro_popup"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="prev" type="Button" parent="TutorialOverlay/Intro_popup"]
+layout_mode = 0
+offset_left = 66.0
+offset_top = 267.0
+offset_right = 162.0
+offset_bottom = 317.0
+theme_override_styles/normal = SubResource("StyleBoxTexture_tuai4")
+text = "Prev"
+
+[node name="skip" type="Button" parent="TutorialOverlay/Intro_popup"]
+layout_mode = 0
+offset_left = 202.0
+offset_top = 267.0
+offset_right = 298.0
+offset_bottom = 317.0
+theme_override_styles/normal = SubResource("StyleBoxTexture_ob58h")
+text = "Skip"
+
+[node name="next" type="Button" parent="TutorialOverlay/Intro_popup"]
+layout_mode = 0
+offset_left = 346.0
+offset_top = 267.0
+offset_right = 442.0
+offset_bottom = 317.0
+theme_override_styles/normal = SubResource("StyleBoxTexture_3hqfm")
+text = "Next"
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 0
+texture = SubResource("CompressedTexture2D_x4yfu")
+
+[node name="rear" type="Label" parent="TextureRect"]
+visible = false
+layout_mode = 0
+offset_left = 1020.0
+offset_top = 258.0
+offset_right = 1107.0
+offset_bottom = 303.0
+theme_override_font_sizes/font_size = 32
+text = "High"
+
+[node name="front" type="Label" parent="TextureRect"]
+visible = false
+layout_mode = 0
+offset_left = 246.0
+offset_top = 260.0
+offset_right = 333.0
+offset_bottom = 305.0
+theme_override_font_sizes/font_size = 32
+text = "Low"
+
+[node name="front2" type="Label" parent="TextureRect"]
+visible = false
+layout_mode = 0
+offset_left = 246.0
+offset_top = 32.0
+offset_right = 333.0
+offset_bottom = 55.0
+text = "Front"
+
+[node name="rear2" type="Label" parent="TextureRect"]
+visible = false
+layout_mode = 0
+offset_left = 918.0
+offset_top = 26.0
+offset_right = 1005.0
+offset_bottom = 49.0
+text = "Rear"
+
+[node name="PivotArrow" type="Sprite2D" parent="TextureRect"]
+visible = false
+z_index = 10
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("6_aex65")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 96.0
+offset_right = 201.0
+offset_bottom = 558.0
+theme_override_constants/separation = 26
+alignment = 1
+
+[node name="Addelement" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_outline_color = Color(1, 0.797094, 0.76332, 1)
+theme_override_colors/font_color = Color(0.0679061, 0.523392, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/hover = SubResource("StyleBoxTexture_5vvyt")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_kjvhd")
+theme_override_styles/normal = SubResource("StyleBoxTexture_cm0pq")
+text = "ADD ELEMENT"
+
+[node name="Searchstep" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/hover = SubResource("StyleBoxTexture_c6i3y")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_5tuhn")
+theme_override_styles/normal = SubResource("StyleBoxTexture_r0du0")
+text = "SORT ELEMENT"
+
+[node name="WaitingElements" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/hover = SubResource("StyleBoxTexture_j4qnp")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_devvj")
+theme_override_styles/normal = SubResource("StyleBoxTexture_3dxm6")
+text = "WAITING
+ELEMENTS"
+
+[node name="TimelineButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/hover = SubResource("StyleBoxTexture_fpfj3")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_3b0ty")
+theme_override_styles/normal = SubResource("StyleBoxTexture_lgr22")
+text = "TIMELINE
+"
+
+[node name="SimulateNew" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/hover = SubResource("StyleBoxTexture_sc1dx")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_bg4s2")
+theme_override_styles/normal = SubResource("StyleBoxTexture_trn2v")
+text = "SIMULATE
+NEW"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 371.0
+offset_top = 583.0
+offset_right = 515.0
+offset_bottom = 626.0
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxFlat_cm0pq")
+text = "Enqueue Counter: "
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 588.0
+offset_top = 585.0
+offset_right = 729.0
+offset_bottom = 625.0
+
+[node name="Label" type="Label" parent="HBoxContainer2"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxFlat_fos0i")
+text = "Dequeue Counter:"
+
+[node name="QueueContainer" type="Control" parent="."]
+custom_minimum_size = Vector2(200, 200)
+layout_direction = 1
+layout_mode = 1
+anchors_preset = 0
+offset_left = 205.0
+offset_top = 278.0
+offset_right = 405.0
+offset_bottom = 478.0
+mouse_filter = 2
+
+[node name="DequeuedContainer" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 0
+offset_left = 375.0
+offset_top = 7.0
+offset_right = 575.0
+offset_bottom = 226.0
+
+[node name="WaitingPopup" type="PopupPanel" parent="."]
+size = Vector2i(250, 150)
+theme_override_styles/panel = SubResource("StyleBoxTexture_wkp8b")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="WaitingPopup"]
+offset_right = 250.0
+offset_bottom = 150.0
+mouse_filter = 0
+
+[node name="Label" type="Label" parent="WaitingPopup/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 30
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TimelinePopup" type="PopupPanel" parent="."]
+size = Vector2i(450, 400)
+theme_override_styles/panel = SubResource("StyleBoxTexture_20pc6")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TimelinePopup"]
+offset_top = 4.0
+offset_right = 450.0
+offset_bottom = 391.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TimelinePopup/ScrollContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="TimelinePopup/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 30
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SimulationCompletePopup" type="PopupPanel" parent="."]
+size = Vector2i(500, 220)
+theme_override_styles/panel = SubResource("StyleBoxTexture_hri7i")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SimulationCompletePopup"]
+offset_left = 25.0
+offset_right = 469.0
+offset_bottom = 220.0
+
+[node name="Label" type="Label" parent="SimulationCompletePopup/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 30
+text = "Simulation Complete!"
+horizontal_alignment = 1
+
+[node name="ShowCppButton" type="Button" parent="SimulationCompletePopup/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/hover = SubResource("StyleBoxTexture_w3rk5")
+theme_override_styles/normal = SubResource("StyleBoxTexture_5mvff")
+text = "Do you want to show the C++ code?"
+
+[node name="CloseButton" type="Button" parent="SimulationCompletePopup/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/hover = SubResource("StyleBoxTexture_oye8v")
+theme_override_styles/normal = SubResource("StyleBoxTexture_40n85")
+text = "Close"
+
+[node name="ProcessLabel" type="Label" parent="SimulationCompletePopup/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 30
+
+[node name="CppPopup" type="PopupPanel" parent="."]
+size = Vector2i(710, 700)
+theme_override_styles/panel = SubResource("StyleBoxTexture_sqvbp")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CppPopup"]
+offset_left = 18.0
+offset_top = 40.0
+offset_right = 695.0
+offset_bottom = 700.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 4
+
+[node name="Label" type="Label" parent="CppPopup/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 30
+text = "Generated C++ Code"
+
+[node name="TextEdit" type="TextEdit" parent="CppPopup/VBoxContainer"]
+custom_minimum_size = Vector2(0, 400)
+layout_mode = 2
+
+[node name="close" type="Button" parent="CppPopup/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/hover = SubResource("StyleBoxTexture_gb15f")
+theme_override_styles/normal = SubResource("StyleBoxTexture_sph85")
+text = "Close
+"
+
+[node name="TutorialPanel" type="Panel" parent="CppPopup/VBoxContainer"]
+layout_mode = 2
+
+[node name="ExplanationText" type="RichTextLabel" parent="CppPopup/VBoxContainer/TutorialPanel"]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 1.0
+offset_top = 56.0
+offset_right = 605.0
+offset_bottom = 238.0
+grow_horizontal = 0
+grow_vertical = 2
+fit_content = true
+
+[node name="CppNextButton" type="Button" parent="CppPopup/VBoxContainer/TutorialPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 4.0
+offset_bottom = 35.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/hover = SubResource("StyleBoxTexture_o7g6l")
+theme_override_styles/normal = SubResource("StyleBoxTexture_vi5kq")
+text = "Next"
+
+[node name="CppCodeButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1055.0
+offset_top = 601.0
+offset_right = 1135.0
+offset_bottom = 632.0
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxTexture_xrxkg")
+text = "C++ CODE"
+
+[node name="HelpButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -111.0
+offset_top = 7.0
+offset_right = -13.0
+offset_bottom = 46.0
+grow_horizontal = 0
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_pnqar")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxTexture_03owx")
+text = "HELP?"
+
+[node name="ParallaxBackground" parent="." instance=ExtResource("7_aex65")]
+
+[node name="bgm" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("11_x4yfu")
+volume_db = 8.008
+
+[node name="btn_sound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("12_764rb")
+
+[node name="enqueue_empty" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "tite"
+
+[node name="ConfigChoiceModal" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -75.0
+offset_right = 150.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="ConfigChoiceModal"]
+layout_mode = 0
+offset_left = 14.0
+offset_right = 280.0
+offset_bottom = 51.0
+theme_override_font_sizes/font_size = 17
+text = "Do you want to configure array size and its element?"
+autowrap_mode = 1
+justification_flags = 168
+
+[node name="SpinBox" type="SpinBox" parent="ConfigChoiceModal"]
+visible = false
+layout_mode = 0
+offset_left = 0.5
+offset_top = 57.0
+offset_right = 87.063
+offset_bottom = 88.0
+
+[node name="yesButton" type="Button" parent="ConfigChoiceModal"]
+layout_mode = 0
+offset_left = 25.5
+offset_top = 66.0
+offset_right = 275.5
+offset_bottom = 97.0
+text = "Yes"
+
+[node name="NoButton" type="Button" parent="ConfigChoiceModal"]
+layout_mode = 0
+offset_left = 25.5
+offset_top = 106.0
+offset_right = 275.5
+offset_bottom = 137.0
+text = "No"
+
+[node name="ConfigSizeElementsModal" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -162.5
+offset_top = -129.0
+offset_right = 162.5
+offset_bottom = 129.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SizeSpinBox" type="SpinBox" parent="ConfigSizeElementsModal"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 7.0
+offset_right = 133.0
+offset_bottom = 38.0
+
+[node name="ElementsTextEdit" type="TextEdit" parent="ConfigSizeElementsModal"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 58.0
+offset_right = 178.0
+offset_bottom = 133.0
+
+[node name="RandomElementsButton" type="Button" parent="ConfigSizeElementsModal"]
+layout_mode = 0
+offset_left = 211.0
+offset_top = 85.0
+offset_right = 306.0
+offset_bottom = 116.0
+text = "Randomize"
+
+[node name="ConfirmButton" type="Button" parent="ConfigSizeElementsModal"]
+layout_mode = 0
+offset_left = 13.0
+offset_top = 160.0
+offset_right = 308.0
+offset_bottom = 191.0
+text = "Yes"
+
+[node name="CancelButton" type="Button" parent="ConfigSizeElementsModal"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 198.0
+offset_right = 309.0
+offset_bottom = 229.0
+text = "No"
+
+[node name="SearchInputModal" type="ConfirmationDialog" parent="."]
+title = "Find Element"
+
+[node name="TargetSpinBox" type="SpinBox" parent="SearchInputModal"]
+offset_right = 86.5625
+offset_bottom = 31.0
+
+[connection signal="pressed" from="TutorialOverlay/TutorialBox/NextButton" to="." method="_on_next_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Addelement" to="." method="_on_enqueue_pressed"]
+[connection signal="pressed" from="VBoxContainer/Searchstep" to="." method="_on_dequeue_pressed"]
+[connection signal="pressed" from="VBoxContainer/WaitingElements" to="." method="_on_waiting_pressed"]
+[connection signal="pressed" from="SimulationCompletePopup/VBoxContainer/ShowCppButton" to="." method="_on_show_cpp_pressed"]
+[connection signal="pressed" from="CppPopup/VBoxContainer/close" to="." method="_on_close_pressed"]
+[connection signal="pressed" from="CppPopup/VBoxContainer/TutorialPanel/CppNextButton" to="." method="_on_cpp_next_button_pressed"]
+[connection signal="pressed" from="CppCodeButton" to="." method="_on_cpp_code_button_pressed"]
+[connection signal="pressed" from="HelpButton" to="." method="_on_help_button_pressed"]

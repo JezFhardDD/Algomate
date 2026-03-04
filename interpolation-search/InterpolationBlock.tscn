@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://ci2h15oyh8a8o"]
+[gd_scene load_steps=4 format=3 uid="uid://ci2h15oyh8a8o"]
 
 [ext_resource type="Script" uid="uid://didhv1rmj3v4f" path="res://InterpolationBlock.gd" id="1_kh8qr"]
 [ext_resource type="Texture2D" uid="uid://dat8hni5cmx8c" path="res://assets/BLOCK_ORANGE.png" id="2_t3sbf"]
+[ext_resource type="FontFile" uid="uid://dyh5hiwgcj5ki" path="res://assets/font/Planes_ValMore.ttf" id="3_t3sbf"]
 
 [node name="InterpolationBlock" type="Control"]
 custom_minimum_size = Vector2(80, 80)
@@ -30,6 +31,10 @@ offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("3_t3sbf")
+theme_override_font_sizes/font_size = 24
 text = "1"
 horizontal_alignment = 1
 vertical_alignment = 1
