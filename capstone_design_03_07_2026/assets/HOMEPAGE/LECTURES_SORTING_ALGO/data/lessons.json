@@ -1,0 +1,17 @@
+{
+  "intro": {
+	"title": "Introduction to Data Structures",
+	"content": "[b]What Is Data?[/b]\n[i]Data[/i] refers to raw facts and values that represent information.\nThese can be numbers, words, symbols, or even measurements.\n\nExamples of data:\n-A student’s age: 18\n-A name: \"Juan\"\n-A test score: 95\n-A yes/no value: true\n\nBy itself, data does not always make sense. It becomes useful only when it is organized, processed, and used correctly.\n\n[b]Why Do We Need to Organize Data?[/b]\nIn computer programs, data is everywhere.\n\nPrograms deal with:\n-Student records\n-Game scores\n-Messages\n-Bank transactions\n-Sensor readings\n\nIf data is not organized properly:\n-Programs become slow\n-Code becomes hard to understand\n-Errors become more likely\n\nTo solve these problems, computer scientists use data structures.\n\n[b]What Is a Data Structure?[/b]\nA [i]data structure[/i] is a way of storing and organizing data in a computer so that it can be used efficiently.\nIt defines:\n-How data is stored in memory\n-How data can be accessed\n-How data can be updated or removed\nDifferent problems require different ways of organizing data.\nThere is no single “best” data structure for all situations.\n\n[b]Real-Life Analogy[/b]\nThink of data like books.\n-If books are piled randomly on the floor, it is hard to find one.\n-If books are arranged on shelves by category, finding a book is easier.\nA data structure is like the shelf system that helps you manage the books properly.\n\n[b]Importance of Data Structures[/b]\nData structures help programmers:\n-Write faster programs\n-Use memory efficiently\n-Manage large amounts of data\n-Solve complex problems logically\n\nMany important applications depend on data structures, such as:\n-Search engines\n-Social media platforms\n-Navigation systems\n-Databases\n-Games\n\n[b]Data Structures in Programming[/b]\nIn programming, data structures are used to:\n-Store collections of data\n-Control how data flows in a program\n-Represent real-world situations\nChoosing the right data structure can greatly improve a program’s performance and readability.\n\n[b]What You Will Learn Next[/b]\nIn the next lessons, you will study specific types of data structures, including:\n-Array\n-Linked List\n-Stack\n-Queue\n-Tree\n-Binary Tree\n-Binary Search Tree\n-Graph\nEach of these has its own purpose and use cases.\n\n[b]Summary[/b]\n-Data is raw information.\n-Data structures organize data efficiently.\n-Good data organization makes programs faster and easier to maintain.\n-Different problems require different data structures.\nUnderstanding data structures is a fundamental skill in computer science and programming.",
+	"simulation_scene": ""
+  },
+  "array": {
+	"title": "Arrays",
+	"content": "[b]Arrays[/b] store elements in contiguous memory...",
+	"simulation_scene": "res://Simulations/ArraySimulation.tscn"
+  },
+  "stack": {
+	"title": "Stacks",
+	"content": "[b]Stack[/b] follows LIFO principle...",
+	"simulation_scene": "res://Simulations/StackSimulation.tscn"
+  }
+}
