@@ -87,7 +87,7 @@ var current_popup = null  # Track which popup is open during tutorial
 
 # Settings
 var MAX_QUEUE_SIZE: int = 5
-var BLOCK_SPACING: float = 10.0
+var BLOCK_SPACING: float = 30.0
 var START_POSITION: Vector2 = Vector2(80, 80)
 
 # Runtime data
@@ -275,9 +275,9 @@ func _show_config_size_modal() -> void:
 	"""Show the second modal for array size input"""
 	user_configuration_step = 1
 	if size_input:
-		size_input.min_value = 5
-		size_input.max_value = 7
-		size_input.value = 5
+		size_input.min_value = 4
+		size_input.max_value = 6
+		size_input.value = 4
 		size_label.text = "Please enter stack size"
 
 	config_modal.hide()
@@ -663,11 +663,12 @@ func _perform_tutorial_enqueue() -> void:
 	if new_block.has_method("set"): new_block.set("value", new_val)
 	queue_container.add_child(new_block)
 	
-	var target_x = START_POSITION.x + (queue.size() - 1) * (new_block.size.x + BLOCK_SPACING)
-	var final_pos = Vector2(target_x, START_POSITION.y)
+	# --- VERTICAL MATH ---
+	var block_height = 64.0 
+	var target_y = START_POSITION.y - (queue.size() - 1) * (block_height + BLOCK_SPACING)
+	var final_pos = Vector2(START_POSITION.x, target_y)
 	
-	# Drop from above for push visual
-	new_block.position = final_pos + Vector2(0, -150) 
+	new_block.position = final_pos + Vector2(150, 0) 
 	new_block.modulate.a = 0
 	
 	var tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
@@ -694,11 +695,15 @@ func _perform_regular_enqueue() -> void:
 	if new_block.has_method("set"): new_block.set("value", new_val)
 	queue_container.add_child(new_block)
 	
-	var target_x = START_POSITION.x + (queue.size() - 1) * (new_block.size.x + BLOCK_SPACING)
-	var final_pos = Vector2(target_x, START_POSITION.y)
+	# --- VERTICAL MATH ---
+	var block_height = 64.0 # Adjust this if your blocks are taller/shorter
+	var target_y = START_POSITION.y - (queue.size() - 1) * (block_height + BLOCK_SPACING)
 	
-	# Drop from above
-	new_block.position = final_pos + Vector2(0, -150) 
+	# X is locked to START_POSITION.x. Only Y changes.
+	var final_pos = Vector2(START_POSITION.x, target_y)
+	
+	# Slide in from the right
+	new_block.position = final_pos + Vector2(150, 0) 
 	new_block.modulate.a = 0
 	
 	var tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
@@ -730,7 +735,7 @@ func _on_dequeue_pressed() -> void:
 
 	var exit_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
 	# Move UP instead of left for a stack pop
-	exit_tween.tween_property(top_block, "position", top_block.position + Vector2(0, -100), 0.4)
+	exit_tween.tween_property(top_block, "position", top_block.position + Vector2(150, 0), 0.4)
 	exit_tween.tween_property(top_block, "modulate:a", 0.0, 0.3)
 	
 	await exit_tween.finished
@@ -1164,19 +1169,24 @@ func update_language_button_states() -> void:
 		c_lang_btn.disabled = (current_code_language == "c")
 
 func _resnap_blocks() -> void:
-	var x = START_POSITION.x
+	var y = START_POSITION.y
 	for child: Control in queue_container.get_children():
-		child.position = Vector2(x, START_POSITION.y)
+		child.position = Vector2(START_POSITION.x, y)
 		child.original_position = child.position
-		x += child.size.x + BLOCK_SPACING
+		# Subtract to move upwards
+		y -= child.size.y + BLOCK_SPACING
 
 func _update_front_rear_visibility() -> void:
 	if queue.size() > 0:
-		# Use rear_icon to show TOP of stack
 		if rear_icon:
 			rear_icon.show()
-			var target_x = START_POSITION.x + (queue.size() - 1) * (64.0 + BLOCK_SPACING)
-			rear_icon.position.x = target_x
+			# Move up the Y axis
+			var target_y = START_POSITION.y - (queue.size() - 1) * (BLOCK_SPACING - 25)
+			rear_icon.position.y = target_y
+			
+			# Keep X slightly offset to the left or right of the stack
+			# Adjust this '80' value based on the width of your queue blocks
+			rear_icon.position.x = START_POSITION.x + 400 
 	else:
 		if rear_icon: rear_icon.hide()
 

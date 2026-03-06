@@ -939,7 +939,7 @@ theme_override_constants/outline_size = 4
 theme_override_constants/shadow_outline_size = 10
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 36
-text = "Rear"
+text = "Top"
 
 [node name="front" type="Label" parent="TextureRect"]
 visible = false
@@ -1004,6 +1004,7 @@ theme_override_font_sizes/font_size = 26
 theme_override_styles/hover = SubResource("StyleBoxTexture_5vvyt")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_kjvhd")
 theme_override_styles/normal = SubResource("StyleBoxTexture_cm0pq")
+text = "PUSH"
 
 [node name="DequeueButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
@@ -1016,6 +1017,7 @@ theme_override_font_sizes/font_size = 26
 theme_override_styles/hover = SubResource("StyleBoxTexture_c6i3y")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_5tuhn")
 theme_override_styles/normal = SubResource("StyleBoxTexture_r0du0")
+text = "POP"
 
 [node name="DequeuedElements" type="Button" parent="VBoxContainer"]
 layout_mode = 2
@@ -1028,6 +1030,8 @@ theme_override_font_sizes/font_size = 22
 theme_override_styles/hover = SubResource("StyleBoxTexture_c2ibq")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_2gh4u")
 theme_override_styles/normal = SubResource("StyleBoxTexture_fos0i")
+text = "POP
+ELEMENTS"
 
 [node name="WaitingElements" type="Button" parent="VBoxContainer"]
 layout_mode = 2
@@ -1088,9 +1092,9 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_cm0pq")
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 612.0
+offset_left = 688.0
 offset_top = 596.0
-offset_right = 801.0
+offset_right = 877.0
 offset_bottom = 636.0
 
 [node name="Label" type="Label" parent="HBoxContainer2"]
@@ -1106,11 +1110,17 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_fos0i")
 custom_minimum_size = Vector2(200, 200)
 layout_direction = 1
 layout_mode = 1
-anchors_preset = 0
-offset_left = 205.0
-offset_top = 278.0
-offset_right = 405.0
-offset_bottom = 478.0
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.5
+offset_top = -214.0
+offset_right = 99.5
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 0
 mouse_filter = 2
 
 [node name="DequeuedContainer" type="HBoxContainer" parent="."]
@@ -1808,9 +1818,9 @@ theme_override_styles/down_background = SubResource("StyleBoxTexture_v1evy")
 theme_override_styles/up_background_pressed = SubResource("StyleBoxTexture_c4fv3")
 theme_override_styles/up_background_hovered = SubResource("StyleBoxTexture_dp0h7")
 theme_override_styles/up_background = SubResource("StyleBoxTexture_u8yls")
-min_value = 5.0
-max_value = 7.0
-value = 5.0
+min_value = 4.0
+max_value = 6.0
+value = 4.0
 alignment = 1
 
 [node name="BackButton" type="Button" parent="ConfigSizeModal"]
