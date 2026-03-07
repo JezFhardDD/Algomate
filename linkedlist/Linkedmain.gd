@@ -1,7 +1,7 @@
 extends Control
 
 # =======================================================
-#   LINKED LIST SIMULATION - FINAL (Custom UI Nodes)
+#    LINKED LIST SIMULATION - FINAL (Custom UI Nodes)
 # =======================================================
 
 # --- MAIN BUTTONS ---
@@ -99,6 +99,8 @@ const POINTER_TEX := preload("res://assets/point_left.png")
 
 # --- LINKED LIST & SEARCH VARIABLES ---
 var main_array: Array[int] = []
+var initial_elements: Array[int] = []      
+var action_history: Array[Dictionary] = [] 
 var block_nodes: Array[Control] = []
 var timeline_log: Array[String] = []
 var visual_links: Array[Line2D] = []
@@ -134,36 +136,43 @@ var intro_step: int = 0
 var intro_texts = [
 	"Welcome to Linked List Simulation!\nA Linked List is a linear data structure where elements are not stored in contiguous memory locations. Instead, elements are linked using pointers.",
 	"The Pointers:\n\n• HEAD: Points to the first node.\n• TAIL: Points to the last node.\n• NEXT: Arrows linking one node to the next.",
+	"Complexity:\n\nTime: [color=yellow]O(N)[/color] for Search, [color=green]O(1)[/color] for Insertion/Deletion at known pointers.\nSpace: [color=yellow]O(N)[/color] for storing N nodes.",
 	"Operations available:\n\n• INSERT: Add at Beginning, End, or a specific Position.\n• DELETE: Remove from Beginning, End, or a specific Position.\n• SEARCH: Traverse the list to find a value."
 ]
 
 var current_code_language: String = "cpp"
 var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
+
+# --- TUTORIAL HIGHLIGHTING DATA (RE-MAPPED TO MATCH FULL CODE STRINGS) ---
 var tutorial_data_map = {
 	"cpp": [
-		{ "lines": [0, 1, 2, 3], "text": "1. Structure:\nA Node contains data and a pointer to the next node." },
-		{ "lines": [6, 7], "text": "2. Traversal Loop:\nStart at the head. Loop continues as long as current is not NULL." },
-		{ "lines": [8, 9], "text": "3. Checking Value:\nIf current node's data matches target 'x', return true (found)." },
-		{ "lines": [10], "text": "4. Moving Forward:\nIf not a match, move current pointer to the NEXT node." }
+		{ "lines": [0], "text": "1. Complexity: [color=yellow]Time O(N)[/color], [color=yellow]Space O(N)[/color]" },
+		{ "lines": [4, 5, 6, 7], "text": "2. Structure:\nA Node contains data and a pointer to the next node." },
+		{ "lines": [91, 92, 93], "text": "3. Traversal Loop:\nStart at the head. Loop continues as long as current is not NULL." },
+		{ "lines": [94, 95, 96, 97], "text": "4. Checking Value:\nIf current node's data matches target 'value', print result." },
+		{ "lines": [98, 99], "text": "5. Moving Forward:\nIf not a match, move current pointer to the NEXT node." }
 	],
 	"python": [
-		{ "lines": [0, 1, 2, 3], "text": "1. Structure:\nA Node contains data and a reference to the next node." },
-		{ "lines": [6, 7], "text": "2. Traversal Loop:\nStart at the head. Loop continues as long as current is not None." },
-		{ "lines": [8, 9], "text": "3. Checking Value:\nIf current node's data matches target 'x', return True (found)." },
-		{ "lines": [10], "text": "4. Moving Forward:\nIf not a match, move current pointer to the NEXT node." }
+		{ "lines": [0], "text": "1. Complexity: [color=yellow]Time O(N)[/color], [color=yellow]Space O(N)[/color]" },
+		{ "lines": [1, 2, 3, 4], "text": "2. Structure:\nA Node contains data and a reference to the next node." },
+		{ "lines": [60, 61, 62], "text": "3. Traversal Loop:\nStart at the head. Loop continues as long as current is not None." },
+		{ "lines": [63, 64, 65], "text": "4. Checking Value:\nIf current node's data matches target 'value', print found." },
+		{ "lines": [66, 67], "text": "5. Moving Forward:\nIf not a match, move current pointer to the NEXT node." }
 	],
 	"java": [
-		{ "lines": [0, 1, 2, 3], "text": "1. Structure:\nA Node contains data and a reference to the next node." },
-		{ "lines": [7, 8], "text": "2. Traversal Loop:\nStart at the head. Loop continues as long as current is not null." },
-		{ "lines": [9], "text": "3. Checking Value:\nIf current node's data matches target 'x', return true (found)." },
-		{ "lines": [10], "text": "4. Moving Forward:\nIf not a match, move current pointer to the NEXT node." }
+		{ "lines": [0], "text": "1. Complexity: [color=yellow]Time O(N)[/color], [color=yellow]Space O(N)[/color]" },
+		{ "lines": [1, 2, 3, 4], "text": "2. Structure:\nA Node contains data and a reference to the next node." },
+		{ "lines": [85, 86, 87], "text": "3. Traversal Loop:\nStart at the head. Loop continues as long as current is not null." },
+		{ "lines": [88, 89, 90, 91], "text": "4. Checking Value:\nIf current node's data matches target 'value', print result." },
+		{ "lines": [92, 93], "text": "5. Moving Forward:\nIf not a match, move current pointer to the NEXT node." }
 	],
 	"c": [
-		{ "lines": [3, 4, 5, 6], "text": "1. Structure:\nA Node contains data and a pointer to the next node." },
-		{ "lines": [9, 10], "text": "2. Traversal Loop:\nStart at the head. Loop continues as long as current is not NULL." },
-		{ "lines": [11, 12], "text": "3. Checking Value:\nIf current node's data matches target 'x', return true (found)." },
-		{ "lines": [13], "text": "4. Moving Forward:\nIf not a match, move current pointer to the NEXT node." }
+		{ "lines": [0], "text": "1. Complexity: [color=yellow]Time O(N)[/color], [color=yellow]Space O(N)[/color]" },
+		{ "lines": [4, 5, 6, 7], "text": "2. Structure:\nA Node contains data and a pointer to the next node." },
+		{ "lines": [87, 88, 89], "text": "3. Traversal Loop:\nStart at the head. Loop continues as long as current is not NULL." },
+		{ "lines": [90, 91, 92, 93], "text": "4. Checking Value:\nIf current node's data matches target 'value', print result." },
+		{ "lines": [94, 95], "text": "5. Moving Forward:\nIf not a match, move current pointer to the NEXT node." }
 	]
 }
 
@@ -192,7 +201,7 @@ func _ready() -> void:
 	
 	if cpp_code_button: cpp_code_button.hide()
 	
-	if sort_btn: sort_btn.text = "Search List"
+	if sort_btn: sort_btn.text = "Find Element"
 	if auto_btn: auto_btn.text = "Search Step"
 	if auto_search_btn: auto_search_btn.text = "Auto Search"
 	
@@ -338,6 +347,12 @@ func _insert_at(index: int, val: int):
 	if main_array.size() >= 6: return 
 	if index < 0 or index > main_array.size(): return
 	
+	action_history.append({
+		"type": "insert",
+		"index": index,
+		"value": val
+	})
+	
 	main_array.insert(index, val)
 	var new_block = BLOCK_SCENE.instantiate()
 	new_block.value = val
@@ -351,6 +366,12 @@ func _insert_at(index: int, val: int):
 
 func _delete_at(index: int):
 	if index < 0 or index >= main_array.size(): return
+	
+	action_history.append({
+		"type": "delete",
+		"index": index
+	})
+	
 	var val = main_array.pop_at(index)
 	var block = block_nodes.pop_at(index)
 	
@@ -426,6 +447,9 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	audio_player.play()
 	
 	main_array = elements.duplicate()
+	initial_elements = elements.duplicate() 
+	action_history.clear()                 
+	
 	block_nodes.clear()
 	timeline_log.clear()
 	
@@ -481,6 +505,11 @@ func _on_search_confirmed():
 	search_target = int(target_spinbox.value)
 	status_label.text = "Searching list for: %d" % search_target
 	timeline_log.append("Started Traversal for: %d" % search_target)
+	
+	action_history.append({
+		"type": "search",
+		"value": search_target
+	})
 	
 	current_idx = 0
 	search_found = false
@@ -569,7 +598,6 @@ func _finish_simulation():
 		auto_search_btn.disabled = true
 	
 	_draw_pointers_and_links() 
-	
 	timeline_log.append("--- TRAVERSAL COMPLETE ---")
 	_show_complete_popup()
 
@@ -586,6 +614,7 @@ func _show_complete_popup() -> void:
 		var txt = "Traversal Finished!\n\nTarget: %d\nResult: %s\nNodes Checked: %d" % [search_target, result_text, comparison_counter]
 		if process_label: process_label.text = txt
 		complete_popup.popup_centered()
+		cpp_code_button.show()
 
 func _on_timeline_pressed() -> void:
 	btn_sound.play()
@@ -599,8 +628,195 @@ func _on_timeline_close_pressed() -> void:
 	if timeline_popup: timeline_popup.hide()
 
 # ==============================================
-#   CODE GENERATION & WALKTHROUGH 
+#   DYNAMIC CODE GENERATION & WALKTHROUGH
 # ==============================================
+
+func _build_action_code(lang: String) -> String:
+	var code = ""
+	match lang:
+		"cpp":
+			code += "int main() {\n"
+			code += "    LinkedList list;\n"
+			code += "    // Initial elements\n"
+			for val in initial_elements:
+				code += "    list.insertEnd(%d);\n" % val
+			
+			code += "\n    cout << \"Initial list = \";\n"
+			code += "    list.printList();\n\n"
+			
+			var sim_size = initial_elements.size()
+			var step = 1
+			
+			for action in action_history:
+				if action["type"] == "insert":
+					if action["index"] == 0:
+						code += "    // %d. Insert at beginning = %d\n" % [step, action["value"]]
+						code += "    list.insertBeginning(%d);\n" % action["value"]
+						code += "    cout << \"After insert %d at beginning = \";\n" % action["value"]
+					elif action["index"] == sim_size:
+						code += "    // %d. Insert at end = %d\n" % [step, action["value"]]
+						code += "    list.insertEnd(%d);\n" % action["value"]
+						code += "    cout << \"After insert %d at end = \";\n" % action["value"]
+					else:
+						code += "    // %d. Insert at index[%d] = %d\n" % [step, action["index"], action["value"]]
+						code += "    list.insertAtIndex(%d, %d);\n" % [action["index"], action["value"]]
+						code += "    cout << \"After insert %d at index[%d] = \";\n" % [action["value"], action["index"]]
+					code += "    list.printList();\n\n"
+					sim_size += 1
+					step += 1
+				elif action["type"] == "delete":
+					if action["index"] == 0:
+						code += "    // %d. Delete at beginning\n" % step
+						code += "    list.deleteBeginning();\n"
+						code += "    cout << \"After delete at beginning = \";\n"
+					elif action["index"] == sim_size - 1:
+						code += "    // %d. Delete at end\n" % step
+						code += "    list.deleteEnd();\n"
+						code += "    cout << \"After delete at end = \";\n"
+					else:
+						code += "    // %d. Delete at index[%d]\n" % [step, action["index"]]
+						code += "    list.deleteAtIndex(%d);\n" % action["index"]
+						code += "    cout << \"After delete at index[%d] = \";\n" % action["index"]
+					code += "    list.printList();\n\n"
+					sim_size -= 1
+					step += 1
+				elif action["type"] == "search":
+					code += "    // %d. Search element %d\n" % [step, action["value"]]
+					code += "    list.linearSearch(%d);\n\n" % action["value"]
+					step += 1
+			code += "    return 0;\n}"
+			
+		"c":
+			code += "\nint main() {\n"
+			code += "    struct Node* head = NULL;\n"
+			code += "    // 1. Initial Elements\n"
+			for val in initial_elements:
+				code += "    insertEnd(&head, %d);\n" % val
+			code += "    printf(\"Initial list = \"); printList(head);\n\n"
+			var sim_size = initial_elements.size()
+			var step = 1
+			for action in action_history:
+				if action["type"] == "insert":
+					if action["index"] == 0:
+						code += "    // %d. Insert at beginning\n" % step
+						code += "    insertBeginning(&head, %d);\n" % action["value"]
+						code += "    printf(\"After insert at beginning = \"); printList(head);\n\n"
+					elif action["index"] == sim_size:
+						code += "    // %d. Insert at end\n" % step
+						code += "    insertEnd(&head, %d);\n" % action["value"]
+						code += "    printf(\"After insert at end = \"); printList(head);\n\n"
+					else:
+						code += "    // %d. Insert at index\n" % step
+						code += "    insertAtIndex(&head, %d, %d);\n" % [action["index"], action["value"]]
+						code += "    printf(\"After insert at index = \"); printList(head);\n\n"
+					sim_size += 1
+					step += 1
+				elif action["type"] == "delete":
+					if action["index"] == 0:
+						code += "    // %d. Delete at beginning\n" % step
+						code += "    deleteBeginning(&head);\n"
+						code += "    printf(\"After delete beginning = \"); printList(head);\n\n"
+					elif action["index"] == sim_size - 1:
+						code += "    // %d. Delete at end\n" % step
+						code += "    deleteEnd(&head);\n"
+						code += "    printf(\"After delete end = \"); printList(head);\n\n"
+					else:
+						code += "    // %d. Delete at index\n" % step
+						code += "    deleteAtIndex(&head, %d);\n" % action["index"]
+						code += "    printf(\"After delete index = \"); printList(head);\n\n"
+					sim_size -= 1
+					step += 1
+				elif action["type"] == "search":
+					code += "    // %d. Search element\n" % step
+					code += "    linearSearch(head, %d);\n\n" % action["value"]
+					step += 1
+			code += "    return 0;\n}"
+			
+		"python":
+			code += "\nif __name__ == '__main__':\n"
+			code += "    llist = LinkedList()\n"
+			code += "    # 1. Initial Elements\n"
+			for val in initial_elements:
+				code += "    llist.insert_end(%d)\n" % val
+			code += "    print(\"Initial list = \", end=\"\"); llist.print_list()\n\n"
+			
+			var sim_size = initial_elements.size()
+			var step = 1
+			for action in action_history:
+				if action["type"] == "insert":
+					if action["index"] == 0:
+						code += "    # %d. Insert at beginning\n" % step
+						code += "    llist.insert_beginning(%d)\n" % action["value"]
+					elif action["index"] == sim_size:
+						code += "    # %d. Insert at end\n" % step
+						code += "    llist.insert_end(%d)\n" % action["value"]
+					else:
+						code += "    # %d. Insert at index\n" % step
+						code += "    llist.insert_at_index(%d, %d)\n" % [action["index"], action["value"]]
+					code += "    print(\"After insert = \", end=\"\"); llist.print_list()\n\n"
+					sim_size += 1
+					step += 1
+				elif action["type"] == "delete":
+					if action["index"] == 0:
+						code += "    # %d. Delete at beginning\n" % step
+						code += "    llist.delete_beginning()\n"
+					elif action["index"] == sim_size - 1:
+						code += "    # %d. Delete at end\n" % step
+						code += "    llist.delete_end()\n"
+					else:
+						code += "    # %d. Delete at index\n" % step
+						code += "    llist.delete_at_index(%d)\n" % action["index"]
+					code += "    print(\"After delete = \", end=\"\"); llist.print_list()\n\n"
+					sim_size -= 1
+					step += 1
+				elif action["type"] == "search":
+					code += "    # %d. Search element\n" % step
+					code += "    llist.linear_search(%d)\n\n" % action["value"]
+					step += 1
+					
+		"java":
+			code += "\n    public static void main(String[] args) {\n"
+			code += "        LinkedList list = new LinkedList();\n"
+			code += "        // 1. Initial Elements\n"
+			for val in initial_elements:
+				code += "        list.insertEnd(%d);\n" % val
+			code += "        System.out.print(\"Initial list = \"); list.printList();\n\n"
+			
+			var sim_size = initial_elements.size()
+			var step = 1
+			for action in action_history:
+				if action["type"] == "insert":
+					if action["index"] == 0:
+						code += "        // %d. Insert at beginning\n" % step
+						code += "        list.insertBeginning(%d);\n" % action["value"]
+					elif action["index"] == sim_size:
+						code += "        // %d. Insert at end\n" % step
+						code += "        list.insertEnd(%d);\n" % action["value"]
+					else:
+						code += "        // %d. Insert at index\n" % step
+						code += "        list.insertAtIndex(%d, %d);\n" % [action["index"], action["value"]]
+					code += "        System.out.print(\"After insert = \"); list.printList();\n\n"
+					sim_size += 1
+					step += 1
+				elif action["type"] == "delete":
+					if action["index"] == 0:
+						code += "        // %d. Delete at beginning\n" % step
+						code += "        list.deleteBeginning();\n"
+					elif action["index"] == sim_size - 1:
+						code += "        // %d. Delete at end\n" % step
+						code += "        list.deleteEnd();\n"
+					else:
+						code += "        // %d. Delete at index\n" % step
+						code += "        list.deleteAtIndex(%d);\n" % action["index"]
+					code += "        System.out.print(\"After delete = \"); list.printList();\n\n"
+					sim_size -= 1
+					step += 1
+				elif action["type"] == "search":
+					code += "        // %d. Search element\n" % step
+					code += "        list.linearSearch(%d);\n\n" % action["value"]
+					step += 1
+			code += "    }\n}" 
+	return code
 
 func _on_show_cpp_pressed() -> void:
 	btn_sound.play()
@@ -620,11 +836,8 @@ func _show_cpp_popup() -> void:
 func _on_cpp_next_pressed() -> void:
 	btn_sound.play()
 	cpp_tutorial_step += 1
-	
 	var active_tutorial_data = tutorial_data_map[current_code_language]
-	if cpp_tutorial_step >= active_tutorial_data.size():
-		cpp_tutorial_step = 0
-		
+	if cpp_tutorial_step >= active_tutorial_data.size(): cpp_tutorial_step = 0
 	_update_cpp_tutorial()
 
 func _update_cpp_tutorial() -> void:
@@ -632,7 +845,9 @@ func _update_cpp_tutorial() -> void:
 	if active_tutorial_data.is_empty(): return
 	
 	var data = active_tutorial_data[cpp_tutorial_step]
-	if cpp_explanation_lbl: cpp_explanation_lbl.text = data["text"]
+	if cpp_explanation_lbl: 
+		cpp_explanation_lbl.bbcode_enabled = true
+		cpp_explanation_lbl.text = data["text"]
 	
 	if cpp_label:
 		var code = ""
@@ -647,65 +862,306 @@ func _update_cpp_tutorial() -> void:
 		var indices = data["lines"]
 		
 		for i in range(lines.size()):
-			if i in indices:
-				highlighted_code += "[color=yellow]" + lines[i] + "[/color]\n"
-			else:
-				highlighted_code += lines[i] + "\n"
+			if i in indices: highlighted_code += "[color=yellow]" + lines[i] + "[/color]\n"
+			else: highlighted_code += lines[i] + "\n"
 		
+		cpp_label.bbcode_enabled = true
 		cpp_label.text = highlighted_code
 		
-		if cpp_scroll and indices.size() > 0:
-			cpp_scroll.scroll_vertical = indices[0] * 25
+		if indices.size() > 0: call_deferred("_scroll_to_highlight", indices[0])
+
+func _scroll_to_highlight(line_index: int) -> void:
+	var target_scroll = line_index * 26
+	if cpp_scroll:
+		var tween = create_tween()
+		tween.tween_property(cpp_scroll, "scroll_vertical", target_scroll, 0.2).set_trans(Tween.TRANS_SINE)
+	elif cpp_label:
+		var scrollbar = cpp_label.get_v_scroll_bar()
+		if scrollbar:
+			var tween = create_tween()
+			tween.tween_property(scrollbar, "value", target_scroll, 0.2).set_trans(Tween.TRANS_SINE)
 
 func get_cpp_code() -> String:
-	return """struct Node {
+	var base_code = """// Complexity: Time O(N), Space O(N)
+#include <iostream>
+using namespace std;
+
+struct Node {
 	int data;
 	Node* next;
 };
 
-bool search(Node* head, int x) {
-	Node* current = head;
-	while (current != nullptr) {
-		if (current->data == x)
-			return true;
-		current = current->next;
+class LinkedList {
+private:
+	Node* head;
+
+public:
+	LinkedList() { head = NULL; }
+
+	void insertEnd(int value) {
+		Node* newNode = new Node();
+		newNode->data = value;
+		newNode->next = NULL;
+		if (head == NULL) { head = newNode; return; }
+		Node* temp = head;
+		while (temp->next != NULL) temp = temp->next;
+		temp->next = newNode;
 	}
-	return false;
-}"""
+
+	void insertBeginning(int value) {
+		Node* newNode = new Node();
+		newNode->data = value;
+		newNode->next = head;
+		head = newNode;
+	}
+
+	void insertAtIndex(int index, int value) {
+		if (index == 0) { insertBeginning(value); return; }
+		Node* newNode = new Node();
+		newNode->data = value;
+		Node* temp = head;
+		for (int i = 0; i < index - 1; i++) {
+			if(temp == NULL) return;
+			temp = temp->next;
+		}
+		newNode->next = temp->next;
+		temp->next = newNode;
+	}
+
+	void deleteBeginning() {
+		if (head == NULL) return;
+		Node* temp = head;
+		head = head->next;
+		delete temp;
+	}
+
+	void deleteEnd() {
+		if (head == NULL) return;
+		if (head->next == NULL) { delete head; head = NULL; return; }
+		Node* temp = head;
+		while (temp->next->next != NULL) temp = temp->next;
+		delete temp->next;
+		temp->next = NULL;
+	}
+
+	void deleteAtIndex(int index) {
+		if (index == 0) { deleteBeginning(); return; }
+		Node* temp = head;
+		for (int i = 0; i < index - 1; i++) {
+			if(temp == NULL) return;
+			temp = temp->next;
+		}
+		if(temp == NULL || temp->next == NULL) return;
+		Node* deleteNode = temp->next;
+		temp->next = deleteNode->next;
+		delete deleteNode;
+	}
+
+	void printList() {
+		Node* temp = head;
+		while (temp != NULL) {
+			cout << temp->data;
+			if (temp->next != NULL) cout << ",";
+			temp = temp->next;
+		}
+		cout << endl;
+	}
+
+	void linearSearch(int value) {
+		Node* temp = head;
+		int index = 0;
+		while (temp != NULL) {
+			if (temp->data == value) {
+				cout << "Result = found at index " << index << endl;
+				return;
+			}
+			temp = temp->next;
+			index++;
+		}
+		cout << "Result = not found" << endl;
+	}
+};"""
+	return base_code + "\n\n" + _build_action_code("cpp")
 
 func get_python_code() -> String:
-	return """class Node:
+	var base_code = """# Complexity: Time O(N), Space O(N)
+class Node:
 	def __init__(self, data):
 		self.data = data
 		self.next = None
 
-def search(head, x):
-	current = head
-	while current is not None:
-		if current.data == x:
-			return True
-		current = current.next
-	return False"""
+class LinkedList:
+	def __init__(self):
+		self.head = None
+
+	def insert_end(self, value):
+		new_node = Node(value)
+		if self.head is None:
+			self.head = new_node
+			return
+		temp = self.head
+		while temp.next is not None:
+			temp = temp.next
+		temp.next = new_node
+
+	def insert_beginning(self, value):
+		new_node = Node(value)
+		new_node.next = self.head
+		self.head = new_node
+
+	def insert_at_index(self, index, value):
+		if index == 0:
+			self.insert_beginning(value)
+			return
+		new_node = Node(value)
+		temp = self.head
+		for _ in range(index - 1):
+			if temp is None: return
+			temp = temp.next
+		if temp is None: return
+		new_node.next = temp.next
+		temp.next = new_node
+
+	def delete_beginning(self):
+		if self.head is None: return
+		self.head = self.head.next
+
+	def delete_end(self):
+		if self.head is None: return
+		if self.head.next is None:
+			self.head = None
+			return
+		temp = self.head
+		while temp.next.next is not None:
+			temp = temp.next
+		temp.next = None
+
+	def delete_at_index(self, index):
+		if index == 0:
+			self.delete_beginning()
+			return
+		temp = self.head
+		for _ in range(index - 1):
+			if temp is None: return
+			temp = temp.next
+		if temp is None or temp.next is None: return
+		temp.next = temp.next.next
+
+	def print_list(self):
+		temp = self.head
+		elems = []
+		while temp is not None:
+			elems.append(str(temp.data))
+			temp = temp.next
+		print(",".join(elems))
+
+	def linear_search(self, value):
+		current = self.head
+		index = 0
+		while current is not None:
+			if current.data == value:
+				print(f"Result = found at index {index}")
+				return True
+			current = current.next
+			index += 1
+		print("Result = not found")
+		return False"""
+	return base_code + _build_action_code("python")
 
 func get_java_code() -> String:
-	return """class Node {
+	var base_code = """// Complexity: Time O(N), Space O(N)
+class Node {
 	int data;
 	Node next;
 }
 
 class LinkedList {
-	public boolean search(Node head, int x) {
-		Node current = head;
-		while (current != null) {
-			if (current.data == x) return true;
-			current = current.next;
-		}
-		return false;
+	Node head;
+
+	public void insertEnd(int value) {
+		Node newNode = new Node();
+		newNode.data = value;
+		newNode.next = null;
+		if (head == null) { head = newNode; return; }
+		Node temp = head;
+		while (temp.next != null) temp = temp.next;
+		temp.next = newNode;
 	}
-}"""
+
+	public void insertBeginning(int value) {
+		Node newNode = new Node();
+		newNode.data = value;
+		newNode.next = head;
+		head = newNode;
+	}
+
+	public void insertAtIndex(int index, int value) {
+		if (index == 0) { insertBeginning(value); return; }
+		Node newNode = new Node();
+		newNode.data = value;
+		Node temp = head;
+		for (int i = 0; i < index - 1; i++) {
+			if (temp == null) return;
+			temp = temp.next;
+		}
+		newNode.next = temp.next;
+		temp.next = newNode;
+	}
+
+	public void deleteBeginning() {
+		if (head == null) return;
+		head = head.next;
+	}
+
+	public void deleteEnd() {
+		if (head == null) return;
+		if (head.next == null) { head = null; return; }
+		Node temp = head;
+		while (temp.next.next != null) temp = temp.next;
+		temp.next = null;
+	}
+
+	public void deleteAtIndex(int index) {
+		if (index == 0) { deleteBeginning(); return; }
+		Node temp = head;
+		for (int i = 0; i < index - 1; i++) {
+			if (temp == null) return;
+			temp = temp.next;
+		}
+		if (temp == null || temp.next == null) return;
+		temp.next = temp.next.next;
+	}
+
+	public void printList() {
+		Node temp = head;
+		while (temp != null) {
+			System.out.print(temp.data);
+			if (temp.next != null) System.out.print(",");
+			temp = temp.next;
+		}
+		System.out.println();
+	}
+
+	public boolean linearSearch(int value) {
+		Node current = head;
+		int index = 0;
+		while (current != null) {
+			if (current.data == value) {
+				System.out.println("Result = found at index " + index);
+				return true;
+			}
+			current = current.next;
+			index++;
+		}
+		System.out.println("Result = not found");
+		return false;
+	}"""
+	return base_code + _build_action_code("java")
 
 func get_c_code() -> String:
-	return """#include <stdio.h>
+	var base_code = """// Complexity: Time O(N), Space O(N)
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 
 struct Node {
@@ -713,15 +1169,94 @@ struct Node {
 	struct Node* next;
 };
 
-bool search(struct Node* head, int x) {
-	struct Node* current = head;
-	while (current != NULL) {
-		if (current->data == x)
-			return true;
-		current = current->next;
+void insertEnd(struct Node** head, int value) {
+	struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+	newNode->data = value;
+	newNode->next = NULL;
+	if (*head == NULL) { *head = newNode; return; }
+	struct Node* temp = *head;
+	while (temp->next != NULL) temp = temp->next;
+	temp->next = newNode;
+}
+
+void insertBeginning(struct Node** head, int value) {
+	struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+	newNode->data = value;
+	newNode->next = *head;
+	*head = newNode;
+}
+
+void insertAtIndex(struct Node** head, int index, int value) {
+	if (index == 0) { insertBeginning(head, value); return; }
+	struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+	newNode->data = value;
+	struct Node* temp = *head;
+	for (int i = 0; i < index - 1; i++) {
+		if (temp == NULL) return;
+		temp = temp->next;
 	}
+	newNode->next = temp->next;
+	temp->next = newNode;
+}
+
+void deleteBeginning(struct Node** head) {
+	if (*head == NULL) return;
+	struct Node* temp = *head;
+	*head = (*head)->next;
+	free(temp);
+}
+
+void deleteEnd(struct Node** head) {
+	if (*head == NULL) return;
+	if ((*head)->next == NULL) {
+		free(*head);
+		*head = NULL;
+		return;
+	}
+	struct Node* temp = *head;
+	while (temp->next->next != NULL) temp = temp->next;
+	free(temp->next);
+	temp->next = NULL;
+}
+
+void deleteAtIndex(struct Node** head, int index) {
+	if (index == 0) { deleteBeginning(head); return; }
+	struct Node* temp = *head;
+	for (int i = 0; i < index - 1; i++) {
+		if (temp == NULL) return;
+		temp = temp->next;
+	}
+	if (temp == NULL || temp->next == NULL) return;
+	struct Node* deleteNode = temp->next;
+	temp->next = deleteNode->next;
+	free(deleteNode);
+}
+
+void printList(struct Node* head) {
+	struct Node* temp = head;
+	while (temp != NULL) {
+		printf("%d", temp->data);
+		if (temp->next != NULL) printf(",");
+		temp = temp->next;
+	}
+	printf("\\n");
+}
+
+bool linearSearch(struct Node* head, int value) {
+	struct Node* current = head;
+	int index = 0;
+	while (current != NULL) {
+		if (current->data == value) {
+			printf("Result = found at index %d\\n", index);
+			return true;
+		}
+		current = current->next;
+		index++;
+	}
+	printf("Result = not found\\n");
 	return false;
 }"""
+	return base_code + _build_action_code("c")
 
 # ==============================================
 #   CONFIG HANDLERS
@@ -755,16 +1290,42 @@ func _on_size_next_pressed() -> void:
 func _show_config_elements_modal() -> void:
 	element_inputs.clear()
 	for child in elements_container.get_children(): child.queue_free()
+	
 	var grid = GridContainer.new()
-	grid.columns = 5
+	grid.columns = 3 
+	grid.add_theme_constant_override("h_separation", 20)
+	grid.add_theme_constant_override("v_separation", 20)
+	grid.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	
 	elements_container.add_child(grid)
+	
 	var count = int(size_input.value)
 	for i in range(count):
 		var le = LineEdit.new()
 		le.placeholder_text = str(randi_range(1, 99))
+		
+		le.custom_minimum_size = Vector2(80, 50) 
+		le.alignment = HORIZONTAL_ALIGNMENT_CENTER 
+		le.max_length = 3 
+		
+		le.text_changed.connect(_on_element_input_changed.bind(le))
+		
 		element_inputs.append(le)
 		grid.add_child(le)
+		
 	config_elements_modal.show()
+
+func _on_element_input_changed(new_text: String, le: LineEdit) -> void:
+	var filtered_text = ""
+	
+	for i in range(new_text.length()):
+		var char = new_text[i]
+		if (char >= "0" and char <= "9") or (i == 0 and char == "-"):
+			filtered_text += char
+			
+	if filtered_text != new_text:
+		le.text = filtered_text
+		le.caret_column = filtered_text.length()
 
 func _on_elements_done_pressed() -> void:
 	btn_sound.play()
@@ -801,7 +1362,8 @@ func show_introduction():
 	_ensure_connected(intro_skip_btn, "pressed", _on_intro_skip_pressed)
 
 func _update_intro_text():
-	if intro_label and intro_texts.size() > 0: intro_label.text = intro_texts[intro_step]
+	if intro_label and intro_texts.size() > 0: 
+		intro_label.text = intro_texts[intro_step]
 	if intro_prev_btn: intro_prev_btn.visible = (intro_step > 0)
 	if intro_next_btn: intro_next_btn.text = "Finish" if intro_step >= intro_texts.size() - 1 else "Next"
 
@@ -836,9 +1398,9 @@ func start_tutorial() -> void:
 	if tutorial_box: tutorial_box.show()
 	
 	tutorial_sequence = [
-		{ "node": sort_btn, "title": "SEARCH LIST", "text": "Opens a popup to set the Target value you want to search for in the Linked List." },
 		{ "node": insert_menu, "title": "INSERT OPTIONS", "text": "Add new nodes to the Beginning, End, or a Specific Position." },
 		{ "node": delete_menu, "title": "DELETE OPTIONS", "text": "Remove nodes from the Beginning, End, or a Specific Position." },
+		{ "node": sort_btn, "title": "SEARCH LIST", "text": "Opens a popup to set the Target value you want to search for in the Linked List." },
 		{ "node": auto_search_btn, "title": "AUTO SEARCH", "text": "Starts/Pauses automatic searching step-by-step." },
 		{ "node": auto_btn, "title": "SEARCH STEP", "text": "Executes one comparison step manually." },
 		{ "node": timeline_btn, "title": "TIMELINE", "text": "View a history of all operations and comparisons." },
@@ -895,13 +1457,15 @@ func _on_cpp_code_button_pressed(): btn_sound.play(); _show_cpp_popup()
 func _on_complete_ok_pressed(): btn_sound.play(); complete_popup.hide()
 
 func _on_simulate_new_pressed(): sim_confirmation.show()
-func _on_no_pressed(): sim_confirmation.hide()
-
+func _on_no_pressed(): 
+	sim_confirmation.hide()
+	cpp_code_button.hide()
 func _on_yes_pressed():
 	sim_confirmation.hide()
 	sim_success.show()
 	await get_tree().create_timer(1.0).timeout
 	sim_success.hide()
+	cpp_code_button.hide()
 	_show_config_modal()
 
 func _connect_language_buttons():
