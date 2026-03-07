@@ -1399,27 +1399,18 @@ func _on_cpp_next_button_pressed() -> void:
 	btn_sound.play()
 	
 	var tutorial_steps = _get_tutorial_steps_for_language()
-	
-	# Calculate next index with loop (using modulo operator)
 	cpp_tutorialcode_index = (cpp_tutorialcode_index + 1) % tutorial_steps.size()
-	
-	# Show the explanation for the new step
 	show_cpp_explanation()
 	
-	# Visual feedback when looping (when index goes from last to 0)
 	if cpp_tutorialcode_index == 0:
-		# Show loop message briefly
 		if cpp_explanation_text:
 			var _original_text = cpp_explanation_text.text
 			cpp_explanation_text.text = "🔄 Looping back to start..."
 			
-			# Wait briefly before showing first step
 			await get_tree().create_timer(0.8).timeout
 			
-			# Now show the first explanation
 			show_cpp_explanation()
 		
-		# Flash the button to indicate loop
 		if cpp_next_button:
 			var tween = create_tween()
 			tween.tween_property(cpp_next_button, "modulate", Color(0.5, 1, 0.5, 1), 0.2)
@@ -1447,7 +1438,6 @@ func _on_yes_pressed() -> void:
 	
 	_clear_simulation_data()
 
-	# Clear visual elements
 	for child in queue_container.get_children():
 		child.queue_free()
 
