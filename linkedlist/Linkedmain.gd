@@ -1,8 +1,7 @@
 extends Control
 
-# =======================================================
 #    LINKED LIST SIMULATION - FINAL (Custom UI Nodes)
-# =======================================================
+
 
 # --- MAIN BUTTONS ---
 @onready var sort_btn: Button = $VBoxContainer/SortButton          
