@@ -1,6 +1,7 @@
 extends Control
 
 signal block_dropped(block: Control)
+signal block_pressed(block: Control) 
 
 # List of preloaded textures
 const TEXTURE_POOL = [
@@ -9,6 +10,7 @@ const TEXTURE_POOL = [
 	preload("res://assets/BLOCK_PURPLE.png"),
 	preload("res://assets/BLOCK_RED.png")
 ]
+
 @export var draggable := false
 @export var value: int = 0:
 	set(v):
@@ -23,24 +25,26 @@ var target_position := Vector2.ZERO # For sorting animations
 func _ready() -> void:
 	set_random_texture()
 	_update_text()
-	if draggable:
-		mouse_filter = Control.MOUSE_FILTER_STOP
-		set_process_input(true)
-	else:
-		mouse_filter = Control.MOUSE_FILTER_IGNORE
-		set_process_input(false)
+	# Always accept input so we can detect presses
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	set_process_input(true)
 
 func _update_text() -> void:
 	var label = get_node_or_null("NumberLabel")
 	if label and label is Label:
 		label.text = str(value)
 
+func hide_number(hide: bool):
+	var label = get_node_or_null("NumberLabel")
+	if label and label is Label:
+		label.visible = not hide
+
 func set_random_texture() -> void:
 	var bg = get_node_or_null("Bg")
 	if bg and bg is TextureRect:
 		bg.texture = TEXTURE_POOL.pick_random()
 
-# --- VISUAL HELPERS FOR SORTING ---
+# --- VISUAL HELPERS ---
 
 func set_highlight(active: bool):
 	# Makes the block glow when being compared
@@ -53,7 +57,6 @@ func set_highlight(active: bool):
 		scale = Vector2(1.0, 1.0)
 		z_index = 0
 
-# Updated to accept a boolean parameter
 func set_sorted_visual(is_sorted: bool = true):
 	# Visual indication that this block is in its final sorted position
 	if is_sorted:
@@ -75,34 +78,6 @@ func set_sorted_visual(is_sorted: bool = true):
 			label.add_theme_color_override("font_color", Color.WHITE)
 			label.add_theme_constant_override("outline_size", 0)
 
-func _gui_input(event: InputEvent) -> void:
-	if not draggable:
-		return
-
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.pressed:
-			_dragging = true
-			original_position = global_position
-			_drag_offset = global_position - event.global_position
-			z_index = 20
-		else:
-			if _dragging:
-				_dragging = false
-				z_index = 0
-				emit_signal("block_dropped", self)
-
-	elif event is InputEventMouseMotion and _dragging:
-		global_position = event.global_position + _drag_offset
-
-func snap_back():
-	global_position = original_position
-	
-func set_outline_color(color: Color):
-	var outline = get_node_or_null("Outline")
-	if outline:
-		outline.show()
-		outline.modulate = color
-		
 func set_pivot_visual(is_pivot: bool):
 	if is_pivot:
 		# Purple tint with crown indicator (crown is handled by separate node)
@@ -120,8 +95,41 @@ func set_pivot_visual(is_pivot: bool):
 			if label and label is Label:
 				label.add_theme_color_override("font_color", Color.WHITE)
 				label.add_theme_constant_override("outline_size", 0)
-				
+
+func set_outline_color(color: Color):
+	var outline = get_node_or_null("Outline")
+	if outline:
+		outline.show()
+		outline.modulate = color
+		
 func hide_outline():
 	var outline = get_node_or_null("Outline")
 	if outline:
 		outline.hide()
+
+# --- INPUT HANDLING (Single consolidated function) ---
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			# ALWAYS emit block_pressed signal when clicked
+			emit_signal("block_pressed", self)
+			
+			# Handle dragging if draggable
+			if draggable:
+				_dragging = true
+				original_position = global_position
+				_drag_offset = global_position - event.global_position
+				z_index = 20
+		else:
+			# Handle drop if was dragging
+			if _dragging:
+				_dragging = false
+				z_index = 0
+				emit_signal("block_dropped", self)
+	
+	# Handle drag motion
+	elif event is InputEventMouseMotion and _dragging:
+		global_position = event.global_position + _drag_offset
+
+func snap_back():
+	global_position = original_position

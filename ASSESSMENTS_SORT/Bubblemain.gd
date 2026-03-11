@@ -586,7 +586,12 @@ func _on_block_dropped(dropped_block: Control) -> void:
 		return
 	
 	# Validate Bubble Sort move (adjacent swap only)
+	var is_adjacent = abs(old_index - insert_index) == 1
 	var is_valid: bool = _is_valid_bubble_move(old_index, insert_index)
+	
+	# Store values for feedback
+	var val1 = main_array[old_index]
+	var val2 = main_array[insert_index]
 
 	# Perform swap
 	var val: int = main_array.pop_at(old_index)
@@ -596,8 +601,10 @@ func _on_block_dropped(dropped_block: Control) -> void:
 	block_nodes.insert(insert_index, dropped_block)
 
 	var move_data = {
-		"i": old_index,
-		"j": insert_index,
+		"old_index": old_index,
+		"new_index": insert_index,
+		"val1": val1,
+		"val2": val2,
 		"was_valid": is_valid
 	}
 
@@ -607,12 +614,12 @@ func _on_block_dropped(dropped_block: Control) -> void:
 	if is_valid:
 		correct_moves += 1
 		timeline_log.append(
-			"[color=green]Good swap: index %d ↔ %d[/color]" 
-			% [old_index, insert_index]
+			"[color=green]Good swap: index[%d] (%d) with index[%d] (%d) - Correct! Left > Right[/color]" 
+			% [old_index, val1, insert_index, val2]
 		)
 
 		show_feedback(
-			"Good move!",
+			"Good move! %d > %d - Swapping fixes inversion" % [max(val1, val2), min(val1, val2)],
 			Color.GREEN,
 			Vector2(dropped_block.global_position.x, START_POSITION.y - 20)
 		)
@@ -626,16 +633,28 @@ func _on_block_dropped(dropped_block: Control) -> void:
 			sort_i += 1
 	else:
 		mistake_counter += 1
-		timeline_log.append(
-			"[color=red]Bad swap: index %d ↔ %d[/color]" 
-			% [old_index, insert_index]
-		)
-
-		show_feedback(
-			"Bad move!",
-			Color.RED,
-			Vector2(dropped_block.global_position.x, START_POSITION.y - 20)
-		)
+		
+		# Detailed reason for bad move
+		if not is_adjacent:
+			timeline_log.append(
+				"[color=red]Bad move: index[%d] (%d) with index[%d] (%d) - Not adjacent! Bubble Sort only swaps adjacent elements[/color]" 
+				% [old_index, val1, insert_index, val2]
+			)
+			show_feedback(
+				"Bad move! Can only swap adjacent blocks",
+				Color.RED,
+				Vector2(dropped_block.global_position.x, START_POSITION.y - 20)
+			)
+		else:
+			timeline_log.append(
+				"[color=red]Bad move: index[%d] (%d) with index[%d] (%d) - Wrong order! %d <= %d, no swap needed[/color]" 
+				% [old_index, val1, insert_index, val2, min(val1, val2), max(val1, val2)]
+			)
+			show_feedback(
+				"Bad move! %d <= %d - Elements already in correct order" % [min(val1, val2), max(val1, val2)],
+				Color.RED,
+				Vector2(dropped_block.global_position.x, START_POSITION.y - 20)
+			)
 	
 	# Update sorted visuals after any move
 	_update_sorted_visuals()
@@ -727,7 +746,7 @@ func _perform_sort_step():
 	
 	if status_label:
 		status_label.text = "Comparing: %d vs %d" % [val_a, val_b]
-	timeline_log.append("Pass %d: Comparing index [%d] (%d) vs [%d] (%d)" % [sort_i+1, sort_j, val_a, sort_j+1, val_b])
+	timeline_log.append("Pass %d: Comparing index [%d] (%d) vs index [%d] (%d)" % [sort_i+1, sort_j, val_a, sort_j+1, val_b])
 	
 	await get_tree().create_timer(ANIM_SPEED * 0.5).timeout
 	
@@ -735,7 +754,7 @@ func _perform_sort_step():
 		swap_counter += 1
 		if status_label:
 			status_label.text = "Swap! %d > %d" % [val_a, val_b]
-		timeline_log.append(" -> Swapped %d and %d" % [val_a, val_b])
+		timeline_log.append(" -> Swapped %d and %d (correct: larger should go right)" % [val_a, val_b])
 		
 		var temp = main_array[sort_j]
 		main_array[sort_j] = main_array[sort_j + 1]
@@ -755,7 +774,7 @@ func _perform_sort_step():
 	else:
 		if status_label:
 			status_label.text = "No Swap. %d <= %d" % [val_a, val_b]
-		timeline_log.append(" -> In correct order.")
+		timeline_log.append(" -> Correct order: %d <= %d, no swap needed" % [val_a, val_b])
 		await get_tree().create_timer(ANIM_SPEED * 0.5).timeout
 		
 	sort_j += 1
@@ -1330,8 +1349,8 @@ func _on_waiting_pressed() -> void:
 		mistake_counter += 1
 
 	timeline_log.append(
-		"[color=gray]Redo: %d ↔ %d[/color]" 
-		% [move["i"], move["j"]]
+		"[color=gray]Redo: reapplied swap index[%d] (%d) ↔ index[%d] (%d)[/color]" 
+		% [move["old_index"], move["val1"], move["new_index"], move["val2"]]
 	)
 
 	_update_timeline_display()
@@ -1401,8 +1420,8 @@ func _on_sort_button_pressed() -> void:
 		mistake_counter -= 1
 
 	timeline_log.append(
-		"[color=gray]Undo: %d ↔ %d[/color]" 
-		% [last_move["i"], last_move["j"]]
+		"[color=gray]Undo: reversed swap index[%d] (%d) ↔ index[%d] (%d)[/color]" 
+		% [last_move["old_index"], last_move["val1"], last_move["new_index"], last_move["val2"]]
 	)
 
 	_update_timeline_display()

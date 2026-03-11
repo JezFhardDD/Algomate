@@ -39,10 +39,12 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_xr2c2")
 text = "Pivot"
 
 [node name="MoveIButton" type="Button" parent="VBoxContainer" index="2"]
+self_modulate = Color(0, 0, 1, 1)
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
-theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/icon_normal_color = Color(1, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 0, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("3_77nty")
 theme_override_font_sizes/font_size = 26
@@ -52,10 +54,12 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_xr2c2")
 text = "Move I"
 
 [node name="MoveJButton" type="Button" parent="VBoxContainer" index="3"]
+self_modulate = Color(1, 1, 0, 1)
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
-theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/icon_normal_color = Color(1, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(1, 1, 0, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("3_77nty")
 theme_override_font_sizes/font_size = 26
