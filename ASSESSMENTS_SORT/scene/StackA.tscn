@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3 uid="uid://cq3gb15j1tlfe"]
+
+[ext_resource type="PackedScene" uid="uid://dq6ebtkxu3lbb" path="res://scene/ArrayA.tscn" id="1_uagsq"]
+[ext_resource type="Script" uid="uid://dfi0lmpdochof" path="res://script/stack_a.gd" id="2_8anxq"]
+
+[node name="Main" instance=ExtResource("1_uagsq")]
+script = ExtResource("2_8anxq")
+
+[node name="rear" parent="TextureRect" index="0"]
+visible = true
+offset_left = 900.0
+offset_top = 128.0
+offset_right = 987.0
+offset_bottom = 173.0
+text = "Top"
+
+[node name="QueueContainer" parent="." index="7"]
+anchors_preset = -1
+anchor_left = 0.607112
+anchor_top = 0.198142
+anchor_right = 0.780572
+anchor_bottom = 0.854489
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="Area2D" parent="." index="34"]
+position = Vector2(370, 463)
