@@ -89,24 +89,18 @@ var max_array_size: int = 7
 var BLOCK_SPACING: float = 30.0
 var START_POSITION: Vector2 = Vector2(60, 80)
 
-# --- COMMAND SYSTEM ---
 enum CommandType { INSERT, DELETE, ACCESS }
 
-var command_queue: Array = []       # All commands for this session
-var current_command_index: int = 0  # Which command we're on
+var command_queue: Array = []
+var current_command_index: int = 0
 var commands_total: int = 0
 var correct_moves: int = 0
 var bad_moves: int = 0
 var has_completed: bool = false
 var completion_type: String = ""
 
-# Each command: { "type": CommandType, "index": int, "value": int }
-# value only used for INSERT commands
-
-# --- SPAWN STACK ---
-# All INSERT blocks are pre-instantiated and stacked in spawn area
-var spawn_stack: Array[Control] = []  # Index 0 = current (top), rest stacked below
-const SPAWN_STACK_OFFSET: Vector2 = Vector2(4, 6)  # Slight offset per stacked block
+var spawn_stack: Array[Control] = []
+const SPAWN_STACK_OFFSET: Vector2 = Vector2(4, 6)
 
 # --- UNDO / REDO ---
 var undo_stack: Array = []
@@ -623,11 +617,9 @@ func _on_array_block_dropped(block: Control) -> void:
 		block.snap_back()
 		return
 
-	# Check if dropped on garbage
 	var dropped_on_garbage = _is_over_garbage(block)
 
 	if not dropped_on_garbage:
-		# Snap back to array position — not dropped on valid target
 		block.snap_back()
 		return
 
@@ -810,8 +802,6 @@ func _restore_state(state: Dictionary) -> void:
 
 
 func _rebuild_spawn_stack_to_command() -> void:
-	# Rebuild spawn stack to reflect how many INSERT commands remain
-	# from current_command_index onward
 	for child in spawn_slot.get_children():
 		child.queue_free()
 	spawn_stack.clear()
