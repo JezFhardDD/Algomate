@@ -91,7 +91,6 @@ texture = ExtResource("6_run40")
 
 [node name="ResultPopup" type="PopupPanel"]
 size = Vector2i(800, 500)
-visible = true
 
 [node name="TextureRect" type="TextureRect" parent="."]
 self_modulate = Color(1, 1, 1, 0.929412)

@@ -77,7 +77,7 @@ const TIKTAK_SFX := preload("res://assets/sfx/tiktak.mp3")
 var tiktak_sound: AudioStreamPlayer
 
 # --- DIFFICULTY & TIMER ---
-var difficulty: int = 1
+var difficulty: int = 2
 var time_remaining: float = 0.0
 var timer_running: bool = false
 var assessment_time_limit: float = 0.0

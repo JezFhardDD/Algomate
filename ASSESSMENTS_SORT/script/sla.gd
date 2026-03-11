@@ -240,7 +240,7 @@ func _get_array_size() -> int:
 func _get_time_limit() -> float:
 	match difficulty:
 		1: return 100000.0 # Easy
-		2: return 9.0    # Medium
+		2: return 90.0    # Medium
 		3: return 60.0     # Hard
 	return 90.0
 
@@ -403,10 +403,17 @@ func _update_current_position():
 	for i in range(main_array.size()):
 		if main_array[i] != sorted_array[i]:
 			current_position = i
+			
+			# Optional: Add status label update
+			if status_label:
+				var target_value = sorted_array[i]
+				status_label.text = "Find %d and swap it into position %d" % [target_value, i]
 			return
 	
 	# If all match, array is fully sorted
 	current_position = main_array.size()
+	if status_label:
+		status_label.text = "Array is sorted!"
 	
 func _process(delta: float) -> void:
 	if sim_mode != SimMode.ASSESSMENT:
@@ -557,14 +564,29 @@ func _update_sorted_visuals():
 			continue
 			
 		if block_nodes[i].has_method("set_sorted_visual"):
-			# Element is sorted if it matches the sorted array at this position
+			# In Selection Sort, elements before current_position should be in their final positions
+			# But also any element that matches the sorted array at its index can be highlighted
 			if main_array[i] == sorted_array[i]:
+				# This element is in its correct final position
 				block_nodes[i].set_sorted_visual(true)
+				
+				# Optional: Add a subtle glow or scale effect for recently sorted
+				if i == current_position - 1 and i >= 0:
+					# This element was just sorted in the last move
+					var block = block_nodes[i]
+					var original_scale = block.scale
+					var tween = create_tween().set_trans(Tween.TRANS_ELASTIC)
+					tween.tween_property(block, "scale", original_scale * 1.1, 0.2)
+					tween.tween_property(block, "scale", original_scale, 0.2)
 			else:
 				block_nodes[i].set_sorted_visual(false)
 		
 		if block_nodes[i].has_method("set_highlight"):
-			block_nodes[i].set_highlight(false)
+			# Highlight the current position we're trying to fill
+			if i == current_position and current_position < main_array.size():
+				block_nodes[i].set_highlight(true)
+			else:
+				block_nodes[i].set_highlight(false)
 
 
 # ==============================================
@@ -644,8 +666,8 @@ func _on_block_dropped(dropped_block: Control) -> void:
 		correct_moves += 1
 		# Detailed timeline log for good moves
 		timeline_log.append(
-			"[color=green]Good move: swapped index[%d]: %d with index[%d]: %d[/color]" 
-			% [old_index, val1, insert_index, val2]
+			"[color=green]Good swap: index[%d] (%d) ↔ index[%d] (%d) - %s[/color]" 
+			% [old_index, val1, insert_index, val2, message]
 		)
 
 		show_feedback(
@@ -662,8 +684,8 @@ func _on_block_dropped(dropped_block: Control) -> void:
 		mistake_counter += 1
 		# Detailed timeline log for bad moves
 		timeline_log.append(
-			"[color=red]Bad move: swapped index[%d]: %d with index[%d]: %d[/color]" 
-			% [old_index, val1, insert_index, val2]
+			"[color=red]Bad move: index[%d] (%d) ↔ index[%d] (%d) - %s[/color]" 
+			% [old_index, val1, insert_index, val2, message]
 		)
 
 		show_feedback(
@@ -719,14 +741,22 @@ func _validate_selection_move(old_index: int, new_index: int) -> Dictionary:
 	   (new_index == current_position and old_index == target_index):
 		return {
 			"valid": true,
-			"message": "Good move!"
+			"message": "Good move! Swapping %d into position %d" % [target_value, current_position]
 		}
 	
-	# Invalid move - cleaner message without revealing target value
-	return {
-		"valid": false,
-		"message": "Bad move"
-	}
+	# Invalid move - give specific feedback
+	if old_index == current_position or new_index == current_position:
+		# Swapping current position with something other than the minimum
+		return {
+			"valid": false,
+			"message": "Bad move! Need to swap the minimum value %d at index %d into position %d" % [target_value, target_index, current_position]
+		}
+	else:
+		# Swapping two elements that don't involve current position
+		return {
+			"valid": false,
+			"message": "Bad move! Swap must involve current position %d" % current_position
+		}
 
 
 func _resnap_blocks() -> void:
@@ -792,8 +822,16 @@ func _perform_sort_step():
 	# Swap if needed
 	if min_idx != current_position:
 		swap_counter += 1
+		var val_at_pos = main_array[current_position]
+		var min_val = main_array[min_idx]
+		
 		if status_label:
-			status_label.text = "Swapping %d with %d" % [main_array[current_position], main_array[min_idx]]
+			status_label.text = "Swapping %d (min) with %d at position %d" % [min_val, val_at_pos, current_position]
+		
+		timeline_log.append(
+			"[color=green]Auto: Swapped minimum %d at index %d into position %d (was %d)[/color]" 
+			% [min_val, min_idx, current_position, val_at_pos]
+		)
 		
 		var temp = main_array[current_position]
 		main_array[current_position] = main_array[min_idx]
@@ -806,11 +844,13 @@ func _perform_sort_step():
 		block_nodes[min_idx] = node_a
 		
 		await _animate_swap(node_a, node_b)
-		timeline_log.append("Swapped minimum %d into position %d" % [main_array[current_position], current_position])
 	else:
 		if status_label:
-			status_label.text = "Element %d already correct" % main_array[current_position]
-		timeline_log.append("Element %d already correct at position %d" % [main_array[current_position], current_position])
+			status_label.text = "Element %d already correct at position %d" % [main_array[current_position], current_position]
+		timeline_log.append(
+			"[color=green]Auto: Element %d already in correct position %d[/color]" 
+			% [main_array[current_position], current_position]
+		)
 		await get_tree().create_timer(ANIM_SPEED * 0.5).timeout
 	
 	current_position += 1
@@ -1351,7 +1391,7 @@ func _on_help_button_pressed():
 #   UNDO/REDO FUNCTIONS
 # ==============================================
 
-func _on_waiting_pressed() -> void:
+func _on_waiting_pressed() -> void: # REDO
 	if not _can_redo():
 		return
 	
@@ -1381,9 +1421,9 @@ func _on_waiting_pressed() -> void:
 	else:
 		mistake_counter += 1
 
-	# Timeline log for redo
+	# Detailed timeline log for redo
 	timeline_log.append(
-		"[color=gray]Redo: reapplied swap index[%d]: %d with index[%d]: %d[/color]" 
+		"[color=gray]Redo: reapplied swap index[%d] (%d) ↔ index[%d] (%d)[/color]" 
 		% [move["old_index"], move["val1"], move["new_index"], move["val2"]]
 	)
 
@@ -1425,7 +1465,7 @@ func _rebuild_blocks_from_array() -> void:
 		
 		current_x += new_block.size.x + BLOCK_SPACING
 
-func _on_sort_button_pressed() -> void:
+func _on_sort_button_pressed() -> void: # UNDO
 	if not _can_undo():
 		return
 	
@@ -1455,9 +1495,9 @@ func _on_sort_button_pressed() -> void:
 	else:
 		mistake_counter -= 1
 
-	# Timeline log for undo
+	# Detailed timeline log for undo
 	timeline_log.append(
-		"[color=gray]Undo: reversed swap index[%d]: %d with index[%d]: %d[/color]" 
+		"[color=gray]Undo: reversed swap index[%d] (%d) ↔ index[%d] (%d)[/color]" 
 		% [last_move["old_index"], last_move["val1"], last_move["new_index"], last_move["val2"]]
 	)
 
