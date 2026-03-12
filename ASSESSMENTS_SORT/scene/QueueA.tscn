@@ -46,7 +46,6 @@ offset_top = -235.0
 offset_right = 323.5
 offset_bottom = -135.0
 text = "hh"
-vertical_alignment = 2
 justification_flags = 160
 
 [node name="SpawnSlot" parent="SpawnArea" index="1"]
