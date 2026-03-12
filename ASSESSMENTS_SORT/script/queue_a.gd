@@ -123,9 +123,10 @@ var is_animating: bool = false
 var ANIM_SPEED: float = 0.3
 
 # --- INTRO ---
+# --- INTRO ---
 var intro_step: int = 0
 var intro_texts: Array = [
-	"WELCOME TO STACK ASSESSMENT!\n\nPut your stack knowledge to the test. The system will give you commands one at a time.",
+	"WELCOME TO QUEUE ASSESSMENT!\n\nPut your queue knowledge to the test. The system will give you commands one at a time.",
 	"COMMANDS:\n\n• Insert # at index # — drag the block from the spawn area to the correct slot\n• Delete block at index # — drag the correct block to the trash\n• Access index # — tap the correct block",
 	"SPAWN AREA (upper left):\n\nBlocks waiting to be inserted are stacked here. The top block is always the current one to drag.",
 	"TRASH (upper right):\n\nDrag unwanted blocks here during DELETE commands. Wrong blocks snap back!",
@@ -310,6 +311,10 @@ func _start_assessment() -> void:
 #   COMMAND GENERATION (UPDATED FOR STACK)
 # ==============================================
 
+# ==============================================
+#   COMMAND GENERATION (UPDATED FOR QUEUE)
+# ==============================================
+
 func _generate_commands() -> void:
 	command_queue.clear()
 	var total = _get_command_count()
@@ -333,19 +338,20 @@ func _generate_commands() -> void:
 
 		match chosen_type:
 			CommandType.INSERT:
-				# STACK: Push to the top (Index 0)
-				var idx = 0 
+				# QUEUE (Enqueue): Add to the back (End of the array)
+				var idx = simulated_array.size() 
 				var val = randi_range(1, 99)
 				cmd = { "type": CommandType.INSERT, "index": idx, "value": val }
 				simulated_array.insert(idx, val)
 
 			CommandType.DELETE:
-				# STACK: Pop from the top (Index 0)
+				# QUEUE (Dequeue): Remove from the front (Index 0)
 				var idx = 0 
 				cmd = { "type": CommandType.DELETE, "index": idx, "value": simulated_array[idx] }
 				simulated_array.remove_at(idx)
 
 			CommandType.ACCESS:
+				# QUEUE (Peek): Look at the front (Index 0)
 				var idx = 0 
 				cmd = { "type": CommandType.ACCESS, "index": idx, "value": simulated_array[idx] }
 
@@ -567,36 +573,34 @@ func _on_spawn_block_dropped(block: Control) -> void:
 	_update_undo_redo_buttons()
 	_update_timeline_display()
 
-
 func _get_drop_index(dropped_block: Control) -> int:
-	var drop_y = dropped_block.global_position.y + 32.0  # Check Y center of dropped block
+	var drop_x = dropped_block.global_position.x + 32.0  # Check X center of dropped block
 
 	if block_nodes.is_empty():
 		return 0
 
-	# Build list of block center y positions
+	# Build list of block center x positions
 	var centers: Array[float] = []
 	for b in block_nodes:
 		if is_instance_valid(b):
-			centers.append(b.global_position.y + 32.0)
+			centers.append(b.global_position.x + 32.0)
 
-	# Before first block (dropped above the top block)
-	if drop_y <= centers[0]:
+	# Before first block (dropped to the left of the first block)
+	if drop_x <= centers[0]:
 		return 0
 
-	# After last block (dropped below the bottom block)
-	if drop_y >= centers[centers.size() - 1]:
+	# After last block (dropped to the right of the last block)
+	if drop_x >= centers[centers.size() - 1]:
 		return centers.size()
 
 	# Between blocks — find which gap
 	for i in range(centers.size() - 1):
-		var top = centers[i]
-		var bottom = centers[i + 1]
-		if drop_y > top and drop_y < bottom:
+		var left = centers[i]
+		var right = centers[i + 1]
+		if drop_x > left and drop_x < right:
 			return i + 1
 
 	return block_nodes.size()
-
 
 # ==============================================
 #   ARRAY BLOCK DRAG & DROP (DELETE command)
@@ -850,15 +854,15 @@ func _rebuild_blocks_from_array() -> void:
 
 	await get_tree().process_frame
 
-	var current_y = START_POSITION.y # Changed from current_x
+	var current_x = START_POSITION.x # Track X instead of Y
 	for i in range(main_array.size()):
 		var val = main_array[i]
 		var block = BLOCK_SCENE.instantiate()
 		block.value = val
 		block.draggable = true
 		
-		# Set X to a fixed position, and increment Y
-		block.position = Vector2(START_POSITION.x, current_y) 
+		# Set Y to a fixed position, and increment X
+		block.position = Vector2(current_x, START_POSITION.y) 
 
 		# Add to scene FIRST
 		array_container.add_child(block)
@@ -876,16 +880,11 @@ func _rebuild_blocks_from_array() -> void:
 		var tween = create_tween()
 		tween.tween_property(block, "modulate:a", 1.0, 0.25)
 
-		# Add to the Y offset for the next block
-		current_y += 64.0 + BLOCK_SPACING 
+		# Add to the X offset for the next block
+		current_x += 64.0 + BLOCK_SPACING 
 
 	if current_command_index < command_queue.size():
 		_show_current_command()
-
-
-# ==============================================
-#   GARBAGE HOVER DETECTION (via _process)
-# ==============================================
 
 func _process(delta: float) -> void:
 	if timer_running and not has_completed and assessment_time_limit > 0.0:

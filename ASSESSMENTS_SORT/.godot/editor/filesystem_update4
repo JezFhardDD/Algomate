@@ -1,3 +1,4 @@
-res://scene/StackA.tscn
 res://scene/BG.gdshader
-res://script/stack_a.gd
+res://scene/QueueA.tscn
+res://script/queue_a.gd
+res://scene/StackA.tscn
