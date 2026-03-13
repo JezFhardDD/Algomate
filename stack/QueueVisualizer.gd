@@ -124,41 +124,41 @@ var cpp_tutorial_texts := [
 var cpp_tutorialcode_index := 0
 var current_tutorial_data: Array = [] 
 
-# --- CODE TUTORIAL STEPS (STACK) ---
+# --- CODE TUTORIAL STEPS (STACK WITH PUSH & POP PRINTS) ---
 var cpp_tutorial_steps := [
 	{"lines": Vector2i(0, 2), "text": "1. Imports: <iostream> for I/O and <stack> for the standard container."},
-	{"lines": Vector2i(3, 6), "text": "2. Main Setup: We define the array and initialize a standard `stack<int>`."},
-	{"lines": Vector2i(7, 11), "text": "3. Push Loop: We iterate through the array and `push()` elements onto the top of the stack."},
-	{"lines": Vector2i(12, 16), "text": "4. Print Initial: We display the stack state by copying it and popping until empty."},
-	{"lines": Vector2i(17, 23), "text": "5. Pop Loop: We get `top()` and `pop()` elements one by one (LIFO) until empty."},
-	{"lines": Vector2i(24, 28), "text": "6. End: The simulation finishes when the stack is empty."}
+	{"lines": Vector2i(4, 7), "text": "2. Main Setup: We define the array and initialize a standard `stack<int>`."},
+	{"lines": Vector2i(9, 14), "text": "3. Push Loop: Iterate, push to the stack, and print the updated stack state."},
+	{"lines": Vector2i(16, 17), "text": "4. Print Initial: We display the top element of the stack before popping."},
+	{"lines": Vector2i(19, 26), "text": "5. Pop Loop: We get `top()`, `pop()` it, and print the remaining stack elements."},
+	{"lines": Vector2i(28, 30), "text": "6. End: The simulation finishes when the stack is empty."}
 ]
 
 var python_tutorial_steps := [
-	{"lines": Vector2i(0, 1), "text": "1. Setup: In Python, a standard list `[]` acts perfectly as a stack."},
-	{"lines": Vector2i(3, 5), "text": "2. Main Setup: Define the list and create an empty stack."},
-	{"lines": Vector2i(7, 9), "text": "3. Push: Use `append()` to add elements to the end (top) of the stack."},
-	{"lines": Vector2i(11, 14), "text": "4. Print: Display the stack contents from bottom to top."},
-	{"lines": Vector2i(16, 19), "text": "5. Pop: Use `pop()` without arguments to remove and return the last element added (LIFO)."},
-	{"lines": Vector2i(21, 24), "text": "6. Execution: Run the main function."}
+	{"lines": Vector2i(1, 2), "text": "1. Setup: In Python, a standard list `[]` acts perfectly as a stack."},
+	{"lines": Vector2i(4, 6), "text": "2. Push Loop: Use `append()` to add elements to the end (top) and print the list."},
+	{"lines": Vector2i(8, 9), "text": "3. Print: Display the initial stack top and start popping."},
+	{"lines": Vector2i(11, 13), "text": "4. Pop Loop: Use `pop()` to remove the last element and print the remaining stack."},
+	{"lines": Vector2i(15, 15), "text": "5. End: The simulation finishes."},
+	{"lines": Vector2i(17, 18), "text": "6. Execution: Run the main function."}
 ]
 
 var java_tutorial_steps := [
-	{"lines": Vector2i(0, 4), "text": "1. Imports & Class: Import the `Stack` class from java.util."},
-	{"lines": Vector2i(5, 7), "text": "2. Setup: Initialize the array and the Stack object."},
-	{"lines": Vector2i(9, 12), "text": "3. Push: Use `s.push(value)` to place items on top of the stack."},
-	{"lines": Vector2i(14, 19), "text": "4. Print: Create a copy to safely print the stack's state."},
-	{"lines": Vector2i(21, 25), "text": "5. Pop: Loop while the stack is not empty. `s.pop()` removes and returns the top item."},
-	{"lines": Vector2i(27, 28), "text": "6. End: Simulation complete."}
+	{"lines": Vector2i(0, 0), "text": "1. Imports: Import the `Stack` class from java.util."},
+	{"lines": Vector2i(4, 5), "text": "2. Setup: Initialize the array and the Stack object."},
+	{"lines": Vector2i(7, 10), "text": "3. Push Loop: Use `s.push(value)` to place items on top and print the state."},
+	{"lines": Vector2i(12, 13), "text": "4. Print: Display the initial stack top using `s.peek()`."},
+	{"lines": Vector2i(15, 18), "text": "5. Pop Loop: Use `s.pop()` to remove the top item and print the remaining stack."},
+	{"lines": Vector2i(19, 21), "text": "6. End: Simulation complete."}
 ]
 
 var c_tutorial_steps := [
-	{"lines": Vector2i(0, 9), "text": "1. Struct Definition: In C, we manually define a Stack struct with an array and a `top` index initialized to -1."},
-	{"lines": Vector2i(11, 45), "text": "2. Helper Functions: Logic for `push`, `pop`, `isEmpty`, and `isFull`."},
-	{"lines": Vector2i(47, 52), "text": "3. Main: Initialize the stack struct and array."},
-	{"lines": Vector2i(54, 57), "text": "4. Push Loop: Add items using our custom `push` function. The `top` index increments."},
-	{"lines": Vector2i(59, 63), "text": "5. Print: Iterate from index 0 up to `top`."},
-	{"lines": Vector2i(65, 69), "text": "6. Pop Loop: Remove items using our custom `pop` function until `isEmpty` returns true."}
+	{"lines": Vector2i(0, 6), "text": "1. Struct Definition: In C, we manually define a Stack struct and array items."},
+	{"lines": Vector2i(8, 18), "text": "2. Helper Functions: Logic for `push`, `pop`, `isEmpty`, and `isFull`."},
+	{"lines": Vector2i(20, 24), "text": "3. Main Setup: Initialize the stack struct and array."},
+	{"lines": Vector2i(26, 31), "text": "4. Push Loop: Add items using `push()` and loop to print the updated stack."},
+	{"lines": Vector2i(33, 34), "text": "5. Print Initial: Display the stack top."},
+	{"lines": Vector2i(36, 41), "text": "6. Pop Loop: Remove items using `pop()` and print the remaining stack."}
 ]
 
 # 🧮 Complexity display
@@ -183,6 +183,10 @@ var current_code_language: String = "cpp"  # cpp, python, java, c, javascript
 @onready var intro_prev_btn: Button = $TutorialOverlay/Intro_popup/prev
 @onready var sim_confirmation: Panel = $Simulate_new_confirmation
 @onready var sim_success: Panel = $"simulate_new success"
+
+#Compiler Integration
+@onready var compiler_output_popup: PopupPanel = null
+@onready var compile_btn: Button = $CppPopup/VBoxContainer/HBoxContainer2/Compile
 
 var intro_step = 0
 var intro_texts = [
@@ -349,7 +353,7 @@ func _on_config_yes_pressed() -> void:
 
 func _on_config_no_pressed() -> void:
 	btn_sound.play()
-	MAX_QUEUE_SIZE = randi_range(5, 7)
+	MAX_QUEUE_SIZE = randi_range(4, 6)
 	var random_elements: Array[int] = []
 	for i in range(MAX_QUEUE_SIZE):
 		random_elements.append(randi_range(1, 99))
@@ -877,6 +881,31 @@ func _show_cpp_popup() -> void:
 		cpp_popup.popup_centered()
 		update_language_button_states()
 
+# ==============================================
+#   COMPILER INTEGRATION
+# ==============================================
+
+# API Keys (copy these from your compiler.gd)
+const API_KEYS = {
+	"cpp": {
+		"clientId": "2401da4c28f2c97e0bed9ca3957a31c7",
+		"clientSecret": "6fdf1a280c510b6d61ba5f964a272a8fa30a5f207cbc395bdece31e781588e73"
+	},
+	"c": {
+		"clientId": "1b1bc8decbed095d6bf0d7399224b9eb",
+		"clientSecret": "e520c9852647730c46853932941226b1c6c47badaf6409c4f34e0a89dcc8611a"
+	},
+	"java": {
+		"clientId": "14e8bb1335d07711f04c72a2a81ad16e",
+		"clientSecret": "c59ca7898c39d69a3fa54a867e52ba35a950fb74707ef3e288d913bbf6a492af"
+	},
+	"python": {
+		"clientId": "36c21fabf5976c192d192ab04af4c8f9",
+		"clientSecret": "a2d0c24c91d4ab4193a2f242307967d61d5f70a2a422734d7458d240c9c596c4"
+	}
+}
+
+
 func generate_code_in_language(lang: String, source_arr: Array) -> String:
 	var arr_str := ", ".join(source_arr.map(func(x): return str(x)))
 	var n = source_arr.size()
@@ -885,6 +914,10 @@ func generate_code_in_language(lang: String, source_arr: Array) -> String:
 		"java": return generate_java_code(arr_str, n)
 		"c": return generate_c_code(arr_str, n)
 		_: return generate_cpp_code(arr_str, n)
+
+# ==============================================
+#   CODE GENERATION FUNCTIONS (WITH LIVE PRINTS)
+# ==============================================
 
 func generate_cpp_code(arr_str: String, _n: int) -> String:
 	return """#include <iostream>
@@ -896,104 +929,91 @@ int main() {
 	int n = sizeof(arr) / sizeof(arr[0]);
 	stack<int> s;
 
-	for (int i = 0; i < n; ++i) 
+	for (int i = 0; i < n; ++i) {
 		s.push(arr[i]);
+		cout << "Pushed " << arr[i] << " | Stack: ";
+		for (int j = 0; j <= i; ++j) cout << arr[j] << " ";
+		cout << endl;
+	}
 
-	cout << "Initial stack top: " << s.top() << endl;
-
+	cout << "\\nInitial stack top: " << s.top() << endl;
 	cout << "Popping..." << endl;
+
 	while (!s.empty()) {
-		cout << "Popped: " << s.top() << endl;
+		int popped = s.top();
 		s.pop();
+		cout << "Popped " << popped << " | Stack: ";
+		// Print remaining elements using the original array indices
+		for (int j = 0; j < s.size(); ++j) cout << arr[j] << " ";
+		cout << endl;
 	}
 
 	cout << "Simulation finished." << endl;
 	return 0;
 }
-
 /*
----------------------------------------
- Time Complexity:
-%s
-
- Space Complexity:
-%s
----------------------------------------
-*/
-""" % [arr_str, get_time_complexity(), get_space_complexity()]
+ Complexity:
+ Time: %s
+ Space: %s
+*/""" % [arr_str, get_time_complexity(), get_space_complexity()]
 
 func generate_python_code(arr_str: String, _n: int) -> String:
-	return """# Stack Simulation in Python
-def main():
+	return """def main():
 	arr = [%s]
 	stack = []
 	
-	# Push all elements
 	for value in arr:
 		stack.append(value)
+		print(f"Pushed {value} | Stack: {stack}")
 	
-	print("Initial stack top:", stack[-1])
+	print("\\nInitial stack top:", stack[-1])
 	print("Popping...")
 	
-	# Pop all elements (LIFO)
 	while len(stack) > 0:
-		print(f"Popped: {stack.pop()}")
+		popped = stack.pop()
+		print(f"Popped {popped} | Stack: {stack}")
 	
 	print("Simulation finished.")
 
 if __name__ == "__main__":
 	main()
-
 '''
----------------------------------------
- Time Complexity:
-%s
-
- Space Complexity:
-%s
----------------------------------------
-'''
-""" % [arr_str, get_time_complexity(), get_space_complexity()]
+ Complexity:
+ Time: %s
+ Space: %s
+'''""" % [arr_str, get_time_complexity(), get_space_complexity()]
 
 func generate_java_code(arr_str: String, _n: int) -> String:
 	return """import java.util.Stack;
 
-public class StackSimulation {
+public class StackSim {
 	public static void main(String[] args) {
 		int[] arr = {%s};
 		Stack<Integer> s = new Stack<>();
 		
-		// Push all elements
 		for (int value : arr) {
 			s.push(value);
+			System.out.println("Pushed " + value + " | Stack: " + s);
 		}
 		
-		System.out.println("Initial stack top: " + s.peek());
+		System.out.println("\\nInitial stack top: " + s.peek());
 		System.out.println("Popping...");
 		
-		// Pop all elements
 		while (!s.isEmpty()) {
-			System.out.println("Popped: " + s.pop());
+			int popped = s.pop();
+			System.out.println("Popped " + popped + " | Stack: " + s);
 		}
-		
 		System.out.println("Simulation finished.");
 	}
 }
-
 /*
----------------------------------------
- Time Complexity:
-%s
-
- Space Complexity:
-%s
----------------------------------------
-*/
-""" % [arr_str, get_time_complexity(), get_space_complexity()]
+ Complexity:
+ Time: %s
+ Space: %s
+*/""" % [arr_str, get_time_complexity(), get_space_complexity()]
 
 func generate_c_code(arr_str: String, _n: int) -> String:
 	return """#include <stdio.h>
-
 #define MAX_SIZE 100
 
 typedef struct {
@@ -1001,31 +1021,15 @@ typedef struct {
 	int top;
 } Stack;
 
-void initStack(Stack *s) {
-	s->top = -1;
-}
-
-int isFull(Stack *s) {
-	return s->top == MAX_SIZE - 1;
-}
-
-int isEmpty(Stack *s) {
-	return s->top == -1;
-}
-
+void initStack(Stack *s) { s->top = -1; }
+int isFull(Stack *s) { return s->top == MAX_SIZE - 1; }
+int isEmpty(Stack *s) { return s->top == -1; }
 void push(Stack *s, int value) {
-	if (isFull(s)) {
-		printf("Stack is full!\\n");
-		return;
-	}
+	if (isFull(s)) { printf("Stack full!\\n"); return; }
 	s->items[++(s->top)] = value;
 }
-
 int pop(Stack *s) {
-	if (isEmpty(s)) {
-		printf("Stack is empty!\\n");
-		return -1;
-	}
+	if (isEmpty(s)) { printf("Stack empty!\\n"); return -1; }
 	return s->items[(s->top)--];
 }
 
@@ -1035,33 +1039,27 @@ int main() {
 	Stack s;
 	initStack(&s);
 	
-	// Push all elements
 	for (int i = 0; i < n; i++) {
 		push(&s, arr[i]);
+		printf("Pushed %d | Stack: ", arr[i]);
+		for(int j = 0; j <= s.top; j++) printf("%d ", s.items[j]);
+		printf("\\n");
 	}
 	
-	printf("Initial stack top: %d\\n", s.items[s.top]);
+	printf("\\nInitial stack top: %d\\n", s.items[s.top]);
 	printf("Popping...\\n");
 	
-	// Pop all elements
 	while (!isEmpty(&s)) {
-		printf("Popped: %d\\n", pop(&s));
+		int popped = pop(&s);
+		printf("Popped %d | Stack: ", popped);
+		for(int j = 0; j <= s.top; j++) printf("%d ", s.items[j]);
+		printf("\\n");
 	}
 	
 	printf("Simulation finished.\\n");
 	return 0;
 }
-
-/*
----------------------------------------
- Time Complexity:
-%s
-
- Space Complexity:
-%s
----------------------------------------
-*/
-""" % [arr_str, get_time_complexity(), get_space_complexity()]
+/* Complexity: Time: %s | Space: %s */""" % [arr_str, get_time_complexity(), get_space_complexity()]
 
 func _on_cpp_lang_button_pressed() -> void:
 	btn_sound.play(); current_code_language = "cpp"; refresh_code_display()
