@@ -1,8 +1,6 @@
 extends Control
+#   MERGE SORT SIMULATION
 
-# =======================================================
-#   MERGE SORT SIMULATION - FINAL COMPLETE CODE
-# =======================================================
 
 # --- MAIN BUTTONS ---
 @onready var sort_btn: Button = $VBoxContainer/SortButton
@@ -142,46 +140,46 @@ var intro_texts = [
 	"Visual Elements:\n\n• Active groups will FLOAT UP while being merged.\n• 'FRONT' pointer: Left sub-array item.\n• 'REAR' pointer: Right sub-array item."
 ]
 
-# --- CODE TUTORIAL DATA (FIXED FOR MERGE SORT) ---
+# --- CODE TUTORIAL DATA (RE-MAPPED TO FIT NEW PRINTS) ---
 var current_code_language: String = "cpp"
 var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
-var current_tutorial_data: Array = [] # Stores the active language data
+var current_tutorial_data: Array = []
 
-# 1. C++ DATA
 var cpp_tutorial_data = [
-	{ "lines": [0, 1], "text": "1. Imports & Setup:\nStandard Input/Output libraries." },
-	{ "lines": [3, 4, 5, 6, 7], "text": "2. Complexity Analysis:\nTime is [color=green]O(n log n)[/color] (Excellent) but Space is [color=orange]O(n)[/color] (needs extra memory)." },
-	{ "lines": [8], "text": "3. Merge Function:\nTakes two sorted sub-arrays and merges them into one." },
-	{ "lines": [11, 12, 13, 14], "text": "4. Comparison Loop:\nCompare elements from Left and Right sub-arrays. Pick the smaller one." },
-	{ "lines": [18, 19, 20, 21, 22], "text": "5. Shifting:\nIf element from right is smaller, we shift elements to make space." },
-	{ "lines": [28, 29, 30], "text": "6. MergeSort (Iterative):\nOuter loops control the width (1, 2, 4...) and the starting positions." }
+	{ "lines": [0], "text": "1. Complexity Analysis:\nTime is [color=green]O(N log N)[/color] but Space is [color=orange]O(N)[/color] due to array copies." },
+	{ "lines": [1, 2], "text": "2. Imports & Setup:\nStandard Input/Output libraries." },
+	{ "lines": [4, 5], "text": "3. Print Array Helper:\nA function to print array elements at each step." },
+	{ "lines": [11, 12, 13, 14], "text": "4. Merge Function:\nTakes two sorted sub-arrays and merges them. We use an in-place shift here to save memory." },
+	{ "lines": [29, 30, 31, 32], "text": "5. Iterative Structure:\nLoops control the width (1, 2, 4...) and the starting positions, printing after each merge." },
+	{ "lines": [38, 39], "text": "6. Main Function:\nInitializes the array and calls our sort." }
 ]
 
-# 2. PYTHON DATA
 var python_tutorial_data = [
-	{ "lines": [0], "text": "1. Complexity:\nTime: O(n log n). Space: O(n)." },
+	{ "lines": [0], "text": "1. Complexity Analysis:\nTime is [color=green]O(N log N)[/color] but Space is [color=orange]O(N)[/color] due to array copies." },
 	{ "lines": [1, 2, 3], "text": "2. Merge Function:\nCreate temporary copies of Left (L) and Right (R) sub-arrays." },
-	{ "lines": [6, 7, 8, 9, 10], "text": "3. Comparison Loop:\nPick smaller element from L or R and put into main array." },
-	{ "lines": [12, 13], "text": "4. Cleanup:\nCopy any remaining elements from L or R into the array." },
-	{ "lines": [15, 16], "text": "5. Merge Sort Driver:\nIteratively increase width (1, 2, 4...) and call merge on segments." }
+	{ "lines": [6, 7, 8, 9, 10], "text": "3. Comparison Loop:\nPick the smaller element from L or R and put it back into the main array." },
+	{ "lines": [12, 13], "text": "4. Cleanup:\nCopy any remaining elements from L or R." },
+	{ "lines": [15, 16], "text": "5. Merge Sort Driver:\nIteratively increase width (1, 2, 4...) and call merge on segments." },
+	{ "lines": [23], "text": "6. Execution:\nPrint array at each size level for debugging." }
 ]
 
-# 3. JAVA DATA
 var java_tutorial_data = [
-	{ "lines": [0, 1], "text": "1. Class Structure:\nStandard Java class setup." },
-	{ "lines": [2, 3], "text": "2. Merge Function:\nCreates temp arrays L[] and R[] to hold data." },
-	{ "lines": [7, 8, 9, 10], "text": "3. Comparison Logic:\nWhile both temp arrays have data, pick smaller and increment index." },
-	{ "lines": [16, 17, 18], "text": "4. Sort Function:\nIterative approach using loops for width and start index." },
-	{ "lines": [24, 25, 26], "text": "5. Main:\nInitializes array and calls sort." }
+	{ "lines": [0], "text": "1. Complexity Analysis:\nTime is [color=green]O(N log N)[/color] but Space is [color=orange]O(N)[/color] due to array copies." },
+	{ "lines": [2, 3, 4], "text": "2. Merge Function:\nCreates temp arrays L[] and R[] to hold the data we are sorting." },
+	{ "lines": [8, 9, 10, 11], "text": "3. Comparison Logic:\nWhile both temp arrays have data, pick smaller and increment the index." },
+	{ "lines": [17, 18, 19], "text": "4. Sort Function:\nIterative approach using loops for width and start index." },
+	{ "lines": [23, 24, 25], "text": "5. Print Logic:\nPrints the array state at the end of each width grouping." },
+	{ "lines": [30, 31, 32], "text": "6. Main:\nInitializes array and calls sort." }
 ]
 
-# 4. C DATA
 var c_tutorial_data = [
-	{ "lines": [0, 1], "text": "1. Setup:\nIncludes stdio and stdlib." },
-	{ "lines": [4, 5, 6, 7], "text": "2. Merge Function:\nCreate temp arrays L and R and copy data." },
-	{ "lines": [9, 10, 11, 12], "text": "3. Comparison Loop:\nStandard merge logic: compare L[i] and R[j], place smaller in arr[k]." },
-	{ "lines": [19, 20], "text": "4. Iterative Structure:\nLoops for `curr_size` and `left_start` replace recursion." }
+	{ "lines": [0], "text": "1. Complexity Analysis:\nTime is [color=green]O(N log N)[/color] but Space is [color=orange]O(N)[/color] due to array copies." },
+	{ "lines": [4, 5, 6, 7, 8, 9], "text": "2. Merge Function:\nCreate temp arrays L and R and copy data into them." },
+	{ "lines": [11, 12, 13, 14], "text": "3. Comparison Loop:\nStandard merge logic: compare L[i] and R[j], place smaller in arr[k]." },
+	{ "lines": [20, 21, 22, 23], "text": "4. Iterative Structure:\nLoops for `curr_size` and `left_start` replace recursion." },
+	{ "lines": [29, 30, 31], "text": "5. Print Logic:\nPrints the array after merging chunks of curr_size." },
+	{ "lines": [35, 36, 37], "text": "6. Main Function:\nInitializes array and runs sort." }
 ]
 
 func _ready() -> void:
@@ -524,7 +522,6 @@ func _show_cpp_popup() -> void:
 	var code = ""
 	var arr_str = ", ".join(main_array.map(func(x): return str(x)))
 	
-	# Select Data based on Language
 	match current_code_language:
 		"cpp":
 			code = get_cpp_merge_code(arr_str)
@@ -544,7 +541,6 @@ func _show_cpp_popup() -> void:
 	
 	cpp_popup.popup_centered()
 	
-	# Reset tutorial step
 	cpp_tutorial_step = 0
 	if cpp_next_btn:
 		if not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
@@ -588,20 +584,24 @@ func _update_cpp_tutorial() -> void:
 		cpp_label.bbcode_enabled = true
 		cpp_label.text = highlighted_code
 		
+		# --- AUTO SCROLL FIX ---
 		if cpp_scroll and highlight_indices.size() > 0:
-			cpp_scroll.scroll_vertical = highlight_indices[0] * 20
+			var target_scroll = highlight_indices[0] * 20
+			var tween = create_tween()
+			tween.tween_property(cpp_scroll, "scroll_vertical", target_scroll, 0.2).set_trans(Tween.TRANS_SINE)
 
-# --- MERGE SORT CODE STRINGS ---
+# --- MERGE SORT CODE STRINGS WITH PRINTS ---
 
 func get_cpp_merge_code(arr: String) -> String:
-	return """#include <iostream>
+	return """// Time Complexity: O(n log n) | Space Complexity: O(n)
+#include <iostream>
 using namespace std;
 
-/*
- * COMPLEXITY:
- * Time: O(n log n)
- * Space: O(n)
- */
+void printArray(int arr[], int n) {
+	for (int i = 0; i < n; i++) cout << arr[i] << " ";
+	cout << endl;
+}
+
 void merge(int arr[], int start, int mid, int end) {
 	int start2 = mid + 1;
 	if (arr[mid] <= arr[start2]) return;
@@ -628,24 +628,26 @@ void mergeSort(int arr[], int n) {
 			int right_end = min(i + 2 * width - 1, n - 1);
 			merge(arr, i, mid, right_end);
 		}
+		cout << "After merging width " << width << ": ";
+		printArray(arr, n);
 	}
 }
 
 int main() {
 	int arr[] = { %s };
 	int n = sizeof(arr) / sizeof(arr[0]);
+	cout << "Initial array: "; printArray(arr, n); cout << endl;
 	mergeSort(arr, n);
 	return 0;
 }""" % arr
 
 func get_python_merge_code(arr: String) -> String:
-	return """# Time: O(n log n) | Space: O(n)
+	return """# Time Complexity: O(n log n) | Space Complexity: O(n)
 def merge(arr, l, m, r):
 	n1, n2 = m - l + 1, r - m
-	L = arr[l:m+1]
-	R = arr[m+1:r+1]
-	i = j = 0
-	k = l
+	L = arr[l:m+1]; R = arr[m+1:r+1]
+	i = j = 0; k = l
+	
 	while i < n1 and j < n2:
 		if L[i] <= R[j]:
 			arr[k] = L[i]; i += 1
@@ -656,8 +658,7 @@ def merge(arr, l, m, r):
 	while j < n2: arr[k] = R[j]; j += 1; k += 1
 
 def merge_sort(arr):
-	width = 1
-	n = len(arr)
+	width = 1; n = len(arr)
 	while width < n:
 		l = 0
 		while l < n:
@@ -665,19 +666,22 @@ def merge_sort(arr):
 			m = min(l + width - 1, n - 1)
 			if m < r: merge(arr, l, m, r)
 			l += width * 2
+		print(f"After merging width {width}: {arr}")
 		width *= 2
 
 arr = [%s]
+print(f"Initial array: {arr}\\n")
 merge_sort(arr)""" % arr
 
 func get_java_merge_code(arr: String) -> String:
-	return """// Time: O(n log n) | Space: O(n)
+	return """// Time Complexity: O(n log n) | Space Complexity: O(n)
 class MergeSort {
 	void merge(int arr[], int l, int m, int r) {
 		int n1 = m - l + 1, n2 = r - m;
 		int L[] = new int[n1], R[] = new int[n2];
 		for (int i=0; i<n1; ++i) L[i] = arr[l + i];
 		for (int j=0; j<n2; ++j) R[j] = arr[m + 1 + j];
+		
 		int i=0, j=0, k=l;
 		while (i<n1 && j<n2) {
 			if (L[i] <= R[j]) arr[k++] = L[i++];
@@ -694,18 +698,24 @@ class MergeSort {
 				int right_end = Math.min(left_start + 2*curr_size - 1, n-1);
 				merge(arr, left_start, mid, right_end);
 			}
+			System.out.print("After merging width " + curr_size + ": ");
+			for (int x : arr) System.out.print(x + " ");
+			System.out.println();
 		}
 	}
 	public static void main(String args[]) {
 		int arr[] = {%s};
+		System.out.print("Initial array: ");
+		for (int x : arr) System.out.print(x + " ");
+		System.out.println("\\n");
 		new MergeSort().sort(arr);
 	}
 }""" % arr
 
 func get_c_merge_code(arr: String) -> String:
-	return """#include <stdio.h>
+	return """// Time Complexity: O(n log n) | Space Complexity: O(n)
+#include <stdio.h>
 #include <stdlib.h>
-// Time: O(n log n) | Space: O(n)
 
 void merge(int arr[], int l, int m, int r) {
 	int i, j, k;
@@ -713,6 +723,7 @@ void merge(int arr[], int l, int m, int r) {
 	int L[n1], R[n2];
 	for (i = 0; i < n1; i++) L[i] = arr[l + i];
 	for (j = 0; j < n2; j++) R[j] = arr[m + 1 + j];
+	
 	i = 0; j = 0; k = l;
 	while (i < n1 && j < n2) {
 		if (L[i] <= R[j]) arr[k++] = L[i++];
@@ -730,12 +741,19 @@ void mergeSort(int arr[], int n) {
 			int right_end = (left_start + 2*curr_size - 1) < (n-1) ? (left_start + 2*curr_size - 1) : (n-1);
 			merge(arr, left_start, mid, right_end);
 		}
+		printf("After merging width %d: ", curr_size);
+		for (int i = 0; i < n; i++) printf("%d ", arr[i]);
+		printf("\\n");
 	}
 }
 
 int main() {
 	int arr[] = {%s};
-	mergeSort(arr, sizeof(arr)/sizeof(arr[0]));
+	int n = sizeof(arr)/sizeof(arr[0]);
+	printf("Initial array: ");
+	for (int i = 0; i < n; i++) printf("%d ", arr[i]);
+	printf("\\n\\n");
+	mergeSort(arr, n);
 	return 0;
 }""" % arr
 
