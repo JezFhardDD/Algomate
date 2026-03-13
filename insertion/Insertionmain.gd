@@ -1,9 +1,5 @@
 extends Control
 
-# =======================================================
-#   INSERTION SORT SIMULATION - FINAL COMPLETE CODE
-# =======================================================
-
 # --- MAIN BUTTONS ---
 @onready var sort_btn: Button = $VBoxContainer/SortButton
 @onready var auto_btn: Button = $VBoxContainer/WaitingElements
