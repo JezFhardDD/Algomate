@@ -126,7 +126,7 @@ var tutorial_sequence = []
 var tutorial_sequence_index = 0
 var tutorial_in_progress = false
 
-# Intro Text (CORRECTED FOR SELECTION SORT)
+# Intro Text
 var intro_step: int = 0
 var intro_texts = [
 	"Welcome to Selection Sort Simulation!\nSelection Sort works by repeatedly finding the minimum element from the unsorted part and putting it at the beginning.",
@@ -135,60 +135,62 @@ var intro_texts = [
 	"Visual Elements:\n\n• The 'FRONT' pointer tracks the current minimum found so far.\n• The 'REAR' pointer scans through the rest of the list."
 ]
 
-# --- CODE TUTORIAL DATA (FIXED FOR SELECTION SORT) ---
+# --- CODE TUTORIAL DATA (PERFECTLY MAPPED TO NEW LIVE-PRINT CODE) ---
 var current_code_language: String = "cpp"
 var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
-var current_tutorial_data: Array = [] # Stores the active language data
+var current_tutorial_data: Array = []
 
 # 1. C++ DATA
 var cpp_tutorial_data = [
-	{ "lines": [0, 1], "text": "1. Imports & Setup:\nIncludes standard libraries and uses the standard namespace." },
-	{ "lines": [3, 4, 5, 6, 7], "text": "2. Complexity Analysis:\nSelection Sort has [color=red]O(n^2)[/color] Time Complexity (Best/Avg/Worst) and [color=green]O(1)[/color] Space Complexity." },
-	{ "lines": [8], "text": "3. Function Definition:\nTakes the array and its size 'n'." },
-	{ "lines": [9], "text": "4. Outer Loop:\nIterates from 0 to n-1. Index 'i' tracks the boundary of the sorted portion." },
-	{ "lines": [10], "text": "5. Init Min:\nAssume the current element (arr[i]) is the minimum." },
-	{ "lines": [11, 12, 13, 14], "text": "6. Inner Loop:\nScans the remaining unsorted array (i+1 to n). If a smaller element is found, update min_idx." },
-	{ "lines": [15, 16, 17], "text": "7. The Swap:\nSwap the found minimum element with the element at index 'i'." },
-	{ "lines": [21, 22, 23, 24, 25], "text": "8. Main:\nInitialize array and call selectionSort." }
+	{ "lines": [3, 4, 5, 6, 7], "text": "1. Complexity Analysis:\nSelection Sort has [color=red]O(n^2)[/color] Time Complexity (Best/Avg/Worst) and [color=green]O(1)[/color] Space Complexity." },
+	{ "lines": [8], "text": "2. Function Definition:\nTakes the array and its size 'n'." },
+	{ "lines": [9], "text": "3. Outer Loop:\nIterates from 0 to n-1. Index 'i' tracks the boundary of the sorted portion." },
+	{ "lines": [10], "text": "4. Init Min:\nAssume the current element (arr[i]) is the minimum." },
+	{ "lines": [11, 12, 13, 14], "text": "5. Inner Loop:\nScans the remaining unsorted array (i+1 to n). If a smaller element is found, update min_idx." },
+	{ "lines": [15, 16, 17], "text": "6. The Swap:\nSwap the found minimum element with the element at index 'i'." },
+	{ "lines": [18, 19, 20, 21], "text": "7. Print Pass:\nPrint the state of the array after the minimum element is placed." },
+	{ "lines": [25, 26, 27, 28, 29, 31, 32], "text": "8. Main:\nInitialize array, print it, and call selectionSort." }
 ]
 
 # 2. PYTHON DATA
 var python_tutorial_data = [
-	{ "lines": [0], "text": "1. Complexity:\nTime is O(n^2). Space is O(1)." },
+	{ "lines": [0], "text": "1. Complexity:\nTime is [color=red]O(n^2)[/color]. Space is [color=green]O(1)[/color]." },
 	{ "lines": [1, 2], "text": "2. Function Definition:\nDefines the function and gets array length." },
 	{ "lines": [3], "text": "3. Outer Loop:\nIterates through the list." },
 	{ "lines": [4], "text": "4. Init Min:\nAssume current index 'i' is minimum." },
 	{ "lines": [5, 6, 7], "text": "5. Inner Loop:\nScans from i+1. Updates min_idx if a smaller value is found." },
 	{ "lines": [8], "text": "6. Swap:\nSwaps the found minimum with the current element." },
-	{ "lines": [10, 11], "text": "7. Execution:\nDefine list and call sort." }
+	{ "lines": [9], "text": "7. Print Pass:\nPrints the array after this specific pass is complete." },
+	{ "lines": [11, 12, 13, 14, 15, 16], "text": "8. Execution:\nDefine list and call sort." }
 ]
 
 # 3. JAVA DATA
 var java_tutorial_data = [
-	{ "lines": [0], "text": "1. Complexity Comment." },
+	{ "lines": [0], "text": "1. Complexity:\nTime is [color=red]O(n^2)[/color]. Space is [color=green]O(1)[/color]." },
 	{ "lines": [1, 2], "text": "2. Class & Method:\nStandard Java structure." },
 	{ "lines": [4], "text": "3. Outer Loop:\nControl passes (0 to n-1)." },
 	{ "lines": [5, 6, 7, 8], "text": "4. Inner Loop:\nFinds index of minimum element in unsorted part." },
 	{ "lines": [9, 10, 11], "text": "5. Swap:\nSwaps arr[min_idx] with arr[i]." },
-	{ "lines": [14, 15, 16, 17], "text": "6. Main:\nCreates object and calls sort." }
+	{ "lines": [13, 14, 15], "text": "6. Print Pass:\nLoops over the array to print its current state." },
+	{ "lines": [19, 20, 23, 24], "text": "7. Main:\nCreates object, prints initial array, and calls sort." }
 ]
 
 # 4. C DATA
 var c_tutorial_data = [
-	{ "lines": [0, 1], "text": "1. Setup:\nStandard I/O include." },
-	{ "lines": [2], "text": "2. Complexity Comment." },
-	{ "lines": [3, 4], "text": "3. Function & Vars:\nDeclare variables at start." },
-	{ "lines": [5], "text": "4. Outer Loop:\nControls the sorted boundary." },
-	{ "lines": [6, 7, 8, 9], "text": "5. Inner Loop:\nFinds the minimum element index." },
-	{ "lines": [10, 11, 12], "text": "6. Swap:\nStandard swap using temp variable." },
-	{ "lines": [14, 15, 16], "text": "7. Main:\nPasses array size explicitly." }
+	{ "lines": [1], "text": "1. Complexity:\nTime is [color=red]O(n^2)[/color]. Space is [color=green]O(1)[/color]." },
+	{ "lines": [2, 3], "text": "2. Function & Vars:\nDeclare variables at start." },
+	{ "lines": [4], "text": "3. Outer Loop:\nControls the sorted boundary." },
+	{ "lines": [5, 6, 7, 8], "text": "4. Inner Loop:\nFinds the minimum element index." },
+	{ "lines": [9, 10, 11], "text": "5. Swap:\nStandard swap using temp variable." },
+	{ "lines": [13, 14, 15, 16], "text": "6. Print Pass:\nLoops through the array to show the updated state." },
+	{ "lines": [20, 21, 22, 23, 26, 27], "text": "7. Main:\nInitializes array, prints it, and calls sort." }
 ]
 
 func _ready() -> void:
 	print(" Program started — initializing Selection Sort visualizer...")
 	randomize()
-	get_node("HelpButton").hide()
+	get_node_or_null("HelpButton").hide()
 	config_modal.hide()
 	config_size_modal.hide()
 	config_elements_modal.hide()
@@ -544,7 +546,6 @@ func _update_cpp_tutorial() -> void:
 	if current_tutorial_data.is_empty(): return
 	var data = current_tutorial_data[cpp_tutorial_step]
 	
-	# ENABLE BBCODE FOR EXPLANATION
 	if cpp_explanation_lbl:
 		cpp_explanation_lbl.bbcode_enabled = true
 		cpp_explanation_lbl.text = data["text"]
@@ -563,17 +564,17 @@ func _update_cpp_tutorial() -> void:
 		var indices = data["lines"]
 		for i in range(lines.size()):
 			if i in indices:
-				# HIGHLIGHT LOGIC
 				highlighted_code += "[color=yellow]" + lines[i] + "[/color]\n"
 			else:
 				highlighted_code += lines[i] + "\n"
 		
-		# ENABLE BBCODE FOR CODE LABEL
 		cpp_label.bbcode_enabled = true
 		cpp_label.text = highlighted_code
 		
 		if cpp_scroll and indices.size() > 0:
-			cpp_scroll.scroll_vertical = indices[0] * 20
+			var target_scroll = indices[0] * 20
+			var tween = create_tween()
+			tween.tween_property(cpp_scroll, "scroll_vertical", target_scroll, 0.2).set_trans(Tween.TRANS_SINE)
 
 # --- SELECTION SORT CODE STRINGS ---
 
@@ -596,13 +597,26 @@ void selectionSort(int arr[], int n) {
 		int temp = arr[min_idx];
 		arr[min_idx] = arr[i];
 		arr[i] = temp;
+		
+		cout << "Pass " << i + 1 << ": ";
+		for(int k = 0; k < n; k++) cout << arr[k] << " ";
+		cout << endl;
 	}
 }
 
 int main() {
 	int arr[] = { %s };
 	int n = sizeof(arr) / sizeof(arr[0]);
+	
+	cout << "Initial array: ";
+	for(int i = 0; i < n; i++) cout << arr[i] << " ";
+	cout << "\\n\\n";
+	
 	selectionSort(arr, n);
+	
+	cout << "\\nSorted array: ";
+	for(int i = 0; i < n; i++) cout << arr[i] << " ";
+	cout << endl;
 	return 0;
 }""" % arr
 
@@ -616,9 +630,16 @@ def selection_sort(arr):
 			if arr[j] < arr[min_idx]:
 				min_idx = j
 		arr[i], arr[min_idx] = arr[min_idx], arr[i]
+		print(f"Pass {i+1}: {arr}")
 
-arr = [%s]
-selection_sort(arr)""" % arr
+def main():
+	arr = [%s]
+	print(f"Initial array: {arr}\\n")
+	selection_sort(arr)
+	print(f"\\nSorted array: {arr}")
+
+if __name__ == "__main__":
+	main()""" % arr
 
 func get_java_selection_code(arr: String) -> String:
 	return """// Time: O(n^2) | Space: O(1)
@@ -633,11 +654,23 @@ class SelectionSort {
 			int temp = arr[min_idx];
 			arr[min_idx] = arr[i];
 			arr[i] = temp;
+			
+			System.out.print("Pass " + (i+1) + ": ");
+			for(int k=0; k<n; k++) System.out.print(arr[k] + " ");
+			System.out.println();
 		}
 	}
 	public static void main(String args[]) {
 		int arr[] = {%s};
+		System.out.print("Initial array: ");
+		for(int k=0; k<arr.length; k++) System.out.print(arr[k] + " ");
+		System.out.println("\\n");
+		
 		new SelectionSort().sort(arr);
+		
+		System.out.print("\\nSorted array: ");
+		for(int k=0; k<arr.length; k++) System.out.print(arr[k] + " ");
+		System.out.println();
 	}
 }""" % arr
 
@@ -654,11 +687,25 @@ void selectionSort(int arr[], int n) {
 		temp = arr[min_idx];
 		arr[min_idx] = arr[i];
 		arr[i] = temp;
+		
+		printf("Pass %d: ", i+1);
+		for(int k=0; k<n; k++) printf("%d ", arr[k]);
+		printf("\\n");
 	}
 }
 int main() {
 	int arr[] = {%s};
-	selectionSort(arr, sizeof(arr)/sizeof(arr[0]));
+	int n = sizeof(arr)/sizeof(arr[0]);
+	
+	printf("Initial array: ");
+	for(int i=0; i<n; i++) printf("%d ", arr[i]);
+	printf("\\n\\n");
+	
+	selectionSort(arr, n);
+	
+	printf("\\nSorted array: ");
+	for(int i=0; i<n; i++) printf("%d ", arr[i]);
+	printf("\\n");
 	return 0;
 }""" % arr
 
