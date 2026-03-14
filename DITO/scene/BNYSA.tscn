@@ -1,0 +1,55 @@
+[gd_scene load_steps=10 format=3 uid="uid://d1w3nmik7e8xh"]
+
+[ext_resource type="PackedScene" uid="uid://vtb5uh7swqkq" path="res://scene/LSA.tscn" id="1_tnwqp"]
+[ext_resource type="Script" uid="uid://doc6omux6yril" path="res://script/bnysa.gd" id="2_xmomj"]
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="3_84ses"]
+[ext_resource type="Texture2D" uid="uid://dcxstyoycht1w" path="res://assets/BUTTON_HOVERED.png" id="4_v6pnl"]
+[ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="5_ab2ih"]
+[ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="6_lu8wv"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_l2kgm"]
+texture = ExtResource("4_v6pnl")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4ypsm"]
+texture = ExtResource("5_ab2ih")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cmc3k"]
+texture = ExtResource("6_lu8wv")
+
+[node name="Main" instance=ExtResource("1_tnwqp")]
+script = ExtResource("2_xmomj")
+
+[node name="DiscardLeftButton" type="Button" parent="VBoxContainer" index="2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_84ses")
+theme_override_font_sizes/font_size = 26
+theme_override_styles/hover = SubResource("StyleBoxTexture_l2kgm")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_4ypsm")
+theme_override_styles/normal = SubResource("StyleBoxTexture_cmc3k")
+text = "Match"
+
+[node name="DiscardRightButton" type="Button" parent="VBoxContainer" index="3"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_84ses")
+theme_override_font_sizes/font_size = 26
+theme_override_styles/hover = SubResource("StyleBoxTexture_l2kgm")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_4ypsm")
+theme_override_styles/normal = SubResource("StyleBoxTexture_cmc3k")
+text = "Match"
+
+[node name="QueueContainer" parent="." index="7"]
+offset_left = 225.0
+offset_right = 425.0
+
+[node name="TargetLabel" parent="." index="29"]
+offset_left = -295.0
+offset_right = 391.0
+autowrap_mode = 2
