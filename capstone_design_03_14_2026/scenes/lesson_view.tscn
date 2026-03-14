@@ -1,0 +1,348 @@
+[gd_scene load_steps=27 format=3 uid="uid://fn2lsok5rgx1"]
+
+[ext_resource type="Script" uid="uid://bxa1jch6fylbm" path="res://scripts/lesson_view.gd" id="1_fgukr"]
+[ext_resource type="Texture2D" uid="uid://denaw5ymlicw" path="res://assets/HOMEPAGE/paper.png" id="2_2s736"]
+[ext_resource type="Shader" uid="uid://dm5tlgdpgj58y" path="res://scripts/lectures_bg.gdshader" id="2_7jxgn"]
+[ext_resource type="Texture2D" uid="uid://gusdopbthg2r" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/BACK_BUTTON_GREEN.png" id="2_slxp1"]
+[ext_resource type="Shader" uid="uid://bffd66uffkamt" path="res://scripts/lesson_view_BG.gdshader" id="3_7jxgn"]
+[ext_resource type="Texture2D" uid="uid://duifqvbqakfe8" path="res://assets/SETTINGS/Sound fx.png" id="5_p0wdg"]
+[ext_resource type="PackedScene" uid="uid://pw1kjcephyld" path="res://scenes/navigation.tscn" id="7_g4odb"]
+[ext_resource type="Texture2D" uid="uid://d1wvqucx6bb47" path="res://assets/profile_pics/cat-sheet.png" id="7_p0wdg"]
+
+[sub_resource type="SystemFont" id="SystemFont_7jxgn"]
+font_names = PackedStringArray("Pixelify Sans")
+subpixel_positioning = 0
+
+[sub_resource type="Theme" id="Theme_g4odb"]
+default_font = SubResource("SystemFont_7jxgn")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_g4odb"]
+shader = ExtResource("2_7jxgn")
+shader_parameter/speed = -0.01
+shader_parameter/density = 5.26
+shader_parameter/min_size = 0.06
+shader_parameter/max_size = 0.67
+shader_parameter/min_alpha = 0.03
+shader_parameter/max_alpha = 0.26
+shader_parameter/bg_color = Color(0.0991255, 0.14671892, 0.02534871, 1)
+shader_parameter/block_color = Color(0.61546767, 0.94360113, 0.644786, 1)
+shader_parameter/accent_color = Color(0.8366481, 0.6679535, 0.3425281, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_p0wdg"]
+shader = ExtResource("3_7jxgn")
+shader_parameter/grain_strength = 0.10000000149012
+shader_parameter/shadow_strength = 0.17600000836
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_selyl"]
+texture = ExtResource("5_p0wdg")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_selyl"]
+atlas = ExtResource("7_p0wdg")
+region = Rect2(0, 0, 60, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a7xbv"]
+atlas = ExtResource("7_p0wdg")
+region = Rect2(60, 0, 60, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dgmyh"]
+atlas = ExtResource("7_p0wdg")
+region = Rect2(120, 0, 60, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gchle"]
+atlas = ExtResource("7_p0wdg")
+region = Rect2(180, 0, 60, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wmdle"]
+atlas = ExtResource("7_p0wdg")
+region = Rect2(240, 0, 60, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h8wgg"]
+atlas = ExtResource("7_p0wdg")
+region = Rect2(300, 0, 60, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r266t"]
+atlas = ExtResource("7_p0wdg")
+region = Rect2(360, 0, 60, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xsrcr"]
+atlas = ExtResource("7_p0wdg")
+region = Rect2(420, 0, 60, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ru005"]
+atlas = ExtResource("7_p0wdg")
+region = Rect2(480, 0, 60, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g86bm"]
+atlas = ExtResource("7_p0wdg")
+region = Rect2(540, 0, 60, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3y5he"]
+atlas = ExtResource("7_p0wdg")
+region = Rect2(600, 0, 60, 60)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1wf3p"]
+atlas = ExtResource("7_p0wdg")
+region = Rect2(660, 0, 60, 60)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cuii5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_selyl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a7xbv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dgmyh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gchle")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wmdle")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h8wgg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r266t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xsrcr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ru005")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g86bm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3y5he")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1wf3p")
+}],
+"loop": true,
+"name": &"talk",
+"speed": 9.0
+}]
+
+[node name="IntroductionView" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_g4odb")
+script = ExtResource("1_fgukr")
+
+[node name="BG" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_g4odb")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.47843137, 0.6627451, 0.22352941, 1)
+
+[node name="ColorRect" type="ColorRect" parent="."]
+texture_repeat = 2
+material = SubResource("ShaderMaterial_p0wdg")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 204.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 65.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="MainVBox" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TopBar" type="HBoxContainer" parent="MarginContainer/MainVBox"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BackButton" type="TextureButton" parent="MarginContainer/MainVBox/TopBar"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_vertical = 4
+texture_normal = ExtResource("2_slxp1")
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/MainVBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 27
+text = "Introduction to Data Structures"
+horizontal_alignment = 1
+uppercase = true
+
+[node name="TTSButton" type="Button" parent="MarginContainer/MainVBox/TopBar"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+tooltip_text = "Read Lesson Aloud"
+theme_override_styles/normal = SubResource("StyleBoxTexture_selyl")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="ContentBox" type="VBoxContainer" parent="MarginContainer/MainVBox/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 16
+
+[node name="paper_bg" type="Sprite2D" parent="MarginContainer/MainVBox/ScrollContainer/ContentBox"]
+visible = false
+texture_filter = 1
+texture_repeat = 2
+position = Vector2(303.72412, 545.55176)
+scale = Vector2(1.4792433, 1.5408143)
+texture = ExtResource("2_2s736")
+
+[node name="LessonText" type="RichTextLabel" parent="MarginContainer/MainVBox/ScrollContainer/ContentBox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 35
+theme_override_font_sizes/bold_font_size = 45
+theme_override_font_sizes/italics_font_size = 40
+bbcode_enabled = true
+text = "[b]What Is Data?[/b]
+[i]Data[/i] refers to raw facts and values that represent information.
+These can be numbers, words, symbols, or even measurements.
+
+Examples of data:
+-A student’s age: 18
+-A name: \"Juan\"
+-A test score: 95
+-A yes/no value: true
+
+By itself, data does not always make sense. It becomes useful only when it is organized, processed, and used correctly.
+
+[b]Why Do We Need to Organize Data?[/b]
+In computer programs, data is everywhere.
+
+Programs deal with:
+-Student records
+-Game scores
+-Messages
+-Bank transactions
+-Sensor readings
+
+If data is not organized properly:
+-Programs become slow
+-Code becomes hard to understand
+-Errors become more likely
+
+To solve these problems, computer scientists use data structures.
+
+[b]What Is a Data Structure?[/b]
+A [i]data structure[/i] is a way of storing and organizing data in a computer so that it can be used efficiently.
+It defines:
+-How data is stored in memory
+-How data can be accessed
+-How data can be updated or removed
+Different problems require different ways of organizing data.
+There is no single “best” data structure for all situations.
+
+[b]Real-Life Analogy[/b]
+Think of data like books.
+-If books are piled randomly on the floor, it is hard to find one.
+-If books are arranged on shelves by category, finding a book is easier.
+A data structure is like the shelf system that helps you manage the books properly.
+
+[b]Importance of Data Structures[/b]
+Data structures help programmers:
+-Write faster programs
+-Use memory efficiently
+-Manage large amounts of data
+-Solve complex problems logically
+
+Many important applications depend on data structures, such as:
+-Search engines
+-Social media platforms
+-Navigation systems
+-Databases
+-Games
+
+[b]Data Structures in Programming[/b]
+In programming, data structures are used to:
+-Store collections of data
+-Control how data flows in a program
+-Represent real-world situations
+Choosing the right data structure can greatly improve a program’s performance and readability.
+
+[b]What You Will Learn Next[/b]
+In the next lessons, you will study specific types of data structures, including:
+-Array
+-Linked List
+-Stack
+-Queue
+-Tree
+-Binary Tree
+-Binary Search Tree
+-Graph
+Each of these has its own purpose and use cases.
+
+[b]Summary[/b]
+-Data is raw information.
+-Data structures organize data efficiently.
+-Good data organization makes programs faster and easier to maintain.
+-Different problems require different data structures.
+Understanding data structures is a fundamental skill in computer science and programming.
+
+"
+fit_content = true
+scroll_active = false
+autowrap_mode = 2
+
+[node name="SimulateButton" type="Button" parent="MarginContainer/MainVBox/ScrollContainer/ContentBox"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+tooltip_text = "Press to make an example simulation"
+theme_override_font_sizes/font_size = 30
+text = "     Simulate Example     "
+
+[node name="Control" type="Control" parent="MarginContainer/MainVBox/ScrollContainer/ContentBox"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+
+[node name="StudentSpeaker" type="Node2D" parent="."]
+position = Vector2(500, 1000)
+
+[node name="ProfilePic" type="AnimatedSprite2D" parent="StudentSpeaker"]
+scale = Vector2(5.97657, 5.65625)
+sprite_frames = SubResource("SpriteFrames_cuii5")
+animation = &"talk"
+frame_progress = 0.7116138
+
+[node name="navigation" parent="." instance=ExtResource("7_g4odb")]
+layout_mode = 1
+
+[connection signal="pressed" from="MarginContainer/MainVBox/TopBar/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="MarginContainer/MainVBox/TopBar/TTSButton" to="." method="_on_tts_button_pressed"]

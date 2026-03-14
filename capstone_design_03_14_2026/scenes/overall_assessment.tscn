@@ -1,0 +1,81 @@
+[gd_scene load_steps=8 format=3 uid="uid://b2hkw0gkjb1ja"]
+
+[ext_resource type="Texture2D" uid="uid://dqqqgk61afgtw" path="res://assets/ASSESSMENT/Assessment_topics.png" id="1_qq23o"]
+[ext_resource type="Script" uid="uid://dsobngk05ygcm" path="res://scripts/overall_assessment.gd" id="2_qq23o"]
+[ext_resource type="SystemFont" uid="uid://by1ledwhotv64" path="res://new_system_font.tres" id="3_kfjxu"]
+
+[sub_resource type="SystemFont" id="SystemFont_mp5f7"]
+font_names = PackedStringArray("Pixelify Sans")
+subpixel_positioning = 0
+
+[sub_resource type="LabelSettings" id="LabelSettings_ujoo3"]
+font = SubResource("SystemFont_mp5f7")
+font_size = 24
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a8fdb"]
+bg_color = Color(0.05882353, 0.039215688, 0.078431375, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mp5f7"]
+bg_color = Color(0.43137255, 0.18039216, 0.50980395, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.37241852, 9.464912e-05, 0.37241587, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="overall" type="TextureRect"]
+anchors_preset = -1
+anchor_left = 0.10719814
+anchor_right = 0.8928019
+anchor_bottom = 0.073954985
+offset_top = 802.0
+offset_bottom = 802.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_qq23o")
+script = ExtResource("2_qq23o")
+float_height = 4.0
+float_rotation = 3.0
+
+[node name="OVERALL" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.28423646
+anchor_top = 0.2173913
+anchor_right = 0.71576357
+anchor_bottom = 0.68115944
+grow_horizontal = 2
+grow_vertical = 2
+text = "OVERALL ASSESSMENT PROGRESS"
+label_settings = SubResource("LabelSettings_ujoo3")
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -283.8705
+offset_top = 39.895508
+offset_right = 89.32497
+offset_bottom = 66.89551
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.5323617, 1.5323617)
+theme_override_fonts/font = ExtResource("3_kfjxu")
+theme_override_font_sizes/font_size = 18
+theme_override_styles/background = SubResource("StyleBoxFlat_a8fdb")
+theme_override_styles/fill = SubResource("StyleBoxFlat_mp5f7")
+max_value = 1.0

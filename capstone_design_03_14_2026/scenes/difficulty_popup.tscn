@@ -1,0 +1,88 @@
+[gd_scene load_steps=9 format=3 uid="uid://qq8h2spv5c"]
+
+[ext_resource type="Script" uid="uid://cvosggwlll4e1" path="res://scripts/difficulty_popup.gd" id="1_lncei"]
+[ext_resource type="Texture2D" uid="uid://crf6ct172pl56" path="res://assets/ASSESSMENT/diff_container.png" id="2_5p4y2"]
+[ext_resource type="Texture2D" uid="uid://su1nh7sw0e3x" path="res://assets/SIDEBAR/SIDE_EXIT.png" id="3_4tmvc"]
+[ext_resource type="LabelSettings" uid="uid://bg8ldg6sc3s0e" path="res://new_label_settings.tres" id="4_5p4y2"]
+[ext_resource type="Texture2D" uid="uid://f5g1e5q6iqyj" path="res://assets/ASSESSMENT/easy.png" id="4_l783r"]
+[ext_resource type="Texture2D" uid="uid://df1qbvivmawsr" path="res://assets/ASSESSMENT/medium.png" id="5_ql14q"]
+[ext_resource type="Texture2D" uid="uid://bfcv7cudpomv8" path="res://assets/ASSESSMENT/Hard.png" id="6_01hch"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sfqa7"]
+
+[node name="DifficultyPopup" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_sfqa7")
+script = ExtResource("1_lncei")
+
+[node name="PopupBackground" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 199.0
+offset_bottom = 37.0
+scale = Vector2(1.8, 1.8)
+texture = ExtResource("2_5p4y2")
+
+[node name="PopupContent" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CloseButton" type="TextureButton" parent="PopupContent"]
+self_modulate = Color(0.39360002, 0.39360002, 0.96, 1)
+layout_mode = 0
+offset_left = 367.0
+offset_top = 16.0
+offset_right = 384.0
+offset_bottom = 32.0
+scale = Vector2(2, 2)
+texture_normal = ExtResource("3_4tmvc")
+stretch_mode = 0
+
+[node name="TitleLabel" type="Label" parent="PopupContent"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = -39.0
+offset_right = 259.0
+offset_bottom = 2.0
+text = "Select Difficulty"
+label_settings = ExtResource("4_5p4y2")
+
+[node name="EasyButton" type="TextureButton" parent="PopupContent"]
+custom_minimum_size = Vector2(2.55, 2.55)
+layout_mode = 0
+offset_left = 8.0
+offset_top = 7.0000005
+offset_right = 68.55556
+offset_bottom = 36.11111
+scale = Vector2(1.8, 1.8)
+texture_normal = ExtResource("4_l783r")
+stretch_mode = 0
+
+[node name="MediumButton" type="TextureButton" parent="PopupContent"]
+custom_minimum_size = Vector2(2.55, 2.55)
+layout_mode = 0
+offset_left = 125.0
+offset_top = 7.0
+offset_right = 185.556
+offset_bottom = 36.111
+scale = Vector2(1.8, 1.8)
+texture_normal = ExtResource("5_ql14q")
+stretch_mode = 0
+
+[node name="HardButton" type="TextureButton" parent="PopupContent"]
+custom_minimum_size = Vector2(2.55, 2.55)
+layout_mode = 0
+offset_left = 242.00002
+offset_top = 8.0
+offset_right = 302.55603
+offset_bottom = 37.111
+scale = Vector2(1.8, 1.8)
+texture_normal = ExtResource("6_01hch")
+stretch_mode = 0

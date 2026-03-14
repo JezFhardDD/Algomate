@@ -1,0 +1,75 @@
+[gd_scene load_steps=5 format=3 uid="uid://obyvgt53k2vl"]
+
+[ext_resource type="Script" uid="uid://deroquhlbqdol" path="res://scripts/profile_setup.gd" id="1_nsgbj"]
+[ext_resource type="LabelSettings" uid="uid://bg8ldg6sc3s0e" path="res://new_label_settings.tres" id="2_2koe0"]
+[ext_resource type="Texture2D" uid="uid://ckwduru4f5ysx" path="res://assets/SETTINGS/container settings.png" id="3_7hloa"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pis4m"]
+texture = ExtResource("3_7hloa")
+
+[node name="Window" type="Window"]
+oversampling_override = 1.0
+position = Vector2i(0, 36)
+size = Vector2i(400, 500)
+popup_window = true
+script = ExtResource("1_nsgbj")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_pis4m")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -163.0
+offset_top = -157.0
+offset_right = 163.0
+offset_bottom = 157.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Create Your Profile"
+label_settings = ExtResource("2_2koe0")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="name_input" type="LineEdit" parent="Panel/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Enter your name"
+
+[node name="Label2" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "Choose Profile Picture"
+label_settings = ExtResource("2_2koe0")
+horizontal_alignment = 1
+uppercase = true
+
+[node name="profile_pic_container" type="GridContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+columns = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="cancel_button" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+text = "Cancel"
+
+[node name="done_button" type="Button" parent="Panel/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Done"
