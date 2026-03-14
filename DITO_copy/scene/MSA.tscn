@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://b85rgnje7cxu7"]
+
+[ext_resource type="PackedScene" uid="uid://dpvktvrg6xmxb" path="res://scene/SSA.tscn" id="1_unxoj"]
+[ext_resource type="Script" uid="uid://bxdxjqopms3eu" path="res://script/msa.gd" id="2_675dr"]
+
+[node name="Main" instance=ExtResource("1_unxoj")]
+script = ExtResource("2_675dr")
+
+[node name="MarginContainer" parent="." index="28"]
+offset_left = -250.0
+offset_top = -70.0
+offset_right = 250.0
+
+[node name="Label" parent="MarginContainer/HBoxContainer2/TextureRect" index="0"]
+text = "Correct: 00 | Mistakes: 00 | Swaps: 00"
