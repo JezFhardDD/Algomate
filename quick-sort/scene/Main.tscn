@@ -1,6 +1,6 @@
 [gd_scene load_steps=173 format=3 uid="uid://cnlp6jn1v8wse"]
 
-[ext_resource type="Script" uid="uid://dx12ivb8i1dwd" path="res://QuickMain.gd" id="1_s5yxy"]
+[ext_resource type="Script" uid="uid://dx12ivb8i1dwd" path="res://source/QuickMain.gd" id="1_s5yxy"]
 [ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="2_eik88"]
 [ext_resource type="Shader" uid="uid://b2q0owni5kbm8" path="res://scene/BG.gdshader" id="2_hrl0l"]
 [ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="3_08k7p"]
