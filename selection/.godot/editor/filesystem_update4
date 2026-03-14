@@ -1,5 +1,2 @@
 res://scene/Main.tscn
-res://Selectionmain.gd
-res://Selection.gd
-res://scene/Mainscene.tscn
 res://SelectionBlock.tscn
