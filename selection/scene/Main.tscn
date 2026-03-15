@@ -1,6 +1,6 @@
 [gd_scene load_steps=165 format=3 uid="uid://cnlp6jn1v8wse"]
 
-[ext_resource type="Script" uid="uid://dx12ivb8i1dwd" path="res://Selectionmain.gd" id="1_s5yxy"]
+[ext_resource type="Script" uid="uid://dx12ivb8i1dwd" path="res://source/Selectionmain.gd" id="1_s5yxy"]
 [ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="2_eik88"]
 [ext_resource type="Shader" uid="uid://b2q0owni5kbm8" path="res://scene/BG.gdshader" id="2_hrl0l"]
 [ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="3_08k7p"]
@@ -1204,8 +1204,8 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_hri7i")
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = 25.0
-offset_right = 469.0
+offset_left = -225.0
+offset_right = 219.0
 offset_bottom = 300.0
 grow_horizontal = 2
 alignment = 1
@@ -1373,7 +1373,11 @@ mouse_filter = 2
 bbcode_enabled = true
 fit_content = true
 
+[node name="HSeparator2" type="HSeparator" parent="CppPopup/VBoxContainer"]
+layout_mode = 2
+
 [node name="TutorialPanel" type="Panel" parent="CppPopup/VBoxContainer"]
+self_modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 
@@ -1383,10 +1387,10 @@ anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = 17.0
-offset_top = -25.0
-offset_right = -23.0
-offset_bottom = -22.0
+offset_left = 22.0
+offset_top = -55.0
+offset_right = -18.0
+offset_bottom = -55.0
 grow_horizontal = 2
 grow_vertical = 2
 fit_content = true

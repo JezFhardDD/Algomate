@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://inbisf4sr0l3"]
 
-[ext_resource type="Script" uid="uid://dx12ivb8i1dwd" path="res://Mergemain.gd" id="1_brnyg"]
+[ext_resource type="Script" uid="uid://dx12ivb8i1dwd" path="res://source/Mergemain.gd" id="1_brnyg"]
+
 
 [node name="QueueUI" type="Control"]
 layout_mode = 3

@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://dcuh2qhoppuxb"]
+
+[ext_resource type="PackedScene" uid="uid://dkpvdlk5xevgv" path="res://scene/TreeDFSA.tscn" id="1_n4hte"]
+[ext_resource type="Script" uid="uid://cdcf28a8j6lq4" path="res://script/tree_bfsa.gd" id="2_la03u"]
+
+[node name="Main" instance=ExtResource("1_n4hte")]
+script = ExtResource("2_la03u")
