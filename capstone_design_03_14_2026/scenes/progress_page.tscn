@@ -1,0 +1,529 @@
+[gd_scene load_steps=15 format=3 uid="uid://n74hr1lti5wc"]
+
+[ext_resource type="Script" uid="uid://bskopphl4nod1" path="res://scripts/progress_page.gd" id="1_823gq"]
+[ext_resource type="Shader" path="res://scripts/lectures_bg.gdshader" id="1_fvj5j"]
+[ext_resource type="PackedScene" uid="uid://pw1kjcephyld" path="res://scenes/navigation.tscn" id="2_4h6h3"]
+[ext_resource type="Texture2D" uid="uid://b32exav1p5s6v" path="res://assets/containers/C++_CONTAINER.png" id="3_nfqvn"]
+[ext_resource type="Texture2D" uid="uid://dqhtyt1dkw1tt" path="res://assets/ASSESSMENT/Assessment_topics.png" id="4_823gq"]
+[ext_resource type="Script" uid="uid://dsobngk05ygcm" path="res://scripts/overall_assessment.gd" id="5_a8fdb"]
+[ext_resource type="LabelSettings" uid="uid://bg8ldg6sc3s0e" path="res://new_label_settings.tres" id="5_a726w"]
+[ext_resource type="PackedScene" uid="uid://b2hkw0gkjb1ja" path="res://scenes/overall_assessment.tscn" id="7_a726w"]
+[ext_resource type="Texture2D" uid="uid://binxvpneifapc" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/BACK_BUTTON_GREEN.png" id="9_a8fdb"]
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="planes_font_ref"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6c2v0"]
+shader = ExtResource("1_fvj5j")
+shader_parameter/speed = -0.01
+shader_parameter/density = 6.215
+shader_parameter/min_size = 0.085
+shader_parameter/max_size = 0.54
+shader_parameter/min_alpha = 0.03
+shader_parameter/max_alpha = 0.265
+shader_parameter/bg_color = Color(0.0054205894, 0.010314448, 0.0010165456, 1)
+shader_parameter/block_color = Color(0.44442868, 0.3516433, 0.65966636, 1)
+shader_parameter/accent_color = Color(0.60869926, 0.75365275, 0.38074076, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a8fdb"]
+texture = ExtResource("3_nfqvn")
+
+[sub_resource type="LabelSettings" id="LabelSettings_ujoo3"]
+font = ExtResource("planes_font_ref")
+font_size = 24
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_823gq"]
+texture = ExtResource("3_nfqvn")
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_823gq")
+
+[node name="BG" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_6c2v0")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.47843137, 0.6627451, 0.22352941, 1)
+
+[node name="progressreport" type="Panel" parent="."]
+self_modulate = Color(0.29635113, 0.7307657, 0, 1)
+layout_mode = 0
+offset_top = 107.0
+offset_right = 646.0
+offset_bottom = 1151.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_a8fdb")
+
+[node name="TextureRect" type="TextureRect" parent="progressreport"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.10719814
+anchor_right = 0.8928019
+anchor_bottom = 0.073954985
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_823gq")
+script = ExtResource("5_a8fdb")
+float_height = 4.0
+float_rotation = 3.0
+
+[node name="PROGRESS_REPORT" type="Label" parent="progressreport/TextureRect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.28423646
+anchor_top = 0.2173913
+anchor_right = 0.71576357
+anchor_bottom = 0.68115944
+grow_horizontal = 2
+grow_vertical = 2
+text = "PROGRESS REPORT"
+label_settings = SubResource("LabelSettings_ujoo3")
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="DATA_STRUCTURES" type="Label" parent="progressreport"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.07894738
+anchor_top = 0.101532556
+anchor_right = 0.2910217
+anchor_bottom = 0.17334393
+offset_right = -1.5258789e-05
+text = "Data
+Structure"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="EASY" type="Panel" parent="progressreport"]
+layout_mode = 0
+offset_left = 31.0
+offset_top = 183.0
+offset_right = 210.0
+offset_bottom = 362.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_823gq")
+
+[node name="Easy" type="VBoxContainer" parent="progressreport/EASY"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -81.25
+offset_top = -72.5
+offset_right = 81.25
+offset_bottom = 72.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+
+[node name="easybadge" type="Label" parent="progressreport/EASY/Easy"]
+layout_mode = 2
+text = "EASY BADGE"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+
+[node name="badge_count" type="Label" parent="progressreport/EASY/Easy"]
+layout_mode = 2
+text = "0/8"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="progressreport/EASY/Easy"]
+layout_mode = 2
+max_value = 8.0
+
+[node name="MEDIUM" type="Panel" parent="progressreport"]
+layout_mode = 0
+offset_left = 31.0
+offset_top = 375.0
+offset_right = 209.0
+offset_bottom = 553.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_823gq")
+
+[node name="Medium" type="VBoxContainer" parent="progressreport/MEDIUM"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -81.25
+offset_top = -72.5
+offset_right = 81.25
+offset_bottom = 72.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+
+[node name="mediumbadge" type="Label" parent="progressreport/MEDIUM/Medium"]
+layout_mode = 2
+text = "MEDIUM
+BADGE"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+
+[node name="badge_count" type="Label" parent="progressreport/MEDIUM/Medium"]
+layout_mode = 2
+text = "0/8"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="progressreport/MEDIUM/Medium"]
+layout_mode = 2
+max_value = 8.0
+
+[node name="HARD" type="Panel" parent="progressreport"]
+layout_mode = 0
+offset_left = 31.0
+offset_top = 568.0
+offset_right = 209.0
+offset_bottom = 746.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_823gq")
+
+[node name="Hard" type="VBoxContainer" parent="progressreport/HARD"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -81.25
+offset_top = -72.5
+offset_right = 81.25
+offset_bottom = 72.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+
+[node name="hardbadge" type="Label" parent="progressreport/HARD/Hard"]
+layout_mode = 2
+text = "HARD
+BADGE"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+
+[node name="badge_count" type="Label" parent="progressreport/HARD/Hard"]
+layout_mode = 2
+text = "0/8"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="progressreport/HARD/Hard"]
+layout_mode = 2
+max_value = 8.0
+
+[node name="SORTING_ALGORITHMS" type="Label" parent="progressreport"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.3746131
+anchor_top = 0.09482758
+anchor_right = 0.5866874
+anchor_bottom = 0.16663894
+offset_left = 10.815792
+offset_top = 7.612007
+offset_right = 10.815781
+offset_bottom = 7.612015
+text = "Sorting
+Algorithms"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="EASY2" type="Panel" parent="progressreport"]
+layout_mode = 0
+offset_left = 231.0
+offset_top = 183.0
+offset_right = 410.0
+offset_bottom = 362.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_823gq")
+
+[node name="Easy" type="VBoxContainer" parent="progressreport/EASY2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -81.25
+offset_top = -72.5
+offset_right = 81.25
+offset_bottom = 72.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+
+[node name="easybadge" type="Label" parent="progressreport/EASY2/Easy"]
+layout_mode = 2
+text = "EASY BADGE"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+
+[node name="badge_count" type="Label" parent="progressreport/EASY2/Easy"]
+layout_mode = 2
+text = "0/7"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="progressreport/EASY2/Easy"]
+layout_mode = 2
+max_value = 7.0
+
+[node name="MEDIUM2" type="Panel" parent="progressreport"]
+layout_mode = 0
+offset_left = 231.0
+offset_top = 375.0
+offset_right = 409.0
+offset_bottom = 553.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_823gq")
+
+[node name="Medium" type="VBoxContainer" parent="progressreport/MEDIUM2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -81.25
+offset_top = -72.5
+offset_right = 81.25
+offset_bottom = 72.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+
+[node name="mediumbadge" type="Label" parent="progressreport/MEDIUM2/Medium"]
+layout_mode = 2
+text = "MEDIUM
+BADGE"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+
+[node name="badge_count" type="Label" parent="progressreport/MEDIUM2/Medium"]
+layout_mode = 2
+text = "0/7"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="progressreport/MEDIUM2/Medium"]
+layout_mode = 2
+max_value = 7.0
+
+[node name="HARD2" type="Panel" parent="progressreport"]
+layout_mode = 0
+offset_left = 231.0
+offset_top = 568.0
+offset_right = 409.0
+offset_bottom = 746.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_823gq")
+
+[node name="Hard" type="VBoxContainer" parent="progressreport/HARD2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -81.25
+offset_top = -72.5
+offset_right = 81.25
+offset_bottom = 72.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+
+[node name="hardbadge" type="Label" parent="progressreport/HARD2/Hard"]
+layout_mode = 2
+text = "HARD
+BADGE"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+
+[node name="badge_count" type="Label" parent="progressreport/HARD2/Hard"]
+layout_mode = 2
+text = "0/7"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="progressreport/HARD2/Hard"]
+layout_mode = 2
+max_value = 7.0
+
+[node name="GRAPH_TREE" type="Label" parent="progressreport"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.6733747
+anchor_top = 0.09482758
+anchor_right = 0.885449
+anchor_bottom = 0.16663894
+offset_left = 10.815792
+offset_top = 7.612007
+offset_right = 10.815781
+offset_bottom = 7.612015
+text = "Graph/Tree
+Searching"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="EASY3" type="Panel" parent="progressreport"]
+layout_mode = 0
+offset_left = 432.0
+offset_top = 183.0
+offset_right = 611.0
+offset_bottom = 362.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_823gq")
+
+[node name="Easy" type="VBoxContainer" parent="progressreport/EASY3"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -81.25
+offset_top = -72.5
+offset_right = 81.25
+offset_bottom = 72.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+
+[node name="easybadge" type="Label" parent="progressreport/EASY3/Easy"]
+layout_mode = 2
+text = "EASY BADGE"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+
+[node name="badge_count" type="Label" parent="progressreport/EASY3/Easy"]
+layout_mode = 2
+text = "0/3"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="progressreport/EASY3/Easy"]
+layout_mode = 2
+max_value = 3.0
+
+[node name="MEDIUM3" type="Panel" parent="progressreport"]
+layout_mode = 0
+offset_left = 432.0
+offset_top = 375.0
+offset_right = 610.0
+offset_bottom = 553.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_823gq")
+
+[node name="Medium" type="VBoxContainer" parent="progressreport/MEDIUM3"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -81.25
+offset_top = -72.5
+offset_right = 81.25
+offset_bottom = 72.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+
+[node name="mediumbadge" type="Label" parent="progressreport/MEDIUM3/Medium"]
+layout_mode = 2
+text = "MEDIUM
+BADGE"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+
+[node name="badge_count" type="Label" parent="progressreport/MEDIUM3/Medium"]
+layout_mode = 2
+text = "0/3"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="progressreport/MEDIUM3/Medium"]
+layout_mode = 2
+max_value = 3.0
+
+[node name="HARD3" type="Panel" parent="progressreport"]
+layout_mode = 0
+offset_left = 432.0
+offset_top = 568.0
+offset_right = 610.0
+offset_bottom = 746.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_823gq")
+
+[node name="Hard" type="VBoxContainer" parent="progressreport/HARD3"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -81.25
+offset_top = -72.5
+offset_right = 81.25
+offset_bottom = 72.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+
+[node name="hardbadge" type="Label" parent="progressreport/HARD3/Hard"]
+layout_mode = 2
+text = "HARD
+BADGE"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+
+[node name="badge_count" type="Label" parent="progressreport/HARD3/Hard"]
+layout_mode = 2
+text = "0/3"
+label_settings = ExtResource("5_a726w")
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="progressreport/HARD3/Hard"]
+layout_mode = 2
+max_value = 3.0
+
+[node name="navigation" parent="progressreport" instance=ExtResource("2_4h6h3")]
+layout_mode = 1
+offset_top = -107.0
+offset_bottom = -3.0
+
+[node name="overall" parent="." instance=ExtResource("7_a726w")]
+layout_mode = 1
+offset_top = 912.0
+offset_bottom = 912.0
+
+[node name="back_button" type="TextureButton" parent="."]
+z_index = 10
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.032407407
+anchor_top = 0.111111104
+anchor_right = 0.11364198
+anchor_bottom = 0.202717
+offset_right = -28.639996
+offset_bottom = -57.416016
+scale = Vector2(2.1933331, 2.1933331)
+texture_normal = ExtResource("9_a8fdb")
+metadata/_edit_use_anchors_ = true
+
+[connection signal="pressed" from="back_button" to="." method="_on_back_button_pressed"]

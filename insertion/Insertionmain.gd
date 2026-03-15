@@ -1,9 +1,5 @@
 extends Control
 
-# =======================================================
-#   INSERTION SORT SIMULATION - FINAL COMPLETE CODE
-# =======================================================
-
 # --- MAIN BUTTONS ---
 @onready var sort_btn: Button = $VBoxContainer/SortButton
 @onready var auto_btn: Button = $VBoxContainer/WaitingElements
@@ -123,16 +119,41 @@ var intro_texts = [
 	"Complexity:\n\nTime: O(n²) because we have nested loops (scanning backwards for every element).\nSpace: O(1) because we sort in-place."
 ]
 
-# Code Tutorial Data (With Complexity)
+# Code Tutorial Data (UPDATED WITH PERFECT LINE HIGHLIGHTING)
 var current_code_language: String = "cpp"
 var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
+
 var cpp_tutorial_data = [
-	{ "lines": [0, 1, 2, 3, 4, 5, 6, 7, 8], "text": "[b]Complexity Analysis:[/b]\n\n• [b]Time (Average/Worst):[/b] O(n²) - Nested loops.\n• [b]Time (Best):[/b] O(n) - Already sorted.\n• [b]Space:[/b] O(1) - Sorting is done in-place." },
-	{ "lines": [10, 11, 12], "text": "1. Outer Loop:\nIterates from the second element (i=1) to the end. This element is the 'key'." },
-	{ "lines": [13, 14, 15], "text": "2. The Key:\nStore the current element in a variable 'key'. 'j' points to the sorted end (i-1)." },
-	{ "lines": [16, 17, 18, 19], "text": "3. Inner While Loop:\nShift elements of arr[0..i-1] that are greater than key, to one position ahead." },
-	{ "lines": [20, 21, 22], "text": "4. Insert:\nOnce the correct spot is found, insert the 'key' at index j + 1." }
+	{ "lines": [3, 4, 5, 6, 7], "text": "[b]Complexity Analysis:[/b]\n\n• [b]Time:[/b] O(n²) - Nested loops.\n• [b]Space:[/b] O(1) - Sorting is done in-place." },
+	{ "lines": [9], "text": "1. Outer Loop:\nIterates from the second element (i=1) to the end. This element is the 'key'." },
+	{ "lines": [10, 11], "text": "2. The Key:\nStore the current element in a variable 'key'. 'j' points to the sorted end (i-1)." },
+	{ "lines": [12, 13, 14, 15], "text": "3. Inner While Loop:\nShift elements of arr[0..i-1] that are greater than key, to one position ahead." },
+	{ "lines": [16, 17, 18, 19], "text": "4. Insert & Print:\nInsert the 'key' at index j + 1 and print the updated array state for this pass." }
+]
+
+var python_tutorial_data = [
+	{ "lines": [0], "text": "[b]Complexity Analysis:[/b]\n\n• [b]Time:[/b] O(n²)\n• [b]Space:[/b] O(1)" },
+	{ "lines": [2], "text": "1. Outer Loop:\nIterates from the second element to the end." },
+	{ "lines": [3, 4], "text": "2. The Key:\nStore the current element in 'key' and set 'j'." },
+	{ "lines": [6, 7, 8], "text": "3. Inner While Loop:\nShift elements to the right to make space for the key." },
+	{ "lines": [9, 10], "text": "4. Insert & Print:\nPlace the key in its sorted spot and print the array." }
+]
+
+var java_tutorial_data = [
+	{ "lines": [0], "text": "[b]Complexity Analysis:[/b]\n\n• [b]Time:[/b] O(n²)\n• [b]Space:[/b] O(1)" },
+	{ "lines": [4], "text": "1. Outer Loop:\nIterates from the second element to the end." },
+	{ "lines": [5, 6], "text": "2. The Key:\nStore the current element in 'key' and set 'j'." },
+	{ "lines": [7, 8, 9, 10], "text": "3. Inner While Loop:\nShift elements > key to the right." },
+	{ "lines": [11, 12, 13, 14], "text": "4. Insert & Print:\nPlace the key and loop to print the array's current state." }
+]
+
+var c_tutorial_data = [
+	{ "lines": [1], "text": "[b]Complexity Analysis:[/b]\n\n• [b]Time:[/b] O(n²)\n• [b]Space:[/b] O(1)" },
+	{ "lines": [4], "text": "1. Outer Loop:\nIterates from the second element to the end." },
+	{ "lines": [5, 6], "text": "2. The Key:\nStore the current element in 'key' and set 'j'." },
+	{ "lines": [7, 8, 9, 10], "text": "3. Inner While Loop:\nShift elements > key to the right." },
+	{ "lines": [11, 12, 13, 14], "text": "4. Insert & Print:\nPlace the key and use printf to output the array." }
 ]
 
 func _ready() -> void:
@@ -529,7 +550,7 @@ func _on_timeline_close_pressed() -> void:
 	if timeline_popup: timeline_popup.hide()
 
 # ==============================================
-#   CODE GENERATION (WITH COMPLEXITY)
+#   CODE GENERATION (WITH LIVE PRINTS)
 # ==============================================
 
 func _on_show_cpp_pressed() -> void:
@@ -542,10 +563,15 @@ func _show_cpp_popup() -> void:
 	var code = ""
 	var arr_str = ", ".join(main_array.map(func(x): return str(x)))
 	match current_code_language:
-		"cpp": code = get_cpp_insertion_code(arr_str)
-		"python": code = get_python_insertion_code(arr_str)
-		"java": code = get_java_insertion_code(arr_str)
-		"c": code = get_c_insertion_code(arr_str)
+		"cpp": 
+			code = get_cpp_insertion_code(arr_str)
+			cpp_tutorial_data = cpp_tutorial_data # Reassigning just to be safe
+		"python": 
+			code = get_python_insertion_code(arr_str)
+		"java": 
+			code = get_java_insertion_code(arr_str)
+		"c": 
+			code = get_c_insertion_code(arr_str)
 	
 	if cpp_label: cpp_label.text = code
 	
@@ -560,13 +586,25 @@ func _show_cpp_popup() -> void:
 func _on_cpp_next_pressed() -> void:
 	btn_sound.play()
 	cpp_tutorial_step += 1
-	if cpp_tutorial_step >= cpp_tutorial_data.size():
+	var max_steps = 0
+	match current_code_language:
+		"cpp": max_steps = cpp_tutorial_data.size()
+		"python": max_steps = python_tutorial_data.size()
+		"java": max_steps = java_tutorial_data.size()
+		"c": max_steps = c_tutorial_data.size()
+		
+	if cpp_tutorial_step >= max_steps:
 		cpp_tutorial_step = 0
 	_update_cpp_tutorial()
 
 func _update_cpp_tutorial() -> void:
-	if cpp_tutorial_data.is_empty(): return
-	var data = cpp_tutorial_data[cpp_tutorial_step]
+	var data = {}
+	match current_code_language:
+		"cpp": data = cpp_tutorial_data[cpp_tutorial_step]
+		"python": data = python_tutorial_data[cpp_tutorial_step]
+		"java": data = java_tutorial_data[cpp_tutorial_step]
+		"c": data = c_tutorial_data[cpp_tutorial_step]
+
 	if cpp_explanation_lbl:
 		cpp_explanation_lbl.bbcode_enabled = true
 		cpp_explanation_lbl.text = data["text"]
@@ -593,9 +631,11 @@ func _update_cpp_tutorial() -> void:
 		cpp_label.text = highlighted_code
 		
 		if cpp_scroll and indices.size() > 0:
-			cpp_scroll.scroll_vertical = indices[0] * 20
+			var target_scroll = indices[0] * 20
+			var tween = create_tween()
+			tween.tween_property(cpp_scroll, "scroll_vertical", target_scroll, 0.2).set_trans(Tween.TRANS_SINE)
 
-# --- CODE STRINGS WITH COMPLEXITY EXPLANATION ---
+# --- CODE STRINGS WITH LIVE PRINTS ---
 
 func get_cpp_insertion_code(arr: String) -> String:
 	return """#include <iostream>
@@ -615,13 +655,25 @@ void insertionSort(int arr[], int n) {
 			j = j - 1;
 		}
 		arr[j + 1] = key;
+		cout << "Pass " << i << ": ";
+		for (int k = 0; k < n; k++) cout << arr[k] << " ";
+		cout << endl;
 	}
 }
 
 int main() {
 	int arr[] = { %s };
 	int n = sizeof(arr) / sizeof(arr[0]);
+	
+	cout << "Initial array: ";
+	for (int i = 0; i < n; i++) cout << arr[i] << " ";
+	cout << "\\n\\n";
+
 	insertionSort(arr, n);
+
+	cout << "\\nSorted array: ";
+	for (int i = 0; i < n; i++) cout << arr[i] << " ";
+	cout << endl;
 	return 0;
 }""" % arr
 
@@ -636,14 +688,21 @@ def insertion_sort(arr):
 			arr[j + 1] = arr[j]
 			j -= 1
 		arr[j + 1] = key
+		print(f"Pass {i}: {arr}")
 
-arr = [%s]
-insertion_sort(arr)""" % arr
+def main():
+	arr = [%s]
+	print(f"Initial array: {arr}\\n")
+	insertion_sort(arr)
+	print(f"\\nSorted array: {arr}")
+
+if __name__ == "__main__":
+	main()""" % arr
 
 func get_java_insertion_code(arr: String) -> String:
 	return """// Time: O(n^2) | Space: O(1)
 class InsertionSort {
-	void sort(int arr[]) {
+	static void sort(int arr[]) {
 		int n = arr.length;
 		for (int i = 1; i < n; ++i) {
 			int key = arr[i];
@@ -653,12 +712,22 @@ class InsertionSort {
 				j = j - 1;
 			}
 			arr[j + 1] = key;
+			System.out.print("Pass " + i + ": ");
+			for (int k = 0; k < n; k++) System.out.print(arr[k] + " ");
+			System.out.println();
 		}
 	}
 	public static void main(String args[]) {
 		int arr[] = {%s};
-		InsertionSort ob = new InsertionSort();
-		ob.sort(arr);
+		System.out.print("Initial array: ");
+		for (int i = 0; i < arr.length; i++) System.out.print(arr[i] + " ");
+		System.out.println("\\n");
+
+		sort(arr);
+
+		System.out.print("\\nSorted array: ");
+		for (int i = 0; i < arr.length; i++) System.out.print(arr[i] + " ");
+		System.out.println();
 	}
 }""" % arr
 
@@ -675,12 +744,24 @@ void insertionSort(int arr[], int n) {
 			j = j - 1;
 		}
 		arr[j + 1] = key;
+		printf("Pass %d: ", i);
+		for (int k = 0; k < n; k++) printf("%d ", arr[k]);
+		printf("\\n");
 	}
 }
 int main() {
 	int arr[] = {%s};
 	int n = sizeof(arr) / sizeof(arr[0]);
+	
+	printf("Initial array: ");
+	for (int i = 0; i < n; i++) printf("%d ", arr[i]);
+	printf("\\n\\n");
+
 	insertionSort(arr, n);
+
+	printf("\\nSorted array: ");
+	for (int i = 0; i < n; i++) printf("%d ", arr[i]);
+	printf("\\n");
 	return 0;
 }""" % arr
 
@@ -730,12 +811,10 @@ func _show_config_elements_modal() -> void:
 	for i in range(array_size):
 		var element_box = VBoxContainer.new()
 		
-		# Create label
 		var label = Label.new()
 		label.text = "Value %d" % (i + 1)
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
-		# Create input
 		var line_edit = LineEdit.new()
 		line_edit.placeholder_text = "0-999"
 		line_edit.text = str(randi_range(1, 99))
@@ -836,7 +915,7 @@ func _on_complete_ok_pressed(): btn_sound.play(); complete_popup.hide()
 func _on_simulate_new_pressed():
 	sim_confirmation.show()
 
-func _on_yes_pressed(): # Connected via signal in Editor or reuse logic
+func _on_yes_pressed():
 	sim_confirmation.hide()
 	sim_success.show()
 	await get_tree().create_timer(1.0).timeout

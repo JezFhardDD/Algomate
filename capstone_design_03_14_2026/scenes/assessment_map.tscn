@@ -1,0 +1,1331 @@
+[gd_scene load_steps=32 format=3 uid="uid://i0whnlrt0wjn"]
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="planes_font_ref"]
+[ext_resource type="Shader" uid="uid://bwo8f725t8nm5" path="res://scenes/assessment_map.gdshader" id="1_tik64"]
+[ext_resource type="Script" uid="uid://ctxmitissoiqd" path="res://scripts/assessment_map.gd" id="1_uirgf"]
+[ext_resource type="Script" uid="uid://fi0te7782ccb" path="res://scripts/panel.gd" id="1_v00f7"]
+[ext_resource type="Texture2D" uid="uid://cj4qa842i3e58" path="res://assets/ASSESSMENT/Floating_blocks_square.png" id="2_8nxpu"]
+[ext_resource type="Shader" uid="uid://cp6fn0n5y16lg" path="res://scripts/floating_island.gdshader" id="3_bik13"]
+[ext_resource type="Texture2D" uid="uid://dmu5w5b77ijvo" path="res://assets/ASSESSMENT/Floating_blocks_L.png" id="4_j3ako"]
+[ext_resource type="Texture2D" uid="uid://vtwuew4s14nd" path="res://assets/ASSESSMENT/Floating_blocks_L_orange.png" id="5_2o42q"]
+[ext_resource type="Texture2D" uid="uid://buqqybvdd3hum" path="res://assets/ASSESSMENT/Floating_blocks_L_purple.png" id="5_70feh"]
+[ext_resource type="Texture2D" uid="uid://cy6kx6llrkn0e" path="res://assets/ASSESSMENT/Floating_blocks_rectangle.png" id="5_bik13"]
+[ext_resource type="Texture2D" uid="uid://cqgyv4ft3h533" path="res://assets/ASSESSMENT/Floating_blocks_LL.png" id="6_2o42q"]
+[ext_resource type="Texture2D" uid="uid://s1gfd666j7aq" path="res://assets/ASSESSMENT/Floating_blocks_smallsquare.png" id="6_gwkt8"]
+[ext_resource type="Texture2D" uid="uid://dqqqgk61afgtw" path="res://assets/ASSESSMENT/Assessment_topics.png" id="7_cu04t"]
+[ext_resource type="Texture2D" uid="uid://ci3jijjyfgn08" path="res://assets/ASSESSMENT/Floating_blocks_L2_purple.png" id="8_ems15"]
+[ext_resource type="Script" uid="uid://ds24osho6plla" path="res://scripts/assessment_array.gd" id="8_oqmdg"]
+[ext_resource type="Texture2D" uid="uid://dlxtwvn5d00x7" path="res://assets/ASSESSMENT/Floating_blocks_rectangle_orange.png" id="8_rdfvb"]
+[ext_resource type="Texture2D" uid="uid://txhgmvrxunhn" path="res://assets/ASSESSMENT/Floating_blocks_square_orange.png" id="10_iwndo"]
+[ext_resource type="Texture2D" uid="uid://vnfgp36jfyql" path="res://assets/ASSESSMENT/Floating_blocks_rectangle_purple.png" id="11_63ret"]
+[ext_resource type="Texture2D" uid="uid://c8swavoj6xset" path="res://assets/ASSESSMENT/Floating_blocks_square_purple.png" id="14_cq7wo"]
+[ext_resource type="Script" uid="uid://da61yy1t5evg" path="res://scripts/assessment_titles.gd" id="17_ix1c0"]
+[ext_resource type="Shader" uid="uid://dtc3gywxeie31" path="res://scripts/intro.gdshader" id="18_63ret"]
+[ext_resource type="Texture2D" uid="uid://dh4yfhfe0xnpv" path="res://assets/MAIN_MENU/ALGOMATE_LOGO.png" id="19_cq7wo"]
+[ext_resource type="Texture2D" uid="uid://cr42f7sut8qo6" path="res://assets/ui/lock.png" id="19_fq2gl"]
+[ext_resource type="PackedScene" uid="uid://qq8h2spv5c" path="res://scenes/difficulty_popup.tscn" id="20_cq7wo"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h3g18"]
+shader = ExtResource("1_tik64")
+shader_parameter/speed = -0.003
+shader_parameter/density = 17.98
+shader_parameter/min_size = 0.255
+shader_parameter/max_size = 0.405
+shader_parameter/min_alpha = 0.07
+shader_parameter/max_alpha = 0.055
+shader_parameter/bg_color = Color(0.0046279915, 0.012289588, 0.031568892, 1)
+shader_parameter/block_color = Color(0.9097271, 1, 0.95190233, 1)
+shader_parameter/accent_color = Color(0.7, 0.4, 1, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cu04t"]
+shader = ExtResource("3_bik13")
+shader_parameter/min_speed = 1.5
+shader_parameter/max_speed = 1.07
+shader_parameter/min_height = 0.09
+shader_parameter/max_height = 0.019
+shader_parameter/min_rotation = 2.07
+shader_parameter/max_rotation = 8.075
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oqmdg"]
+shader = ExtResource("3_bik13")
+shader_parameter/min_speed = 1.5
+shader_parameter/max_speed = 1.07
+shader_parameter/min_height = 0.05
+shader_parameter/max_height = 0.009
+shader_parameter/min_rotation = 1.0
+shader_parameter/max_rotation = 1.9
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bik13"]
+shader = ExtResource("3_bik13")
+shader_parameter/min_speed = 1.5
+shader_parameter/max_speed = 1.07
+shader_parameter/min_height = 0.05
+shader_parameter/max_height = 0.009
+shader_parameter/min_rotation = 1.0
+shader_parameter/max_rotation = 1.9
+
+subpixel_positioning = 0
+
+[sub_resource type="LabelSettings" id="LabelSettings_ubyvv"]
+line_spacing = -5.485
+font = ExtResource("planes_font_ref")
+font_size = 11
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gwkt8"]
+shader = ExtResource("3_bik13")
+shader_parameter/min_speed = 1.5
+shader_parameter/max_speed = 1.07
+shader_parameter/min_height = 0.09
+shader_parameter/max_height = 0.019
+shader_parameter/min_rotation = 2.07
+shader_parameter/max_rotation = 8.075
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uirgf"]
+shader = ExtResource("18_63ret")
+shader_parameter/speed = 2.0
+shader_parameter/strength = 0.05
+shader_parameter/tilt_strength = 0.03
+
+[node name="assessment_map" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_uirgf")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 648.0
+offset_bottom = 1152.0
+mouse_filter = 2
+
+[node name="BG_assessment" type="ColorRect" parent="Panel"]
+material = SubResource("ShaderMaterial_h3g18")
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = -4.0
+offset_top = -628.0
+offset_right = 1885.0
+offset_bottom = 1372.0
+grow_vertical = 2
+size_flags_horizontal = 0
+color = Color(0.18944025, 0.36194834, 0.2975144, 1)
+script = ExtResource("1_v00f7")
+
+[node name="L" type="CanvasGroup" parent="Panel/BG_assessment"]
+position = Vector2(242, 689)
+scale = Vector2(2.7632327, 2.7632327)
+
+[node name="L2" type="Sprite2D" parent="Panel/BG_assessment/L"]
+material = SubResource("ShaderMaterial_cu04t")
+position = Vector2(452.7306, -135.34872)
+rotation = -0.28243884
+texture = ExtResource("4_j3ako")
+
+[node name="L3" type="Sprite2D" parent="Panel/BG_assessment/L"]
+material = SubResource("ShaderMaterial_cu04t")
+position = Vector2(202.66118, 326.06738)
+rotation = -0.28243884
+texture = ExtResource("5_70feh")
+
+[node name="L4" type="Sprite2D" parent="Panel/BG_assessment/L"]
+material = SubResource("ShaderMaterial_cu04t")
+position = Vector2(560.5753, 112.54933)
+texture = ExtResource("5_2o42q")
+
+[node name="L5" type="Sprite2D" parent="Panel/BG_assessment/L"]
+position = Vector2(-32.208652, 15.199589)
+texture = ExtResource("6_2o42q")
+
+[node name="L6" type="Sprite2D" parent="Panel/BG_assessment/L"]
+position = Vector2(-23.52317, 224.01295)
+texture = ExtResource("8_ems15")
+
+[node name="rectangle" type="CanvasGroup" parent="Panel/BG_assessment"]
+position = Vector2(91, -65.99999)
+scale = Vector2(0.5177775, 0.5296982)
+
+[node name="rectangle" type="Sprite2D" parent="Panel/BG_assessment/rectangle"]
+material = SubResource("ShaderMaterial_oqmdg")
+position = Vector2(432.46307, 860.29376)
+scale = Vector2(2.5742762, 2.5742762)
+texture = ExtResource("5_bik13")
+
+[node name="rectangle13" type="Sprite2D" parent="Panel/BG_assessment/rectangle"]
+material = SubResource("ShaderMaterial_oqmdg")
+position = Vector2(1122.1035, 883.52203)
+scale = Vector2(2.5742762, 2.5742762)
+texture = ExtResource("5_bik13")
+
+[node name="rectangle2" type="Sprite2D" parent="Panel/BG_assessment/rectangle"]
+material = SubResource("ShaderMaterial_oqmdg")
+position = Vector2(486.6955, 1359.2646)
+scale = Vector2(2.5742762, 2.5742762)
+texture = ExtResource("5_bik13")
+
+[node name="rectangle14" type="Sprite2D" parent="Panel/BG_assessment/rectangle"]
+material = SubResource("ShaderMaterial_oqmdg")
+position = Vector2(2557.083, 1183.6929)
+scale = Vector2(2.5742762, 2.5742762)
+texture = ExtResource("5_bik13")
+
+[node name="rectangle3" type="Sprite2D" parent="Panel/BG_assessment/rectangle"]
+material = SubResource("ShaderMaterial_oqmdg")
+position = Vector2(1921.6747, 849.54034)
+scale = Vector2(2.5742762, 2.5742762)
+texture = ExtResource("5_bik13")
+
+[node name="rectangle4" type="Sprite2D" parent="Panel/BG_assessment/rectangle"]
+material = SubResource("ShaderMaterial_oqmdg")
+position = Vector2(1166.5243, 1478.2003)
+scale = Vector2(2.5742762, 2.5742762)
+texture = ExtResource("5_bik13")
+
+[node name="rectangle5" type="Sprite2D" parent="Panel/BG_assessment/rectangle"]
+material = SubResource("ShaderMaterial_oqmdg")
+position = Vector2(1823.177, 1313.9557)
+scale = Vector2(2.5742762, 2.5742762)
+texture = ExtResource("5_bik13")
+
+[node name="rectangle6" type="Sprite2D" parent="Panel/BG_assessment/rectangle"]
+material = SubResource("ShaderMaterial_oqmdg")
+position = Vector2(654.7214, 1912.4098)
+scale = Vector2(2.5742762, 2.5742762)
+texture = ExtResource("8_rdfvb")
+
+[node name="rectangle7" type="Sprite2D" parent="Panel/BG_assessment/rectangle"]
+material = SubResource("ShaderMaterial_oqmdg")
+position = Vector2(1359.6575, 1848.2224)
+scale = Vector2(2.5742762, 2.5742762)
+texture = ExtResource("8_rdfvb")
+
+[node name="rectangle8" type="Sprite2D" parent="Panel/BG_assessment/rectangle"]
+material = SubResource("ShaderMaterial_oqmdg")
+position = Vector2(2678.7568, 1961.4941)
+scale = Vector2(2.5742762, 2.5742762)
+texture = ExtResource("8_rdfvb")
+
+[node name="rectangle11" type="Sprite2D" parent="Panel/BG_assessment/rectangle"]
+material = SubResource("ShaderMaterial_oqmdg")
+position = Vector2(2900.86, 2405.143)
+scale = Vector2(2.5742762, 2.5742762)
+texture = ExtResource("8_rdfvb")
+
+[node name="rectangle9" type="Sprite2D" parent="Panel/BG_assessment/rectangle"]
+material = SubResource("ShaderMaterial_oqmdg")
+position = Vector2(2041.4172, 1929.4004)
+scale = Vector2(2.5742762, 2.5742762)
+texture = ExtResource("8_rdfvb")
+
+[node name="rectangle10" type="Sprite2D" parent="Panel/BG_assessment/rectangle"]
+material = SubResource("ShaderMaterial_oqmdg")
+position = Vector2(2329.186, 2471.2183)
+scale = Vector2(2.5742762, 2.5742762)
+texture = ExtResource("11_63ret")
+
+[node name="rectangle12" type="Sprite2D" parent="Panel/BG_assessment/rectangle"]
+material = SubResource("ShaderMaterial_oqmdg")
+position = Vector2(1494.8506, 2488.2092)
+scale = Vector2(2.5742762, 2.5742762)
+texture = ExtResource("11_63ret")
+
+[node name="rectangle17" type="Sprite2D" parent="Panel/BG_assessment/rectangle"]
+material = SubResource("ShaderMaterial_oqmdg")
+position = Vector2(1832.8335, 3511.434)
+scale = Vector2(2.5742762, 2.5742762)
+texture = ExtResource("11_63ret")
+
+[node name="rectangle15" type="Sprite2D" parent="Panel/BG_assessment/rectangle"]
+material = SubResource("ShaderMaterial_oqmdg")
+position = Vector2(903.863, 2531.6306)
+scale = Vector2(2.5742762, 2.5742762)
+texture = ExtResource("11_63ret")
+
+[node name="rectangle16" type="Sprite2D" parent="Panel/BG_assessment/rectangle"]
+material = SubResource("ShaderMaterial_oqmdg")
+position = Vector2(473.17627, 3082.888)
+scale = Vector2(2.5742762, 2.5742762)
+texture = ExtResource("11_63ret")
+
+[node name="square" type="CanvasGroup" parent="Panel/BG_assessment"]
+position = Vector2(41, -79)
+scale = Vector2(0.48862228, 0.4998718)
+
+[node name="data_stuctures" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(151.6737, 627.4503)
+scale = Vector2(6.7184143, 6.718414)
+texture = ExtResource("2_8nxpu")
+
+[node name="square2" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(249.23312, 929.3084)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("2_8nxpu")
+
+[node name="square3" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(900.4551, 935.2025)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("2_8nxpu")
+
+[node name="square4" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(1729.3523, 984.2524)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("2_8nxpu")
+
+[node name="square5" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(2521.375, 812.2083)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("2_8nxpu")
+
+[node name="square6" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(3178.3242, 1172.3005)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("2_8nxpu")
+
+[node name="square7" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(1004.86615, 1502.3854)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("2_8nxpu")
+
+[node name="square8" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(1694.5604, 1532.393)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("2_8nxpu")
+
+[node name="square9" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(2410.86, 1350.3464)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("2_8nxpu")
+
+[node name="square10" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(319.26505, 2140.5488)
+scale = Vector2(8.725021, 8.72502)
+texture = ExtResource("10_iwndo")
+
+[node name="square13" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(2146.8525, 2702.6929)
+scale = Vector2(8.725021, 8.72502)
+texture = ExtResource("14_cq7wo")
+
+[node name="square11" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(1174.7316, 2016.5171)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("10_iwndo")
+
+[node name="square12" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(1903.3107, 2060.5288)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("10_iwndo")
+
+[node name="square14" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(3266.3267, 2098.5383)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("10_iwndo")
+
+[node name="square15" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(2609.3774, 2144.5503)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("10_iwndo")
+
+[node name="square16" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(3509.8684, 2566.6582)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("10_iwndo")
+
+[node name="square17" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(2897.9438, 2650.68)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("10_iwndo")
+
+[node name="square18" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(1340.5039, 2692.691)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("14_cq7wo")
+
+[node name="square19" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(695.834, 2692.6904)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("14_cq7wo")
+
+[node name="square20" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(186.23795, 3252.8342)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("14_cq7wo")
+
+[node name="square21" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(1041.7043, 3324.853)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("14_cq7wo")
+
+[node name="square22" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(1639.3031, 3814.9785)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("14_cq7wo")
+
+[node name="square23" type="Sprite2D" parent="Panel/BG_assessment/square"]
+material = SubResource("ShaderMaterial_bik13")
+position = Vector2(2435.419, 3768.9663)
+scale = Vector2(5.183046, 5.1830454)
+texture = ExtResource("14_cq7wo")
+
+[node name="DataStructures" type="TextureRect" parent="Panel/BG_assessment"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.008205042
+anchor_top = 0.05289543
+anchor_right = 0.053511407
+anchor_bottom = 0.09012521
+offset_left = 4.3848724
+offset_top = 12.209137
+offset_right = -17.198845
+offset_bottom = -23.250427
+scale = Vector2(2.845153, 2.845153)
+texture = ExtResource("7_cu04t")
+script = ExtResource("17_ix1c0")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/DataStructures"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.01081462
+anchor_top = -0.063085236
+anchor_right = 1.0108148
+anchor_bottom = 0.8840743
+text = "Data
+Structures"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="array" type="TextureButton" parent="Panel/BG_assessment"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.05240868
+anchor_top = 0.1485
+anchor_right = 0.12383225
+anchor_bottom = 0.18572979
+offset_right = -70.91911
+offset_bottom = -35.459564
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/array"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02189341
+anchor_top = -0.07297819
+anchor_right = 1.0002573
+anchor_bottom = 0.92020947
+text = "Array"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="linkedlist" type="TextureButton" parent="Panel/BG_assessment"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2186342
+anchor_top = 0.1395
+anchor_right = 0.29005778
+anchor_bottom = 0.17672978
+offset_right = -70.91911
+offset_bottom = -35.459564
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/linkedlist"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02189341
+anchor_top = -0.07297819
+anchor_right = 1.0002573
+anchor_bottom = 0.92020947
+text = "Linked List"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/linkedlist"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="stack" type="TextureButton" parent="Panel/BG_assessment"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.43356273
+anchor_top = 0.15450002
+anchor_right = 0.5049863
+anchor_bottom = 0.1917298
+offset_right = -70.91911
+offset_bottom = -35.459564
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/stack"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02189341
+anchor_top = -0.07297819
+anchor_right = 1.0002573
+anchor_bottom = 0.92020947
+text = "Stack"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/stack"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="queue" type="TextureButton" parent="Panel/BG_assessment"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.64266807
+anchor_top = 0.1145
+anchor_right = 0.7140916
+anchor_bottom = 0.15172978
+offset_right = -70.91911
+offset_bottom = -35.459564
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/queue"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02189341
+anchor_top = -0.07297819
+anchor_right = 1.0002573
+anchor_bottom = 0.92020947
+text = "Queue"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/queue"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="tree" type="TextureButton" parent="Panel/BG_assessment"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.8078348
+anchor_top = 0.2115
+anchor_right = 0.8792584
+anchor_bottom = 0.24872972
+offset_right = -70.91911
+offset_bottom = -35.459564
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/tree"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02189341
+anchor_top = -0.07297819
+anchor_right = 1.0002573
+anchor_bottom = 0.92020947
+text = "Tree"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/tree"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="binarytree" type="TextureButton" parent="Panel/BG_assessment"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.6146109
+anchor_top = 0.25050002
+anchor_right = 0.68603444
+anchor_bottom = 0.28772968
+offset_right = -70.91911
+offset_bottom = -35.459564
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/binarytree"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02189341
+anchor_top = -0.07297819
+anchor_right = 1.0002573
+anchor_bottom = 0.92020947
+text = "Binary Tree"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/binarytree"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="binarysearchtree" type="TextureButton" parent="Panel/BG_assessment"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.42403388
+anchor_top = 0.2895
+anchor_right = 0.49545744
+anchor_bottom = 0.32672974
+offset_right = -70.91911
+offset_bottom = -35.459564
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/binarysearchtree"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02189341
+anchor_top = -0.07297819
+anchor_right = 1.0002573
+anchor_bottom = 0.92020947
+text = "BST"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/binarysearchtree"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="graph" type="TextureButton" parent="Panel/BG_assessment"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.24722075
+anchor_top = 0.289
+anchor_right = 0.31864432
+anchor_bottom = 0.32622966
+offset_right = -70.91911
+offset_bottom = -35.459564
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/graph"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02189341
+anchor_top = -0.07297819
+anchor_right = 1.0002573
+anchor_bottom = 0.92020947
+text = "Graph"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/graph"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="soringalgo" type="TextureRect" parent="Panel/BG_assessment"]
+self_modulate = Color(0.92, 0.90635335, 0.101200014, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.046056114
+anchor_top = 0.414
+anchor_right = 0.11747968
+anchor_bottom = 0.4512296
+offset_right = -70.91911
+offset_bottom = -35.459595
+scale = Vector2(3.3540795, 3.3540795)
+texture = ExtResource("7_cu04t")
+script = ExtResource("17_ix1c0")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/soringalgo"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02189341
+anchor_top = -0.07297819
+anchor_right = 1.0002573
+anchor_bottom = 0.92020947
+text = "Sorting
+Algorithms"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="bubblesort" type="TextureButton" parent="Panel/BG_assessment"]
+self_modulate = Color(0.92156863, 0.90588236, 0.101960786, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.28639492
+anchor_top = 0.4155
+anchor_right = 0.35781848
+anchor_bottom = 0.45272967
+offset_right = -70.91911
+offset_bottom = -35.459564
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/bubblesort"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02189341
+anchor_top = -0.07297819
+anchor_right = 1.0002573
+anchor_bottom = 0.92020947
+text = "Bubble Sort"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/bubblesort"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="selectionsort" type="TextureButton" parent="Panel/BG_assessment"]
+self_modulate = Color(0.92156863, 0.90588236, 0.101960786, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.48173636
+anchor_top = 0.4265
+anchor_right = 0.5531599
+anchor_bottom = 0.46372968
+offset_right = -70.91911
+offset_bottom = -35.459564
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/selectionsort"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02189341
+anchor_top = -0.07297819
+anchor_right = 1.0002573
+anchor_bottom = 0.92020947
+text = "Selection
+sort"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/selectionsort"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="insertionsort" type="TextureButton" parent="Panel/BG_assessment"]
+self_modulate = Color(0.92156863, 0.90588236, 0.101960786, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.6585494
+anchor_top = 0.4425
+anchor_right = 0.72997296
+anchor_bottom = 0.47972968
+offset_right = -70.91911
+offset_bottom = -35.459564
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/insertionsort"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02189341
+anchor_top = -0.07297819
+anchor_right = 1.0002573
+anchor_bottom = 0.92020947
+text = "Insertion
+sort"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/insertionsort"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="mergesort" type="TextureButton" parent="Panel/BG_assessment"]
+self_modulate = Color(0.92156863, 0.90588236, 0.101960786, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.8321863
+anchor_top = 0.437
+anchor_right = 0.9036098
+anchor_bottom = 0.47422966
+offset_right = -70.91911
+offset_bottom = -35.459564
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/mergesort"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02189341
+anchor_top = -0.07297819
+anchor_right = 1.0002573
+anchor_bottom = 0.92020947
+text = "Merge
+sort"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/mergesort"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="quicksort" type="TextureButton" parent="Panel/BG_assessment"]
+self_modulate = Color(0.92156863, 0.90588236, 0.101960786, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.8978295
+anchor_top = 0.5465001
+anchor_right = 0.969253
+anchor_bottom = 0.58372974
+offset_right = -70.91911
+offset_bottom = -35.459564
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/quicksort"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02189341
+anchor_top = -0.07297819
+anchor_right = 1.0002573
+anchor_bottom = 0.92020947
+text = "Quick
+Sort"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/quicksort"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="shellsort" type="TextureButton" parent="Panel/BG_assessment"]
+self_modulate = Color(0.92156863, 0.90588236, 0.101960786, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.73742723
+anchor_top = 0.572
+anchor_right = 0.80885077
+anchor_bottom = 0.6092297
+offset_right = -70.91911
+offset_bottom = -35.459564
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/shellsort"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02189341
+anchor_top = -0.07297819
+anchor_right = 1.0002573
+anchor_bottom = 0.92020947
+text = "Shell
+sort"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/shellsort"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="searchingalgo" type="TextureRect" parent="Panel/BG_assessment"]
+self_modulate = Color(0.70439065, 0.00027136118, 0.6750184, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5156167
+anchor_top = 0.5565
+anchor_right = 0.58704025
+anchor_bottom = 0.5937297
+offset_right = -70.91907
+offset_bottom = -35.459595
+scale = Vector2(3.3540795, 3.3540795)
+texture = ExtResource("7_cu04t")
+script = ExtResource("17_ix1c0")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/searchingalgo"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02189341
+anchor_top = -0.07297819
+anchor_right = 1.0002573
+anchor_bottom = 0.92020947
+text = "Searching
+Algorithms"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="linearsearch" type="TextureButton" parent="Panel/BG_assessment"]
+self_modulate = Color(0.7058824, 0, 0.6745098, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.3340392
+anchor_top = 0.5845
+anchor_right = 0.40546274
+anchor_bottom = 0.6217297
+offset_right = -70.91907
+offset_bottom = -35.459595
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/linearsearch"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02189341
+anchor_top = -0.07297819
+anchor_right = 1.0002573
+anchor_bottom = 0.92020947
+text = "Linear
+Search"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/linearsearch"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="binarysearch" type="TextureButton" parent="Panel/BG_assessment"]
+self_modulate = Color(0.7058824, 0, 0.6745098, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.16516681
+anchor_top = 0.581
+anchor_right = 0.23659034
+anchor_bottom = 0.6182297
+offset_right = -70.91907
+offset_bottom = -35.459595
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/binarysearch"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.02189341
+anchor_top = -0.07297819
+anchor_right = 1.0002573
+anchor_bottom = 0.92020947
+text = "Binary
+Search"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/binarysearch"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="interpolationsearch" type="TextureButton" parent="Panel/BG_assessment"]
+self_modulate = Color(0.7058824, 0, 0.6745098, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.03493913
+anchor_top = 0.7225
+anchor_right = 0.10636267
+anchor_bottom = 0.7597297
+offset_right = -70.91907
+offset_bottom = -35.459595
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/interpolationsearch"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.051883064
+anchor_top = -0.0851413
+anchor_right = 1.1043669
+anchor_bottom = 0.90804625
+text = "Interpolation
+Search"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/interpolationsearch"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="graphtreesearch" type="TextureButton" parent="Panel/BG_assessment"]
+self_modulate = Color(0.7058824, 0, 0.6745098, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.25622022
+anchor_top = 0.731
+anchor_right = 0.32764375
+anchor_bottom = 0.76822966
+offset_right = -70.91907
+offset_bottom = -35.459595
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/graphtreesearch"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.051883064
+anchor_top = -0.0851413
+anchor_right = 1.1043669
+anchor_bottom = 0.90804625
+text = "Graph/Tree
+Search"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/graphtreesearch"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="depthfirstsearch" type="TextureButton" parent="Panel/BG_assessment"]
+self_modulate = Color(0.7058824, 0, 0.6745098, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.41079935
+anchor_top = 0.8575
+anchor_right = 0.4822229
+anchor_bottom = 0.8947297
+offset_right = -70.91907
+offset_bottom = -35.459595
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/depthfirstsearch"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.051883064
+anchor_top = -0.0851413
+anchor_right = 1.1043669
+anchor_bottom = 0.90804625
+text = "Depth-First
+Search"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/depthfirstsearch"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="breadthfirstsearch" type="TextureButton" parent="Panel/BG_assessment"]
+self_modulate = Color(0.7058824, 0, 0.6745098, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.6146109
+anchor_top = 0.8505
+anchor_right = 0.68603444
+anchor_bottom = 0.8877297
+offset_right = -70.91907
+offset_bottom = -35.459595
+scale = Vector2(2.1081111, 2.1081111)
+texture_normal = ExtResource("7_cu04t")
+script = ExtResource("8_oqmdg")
+metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="Panel/BG_assessment/breadthfirstsearch"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.051883064
+anchor_top = -0.0851413
+anchor_right = 1.1043669
+anchor_bottom = 0.90804625
+text = "Breadth-First
+Search"
+label_settings = SubResource("LabelSettings_ubyvv")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="LockSprite" type="TextureRect" parent="Panel/BG_assessment/breadthfirstsearch"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -12.769295
+offset_top = -17.076897
+offset_right = 17.230705
+offset_bottom = 14.923103
+grow_horizontal = 0
+texture = ExtResource("19_fq2gl")
+
+[node name="small" type="Sprite2D" parent="Panel/BG_assessment"]
+visible = false
+material = SubResource("ShaderMaterial_gwkt8")
+position = Vector2(397.00006, 721)
+scale = Vector2(2.900211, 2.900211)
+texture = ExtResource("6_gwkt8")
+
+[node name="logo" type="Sprite2D" parent="Panel/BG_assessment"]
+material = SubResource("ShaderMaterial_uirgf")
+position = Vector2(1635.0001, 1631.9998)
+scale = Vector2(1.1633569, 1.163357)
+texture = ExtResource("19_cq7wo")
+
+[node name="DifficultyPopup" parent="." instance=ExtResource("20_cq7wo")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1

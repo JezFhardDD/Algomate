@@ -1,0 +1,538 @@
+[gd_scene load_steps=30 format=3 uid="uid://bsrtgx2yweede"]
+
+[ext_resource type="Script" uid="uid://bpvf113nkcdkk" path="res://scripts/shop.gd" id="1_032fp"]
+[ext_resource type="Shader" path="res://scripts/lectures_bg.gdshader" id="2_2fc2m"]
+[ext_resource type="FontFile" uid="uid://by1ledwhotv64" path="res://new_system_font.tres" id="3_8r1wq"]
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="3_44xle"]
+[ext_resource type="PackedScene" uid="uid://pw1kjcephyld" path="res://scenes/navigation.tscn" id="4_ajxib"]
+[ext_resource type="Texture2D" uid="uid://caigeuovsqr7v" path="res://assets/profile_pics/cat1.jpg" id="4_y6sft"]
+[ext_resource type="LabelSettings" uid="uid://bg8ldg6sc3s0e" path="res://new_label_settings.tres" id="5_m4ofw"]
+[ext_resource type="Texture2D" uid="uid://bqdaj3uy6nw62" path="res://assets/ui/scsCoin.png" id="6_1v8qu"]
+[ext_resource type="Texture2D" uid="uid://qpr5ic3i4i4n" path="res://assets/profile_pics/wildboar1.png" id="6_heatd"]
+[ext_resource type="Texture2D" uid="uid://c3e7l2fqv0wku" path="res://assets/ui/buy_button.png" id="6_y6sft"]
+[ext_resource type="Texture2D" uid="uid://binxvpneifapc" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/BACK_BUTTON_GREEN.png" id="8_m4ofw"]
+[ext_resource type="Texture2D" uid="uid://cnlkpprxlc8m1" path="res://assets/profile_pics/bread1.png" id="9_1v8qu"]
+[ext_resource type="Texture2D" uid="uid://cutwgd8nj1o3a" path="res://assets/profile_pics/fishpfp1.png" id="11_24it5"]
+[ext_resource type="Texture2D" uid="uid://btqtsw116y7wq" path="res://assets/profile_pics/robot1.png" id="11_j14q8"]
+[ext_resource type="Texture2D" uid="uid://bb527jdfbq41b" path="res://assets/profile_pics/girlCCT2.jpeg" id="12_5u241"]
+[ext_resource type="Texture2D" uid="uid://cbb303ij0hip7" path="res://assets/profile_pics/boyCCT2.jpg" id="13_pqync"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y6sft"]
+shader = ExtResource("2_2fc2m")
+shader_parameter/speed = -0.01
+shader_parameter/density = 6.735
+shader_parameter/min_size = 0.22
+shader_parameter/max_size = 0.595
+shader_parameter/min_alpha = -0.02
+shader_parameter/max_alpha = 0.16
+shader_parameter/bg_color = Color(0.0054205894, 0.010314448, 0.0010165456, 1)
+shader_parameter/block_color = Color(0.44442868, 0.3516433, 0.65966636, 1)
+shader_parameter/accent_color = Color(0.60869926, 0.75365275, 0.38074076, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m4ofw"]
+bg_color = Color(0.845367, 0.5078304, 0.14357418, 1)
+border_width_left = 20
+border_width_top = 10
+border_width_right = 20
+border_width_bottom = 10
+border_color = Color(0.7575125, 0.44526106, 0.10527188, 1)
+shadow_color = Color(0, 0, 0, 0.32941177)
+shadow_size = 40
+shadow_offset = Vector2(0, 9.6)
+
+[sub_resource type="LabelSettings" id="LabelSettings_heatd"]
+font = ExtResource("3_8r1wq")
+font_size = 45
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_njwbg"]
+atlas = ExtResource("6_1v8qu")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vssbc"]
+atlas = ExtResource("6_1v8qu")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lxfhk"]
+atlas = ExtResource("6_1v8qu")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mo62g"]
+atlas = ExtResource("6_1v8qu")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rdrm2"]
+atlas = ExtResource("6_1v8qu")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v4xbb"]
+atlas = ExtResource("6_1v8qu")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_birg4"]
+atlas = ExtResource("6_1v8qu")
+region = Rect2(192, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gbrti"]
+atlas = ExtResource("6_1v8qu")
+region = Rect2(224, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_44xle"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_njwbg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vssbc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lxfhk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mo62g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rdrm2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v4xbb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_birg4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gbrti")
+}],
+"loop": true,
+"name": &"new_animation",
+"speed": 9.0
+}]
+
+[sub_resource type="LabelSettings" id="LabelSettings_24it5"]
+font = ExtResource("3_8r1wq")
+font_size = 30
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+
+[node name="Shop" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_032fp")
+
+[node name="BG" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_y6sft")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.47843137, 0.6627451, 0.22352941, 1)
+
+[node name="TopBar" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 105.0
+offset_bottom = 165.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m4ofw")
+
+[node name="TitleLabel" type="Label" parent="TopBar"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -22.0
+offset_top = -11.5
+offset_right = 22.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_44xle")
+text = "SHOP"
+label_settings = SubResource("LabelSettings_heatd")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 237.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="GridContainer" type="GridContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 20
+columns = 3
+
+[node name="Cat" type="Panel" parent="ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(200, 420)
+layout_mode = 2
+
+[node name="Picture" type="TextureRect" parent="ScrollContainer/GridContainer/Cat"]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 75.0
+offset_right = 88.0
+offset_bottom = 135.0
+scale = Vector2(2.937857, 2.937857)
+texture = ExtResource("4_y6sft")
+
+[node name="Name" type="Label" parent="ScrollContainer/GridContainer/Cat"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 27.0
+offset_right = 211.0
+offset_bottom = 68.0
+text = "ORANGE
+CAT"
+label_settings = ExtResource("5_m4ofw")
+horizontal_alignment = 1
+
+[node name="CoinIcon" type="AnimatedSprite2D" parent="ScrollContainer/GridContainer/Cat"]
+position = Vector2(92.34355, 369.34357)
+scale = Vector2(1.6464719, 1.6464719)
+sprite_frames = SubResource("SpriteFrames_44xle")
+animation = &"new_animation"
+autoplay = "new_animation"
+
+[node name="PriceLabel" type="Label" parent="ScrollContainer/GridContainer/Cat"]
+layout_mode = 0
+offset_left = 122.34355
+offset_top = 350.34357
+offset_right = 180.34355
+offset_bottom = 391.34357
+text = "900"
+label_settings = SubResource("LabelSettings_24it5")
+
+[node name="ActionButton" type="TextureButton" parent="ScrollContainer/GridContainer/Cat"]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 281.0
+offset_right = 117.0
+offset_bottom = 312.0
+scale = Vector2(2.235, 2.235)
+texture_normal = ExtResource("6_y6sft")
+
+[node name="Wildboar" type="Panel" parent="ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(200, 420)
+layout_mode = 2
+
+[node name="Picture" type="TextureRect" parent="ScrollContainer/GridContainer/Wildboar"]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 75.0
+offset_right = 88.0
+offset_bottom = 135.0
+scale = Vector2(2.9721904, 2.9721904)
+texture = ExtResource("6_heatd")
+
+[node name="Name" type="Label" parent="ScrollContainer/GridContainer/Wildboar"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 28.0
+offset_right = 190.0
+offset_bottom = 69.0
+text = "WILD
+BOAR"
+label_settings = ExtResource("5_m4ofw")
+horizontal_alignment = 1
+
+[node name="CoinIcon" type="AnimatedSprite2D" parent="ScrollContainer/GridContainer/Wildboar"]
+position = Vector2(92.34355, 369.34357)
+scale = Vector2(1.6464719, 1.6464719)
+sprite_frames = SubResource("SpriteFrames_44xle")
+animation = &"new_animation"
+autoplay = "new_animation"
+
+[node name="PriceLabel" type="Label" parent="ScrollContainer/GridContainer/Wildboar"]
+layout_mode = 0
+offset_left = 122.34355
+offset_top = 350.34357
+offset_right = 180.34355
+offset_bottom = 391.34357
+text = "1000"
+label_settings = SubResource("LabelSettings_24it5")
+
+[node name="ActionButton" type="TextureButton" parent="ScrollContainer/GridContainer/Wildboar"]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 281.0
+offset_right = 117.0
+offset_bottom = 312.0
+scale = Vector2(2.235, 2.235)
+texture_normal = ExtResource("6_y6sft")
+
+[node name="Bread" type="Panel" parent="ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(200, 420)
+layout_mode = 2
+
+[node name="Picture" type="TextureRect" parent="ScrollContainer/GridContainer/Bread"]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 75.0
+offset_right = 88.0
+offset_bottom = 135.0
+scale = Vector2(2.9721904, 2.9721904)
+texture = ExtResource("9_1v8qu")
+
+[node name="Name" type="Label" parent="ScrollContainer/GridContainer/Bread"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 28.0
+offset_right = 190.0
+offset_bottom = 69.0
+text = "BREAD"
+label_settings = ExtResource("5_m4ofw")
+horizontal_alignment = 1
+
+[node name="CoinIcon" type="AnimatedSprite2D" parent="ScrollContainer/GridContainer/Bread"]
+position = Vector2(92.34355, 369.34357)
+scale = Vector2(1.6464719, 1.6464719)
+sprite_frames = SubResource("SpriteFrames_44xle")
+animation = &"new_animation"
+autoplay = "new_animation"
+
+[node name="PriceLabel" type="Label" parent="ScrollContainer/GridContainer/Bread"]
+layout_mode = 0
+offset_left = 122.34355
+offset_top = 350.34357
+offset_right = 180.34355
+offset_bottom = 391.34357
+text = "300"
+label_settings = SubResource("LabelSettings_24it5")
+
+[node name="ActionButton" type="TextureButton" parent="ScrollContainer/GridContainer/Bread"]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 281.0
+offset_right = 117.0
+offset_bottom = 312.0
+scale = Vector2(2.235, 2.235)
+texture_normal = ExtResource("6_y6sft")
+
+[node name="Robot" type="Panel" parent="ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(200, 420)
+layout_mode = 2
+
+[node name="Picture" type="TextureRect" parent="ScrollContainer/GridContainer/Robot"]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 75.0
+offset_right = 88.0
+offset_bottom = 135.0
+scale = Vector2(2.9721904, 2.9721904)
+texture = ExtResource("11_j14q8")
+
+[node name="Name" type="Label" parent="ScrollContainer/GridContainer/Robot"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 28.0
+offset_right = 190.0
+offset_bottom = 69.0
+text = "ROBOT"
+label_settings = ExtResource("5_m4ofw")
+horizontal_alignment = 1
+
+[node name="CoinIcon" type="AnimatedSprite2D" parent="ScrollContainer/GridContainer/Robot"]
+position = Vector2(92.34355, 369.34357)
+scale = Vector2(1.6464719, 1.6464719)
+sprite_frames = SubResource("SpriteFrames_44xle")
+animation = &"new_animation"
+autoplay = "new_animation"
+
+[node name="PriceLabel" type="Label" parent="ScrollContainer/GridContainer/Robot"]
+layout_mode = 0
+offset_left = 122.34355
+offset_top = 350.34357
+offset_right = 180.34355
+offset_bottom = 391.34357
+text = "1000"
+label_settings = SubResource("LabelSettings_24it5")
+
+[node name="ActionButton" type="TextureButton" parent="ScrollContainer/GridContainer/Robot"]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 281.0
+offset_right = 117.0
+offset_bottom = 312.0
+scale = Vector2(2.235, 2.235)
+texture_normal = ExtResource("6_y6sft")
+
+[node name="Girl" type="Panel" parent="ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(200, 420)
+layout_mode = 2
+
+[node name="Picture" type="TextureRect" parent="ScrollContainer/GridContainer/Girl"]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 75.0
+offset_right = 88.0
+offset_bottom = 135.0
+scale = Vector2(2.9721904, 2.9721904)
+texture = ExtResource("12_5u241")
+
+[node name="Name" type="Label" parent="ScrollContainer/GridContainer/Girl"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 28.0
+offset_right = 190.0
+offset_bottom = 69.0
+text = "GIRL"
+label_settings = ExtResource("5_m4ofw")
+horizontal_alignment = 1
+
+[node name="CoinIcon" type="AnimatedSprite2D" parent="ScrollContainer/GridContainer/Girl"]
+position = Vector2(92.34355, 369.34357)
+scale = Vector2(1.6464719, 1.6464719)
+sprite_frames = SubResource("SpriteFrames_44xle")
+animation = &"new_animation"
+autoplay = "new_animation"
+
+[node name="PriceLabel" type="Label" parent="ScrollContainer/GridContainer/Girl"]
+layout_mode = 0
+offset_left = 122.34355
+offset_top = 350.34357
+offset_right = 180.34355
+offset_bottom = 391.34357
+text = "0"
+label_settings = SubResource("LabelSettings_24it5")
+
+[node name="ActionButton" type="TextureButton" parent="ScrollContainer/GridContainer/Girl"]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 281.0
+offset_right = 117.0
+offset_bottom = 312.0
+scale = Vector2(2.235, 2.235)
+texture_normal = ExtResource("6_y6sft")
+
+[node name="Boy" type="Panel" parent="ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(200, 420)
+layout_mode = 2
+
+[node name="Picture" type="TextureRect" parent="ScrollContainer/GridContainer/Boy"]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 75.0
+offset_right = 88.0
+offset_bottom = 135.0
+scale = Vector2(2.9721904, 2.9721904)
+texture = ExtResource("13_pqync")
+
+[node name="Name" type="Label" parent="ScrollContainer/GridContainer/Boy"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 28.0
+offset_right = 190.0
+offset_bottom = 69.0
+text = "BOY"
+label_settings = ExtResource("5_m4ofw")
+horizontal_alignment = 1
+
+[node name="CoinIcon" type="AnimatedSprite2D" parent="ScrollContainer/GridContainer/Boy"]
+position = Vector2(92.34355, 369.34357)
+scale = Vector2(1.6464719, 1.6464719)
+sprite_frames = SubResource("SpriteFrames_44xle")
+animation = &"new_animation"
+autoplay = "new_animation"
+
+[node name="PriceLabel" type="Label" parent="ScrollContainer/GridContainer/Boy"]
+layout_mode = 0
+offset_left = 122.34355
+offset_top = 350.34357
+offset_right = 180.34355
+offset_bottom = 391.34357
+text = "0"
+label_settings = SubResource("LabelSettings_24it5")
+
+[node name="ActionButton" type="TextureButton" parent="ScrollContainer/GridContainer/Boy"]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 281.0
+offset_right = 117.0
+offset_bottom = 312.0
+scale = Vector2(2.235, 2.235)
+texture_normal = ExtResource("6_y6sft")
+
+[node name="Fish" type="Panel" parent="ScrollContainer/GridContainer"]
+custom_minimum_size = Vector2(200, 420)
+layout_mode = 2
+
+[node name="Picture" type="TextureRect" parent="ScrollContainer/GridContainer/Fish"]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 75.0
+offset_right = 88.0
+offset_bottom = 135.0
+scale = Vector2(2.9721904, 2.9721904)
+texture = ExtResource("11_24it5")
+
+[node name="Name" type="Label" parent="ScrollContainer/GridContainer/Fish"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 28.0
+offset_right = 190.0
+offset_bottom = 69.0
+text = "FISH"
+label_settings = ExtResource("5_m4ofw")
+horizontal_alignment = 1
+
+[node name="CoinIcon" type="AnimatedSprite2D" parent="ScrollContainer/GridContainer/Fish"]
+position = Vector2(92.34355, 369.34357)
+scale = Vector2(1.6464719, 1.6464719)
+sprite_frames = SubResource("SpriteFrames_44xle")
+animation = &"new_animation"
+autoplay = "new_animation"
+
+[node name="PriceLabel" type="Label" parent="ScrollContainer/GridContainer/Fish"]
+layout_mode = 0
+offset_left = 122.34355
+offset_top = 350.34357
+offset_right = 180.34355
+offset_bottom = 391.34357
+text = "500"
+label_settings = SubResource("LabelSettings_24it5")
+
+[node name="ActionButton" type="TextureButton" parent="ScrollContainer/GridContainer/Fish"]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 281.0
+offset_right = 117.0
+offset_bottom = 312.0
+scale = Vector2(2.235, 2.235)
+texture_normal = ExtResource("6_y6sft")
+
+[node name="back_button" type="TextureButton" parent="."]
+z_index = 10
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.032407407
+anchor_top = 0.16145831
+anchor_right = 0.11364198
+anchor_bottom = 0.25306427
+offset_right = -28.639996
+offset_bottom = -57.416016
+scale = Vector2(2.1933331, 2.1933331)
+texture_normal = ExtResource("8_m4ofw")
+metadata/_edit_use_anchors_ = true
+
+[node name="navigation" parent="." instance=ExtResource("4_ajxib")]
+visible = false
+layout_mode = 1
+offset_top = 3.0
+offset_bottom = 107.0
+
+[connection signal="pressed" from="back_button" to="." method="_on_back_button_pressed"]

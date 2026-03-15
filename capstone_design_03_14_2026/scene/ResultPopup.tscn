@@ -1,0 +1,245 @@
+[gd_scene load_steps=22 format=3 uid="uid://cdg6mqdpf5ylc"]
+
+[ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="1_bf8n2"]
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="2_7s5in"]
+[ext_resource type="Texture2D" uid="uid://ctekyvyl56jl8" path="res://assets/scsCoin-Sheet.png" id="3_411bg"]
+[ext_resource type="Texture2D" uid="uid://dcxstyoycht1w" path="res://assets/BUTTON_HOVERED.png" id="4_qdllw"]
+[ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="5_7jnim"]
+[ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="6_run40"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qdllw"]
+atlas = ExtResource("3_411bg")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7jnim"]
+atlas = ExtResource("3_411bg")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_run40"]
+atlas = ExtResource("3_411bg")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yn3na"]
+atlas = ExtResource("3_411bg")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yv7qk"]
+atlas = ExtResource("3_411bg")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ddlec"]
+atlas = ExtResource("3_411bg")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_drqmd"]
+atlas = ExtResource("3_411bg")
+region = Rect2(192, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fiisr"]
+atlas = ExtResource("3_411bg")
+region = Rect2(224, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_wcdth"]
+animations = [{
+"frames": [{
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_qdllw")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_7jnim")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_run40")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_yn3na")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_yv7qk")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_ddlec")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_drqmd")
+}, {
+"duration": 0.5,
+"texture": SubResource("AtlasTexture_fiisr")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ddlec"]
+texture = ExtResource("6_run40")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yv7qk"]
+texture = ExtResource("5_7jnim")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yn3na"]
+texture = ExtResource("4_qdllw")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_run40"]
+texture = ExtResource("6_run40")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7jnim"]
+texture = ExtResource("5_7jnim")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qdllw"]
+texture = ExtResource("4_qdllw")
+
+[node name="ResultPopup" type="PopupPanel"]
+oversampling_override = 1.0
+size = Vector2i(800, 500)
+
+[node name="TextureRect" type="TextureRect" parent="."]
+self_modulate = Color(1, 1, 1, 0.929412)
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 796.0
+offset_bottom = 496.0
+texture = ExtResource("1_bf8n2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TextureRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ResultTitle" type="Label" parent="TextureRect/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_constants/outline_size = 7
+theme_override_fonts/font = ExtResource("2_7s5in")
+theme_override_font_sizes/font_size = 100
+text = "PASSED!"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="TextureRect/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TextureRect/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="ScoreSummary" type="Label" parent="TextureRect/VBoxContainer/HBoxContainer3/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 6
+theme_override_colors/font_color = Color(0, 0.913725, 0.635294, 1)
+theme_override_colors/font_outline_color = Color(0, 0.584314, 0.027451, 1)
+theme_override_constants/outline_size = 7
+theme_override_fonts/font = ExtResource("2_7s5in")
+theme_override_font_sizes/font_size = 30
+text = "Score Summary: "
+
+[node name="AccuracyLabel" type="Label" parent="TextureRect/VBoxContainer/HBoxContainer3/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 6
+theme_override_colors/font_color = Color(0, 0.913725, 0.635294, 1)
+theme_override_colors/font_outline_color = Color(0, 0.584314, 0.027451, 1)
+theme_override_constants/outline_size = 7
+theme_override_fonts/font = ExtResource("2_7s5in")
+theme_override_font_sizes/font_size = 30
+text = "Accuracy: "
+
+[node name="TimeUsedLabel" type="Label" parent="TextureRect/VBoxContainer/HBoxContainer3/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 6
+theme_override_colors/font_color = Color(0, 0.913725, 0.635294, 1)
+theme_override_colors/font_outline_color = Color(0, 0.584314, 0.027451, 1)
+theme_override_constants/outline_size = 7
+theme_override_fonts/font = ExtResource("2_7s5in")
+theme_override_font_sizes/font_size = 30
+text = "Time Used: "
+
+[node name="Label2" type="Label" parent="TextureRect/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "            "
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TextureRect/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="TextureRect/VBoxContainer/HBoxContainer3/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_colors/font_color = Color(0, 0.913725, 0.635294, 1)
+theme_override_colors/font_outline_color = Color(0, 0.584314, 0.027451, 1)
+theme_override_constants/outline_size = 7
+theme_override_fonts/font = ExtResource("2_7s5in")
+theme_override_font_sizes/font_size = 50
+text = "+"
+
+[node name="Control" type="Control" parent="TextureRect/VBoxContainer/HBoxContainer3/HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="TextureRect/VBoxContainer/HBoxContainer3/HBoxContainer/Control"]
+position = Vector2(49, 20)
+scale = Vector2(3.5, 3.5)
+sprite_frames = SubResource("SpriteFrames_wcdth")
+frame_progress = 0.738973
+
+[node name="Label" type="Label" parent="TextureRect/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="TextureRect/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+theme_override_constants/separation = 50
+
+[node name="TryAgainButton" type="Button" parent="TextureRect/VBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(100, 70)
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_colors/font_color = Color(1.39579e-06, 0.873921, 0.250737, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0.607843, 1)
+theme_override_constants/outline_size = 7
+theme_override_fonts/font = ExtResource("2_7s5in")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxTexture_ddlec")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_yv7qk")
+theme_override_styles/hover = SubResource("StyleBoxTexture_yn3na")
+text = " Try Again "
+
+[node name="BackButton" type="Button" parent="TextureRect/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_colors/font_color = Color(1.39579e-06, 0.873921, 0.250737, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0.607843, 1)
+theme_override_constants/outline_size = 7
+theme_override_fonts/font = ExtResource("2_7s5in")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxTexture_ddlec")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_yv7qk")
+theme_override_styles/hover = SubResource("StyleBoxTexture_yn3na")
+text = " Back "
+
+[node name="translate_code_btn" type="Button" parent="TextureRect/VBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(400, 75)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 2
+theme_override_colors/font_color = Color(0, 0.87451, 0.25098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0.607843, 1)
+theme_override_constants/outline_size = 7
+theme_override_fonts/font = ExtResource("2_7s5in")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxTexture_run40")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_7jnim")
+theme_override_styles/hover = SubResource("StyleBoxTexture_qdllw")
+text = "Translate to Code"

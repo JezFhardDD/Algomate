@@ -1,25 +1,38 @@
-[gd_scene load_steps=3 format=3 uid="uid://cq3gb15j1tlfe"]
+[gd_scene load_steps=4 format=3 uid="uid://cq3gb15j1tlfe"]
 
 [ext_resource type="PackedScene" uid="uid://dq6ebtkxu3lbb" path="res://scene/ArrayA.tscn" id="1_uagsq"]
 [ext_resource type="Script" uid="uid://dfi0lmpdochof" path="res://script/stack_a.gd" id="2_8anxq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8anxq"]
+bg_color = Color(0, 0.71906, 0.350766, 1)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+shadow_color = Color(0, 0, 0, 0.47)
+shadow_size = 8
+shadow_offset = Vector2(0, 4)
 
 [node name="Main" instance=ExtResource("1_uagsq")]
 script = ExtResource("2_8anxq")
 
 [node name="rear" parent="TextureRect" index="0"]
 visible = true
-offset_left = 900.0
-offset_top = 128.0
-offset_right = 987.0
-offset_bottom = 173.0
+offset_left = 828.0
+offset_top = 192.0
+offset_right = 915.0
+offset_bottom = 237.0
 text = "Top"
+
+[node name="AnimatedSprite2D" parent="VBoxContainer/HBoxContainer" index="0"]
+position = Vector2(8, 17)
 
 [node name="QueueContainer" parent="." index="7"]
 anchors_preset = -1
-anchor_left = 0.607112
-anchor_top = 0.198142
-anchor_right = 0.780572
-anchor_bottom = 0.854489
+anchor_left = 0.544666
+anchor_top = 0.272446
+anchor_right = 0.718127
+anchor_bottom = 0.866873
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 0.0
@@ -27,6 +40,33 @@ offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
 metadata/_edit_use_anchors_ = true
+
+[node name="TargetLabel" parent="." index="31"]
+anchors_preset = 5
+anchor_top = 0.0
+anchor_bottom = 0.0
+offset_left = -156.5
+offset_top = 16.0
+offset_right = 285.5
+offset_bottom = 144.0
+grow_vertical = 1
+theme_override_styles/normal = SubResource("StyleBoxFlat_8anxq")
+horizontal_alignment = 1
+
+[node name="CommandProgressLabel" parent="." index="32"]
+offset_left = -132.5
+offset_top = -267.0
+offset_right = 267.5
+offset_bottom = -179.0
+text = ""
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="SpawnSlot" parent="SpawnArea" index="1"]
+offset_left = 8.0
+offset_top = 50.0
+offset_right = 8.0
+offset_bottom = 50.0
 
 [node name="Area2D" parent="." index="34"]
 position = Vector2(370, 463)

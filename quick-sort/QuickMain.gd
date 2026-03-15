@@ -1,7 +1,7 @@
 extends Control
 
 # =======================================================
-#  QUICK SORT SIMULATION - FINAL (With Scroll & All Functions)
+#   QUICK SORT SIMULATION - FINAL (With Scroll & All Functions)
 # =======================================================
 
 # --- MAIN BUTTONS ---
@@ -51,7 +51,7 @@ extends Control
 @onready var cpp_code_button: Button = get_node_or_null("CppCodeButton")
 @onready var code_anim: AnimatedSprite2D = get_node_or_null("CppCodeButton/code_anim")
 
-# --- SCENE RESOURCES (Using QuickBlock.tscn as per your tree) ---
+# --- SCENE RESOURCES ---
 const BLOCK_SCENE := preload("res://QuickBlock.tscn")
 const POINTER_TEX := preload("res://assets/point_left.png")
 
@@ -106,7 +106,7 @@ const POINTER_TEX := preload("res://assets/point_left.png")
 @onready var java_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/Java_btn
 @onready var c_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/C_btn
 
-# --- QUICK SORT VARIABLES (REPLACED MERGE) ---
+# --- QUICK SORT VARIABLES ---
 var main_array: Array[int] = []
 var block_nodes: Array[Control] = []
 var timeline_log: Array[String] = []
@@ -136,7 +136,7 @@ var tutorial_sequence = []
 var tutorial_sequence_index = 0
 var tutorial_in_progress = false
 
-# Intro Text (UPDATED FOR QUICK SORT)
+# Intro Text
 var intro_step: int = 0
 var intro_texts = [
 	"Welcome to Quick Sort!\n\nThis is a 'Divide and Conquer' algorithm. It's much faster than Insertion Sort for large lists.",
@@ -145,17 +145,45 @@ var intro_texts = [
 	"Complexity:\n\nTime: O(n log n) on average.\nSpace: O(log n) for stack space."
 ]
 
-# Code Tutorial Data (UPDATED FOR QUICK SORT)
+# Code Tutorial Data (RE-MAPPED TO NEW PRINTS)
 var current_code_language: String = "cpp"
 var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
+
 var cpp_tutorial_data = [
-	{ "lines": [4, 5, 6, 7, 8], "text": "[b]Complexity Analysis:[/b]\n• [b]Time:[/b] [color=green]O(n log n)[/color] (Avg), [color=red]O(n²)[/color] (Worst).\n• [b]Space:[/b] [color=orange]O(log n)[/color] due to recursion stack." },
-	{ "lines": [10, 11, 12], "text": "1. Partition Function:\nTakes the last element as the 'pivot'. The goal is to place the pivot in its correct sorted position." },
-	{ "lines": [13, 14, 15], "text": "2. Pointers:\n'i' tracks the boundary of smaller elements. 'j' scans the array." },
-	{ "lines": [16, 17, 18, 19], "text": "3. The Swap:\nIf arr[j] is smaller than pivot, we swap it with arr[i] to move it to the 'small' side." },
-	{ "lines": [23, 24, 25], "text": "4. Place Pivot:\nFinally, swap the pivot into the slot after 'i'. It is now sorted." },
-	{ "lines": [28, 29, 30, 31], "text": "5. Recursive Calls:\nSort the sub-array to the left of the pivot, and then the sub-array to the right." }
+	{ "lines": [3, 4, 5, 6, 7], "text": "[b]Complexity Analysis:[/b]\n• [b]Time:[/b] [color=green]O(n log n)[/color] (Avg), [color=red]O(n²)[/color] (Worst).\n• [b]Space:[/b] [color=orange]O(log n)[/color] due to recursion stack." },
+	{ "lines": [16, 17, 18], "text": "1. Partition Function:\nTakes the last element as the 'pivot'." },
+	{ "lines": [19, 20, 21], "text": "2. Pointers:\n'i' tracks the boundary of smaller elements. 'j' scans the array." },
+	{ "lines": [22, 23, 24, 25], "text": "3. The Swap:\nIf arr[j] is smaller than pivot, we swap it with arr[i]." },
+	{ "lines": [29, 30, 31], "text": "4. Place Pivot:\nSwap the pivot into the slot after 'i'. It is now sorted." },
+	{ "lines": [36, 37, 38, 39, 40], "text": "5. Recursive Calls:\nSort left of pivot, then print, then sort right of pivot." }
+]
+
+var python_tutorial_data = [
+	{ "lines": [0], "text": "[b]Complexity Analysis:[/b]\n• [b]Time:[/b] [color=green]O(n log n)[/color] (Avg).\n• [b]Space:[/b] [color=orange]O(log n)[/color]." },
+	{ "lines": [2, 3], "text": "1. Partition Function:\nTakes the last element as the 'pivot'." },
+	{ "lines": [4, 5], "text": "2. Pointers:\n'i' tracks the boundary of smaller elements. 'j' scans." },
+	{ "lines": [6, 7, 8], "text": "3. The Swap:\nIf arr[j] is smaller than pivot, we swap them." },
+	{ "lines": [9, 10], "text": "4. Place Pivot:\nSwap the pivot into its final sorted position." },
+	{ "lines": [12, 13, 14, 15, 16], "text": "5. Recursive Calls:\nSort left of pivot, print state, then sort right." }
+]
+
+var java_tutorial_data = [
+	{ "lines": [0], "text": "[b]Complexity Analysis:[/b]\n• [b]Time:[/b] [color=green]O(n log n)[/color] (Avg).\n• [b]Space:[/b] [color=orange]O(log n)[/color]." },
+	{ "lines": [1, 2], "text": "1. Partition Function:\nTakes the last element as the 'pivot'." },
+	{ "lines": [3, 4], "text": "2. Pointers:\n'i' tracks the boundary of smaller elements. 'j' scans." },
+	{ "lines": [5, 6, 7, 8, 9, 10], "text": "3. The Swap:\nIf arr[j] is smaller than pivot, we swap them using a temp int." },
+	{ "lines": [12, 13, 14, 15], "text": "4. Place Pivot:\nSwap the pivot into its final sorted position." },
+	{ "lines": [18, 19, 20, 21, 22, 23], "text": "5. Recursive Calls:\nSort left of pivot, print the array, then sort right." }
+]
+
+var c_tutorial_data = [
+	{ "lines": [1], "text": "[b]Complexity Analysis:[/b]\n• [b]Time:[/b] [color=green]O(n log n)[/color] (Avg).\n• [b]Space:[/b] [color=orange]O(log n)[/color]." },
+	{ "lines": [10, 11, 12], "text": "1. Partition Function:\nTakes the last element as the 'pivot'." },
+	{ "lines": [13, 14, 15], "text": "2. Pointers:\n'i' tracks the boundary of smaller elements. 'j' scans." },
+	{ "lines": [16, 17, 18, 19], "text": "3. The Swap:\nIf arr[j] is smaller than pivot, we swap them using our helper." },
+	{ "lines": [23, 24, 25], "text": "4. Place Pivot:\nSwap the pivot into its final sorted position." },
+	{ "lines": [30, 31, 32, 33, 34], "text": "5. Recursive Calls:\nSort left of pivot, print the array, then sort right." }
 ]
 
 func _ready() -> void:
@@ -180,7 +208,6 @@ func _ready() -> void:
 	_connect_configuration_buttons()
 	_show_config_modal() 
 	
-	# Show Intro - Uses deferred call to ensure UI is ready
 	call_deferred("show_introduction")
 	
 	if q_mark_sprite: q_mark_sprite.play("default")
@@ -407,7 +434,6 @@ func _perform_sort_step():
 			
 		else:
 			# -- PHASE 3: PLACE PIVOT --
-			# Swap arr[i + 1] and arr[high] (the pivot)
 			var final_pivot_pos = partition_index + 1
 			
 			if final_pivot_pos != current_high:
@@ -428,7 +454,6 @@ func _perform_sort_step():
 			if block_nodes[final_pivot_pos].has_method("set_highlight"):
 				block_nodes[final_pivot_pos].set_highlight(false)
 			
-			# Push new ranges to stack
 			# Push Right side first (so Left is processed next)
 			if final_pivot_pos + 1 < current_high:
 				quick_stack.append([final_pivot_pos + 1, current_high])
@@ -513,7 +538,7 @@ func _on_timeline_close_pressed() -> void:
 		timeline_popup.hide()
 
 # ==============================================
-#  CODE GENERATION & TUTORIAL (QUICK SORT STRINGS)
+#  CODE GENERATION & TUTORIAL
 # ==============================================
 
 func _on_show_cpp_pressed() -> void:
@@ -531,59 +556,80 @@ func _show_cpp_popup() -> void:
 		"java": code = get_java_quick_code(arr_str)
 		"c": code = get_c_quick_code(arr_str)
 	
-	# UPDATED: Use RichTextLabel
 	if cpp_label:
 		cpp_label.text = code
 	
 	cpp_popup.popup_centered()
 	
-	if current_code_language == "cpp":
-		cpp_tutorial_step = 0
-		if cpp_next_btn:
-			if not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
-				cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
-		_update_cpp_tutorial()
+	cpp_tutorial_step = 0
+	if cpp_next_btn:
+		if not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
+			cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
+	_update_cpp_tutorial()
 
 func _on_cpp_next_pressed() -> void:
 	btn_sound.play()
 	cpp_tutorial_step += 1
-	if cpp_tutorial_step >= cpp_tutorial_data.size():
+	var max_steps = 0
+	match current_code_language:
+		"cpp": max_steps = cpp_tutorial_data.size()
+		"python": max_steps = python_tutorial_data.size()
+		"java": max_steps = java_tutorial_data.size()
+		"c": max_steps = c_tutorial_data.size()
+		
+	if cpp_tutorial_step >= max_steps:
 		cpp_tutorial_step = 0
 	_update_cpp_tutorial()
 
 func _update_cpp_tutorial() -> void:
-	if cpp_tutorial_data.is_empty(): return
-	var data = cpp_tutorial_data[cpp_tutorial_step]
-	cpp_explanation_lbl.bbcode_enabled = true
-	cpp_explanation_lbl.text = data["text"]
-	
-	var code = ""
-	var arr_str = ", ".join(main_array.map(func(x): return str(x)))
+	var data = {}
 	match current_code_language:
-		"cpp": code = get_cpp_quick_code(arr_str)
-		"python": code = get_python_quick_code(arr_str)
-		"java": code = get_java_quick_code(arr_str)
-		"c": code = get_c_quick_code(arr_str)
+		"cpp": data = cpp_tutorial_data[cpp_tutorial_step]
+		"python": data = python_tutorial_data[cpp_tutorial_step]
+		"java": data = java_tutorial_data[cpp_tutorial_step]
+		"c": data = c_tutorial_data[cpp_tutorial_step]
 	
-	var lines = code.split("\n")
-	var highlighted_code = ""
-	var indices = data["lines"]
-	for i in range(lines.size()):
-		if i in indices:
-			highlighted_code += "[color=yellow]" + lines[i] + "[/color]\n"
-		else:
-			highlighted_code += lines[i] + "\n"
+	if cpp_explanation_lbl:
+		cpp_explanation_lbl.bbcode_enabled = true
+		cpp_explanation_lbl.text = data["text"]
 	
-	cpp_label.bbcode_enabled = true
-	cpp_label.text = highlighted_code
-	if cpp_scroll and indices.size() > 0:
-		cpp_scroll.scroll_vertical = indices[0] * 20
+	if cpp_label:
+		var code = ""
+		var arr_str = ", ".join(main_array.map(func(x): return str(x)))
+		match current_code_language:
+			"cpp": code = get_cpp_quick_code(arr_str)
+			"python": code = get_python_quick_code(arr_str)
+			"java": code = get_java_quick_code(arr_str)
+			"c": code = get_c_quick_code(arr_str)
+		
+		var lines = code.split("\n")
+		var highlighted_code = ""
+		var indices = data["lines"]
+		for i in range(lines.size()):
+			if i in indices:
+				highlighted_code += "[color=yellow]" + lines[i] + "[/color]\n"
+			else:
+				highlighted_code += lines[i] + "\n"
+		
+		cpp_label.bbcode_enabled = true
+		cpp_label.text = highlighted_code
+		
+		# --- AUTO SCROLL FIX ---
+		if cpp_scroll and indices.size() > 0:
+			var target_scroll = indices[0] * 20
+			var tween = create_tween()
+			tween.tween_property(cpp_scroll, "scroll_vertical", target_scroll, 0.2).set_trans(Tween.TRANS_SINE)
 
-# --- QUICK SORT CODE STRINGS ---
+# --- QUICK SORT CODE STRINGS WITH PRINTS ---
 
 func get_cpp_quick_code(arr: String) -> String:
 	return """#include <iostream>
 using namespace std;
+
+void printArray(int arr[], int n) {
+	for (int k = 0; k < n; k++) cout << arr[k] << " ";
+	cout << endl;
+}
 
 /*
  * COMPLEXITY:
@@ -594,7 +640,7 @@ void swap(int* a, int* b) {
 	int t = *a; *a = *b; *b = t;
 }
 
-int partition(int arr[], int low, int high) {
+int partition(int arr[], int low, int high, int n) {
 	int pivot = arr[high];
 	int i = (low - 1);
 	for (int j = low; j <= high - 1; j++) {
@@ -607,23 +653,34 @@ int partition(int arr[], int low, int high) {
 	return (i + 1);
 }
 
-void quickSort(int arr[], int low, int high) {
+void quickSort(int arr[], int low, int high, int n) {
 	if (low < high) {
-		int pi = partition(arr, low, high);
-		quickSort(arr, low, pi - 1);
-		quickSort(arr, pi + 1, high);
+		int pi = partition(arr, low, high, n);
+		
+		// Print array after finding pivot
+		cout << "Pivot placed at index " << pi << " | Array: ";
+		printArray(arr, n);
+		
+		quickSort(arr, low, pi - 1, n);
+		quickSort(arr, pi + 1, high, n);
 	}
 }
 
 int main() {
 	int arr[] = { %s };
 	int n = sizeof(arr) / sizeof(arr[0]);
-	quickSort(arr, 0, n - 1);
+	
+	cout << "Initial array: "; printArray(arr, n); cout << endl;
+	
+	quickSort(arr, 0, n - 1, n);
+	
+	cout << "\\nSorted array: "; printArray(arr, n);
 	return 0;
 }""" % arr
 
 func get_python_quick_code(arr: String) -> String:
 	return """# Time: O(n log n) | Space: O(log n)
+
 def partition(arr, low, high):
 	pivot = arr[high]
 	i = low - 1
@@ -637,11 +694,21 @@ def partition(arr, low, high):
 def quick_sort(arr, low, high):
 	if low < high:
 		pi = partition(arr, low, high)
+		
+		# Print array after finding pivot
+		print(f"Pivot placed at index {pi} | Array: {arr}")
+		
 		quick_sort(arr, low, pi - 1)
 		quick_sort(arr, pi + 1, high)
 
-arr = [%s]
-quick_sort(arr, 0, len(arr) - 1)""" % arr
+def main():
+	arr = [%s]
+	print(f"Initial array: {arr}\\n")
+	quick_sort(arr, 0, len(arr) - 1)
+	print(f"\\nSorted array: {arr}")
+
+if __name__ == "__main__":
+	main()""" % arr
 
 func get_java_quick_code(arr: String) -> String:
 	return """// Time: O(n log n) | Space: O(log n)
@@ -662,26 +729,51 @@ class QuickSort {
 		arr[high] = temp;
 		return i+1;
 	}
-	void sort(int arr[], int low, int high) {
+
+	void sort(int arr[], int low, int high, int n) {
 		if (low < high) {
 			int pi = partition(arr, low, high);
-			sort(arr, low, pi-1);
-			sort(arr, pi+1, high);
+			
+			// Print array after finding pivot
+			System.out.print("Pivot placed at index " + pi + " | Array: ");
+			for (int k = 0; k < n; k++) System.out.print(arr[k] + " ");
+			System.out.println();
+			
+			sort(arr, low, pi-1, n);
+			sort(arr, pi+1, high, n);
 		}
 	}
+
 	public static void main(String args[]) {
 		int arr[] = {%s};
-		new QuickSort().sort(arr, 0, arr.length-1);
+		int n = arr.length;
+		
+		System.out.print("Initial array: ");
+		for (int k = 0; k < n; k++) System.out.print(arr[k] + " ");
+		System.out.println("\\n");
+		
+		new QuickSort().sort(arr, 0, n-1, n);
+		
+		System.out.print("\\nSorted array: ");
+		for (int k = 0; k < n; k++) System.out.print(arr[k] + " ");
+		System.out.println();
 	}
 }""" % arr
 
 func get_c_quick_code(arr: String) -> String:
 	return """#include <stdio.h>
 // Time: O(n log n) | Space: O(log n)
+
+void printArray(int arr[], int n) {
+	for (int k = 0; k < n; k++) printf("%d ", arr[k]);
+	printf("\\n");
+}
+
 void swap(int* a, int* b) {
 	int t = *a; *a = *b; *b = t;
 }
-int partition(int arr[], int low, int high) {
+
+int partition(int arr[], int low, int high, int n) {
 	int pivot = arr[high];
 	int i = (low - 1);
 	for (int j = low; j <= high - 1; j++) {
@@ -693,17 +785,31 @@ int partition(int arr[], int low, int high) {
 	swap(&arr[i + 1], &arr[high]);
 	return (i + 1);
 }
-void quickSort(int arr[], int low, int high) {
+
+void quickSort(int arr[], int low, int high, int n) {
 	if (low < high) {
-		int pi = partition(arr, low, high);
-		quickSort(arr, low, pi - 1);
-		quickSort(arr, pi + 1, high);
+		int pi = partition(arr, low, high, n);
+		
+		printf("Pivot placed at index %d | Array: ", pi);
+		printArray(arr, n);
+		
+		quickSort(arr, low, pi - 1, n);
+		quickSort(arr, pi + 1, high, n);
 	}
 }
+
 int main() {
 	int arr[] = {%s};
 	int n = sizeof(arr)/sizeof(arr[0]);
-	quickSort(arr, 0, n - 1);
+	
+	printf("Initial array: ");
+	printArray(arr, n);
+	printf("\\n");
+	
+	quickSort(arr, 0, n - 1, n);
+	
+	printf("\\nSorted array: ");
+	printArray(arr, n);
 	return 0;
 }""" % arr
 

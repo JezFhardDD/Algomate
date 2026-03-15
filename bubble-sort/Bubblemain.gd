@@ -33,7 +33,7 @@ extends Control
 
 # --- CODE VIEW POPUP NODES ---
 @onready var cpp_popup: PopupPanel = get_node_or_null("CppPopup") as PopupPanel
-# NOTE: Ensure this node is a CodeEdit in your scene tree!
+@onready var cpp_scroll: ScrollContainer = get_node_or_null("CppPopup/VBoxContainer/ScrollContainer")
 @onready var cpp_text: RichTextLabel = get_node_or_null("CppPopup/VBoxContainer/ScrollContainer/RichTextLabel") as RichTextLabel
 @onready var cpp_close_btn: Button = get_node_or_null("CppPopup/VBoxContainer/HBoxContainer2/close") as Button
 
@@ -126,11 +126,12 @@ var tutorial_sequence = []
 var tutorial_sequence_index = 0
 var tutorial_in_progress = false
 
-# Intro Text
+# Intro Text (ADDED COMPLEXITY)
 var intro_step: int = 0
 var intro_texts = [
 	"Welcome to Bubble Sort Simulation!\nBubble Sort is a simple algorithm that repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order.",
 	"The Algorithm:\n\n1. Compare the first two elements.\n2. If the left is greater than the right, SWAP them.\n3. Move to the next pair.\n4. Repeat until the largest element 'bubbles' to the end.",
+	"Complexity Analysis:\n\n• Time: O(n²) worst case because of the nested loops checking elements multiple times.\n• Space: O(1) because it sorts entirely in-place without needing extra memory arrays.",
 	"Visual Elements:\n\n• The pointers track the two blocks being compared.\n• The blocks will glow when being checked.\n• You can DRAG blocks to rearrange them before sorting!",
 	"How to Use:\n\n1. Click 'NEXT STEP' to compare one pair.\n2. Click 'AUTO SORT' to watch the whole process."
 ]
@@ -139,46 +140,43 @@ var intro_texts = [
 var current_code_language: String = "cpp"
 var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
-var current_tutorial_data: Array = [] # Stores the active language data
+var current_tutorial_data: Array = [] 
 
-# 1. C++ DATA (FIXED ALIGNMENT)
+# --- PERFECTLY SYNCED HIGHLIGHT MAPPING ---
 var cpp_tutorial_data = [
-	{ "lines": [0, 1], "text": "1. Complexity Analysis:\nBubble Sort has O(n^2) Time Complexity due to nested loops, and O(1) Space Complexity because it sorts in-place." },
-	{ "lines": [2, 3], "text": "2. Imports & Setup:\nIncludes standard libraries and uses the standard namespace." },
-	{ "lines": [6], "text": "3. Outer Loop:\nIterates from 0 to n-1. This controls how many passes we make through the array." },
-	{ "lines": [7], "text": "4. Inner Loop:\nIterates through the unsorted part of the array. The range (n-i-1) decreases each time as large elements bubble to the end." },
-	{ "lines": [8, 9, 10, 11, 12], "text": "5. The Swap:\nWe check if the current element is larger than the next. If so, we swap them using a temporary variable." },
-	{ "lines": [17, 18, 19, 20, 21], "text": "6. Main Function:\nWe initialize the array, calculate its size, and call the bubbleSort function." }
+	{ "lines": [33], "text": "1. Complexity Analysis:\nBubble Sort has [color=yellow]O(N^2) Time[/color] and [color=green]O(1) Space[/color]." },
+	{ "lines": [0, 1], "text": "2. Imports & Setup:\nIncludes standard libraries and namespace." },
+	{ "lines": [4], "text": "3. Outer Loop:\nControls how many passes we make through the array." },
+	{ "lines": [5], "text": "4. Inner Loop:\nThe unsorted range (n-i-1) decreases each time as large elements bubble to the end." },
+	{ "lines": [6, 7, 8, 9, 10], "text": "5. The Swap:\nIf current element > next, swap them using a temporary variable." },
+	{ "lines": [18, 19, 20, 26], "text": "6. Main Function:\nInitialize array, get size, and call the bubbleSort function." }
 ]
 
-# 2. PYTHON DATA
 var python_tutorial_data = [
-	{ "lines": [0, 1, 2], "text": "1. Complexity:\nTime is O(n^2). Space is O(1). Python handles memory automatically." },
-	{ "lines": [3, 4], "text": "2. Function Definition:\nDefines the function and gets the array length." },
-	{ "lines": [5], "text": "3. Outer Loop:\nIterates through the list 'n' times." },
-	{ "lines": [6], "text": "4. Inner Loop:\nThe range reduces by 'i' each time because the end of the list gets sorted first." },
-	{ "lines": [7, 8], "text": "5. Pythonic Swap:\nPython allows swapping two variables in one line without a temporary variable." },
-	{ "lines": [10, 11, 12], "text": "6. Execution:\nWe define the list and call the function." }
+	{ "lines": [16], "text": "1. Complexity:\nTime is [color=yellow]O(N^2)[/color]. Space is [color=green]O(1)[/color]." },
+	{ "lines": [0, 1], "text": "2. Function Definition:\nDefines the function and gets the array length." },
+	{ "lines": [2], "text": "3. Outer Loop:\nIterates through the list 'n' times." },
+	{ "lines": [3], "text": "4. Inner Loop:\nThe range reduces by 'i' each time." },
+	{ "lines": [4, 5], "text": "5. Pythonic Swap:\nPython allows swapping variables in one line without temp." },
+	{ "lines": [8, 9, 11], "text": "6. Execution:\nDefine the list and call the function." }
 ]
 
-# 3. JAVA DATA
 var java_tutorial_data = [
-	{ "lines": [0, 1], "text": "1. Class Structure:\nIn Java, all code must reside inside a Class." },
-	{ "lines": [2, 3], "text": "2. Method Definition:\nWe define the sort method and get the array length." },
-	{ "lines": [4], "text": "3. Outer Loop:\nStandard loop to control passes (n-1 times)." },
-	{ "lines": [5], "text": "4. Inner Loop:\nCompares up to the last unsorted element (n-i-1)." },
-	{ "lines": [6, 7, 8, 9, 10], "text": "5. The Swap:\nIf left > right, we swap them using a temporary integer." },
-	{ "lines": [12, 13, 14, 15, 16], "text": "6. Main Method:\nCreates the BubbleSort object and calls the sort method." }
+	{ "lines": [29], "text": "1. Complexity Analysis:\n[color=yellow]Time: O(N^2)[/color] | [color=green]Space: O(1)[/color]." },
+	{ "lines": [1, 2], "text": "2. Method Definition:\nWe define the sort method and get the array length." },
+	{ "lines": [3], "text": "3. Outer Loop:\nStandard loop to control passes." },
+	{ "lines": [4], "text": "4. Inner Loop:\nCompares up to the last unsorted element." },
+	{ "lines": [5, 6, 7, 8, 9], "text": "5. The Swap:\nIf left > right, we swap them." },
+	{ "lines": [16, 17, 22], "text": "6. Main Method:\nCreates array and calls the sort method." }
 ]
 
-# 4. C DATA
 var c_tutorial_data = [
-	{ "lines": [0, 1], "text": "1. Setup:\nIncludes standard I/O for printing output." },
-	{ "lines": [2, 3], "text": "2. Function Start:\nIn C, variables are often declared at the start of the function scope." },
+	{ "lines": [33], "text": "1. Complexity Analysis:\n[color=yellow]Time: O(N^2)[/color] | [color=green]Space: O(1)[/color]." },
+	{ "lines": [0, 2, 3], "text": "2. Setup & Function:\nIncludes standard I/O and starts function scope." },
 	{ "lines": [4], "text": "3. Outer Loop:\nIterates 'n-1' times to control passes." },
 	{ "lines": [5], "text": "4. Inner Loop:\nIterates through unsorted elements." },
 	{ "lines": [6, 7, 8, 9, 10], "text": "5. The Swap:\nUses a temp variable to swap memory values." },
-	{ "lines": [12, 13, 14, 15], "text": "6. Main:\nPasses the array and its size (calculated via sizeof) to the function." }
+	{ "lines": [18, 19, 20, 26], "text": "6. Main:\nPasses the array and its calculated size." }
 ]
 
 func _ready() -> void:
@@ -506,7 +504,6 @@ func _show_cpp_popup() -> void:
 	var code = ""
 	var arr_str = ", ".join(main_array.map(func(x): return str(x)))
 	
-	# Select Code and Tutorial Data based on Language
 	match current_code_language:
 		"cpp":
 			code = get_cpp_bubble_code(arr_str)
@@ -521,25 +518,23 @@ func _show_cpp_popup() -> void:
 			code = get_c_bubble_code(arr_str)
 			current_tutorial_data = c_tutorial_data
 	
-	cpp_text.text = code
+	if cpp_text:
+		cpp_text.bbcode_enabled = true
+		cpp_text.text = code
+		
 	cpp_popup.popup_centered()
-	
-	# Reset tutorial step
 	cpp_tutorial_step = 0
 	
-	# Connect Button if needed
 	if cpp_next_btn:
 		if not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
 			cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
 	
-	# Always show tutorial panel now
-	cpp_tutorial_panel.show()
+	if cpp_tutorial_panel: cpp_tutorial_panel.show()
 	_update_cpp_tutorial()
 
 func _on_cpp_next_pressed() -> void:
 	btn_sound.play()
 	cpp_tutorial_step += 1
-	# Use current_tutorial_data.size() to support all languages
 	if cpp_tutorial_step >= current_tutorial_data.size():
 		cpp_tutorial_step = 0
 	_update_cpp_tutorial()
@@ -550,14 +545,11 @@ func _update_cpp_tutorial() -> void:
 	
 	var data = current_tutorial_data[cpp_tutorial_step]
 	
-	# 1. Update the explanation text
 	if cpp_explanation_lbl:
+		cpp_explanation_lbl.bbcode_enabled = true
 		cpp_explanation_lbl.text = data["text"]
 	
-	# 2. Handle the Code Highlighting
 	if cpp_text:
-		# We start with a fresh copy of the code from the generator 
-		# based on the current language, so highlights don't "stack"
 		var base_code = ""
 		var arr_str = ", ".join(main_array.map(func(x): return str(x)))
 		
@@ -567,33 +559,33 @@ func _update_cpp_tutorial() -> void:
 			"java": base_code = get_java_bubble_code(arr_str)
 			"c": base_code = get_c_bubble_code(arr_str)
 
-		# Split into lines to inject BBCode
 		var lines = base_code.split("\n")
 		
-		# Apply background color to specific lines from tutorial data
 		for line_idx in data["lines"]:
 			if line_idx >= 0 and line_idx < lines.size():
-				# [bgcolor] highlights the background. 
-				# You can also use [b] for bold or [color=yellow]
 				lines[line_idx] = "[bgcolor=#444400]" + lines[line_idx] + "[/bgcolor]"
 		
-		# Re-enable BBCode and join the strings back together
-		cpp_text.bbcode_enabled = true
 		cpp_text.text = "\n".join(lines)
 		
-		# 3. Scroll to the first highlighted line
+		# --- AUTO SCROLL FIX ---
 		if data["lines"].size() > 0:
-			var target_line = data["lines"][0]
-			# Small delay helps ensure the UI has updated its layout before scrolling
-			await get_tree().process_frame 
-			cpp_text.scroll_to_line(target_line)
+			call_deferred("_scroll_to_highlight", data["lines"][0])
 
-# --- CODE GENERATION FUNCTIONS (FIXED) ---
+func _scroll_to_highlight(line_index: int) -> void:
+	var target_scroll = line_index * 26
+	if cpp_scroll:
+		var tween = create_tween()
+		tween.tween_property(cpp_scroll, "scroll_vertical", target_scroll, 0.2).set_trans(Tween.TRANS_SINE)
+	elif cpp_text:
+		var scrollbar = cpp_text.get_v_scroll_bar()
+		if scrollbar:
+			var tween = create_tween()
+			tween.tween_property(scrollbar, "value", target_scroll, 0.2).set_trans(Tween.TRANS_SINE)
+
+# --- CODE GENERATION FUNCTIONS WITH PRINTS & COMPLEXITY ---
 
 func get_cpp_bubble_code(arr: String) -> String:
-	return """/* Time Complexity: O(n^2)
-   Space Complexity: O(1) */
-#include <iostream>
+	return """#include <iostream>
 using namespace std;
 
 void bubbleSort(int arr[], int n) {
@@ -605,69 +597,115 @@ void bubbleSort(int arr[], int n) {
 				arr[j + 1] = temp;
 			}
 		}
+		cout << "Pass " << i + 1 << ": ";
+		for (int k = 0; k < n; k++) cout << arr[k] << " ";
+		cout << endl;
 	}
 }
 
 int main() {
 	int arr[] = { %s };
 	int n = sizeof(arr) / sizeof(arr[0]);
+	
+	cout << "Initial array: ";
+	for (int i = 0; i < n; i++) cout << arr[i] << " ";
+	cout << "\\n\\n";
+	
 	bubbleSort(arr, n);
+	
+	cout << "\\nSorted array: ";
+	for (int i = 0; i < n; i++) cout << arr[i] << " ";
+	cout << endl;
 	return 0;
-}""" % arr
+}
+/* Complexity: Time O(N^2) | Space O(1) */""" % arr
 
 func get_python_bubble_code(arr: String) -> String:
-	return """# Time Complexity: O(n^2)
-# Space Complexity: O(1)
-
-def bubble_sort(arr):
+	return """def bubble_sort(arr):
 	n = len(arr)
 	for i in range(n):
 		for j in range(0, n - i - 1):
 			if arr[j] > arr[j + 1]:
 				arr[j], arr[j + 1] = arr[j + 1], arr[j]
+		print(f"Pass {i + 1}: {arr}")
 
-arr = [%s]
-bubble_sort(arr)
-print("Sorted:", arr)""" % arr
+def main():
+	arr = [%s]
+	print(f"Initial array: {arr}\\n")
+	bubble_sort(arr)
+	print(f"\\nSorted array: {arr}")
+
+if __name__ == "__main__":
+	main()
+''' Complexity: Time O(N^2) | Space O(1) '''""" % arr
 
 func get_java_bubble_code(arr: String) -> String:
-	return """/* Time Complexity: O(n^2) */
-class BubbleSort {
-	void sort(int arr[]) {
+	return """class BubbleSort {
+	static void sort(int arr[]) {
 		int n = arr.length;
-		for (int i = 0; i < n - 1; i++)
-			for (int j = 0; j < n - i - 1; j++)
+		for (int i = 0; i < n - 1; i++) {
+			for (int j = 0; j < n - i - 1; j++) {
 				if (arr[j] > arr[j + 1]) {
 					int temp = arr[j];
 					arr[j] = arr[j + 1];
 					arr[j + 1] = temp;
 				}
+			}
+			System.out.print("Pass " + (i + 1) + ": ");
+			for (int k = 0; k < n; k++) System.out.print(arr[k] + " ");
+			System.out.println();
+		}
 	}
 	public static void main(String args[]) {
 		int arr[] = {%s};
-		BubbleSort ob = new BubbleSort();
-		ob.sort(arr);
+		System.out.print("Initial array: ");
+		for (int i = 0; i < arr.length; i++) System.out.print(arr[i] + " ");
+		System.out.println("\\n");
+		
+		sort(arr);
+		
+		System.out.print("\\nSorted array: ");
+		for (int i = 0; i < arr.length; i++) System.out.print(arr[i] + " ");
+		System.out.println();
 	}
-}""" % arr
+}
+/* Complexity: Time O(N^2) | Space O(1) */""" % arr
 
 func get_c_bubble_code(arr: String) -> String:
-	return """/* Time Complexity: O(n^2) */
-#include <stdio.h>
+	return """#include <stdio.h>
+
 void bubbleSort(int arr[], int n) {
 	int i, j, temp;
-	for (i = 0; i < n - 1; i++)
-		for (j = 0; j < n - i - 1; j++)
+	for (i = 0; i < n - 1; i++) {
+		for (j = 0; j < n - i - 1; j++) {
 			if (arr[j] > arr[j + 1]) {
 				temp = arr[j];
 				arr[j] = arr[j + 1];
 				arr[j + 1] = temp;
 			}
+		}
+		printf("Pass %d: ", i + 1);
+		for (int k = 0; k < n; k++) printf("%d ", arr[k]);
+		printf("\\n");
+	}
 }
+
 int main() {
 	int arr[] = {%s};
-	bubbleSort(arr, sizeof(arr)/sizeof(arr[0]));
+	int n = sizeof(arr)/sizeof(arr[0]);
+	
+	printf("Initial array: ");
+	for (int i = 0; i < n; i++) printf("%d ", arr[i]);
+	printf("\\n\\n");
+	
+	bubbleSort(arr, n);
+	
+	printf("\\nSorted array: ");
+	for (int i = 0; i < n; i++) printf("%d ", arr[i]);
+	printf("\\n");
 	return 0;
-}""" % arr
+}
+/* Complexity: Time O(N^2) | Space O(1) */""" % arr
 
 # ==============================================
 #   APP TUTORIAL

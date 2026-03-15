@@ -1,0 +1,139 @@
+[gd_scene load_steps=11 format=3 uid="uid://k04bubif72v"]
+
+[ext_resource type="PackedScene" uid="uid://dpvktvrg6xmxb" path="res://scene/SSA.tscn" id="1_tle6u"]
+[ext_resource type="Script" uid="uid://1g7h1g67vsp6" path="res://script/qsa.gd" id="2_jigj7"]
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="3_77nty"]
+[ext_resource type="Texture2D" uid="uid://dcxstyoycht1w" path="res://assets/BUTTON_HOVERED.png" id="4_au56b"]
+[ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="5_nwtjd"]
+[ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="6_sqki8"]
+[ext_resource type="Texture2D" uid="uid://d0fqltlbp2rjh" path="res://assets/crown.png" id="7_77nty"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xr2c2"]
+texture = ExtResource("6_sqki8")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6uwwj"]
+texture = ExtResource("5_nwtjd")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iuqvf"]
+texture = ExtResource("4_au56b")
+
+[node name="Main2" instance=ExtResource("1_tle6u")]
+script = ExtResource("2_jigj7")
+
+[node name="VBoxContainer" parent="." index="6"]
+offset_left = 38.0
+offset_bottom = 579.0
+theme_override_constants/separation = 20
+
+[node name="PivotButton" type="Button" parent="VBoxContainer" index="1"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_77nty")
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxTexture_xr2c2")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_6uwwj")
+theme_override_styles/hover = SubResource("StyleBoxTexture_iuqvf")
+text = "Pivot"
+
+[node name="MoveIButton" type="Button" parent="VBoxContainer" index="2"]
+self_modulate = Color(0, 0, 1, 1)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 0, 1)
+theme_override_colors/icon_normal_color = Color(1, 1, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_77nty")
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxTexture_xr2c2")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_6uwwj")
+theme_override_styles/hover = SubResource("StyleBoxTexture_iuqvf")
+text = "Move I"
+
+[node name="MoveJButton" type="Button" parent="VBoxContainer" index="3"]
+self_modulate = Color(1, 1, 0, 1)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_normal_color = Color(1, 1, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_77nty")
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxTexture_xr2c2")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_6uwwj")
+theme_override_styles/hover = SubResource("StyleBoxTexture_iuqvf")
+text = "Move J"
+
+[node name="PlacePivotButton" type="Button" parent="VBoxContainer" index="4"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_77nty")
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("StyleBoxTexture_xr2c2")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_6uwwj")
+theme_override_styles/hover = SubResource("StyleBoxTexture_iuqvf")
+text = "Place Pivot"
+
+[node name="SortButton" parent="VBoxContainer" index="5"]
+visible = false
+
+[node name="WaitingElements" parent="VBoxContainer" index="6"]
+visible = false
+
+[node name="PassButton" parent="VBoxContainer" index="7"]
+visible = false
+
+[node name="RecursionMap" type="Control" parent="." index="29"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 62.5
+offset_right = 281.5
+offset_bottom = 217.0
+grow_horizontal = 2
+
+[node name="StatusLabel" type="Label" parent="." index="30"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -163.5
+offset_top = 268.0
+offset_right = 136.5
+offset_bottom = 326.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.798606, 0.297283, 0.305922, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_77nty")
+theme_override_font_sizes/font_size = 30
+text = "ccccccc"
+
+[node name="SubArrayOutlineLeft" type="ColorRect" parent="." index="31"]
+visible = false
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+color = Color(0, 0, 1, 0.3)
+
+[node name="SubArrayOutlineRight" type="ColorRect" parent="." index="32"]
+visible = false
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+color = Color(1, 1, 0, 0.3)
+
+[node name="PivotIndicator" type="Sprite2D" parent="." index="33"]
+texture = ExtResource("7_77nty")

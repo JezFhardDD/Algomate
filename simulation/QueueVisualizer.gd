@@ -124,41 +124,41 @@ var cpp_tutorial_texts := [
 var cpp_tutorialcode_index := 0
 var current_tutorial_data: Array = [] 
 
-# --- CODE TUTORIAL STEPS ---
+# --- CODE TUTORIAL STEPS (QUEUE WITH LIVE PRINTS) ---
 var cpp_tutorial_steps := [
-	{"lines": Vector2i(0, 2), "text": "1. Imports: <iostream> for I/O and <queue> for the standard container."},
-	{"lines": Vector2i(3, 6), "text": "2. Main Setup: We define the array and initialize a standard `queue<int>`."},
-	{"lines": Vector2i(7, 11), "text": "3. Enqueue Loop: We iterate through the array and `push()` elements into the queue."},
-	{"lines": Vector2i(12, 16), "text": "4. Print Initial: We display the queue state (using a copy to avoid modifying the real one)."},
-	{"lines": Vector2i(17, 23), "text": "5. Dequeue Loop: We `pop()` elements from the front one by one until empty."},
-	{"lines": Vector2i(24, 28), "text": "6. End: The simulation finishes when the queue is empty."}
+	{"lines": Vector2i(0, 1), "text": "1. Imports: <iostream> for I/O and <queue> for the standard container."},
+	{"lines": Vector2i(4, 7), "text": "2. Main Setup: We define the array and initialize a standard `queue<int>`."},
+	{"lines": Vector2i(9, 18), "text": "3. Enqueue Loop: Iterate, push to the back, and use a copy to print the current queue state."},
+	{"lines": Vector2i(20, 21), "text": "4. Print Initial: We display the front element of the queue before dequeuing."},
+	{"lines": Vector2i(23, 33), "text": "5. Dequeue Loop: We get `front()`, `pop()` it, and print the remaining queue elements."},
+	{"lines": Vector2i(35, 37), "text": "6. End: The simulation finishes when the queue is empty."}
 ]
 
 var python_tutorial_steps := [
-	{"lines": Vector2i(0, 1), "text": "1. Imports: We import `deque` from collections for an efficient queue."},
-	{"lines": Vector2i(3, 5), "text": "2. Main Setup: Define the list and create an empty deque."},
-	{"lines": Vector2i(8, 9), "text": "3. Enqueue: Use `append()` to add elements to the right side."},
-	{"lines": Vector2i(11, 14), "text": "4. Print: Display the queue contents without removing them."},
-	{"lines": Vector2i(16, 19), "text": "5. Dequeue: Use `popleft()` to remove elements from the front."},
-	{"lines": Vector2i(21, 24), "text": "6. Execution: Run the main function."}
+	{"lines": Vector2i(0, 4), "text": "1. Setup: In Python, we import `deque` to act efficiently as a queue."},
+	{"lines": Vector2i(6, 8), "text": "2. Enqueue Loop: Use `append()` to add elements to the back and print the list."},
+	{"lines": Vector2i(10, 11), "text": "3. Print: Display the initial queue front and start dequeuing."},
+	{"lines": Vector2i(13, 15), "text": "4. Dequeue Loop: Use `popleft()` to remove the first element added and print the remaining queue."},
+	{"lines": Vector2i(17, 17), "text": "5. End: The simulation finishes."},
+	{"lines": Vector2i(19, 20), "text": "6. Execution: Run the main function."}
 ]
 
 var java_tutorial_steps := [
-	{"lines": Vector2i(0, 4), "text": "1. Imports & Class: Java uses `LinkedList` as a Queue implementation."},
-	{"lines": Vector2i(5, 7), "text": "2. Setup: Initialize the array and the Queue object."},
-	{"lines": Vector2i(10, 12), "text": "3. Enqueue: Use `q.add(value)` to insert elements at the rear."},
-	{"lines": Vector2i(14, 19), "text": "4. Print: Create a copy to traverse and print the queue."},
-	{"lines": Vector2i(22, 25), "text": "5. Dequeue: Use `q.poll()` to remove and return the front element."},
-	{"lines": Vector2i(27, 28), "text": "6. End: Simulation complete."}
+	{"lines": Vector2i(0, 3), "text": "1. Imports & Class: Import the `Queue` interface and `LinkedList` class."},
+	{"lines": Vector2i(4, 6), "text": "2. Setup: Initialize the array and the Queue object."},
+	{"lines": Vector2i(8, 11), "text": "3. Enqueue Loop: Use `q.add(value)` to place items at the rear and print the state."},
+	{"lines": Vector2i(13, 14), "text": "4. Print: Display the initial queue front using `q.peek()`."},
+	{"lines": Vector2i(16, 19), "text": "5. Dequeue Loop: Use `q.poll()` to remove the front item and print the remaining queue."},
+	{"lines": Vector2i(20, 22), "text": "6. End: Simulation complete."}
 ]
 
 var c_tutorial_steps := [
-	{"lines": Vector2i(0, 9), "text": "1. Struct Definition: In C, we manually define a Queue struct with an array and pointers."},
-	{"lines": Vector2i(11, 45), "text": "2. Helper Functions: Logic for `enqueue`, `dequeue`, `isEmpty`, and `isFull`."},
-	{"lines": Vector2i(47, 52), "text": "3. Main: Initialize the queue struct and array."},
-	{"lines": Vector2i(55, 57), "text": "4. Enqueue Loop: Add items using our helper function."},
-	{"lines": Vector2i(60, 63), "text": "5. Print: Iterate from `front` to `rear` index."},
-	{"lines": Vector2i(66, 69), "text": "6. Dequeue Loop: Remove items until `isEmpty` returns true."}
+	{"lines": Vector2i(0, 7), "text": "1. Struct Definition: In C, we manually define a Queue struct with front and rear pointers."},
+	{"lines": Vector2i(9, 29), "text": "2. Helper Functions: Logic for `enqueue`, `dequeue`, `isEmpty`, and `printQueue`."},
+	{"lines": Vector2i(31, 35), "text": "3. Main Setup: Initialize the queue struct and array."},
+	{"lines": Vector2i(37, 42), "text": "4. Enqueue Loop: Add items using `enqueue()` and loop to print the updated queue."},
+	{"lines": Vector2i(44, 45), "text": "5. Print Initial: Display the queue front."},
+	{"lines": Vector2i(47, 52), "text": "6. Dequeue Loop: Remove items using `dequeue()` and print the remaining queue."}
 ]
 
 # 🧮 Complexity display
@@ -1171,6 +1171,10 @@ func generate_code_in_language(lang: String, source_arr: Array) -> String:
 		_:  # Default to C++
 			return generate_cpp_code(arr_str, n)
 
+# ==============================================
+#   CODE GENERATION FUNCTIONS (WITH LIVE PRINTS)
+# ==============================================
+
 func generate_cpp_code(arr_str: String, _n: int) -> String:
 	return """#include <iostream>
 #include <queue>
@@ -1181,123 +1185,101 @@ int main() {
 	int n = sizeof(arr) / sizeof(arr[0]);
 	queue<int> q;
 
-	for (int i = 0; i < n; ++i) 
+	for (int i = 0; i < n; ++i) {
 		q.push(arr[i]);
-
-	cout << "Initial queue:";
-	queue<int> copy = q;
-	while (!copy.empty()) {
-		cout << " " << copy.front();
-		copy.pop();
+		cout << "Enqueued " << arr[i] << " | Queue: ";
+		queue<int> temp = q; // Copy to print without modifying
+		while (!temp.empty()) {
+			cout << temp.front() << " ";
+			temp.pop();
+		}
+		cout << endl;
 	}
-	cout << endl;
 
+	cout << "\\nInitial queue front: " << q.front() << endl;
 	cout << "Dequeuing..." << endl;
+
 	while (!q.empty()) {
-		cout << "Dequeued: " << q.front() << endl;
+		int dequeued = q.front();
 		q.pop();
+		cout << "Dequeued " << dequeued << " | Queue: ";
+		queue<int> temp = q;
+		while (!temp.empty()) {
+			cout << temp.front() << " ";
+			temp.pop();
+		}
+		cout << endl;
 	}
 
 	cout << "Simulation finished." << endl;
 	return 0;
 }
-
 /*
----------------------------------------
- Time Complexity:
-%s
-
- Space Complexity:
-%s
----------------------------------------
-*/
-""" % [arr_str, get_time_complexity(), get_space_complexity()]
+ Complexity:
+ Time: %s
+ Space: %s
+*/""" % [arr_str, get_time_complexity(), get_space_complexity()]
 
 func generate_python_code(arr_str: String, _n: int) -> String:
-	return """# Queue Simulation in Python
-from collections import deque
+	return """from collections import deque
 
 def main():
 	arr = [%s]
 	q = deque()
 	
-	# Enqueue all elements
 	for value in arr:
 		q.append(value)
+		print(f"Enqueued {value} | Queue: {list(q)}")
 	
-	print("Initial queue:", end="")
-	# Create a copy to print without modifying queue
-	for value in list(q):
-		print(f" {value}", end="")
-	print()
-	
+	print(f"\\nInitial queue front: {q[0]}")
 	print("Dequeuing...")
-	# Dequeue all elements
-	while q:
-		print(f"Dequeued: {q.popleft()}")
+	
+	while len(q) > 0:
+		dequeued = q.popleft()
+		print(f"Dequeued {dequeued} | Queue: {list(q)}")
 	
 	print("Simulation finished.")
 
 if __name__ == "__main__":
 	main()
-
 '''
----------------------------------------
- Time Complexity:
-%s
-
- Space Complexity:
-%s
----------------------------------------
-'''
-""" % [arr_str, get_time_complexity(), get_space_complexity()]
+ Complexity:
+ Time: %s
+ Space: %s
+'''""" % [arr_str, get_time_complexity(), get_space_complexity()]
 
 func generate_java_code(arr_str: String, _n: int) -> String:
 	return """import java.util.LinkedList;
 import java.util.Queue;
 
-public class QueueSimulation {
+public class QueueSim {
 	public static void main(String[] args) {
 		int[] arr = {%s};
 		Queue<Integer> q = new LinkedList<>();
 		
-		// Enqueue all elements
 		for (int value : arr) {
 			q.add(value);
+			System.out.println("Enqueued " + value + " | Queue: " + q);
 		}
 		
-		System.out.print("Initial queue:");
-		// Create a copy to print without modifying queue
-		Queue<Integer> copy = new LinkedList<>(q);
-		while (!copy.isEmpty()) {
-			System.out.print(" " + copy.poll());
-		}
-		System.out.println();
-		
+		System.out.println("\\nInitial queue front: " + q.peek());
 		System.out.println("Dequeuing...");
-		// Dequeue all elements
-		while (!q.isEmpty()) {
-			System.out.println("Dequeued: " + q.poll());
-		}
 		
+		while (!q.isEmpty()) {
+			int dequeued = q.poll();
+			System.out.println("Dequeued " + dequeued + " | Queue: " + q);
+		}
 		System.out.println("Simulation finished.");
 	}
 }
-
 /*
----------------------------------------
- Time Complexity:
-%s
-
- Space Complexity:
-%s
----------------------------------------
-*/
-""" % [arr_str, get_time_complexity(), get_space_complexity()]
+ Complexity:
+ Time: %s
+ Space: %s
+*/""" % [arr_str, get_time_complexity(), get_space_complexity()]
 
 func generate_c_code(arr_str: String, _n: int) -> String:
 	return """#include <stdio.h>
-
 #define MAX_SIZE 100
 
 typedef struct {
@@ -1306,42 +1288,26 @@ typedef struct {
 	int rear;
 } Queue;
 
-void initQueue(Queue *q) {
-	q->front = -1;
-	q->rear = -1;
-}
-
-int isFull(Queue *q) {
-	return q->rear == MAX_SIZE - 1;
-}
-
-int isEmpty(Queue *q) {
-	return q->front == -1;
-}
+void initQueue(Queue *q) { q->front = -1; q->rear = -1; }
+int isFull(Queue *q) { return q->rear == MAX_SIZE - 1; }
+int isEmpty(Queue *q) { return q->front == -1 || q->front > q->rear; }
 
 void enqueue(Queue *q, int value) {
-	if (isFull(q)) {
-		printf("Queue is full!\\n");
-		return;
-	}
-	if (isEmpty(q)) {
-		q->front = 0;
-	}
-	q->rear++;
-	q->items[q->rear] = value;
+	if (isFull(q)) { printf("Queue full!\\n"); return; }
+	if (q->front == -1) q->front = 0;
+	q->items[++(q->rear)] = value;
 }
 
 int dequeue(Queue *q) {
-	if (isEmpty(q)) {
-		printf("Queue is empty!\\n");
-		return -1;
+	if (isEmpty(q)) { printf("Queue empty!\\n"); return -1; }
+	return q->items[(q->front)++];
+}
+
+void printQueue(Queue *q) {
+	if (isEmpty(q)) return;
+	for (int i = q->front; i <= q->rear; i++) {
+		printf("%d ", q->items[i]);
 	}
-	int item = q->items[q->front];
-	q->front++;
-	if (q->front > q->rear) {
-		q->front = q->rear = -1;
-	}
-	return item;
 }
 
 int main() {
@@ -1350,38 +1316,27 @@ int main() {
 	Queue q;
 	initQueue(&q);
 	
-	// Enqueue all elements
 	for (int i = 0; i < n; i++) {
 		enqueue(&q, arr[i]);
+		printf("Enqueued %d | Queue: ", arr[i]);
+		printQueue(&q);
+		printf("\\n");
 	}
 	
-	printf("Initial queue:");
-	// Print queue (simplified - real implementation would need copy)
-	for (int i = q.front; i <= q.rear; i++) {
-		printf(" %d", q.items[i]);
-	}
-	printf("\\n");
-	
+	printf("\\nInitial queue front: %d\\n", q.items[q.front]);
 	printf("Dequeuing...\\n");
-	// Dequeue all elements
+	
 	while (!isEmpty(&q)) {
-		printf("Dequeued: %d\\n", dequeue(&q));
+		int dequeued = dequeue(&q);
+		printf("Dequeued %d | Queue: ", dequeued);
+		printQueue(&q);
+		printf("\\n");
 	}
 	
 	printf("Simulation finished.\\n");
 	return 0;
 }
-
-/*
----------------------------------------
- Time Complexity:
-%s
-
- Space Complexity:
-%s
----------------------------------------
-*/
-""" % [arr_str, get_time_complexity(), get_space_complexity()]
+/* Complexity: Time: %s | Space: %s */""" % [arr_str, get_time_complexity(), get_space_complexity()]
 
 func _on_cpp_lang_button_pressed() -> void:
 	btn_sound.play()

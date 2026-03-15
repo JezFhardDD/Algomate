@@ -1,0 +1,66 @@
+[gd_scene load_steps=5 format=3 uid="uid://us5ckewr8set"]
+
+[ext_resource type="PackedScene" uid="uid://d1w3nmik7e8xh" path="res://scene/BNYSA.tscn" id="1_8t01h"]
+[ext_resource type="Script" uid="uid://cc0xisw6htu17" path="res://script/ipsa.gd" id="2_30c7k"]
+[ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="3_eygce"]
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="4_u062t"]
+
+[node name="Main" instance=ExtResource("1_8t01h")]
+script = ExtResource("2_30c7k")
+
+[node name="DiificultyLabel" parent="." index="5"]
+text = "Difficulty: Medium"
+
+[node name="QueueContainer" parent="." index="7"]
+offset_left = 244.0
+offset_top = 302.0
+offset_right = 444.0
+offset_bottom = 502.0
+
+[node name="CppPopup" parent="." index="12"]
+size = Vector2i(789, 659)
+visible = true
+
+[node name="VBoxContainer" parent="CppPopup" index="1"]
+offset_right = 774.0
+
+[node name="HSeparator2" parent="CppPopup/VBoxContainer/TutorialPanel" index="0"]
+offset_left = -2.0
+offset_right = 592.0
+
+[node name="TargetLabel" parent="." index="29"]
+offset_left = -125.5
+offset_top = -290.0
+offset_right = 355.5
+offset_bottom = -190.0
+theme_override_font_sizes/font_size = 30
+text = "GHDQWUODHQWHDOQWIDH"
+
+[node name="FormulaLabel" type="RichTextLabel" parent="." index="30"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -276.5
+offset_top = -130.0
+offset_right = 523.5
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/normal_font = ExtResource("4_u062t")
+theme_override_font_sizes/normal_font_size = 30
+text = "THEYEWUDGQWHDUQWKBDQWDHQWIDHIHQWIDHDIWHQDIHWQIDIHWQIDHWIQDHIHDIWHQIJ"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect2" type="TextureRect" parent="." index="31"]
+visible = false
+layout_mode = 0
+offset_left = 346.0
+offset_top = 150.0
+offset_right = 948.0
+offset_bottom = 461.0
+texture = ExtResource("3_eygce")

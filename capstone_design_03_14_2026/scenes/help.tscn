@@ -1,0 +1,181 @@
+[gd_scene load_steps=11 format=3 uid="uid://01exuv6dl3no"]
+
+[ext_resource type="Shader" path="res://scripts/lectures_bg.gdshader" id="1_2by0i"]
+[ext_resource type="Script" path="res://scripts/help.gd" id="1_2c3wl"]
+[ext_resource type="LabelSettings" path="res://content_label.tres" id="3_2c3wl"]
+[ext_resource type="PackedScene" uid="uid://pw1kjcephyld" path="res://scenes/navigation.tscn" id="4_hq4sr"]
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="4_k347r"]
+[ext_resource type="Texture2D" uid="uid://binxvpneifapc" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/BACK_BUTTON_GREEN.png" id="5_oar4r"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k347r"]
+shader = ExtResource("1_2by0i")
+shader_parameter/speed = -0.01
+shader_parameter/density = 6.735
+shader_parameter/min_size = 0.22
+shader_parameter/max_size = 0.595
+shader_parameter/min_alpha = -0.02
+shader_parameter/max_alpha = 0.16
+shader_parameter/bg_color = Color(0.0054205894, 0.010314448, 0.0010165456, 1)
+shader_parameter/block_color = Color(0.44442868, 0.3516433, 0.65966636, 1)
+shader_parameter/accent_color = Color(0.60869926, 0.75365275, 0.38074076, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_mpb58"]
+font = ExtResource("4_k347r")
+font_size = 40
+
+[sub_resource type="LabelSettings" id="LabelSettings_i3xxq"]
+font = ExtResource("4_k347r")
+font_size = 55
+
+[sub_resource type="LabelSettings" id="LabelSettings_0eisp"]
+font = ExtResource("4_k347r")
+font_size = 55
+
+[node name="Help" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2c3wl")
+
+[node name="BG" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_k347r")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.47843137, 0.6627451, 0.22352941, 1)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -271.0
+offset_top = 147.0
+offset_right = 286.6383
+offset_bottom = 147.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.94, 0.94)
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="Content" type="VBoxContainer" parent="ScrollContainer"]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 60
+
+[node name="TitleLabel" type="Label" parent="ScrollContainer/Content"]
+layout_mode = 2
+text = "Help & Support"
+label_settings = SubResource("LabelSettings_mpb58")
+horizontal_alignment = 1
+
+[node name="Section1" type="VBoxContainer" parent="ScrollContainer/Content"]
+layout_mode = 2
+
+[node name="HeadingLabel" type="Label" parent="ScrollContainer/Content/Section1"]
+layout_mode = 2
+text = "Getting Started"
+label_settings = SubResource("LabelSettings_i3xxq")
+horizontal_alignment = 1
+
+[node name="ContentLabel" type="Label" parent="ScrollContainer/Content/Section1"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+text = "• Create a profile with your name and picture
+• Click START to begin learning
+• Your progress is automatically saved"
+label_settings = ExtResource("3_2c3wl")
+autowrap_mode = 2
+
+[node name="Section2" type="VBoxContainer" parent="ScrollContainer/Content"]
+layout_mode = 2
+
+[node name="HeadingLabel" type="Label" parent="ScrollContainer/Content/Section2"]
+layout_mode = 2
+text = "Navigation"
+label_settings = SubResource("LabelSettings_0eisp")
+horizontal_alignment = 1
+
+[node name="ContentLabel" type="Label" parent="ScrollContainer/Content/Section2"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+text = "• Swipe left/right to switch between topics
+• Tap the menu icon or swipe from left edge to open sidebar
+• Use the back button to return to previous screens"
+label_settings = ExtResource("3_2c3wl")
+autowrap_mode = 2
+
+[node name="Section3" type="VBoxContainer" parent="ScrollContainer/Content"]
+layout_mode = 2
+
+[node name="HeadingLabel" type="Label" parent="ScrollContainer/Content/Section3"]
+layout_mode = 2
+text = "Learning Features"
+label_settings = SubResource("LabelSettings_0eisp")
+horizontal_alignment = 1
+
+[node name="ContentLabel" type="Label" parent="ScrollContainer/Content/Section3"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+text = "• Lectures: Tap any topic to view detailed explanations
+• Assessments: Test your knowledge after each topic
+• Progress: Track your completed assessments"
+label_settings = ExtResource("3_2c3wl")
+autowrap_mode = 2
+
+[node name="Section4" type="VBoxContainer" parent="ScrollContainer/Content"]
+layout_mode = 2
+
+[node name="HeadingLabel" type="Label" parent="ScrollContainer/Content/Section4"]
+layout_mode = 2
+text = "FAQs"
+label_settings = SubResource("LabelSettings_0eisp")
+horizontal_alignment = 1
+
+[node name="ContentLabel" type="Label" parent="ScrollContainer/Content/Section4"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+text = "Q: How do I change my profile picture?
+A: Reset your profile and create a new one
+
+Q: Does progress save automatically?
+A: Yes! Progress is saved after each assessment
+
+Q: Is this app mobile-friendly?
+A: No. It's for mobile only
+
+
+"
+label_settings = ExtResource("3_2c3wl")
+autowrap_mode = 2
+
+[node name="navigation" parent="." instance=ExtResource("4_hq4sr")]
+layout_mode = 1
+offset_top = 3.0
+offset_bottom = 107.0
+
+[node name="back_button" type="TextureButton" parent="."]
+z_index = 10
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.032407407
+anchor_top = 0.111111104
+anchor_right = 0.11364198
+anchor_bottom = 0.202717
+offset_right = -28.639996
+offset_bottom = -57.416016
+scale = Vector2(2.1933331, 2.1933331)
+texture_normal = ExtResource("5_oar4r")
+metadata/_edit_use_anchors_ = true
+
+[connection signal="pressed" from="back_button" to="." method="_on_back_button_pressed"]

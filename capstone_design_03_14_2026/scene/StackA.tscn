@@ -1,0 +1,108 @@
+[gd_scene load_steps=4 format=3 uid="uid://cq3gb15j1tlfe"]
+
+[ext_resource type="PackedScene" uid="uid://dq6ebtkxu3lbb" path="res://scene/ArrayA.tscn" id="1_uagsq"]
+[ext_resource type="Script" uid="uid://dfi0lmpdochof" path="res://script/stack_a.gd" id="2_8anxq"]
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="3_babkl"]
+
+[node name="Main2" instance=ExtResource("1_uagsq")]
+script = ExtResource("2_8anxq")
+
+[node name="TimeUpPopup" parent="." index="0"]
+oversampling_override = 1.0
+
+[node name="rear" parent="TextureRect" index="0"]
+visible = true
+offset_left = 728.0
+offset_top = 171.0
+offset_right = 815.0
+offset_bottom = 216.0
+text = "Top"
+
+[node name="rear3" type="Label" parent="TextureRect" index="1"]
+layout_mode = 0
+offset_left = 696.0
+offset_top = 461.0
+offset_right = 813.0
+offset_bottom = 506.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0.402513, 0.404221, 0.449845, 1)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/outline_size = 4
+theme_override_constants/shadow_outline_size = 10
+theme_override_fonts/font = ExtResource("3_babkl")
+theme_override_font_sizes/font_size = 36
+text = "Bottom"
+
+[node name="AnimatedSprite2D" parent="VBoxContainer/HBoxContainer" index="0"]
+position = Vector2(8, 17)
+
+[node name="QueueContainer" parent="." index="7"]
+anchors_preset = -1
+anchor_left = 0.44058976
+anchor_top = 0.012383901
+anchor_right = 0.6140508
+anchor_bottom = 0.85603696
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="CppCodeButton" parent="." index="13"]
+visible = false
+
+[node name="MarginContainer" parent="." index="29"]
+offset_left = 289.5
+offset_top = -178.0
+offset_right = 539.5
+offset_bottom = -108.0
+
+[node name="TargetLabel" parent="." index="31"]
+anchors_preset = 5
+anchor_top = 0.0
+anchor_bottom = 0.0
+offset_left = 283.5
+offset_top = 307.0
+offset_right = 536.5
+offset_bottom = 364.0
+grow_vertical = 1
+horizontal_alignment = 1
+
+[node name="CommandProgressLabel" parent="." index="32"]
+offset_left = 281.5
+offset_top = -130.0
+offset_right = 547.5
+offset_bottom = -42.0
+text = "dasdasdasdasddsa"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="SpawnArea" parent="." index="33"]
+mouse_filter = 1
+
+[node name="Label" parent="SpawnArea" index="0"]
+offset_left = -15.0
+offset_top = -36.0
+offset_right = 107.0
+offset_bottom = 4.0
+
+[node name="SpawnSlot" parent="SpawnArea" index="1"]
+z_index = 10
+offset_left = 22.0
+offset_top = 2.0
+offset_right = 22.0
+offset_bottom = 2.0
+mouse_filter = 1
+
+[node name="Area2D" parent="." index="34"]
+position = Vector2(364, 454)
+
+[node name="Label2" parent="." index="35"]
+offset_left = 271.0
+offset_top = 533.0
+offset_right = 454.0
+offset_bottom = 598.0
+theme_override_font_sizes/font_size = 20

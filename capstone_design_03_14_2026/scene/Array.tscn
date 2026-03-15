@@ -1,0 +1,413 @@
+[gd_scene load_steps=23 format=3 uid="uid://dt60pmkulclpg"]
+
+[ext_resource type="PackedScene" uid="uid://cnlp6jn1v8wse" path="res://scene/BBSA.tscn" id="1_85hwj"]
+[ext_resource type="Script" uid="uid://63r0il4jv1uy" path="res://script/array.gd" id="2_sjaiv"]
+[ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="3_dq125"]
+[ext_resource type="Script" uid="uid://bs2yddbychbqq" path="res://script/array_action_modal.gd" id="4_xywgn"]
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="5_njl6h"]
+[ext_resource type="Texture2D" uid="uid://dcxstyoycht1w" path="res://assets/BUTTON_HOVERED.png" id="6_x3etq"]
+[ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="7_rsgdm"]
+[ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="8_2oo6p"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dq125"]
+texture = ExtResource("6_x3etq")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xywgn"]
+texture = ExtResource("7_rsgdm")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_njl6h"]
+texture = ExtResource("8_2oo6p")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r5aow"]
+texture = ExtResource("3_dq125")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wuire"]
+texture = ExtResource("6_x3etq")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nnk1c"]
+texture = ExtResource("7_rsgdm")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ldlja"]
+texture = ExtResource("8_2oo6p")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1ihg2"]
+texture = ExtResource("6_x3etq")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_32nmk"]
+texture = ExtResource("7_rsgdm")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ftvp4"]
+texture = ExtResource("8_2oo6p")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_21xc6"]
+texture = ExtResource("3_dq125")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bm4w0"]
+texture = ExtResource("6_x3etq")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jhjhp"]
+texture = ExtResource("7_rsgdm")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c1j5l"]
+texture = ExtResource("8_2oo6p")
+
+[node name="Main" instance=ExtResource("1_85hwj")]
+script = ExtResource("2_sjaiv")
+
+[node name="DimBackground" parent="TutorialOverlay" index="0"]
+z_index = -5
+
+[node name="DiificultyLabel" parent="." index="5"]
+visible = false
+
+[node name="VBoxContainer" parent="." index="6"]
+offset_left = 33.0
+offset_top = 20.0
+offset_right = 277.0
+offset_bottom = 625.0
+theme_override_constants/separation = 15
+
+[node name="HBoxContainer" parent="VBoxContainer" index="0"]
+visible = false
+
+[node name="AccessButton" type="Button" parent="VBoxContainer" index="1"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("5_njl6h")
+theme_override_font_sizes/font_size = 26
+theme_override_styles/hover = SubResource("StyleBoxTexture_dq125")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_xywgn")
+theme_override_styles/normal = SubResource("StyleBoxTexture_njl6h")
+text = "Access [i]"
+
+[node name="InsertAtEndButton" type="Button" parent="VBoxContainer" index="2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("5_njl6h")
+theme_override_font_sizes/font_size = 26
+theme_override_styles/hover = SubResource("StyleBoxTexture_dq125")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_xywgn")
+theme_override_styles/normal = SubResource("StyleBoxTexture_njl6h")
+text = " Insert at End "
+
+[node name="InsertAtIButton" type="Button" parent="VBoxContainer" index="3"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("5_njl6h")
+theme_override_font_sizes/font_size = 26
+theme_override_styles/hover = SubResource("StyleBoxTexture_dq125")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_xywgn")
+theme_override_styles/normal = SubResource("StyleBoxTexture_njl6h")
+text = "Insert at  [i]"
+
+[node name="DeleteButton" type="Button" parent="VBoxContainer" index="4"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("5_njl6h")
+theme_override_font_sizes/font_size = 26
+theme_override_styles/hover = SubResource("StyleBoxTexture_dq125")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_xywgn")
+theme_override_styles/normal = SubResource("StyleBoxTexture_njl6h")
+text = "Delete [i]"
+
+[node name="SortButton" parent="VBoxContainer" index="5"]
+text = "Simulate New"
+
+[node name="WaitingElements" parent="VBoxContainer" index="6"]
+text = " END SIMULATION "
+
+[node name="TimelineButton" parent="VBoxContainer" index="7"]
+text = "TIMELINE"
+
+[node name="QueueContainer" parent="." index="7"]
+offset_left = 257.0
+offset_top = 239.0
+offset_right = 457.0
+offset_bottom = 439.0
+
+[node name="TryAgainButton" parent="." index="14"]
+visible = false
+
+[node name="End_simulation_confirmation" type="Panel" parent="." index="24"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -125.0
+offset_right = 200.0
+offset_bottom = 125.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_r5aow")
+
+[node name="Label" type="Label" parent="End_simulation_confirmation" index="0"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -216.0
+offset_top = 36.0
+offset_right = 220.0
+offset_bottom = 88.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.145098, 0.823529, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("5_njl6h")
+theme_override_font_sizes/font_size = 40
+text = "Do you really
+want to end
+simulation?"
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 0
+
+[node name="no" type="Button" parent="End_simulation_confirmation" index="1"]
+layout_mode = 0
+offset_left = 44.0
+offset_top = 176.0
+offset_right = 144.0
+offset_bottom = 226.0
+theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
+theme_override_fonts/font = ExtResource("5_njl6h")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/hover = SubResource("StyleBoxTexture_wuire")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_nnk1c")
+theme_override_styles/normal = SubResource("StyleBoxTexture_ldlja")
+text = "No"
+
+[node name="yes" type="Button" parent="End_simulation_confirmation" index="2"]
+layout_mode = 0
+offset_left = 252.0
+offset_top = 176.0
+offset_right = 352.0
+offset_bottom = 226.0
+theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
+theme_override_fonts/font = ExtResource("5_njl6h")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/hover = SubResource("StyleBoxTexture_1ihg2")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_32nmk")
+theme_override_styles/normal = SubResource("StyleBoxTexture_ftvp4")
+text = "Yes"
+
+[node name="Label" parent="Simulate_new_confirmation" index="0"]
+theme_override_font_sizes/font_size = 40
+text = "Do you really
+want to 
+simulate new?"
+
+[node name="Label" parent="ConfigElementsModal" index="0"]
+offset_top = 7.0
+offset_bottom = 66.0
+text = "
+Please enter array elements"
+
+[node name="ArrayActionModal" type="Panel" parent="." index="30"]
+visible = false
+custom_minimum_size = Vector2(800, 500)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_21xc6")
+script = ExtResource("4_xywgn")
+
+[node name="ColorRect" type="ColorRect" parent="ArrayActionModal" index="0"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.371)
+
+[node name="ModalContent" type="Panel" parent="ArrayActionModal" index="1"]
+self_modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(700, 300)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -350.0
+offset_top = -225.0
+offset_right = 350.0
+offset_bottom = 208.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="ArrayActionModal/ModalContent" index="0"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.602829, 0.847177, 0.564057, 1)
+theme_override_colors/font_shadow_color = Color(1, 1, 1, 0.768)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("5_njl6h")
+theme_override_font_sizes/font_size = 70
+text = "ACTION TITLE"
+horizontal_alignment = 1
+
+[node name="InputContainer" type="VBoxContainer" parent="ArrayActionModal/ModalContent" index="1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 59.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SingleInputRow" type="HBoxContainer" parent="ArrayActionModal/ModalContent/InputContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="ArrayActionModal/ModalContent/InputContainer/SingleInputRow" index="0"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_njl6h")
+theme_override_font_sizes/font_size = 60
+text = "Index:"
+
+[node name="IndexSpinBox" type="SpinBox" parent="ArrayActionModal/ModalContent/InputContainer/SingleInputRow" index="1"]
+custom_minimum_size = Vector2(200, 80)
+layout_mode = 2
+theme_override_constants/set_min_buttons_width_from_icons = 10
+theme_override_constants/buttons_width = 10
+max_value = 10.0
+alignment = 1
+
+[node name="DoubleInputContainer" type="VBoxContainer" parent="ArrayActionModal/ModalContent/InputContainer" index="1"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ArrayActionModal/ModalContent/InputContainer/DoubleInputContainer" index="0"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ArrayActionModal/ModalContent/InputContainer/DoubleInputContainer/HBoxContainer" index="0"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_njl6h")
+theme_override_font_sizes/font_size = 60
+text = "Value:"
+
+[node name="ValueSpinBox" type="SpinBox" parent="ArrayActionModal/ModalContent/InputContainer/DoubleInputContainer/HBoxContainer" index="1"]
+custom_minimum_size = Vector2(200, 80)
+layout_mode = 2
+theme_override_constants/set_min_buttons_width_from_icons = 10
+theme_override_constants/buttons_width = 10
+min_value = 1.0
+max_value = 99.0
+value = 1.0
+alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="ArrayActionModal/ModalContent/InputContainer/DoubleInputContainer" index="1"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ArrayActionModal/ModalContent/InputContainer/DoubleInputContainer/HBoxContainer2" index="0"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("5_njl6h")
+theme_override_font_sizes/font_size = 60
+text = "Index:"
+
+[node name="InsertIndexSpinBox" type="SpinBox" parent="ArrayActionModal/ModalContent/InputContainer/DoubleInputContainer/HBoxContainer2" index="1"]
+custom_minimum_size = Vector2(200, 80)
+layout_mode = 2
+theme_override_constants/set_min_buttons_width_from_icons = 10
+theme_override_constants/buttons_width = 10
+max_value = 10.0
+value = 1.0
+alignment = 1
+
+[node name="ActionButtons" type="HBoxContainer" parent="ArrayActionModal/ModalContent" index="2"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -54.0
+offset_top = -40.0
+offset_right = 54.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 30
+
+[node name="CancelButton" type="Button" parent="ArrayActionModal/ModalContent/ActionButtons" index="0"]
+custom_minimum_size = Vector2(200, 70)
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0.795181, 0.541662, 0.621549, 1)
+theme_override_colors/font_color = Color(0.839463, 4.32695e-05, 0.367964, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("5_njl6h")
+theme_override_font_sizes/font_size = 50
+theme_override_styles/hover = SubResource("StyleBoxTexture_bm4w0")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_jhjhp")
+theme_override_styles/normal = SubResource("StyleBoxTexture_c1j5l")
+text = "Cancel"
+
+[node name="ConfirmButton" type="Button" parent="ArrayActionModal/ModalContent/ActionButtons" index="1"]
+custom_minimum_size = Vector2(200, 70)
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0.689629, 0.365104, 0.0311437, 1)
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("5_njl6h")
+theme_override_font_sizes/font_size = 50
+theme_override_styles/hover = SubResource("StyleBoxTexture_bm4w0")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_jhjhp")
+theme_override_styles/normal = SubResource("StyleBoxTexture_c1j5l")
+text = "Confirm"
+
+[node name="TargetLabel" type="Label" parent="." index="31"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -76.5
+offset_top = -306.0
+offset_right = 323.5
+offset_bottom = -206.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.638753, 0.758185, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.745, 0.745, 0.745, 0.425)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 3
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("5_njl6h")
+theme_override_font_sizes/font_size = 100
+text = "Find: 99"
+autowrap_mode = 2
+
+[connection signal="pressed" from="End_simulation_confirmation/no" to="." method="_on_no_pressed"]
+[connection signal="pressed" from="End_simulation_confirmation/yes" to="." method="_on_yes_pressed"]

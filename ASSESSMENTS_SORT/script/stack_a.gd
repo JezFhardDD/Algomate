@@ -1173,6 +1173,9 @@ func _on_intro_next_pressed() -> void:
 		if difficulty != 1:
 			timer_running = true
 			clock.play()  # NOW start the clock animation
+			target_label.show()
+			command_progress_label.show()
+			
 
 
 
@@ -1190,6 +1193,8 @@ func _on_intro_skip_pressed() -> void:
 	if difficulty != 1:
 		timer_running = true
 		clock.play()  # NOW start the clock animation
+		target_label.show()
+		command_progress_label.show()
 
 
 # ==============================================
