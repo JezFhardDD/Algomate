@@ -1120,6 +1120,7 @@ func _on_dequeued_close_pressed() -> void:
 	current_popup = null
 
 func _show_complete_popup() -> void:
+	# Use the existing SimulationCompletePopup, not the ResultPopup scene
 	if complete_popup:
 		var total_processes = enqueue_counter + dequeue_counter
 		var process_text = "Total Processes: %d\n→ Enqueue: %d\n→ Dequeue: %d" % [total_processes, enqueue_counter, dequeue_counter]
@@ -1130,13 +1131,11 @@ func _show_complete_popup() -> void:
 		complete_popup.popup_centered()
 		print(" Showing 'Simulation Complete' popup...")
 
-	if cpp_code_button:
-		cpp_code_button.show()
-		code_sprite.play("default")
-	
-	# Show result popup
-	var grade = _compute_grade()
-	_show_result_popup("PASS", grade)
+		if cpp_code_button:
+			cpp_code_button.show()
+			code_sprite.play("default")
+	else:
+		print("ERROR: complete_popup not found!")
 
 func _compute_grade() -> Dictionary:
 	var total_moves = enqueue_counter + dequeue_counter

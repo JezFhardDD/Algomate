@@ -5,6 +5,7 @@ extends Control
 # =========================
 @onready var grid_container = $ScrollContainer/GridContainer
 @onready var back_button = $BackButton
+@onready var title_label = $TopBar/TitleLabel
 const FEEDBACK_SCENE = preload("res://scene/FeedbackLabel.tscn")
 
 # =========================
@@ -12,6 +13,13 @@ const FEEDBACK_SCENE = preload("res://scene/FeedbackLabel.tscn")
 # =========================
 func _ready():
 	print("=== SHOP READY ===")
+	
+	# Load the custom font
+	var custom_font = load("res://assets/font/Planes_ValMore.ttf")
+	
+	# Apply font to TitleLabel (TopBar/TitleLabel)
+	if title_label:
+		title_label.add_theme_font_override("font", custom_font)
 	
 	# Connect to Global signals
 	if Global.has_signal("purchases_updated"):
@@ -41,12 +49,15 @@ func _on_coins_updated(amount: int):
 
 func setup_shop_items():
 	print("Setting up shop items...")
+	# Load the custom font
+	var custom_font = load("res://assets/font/Planes_ValMore.ttf")
+	
 	# Loop through all children of GridContainer (your panels)
 	for panel in grid_container.get_children():
 		if panel is Panel:
-			setup_panel(panel)
+			setup_panel(panel, custom_font)
 
-func setup_panel(panel: Panel):
+func setup_panel(panel: Panel, custom_font: Font):
 	# Find nodes inside your panel
 	var picture = find_child_by_type(panel, TextureRect)
 	var name_label = find_child_by_type(panel, Label)
@@ -56,6 +67,14 @@ func setup_panel(panel: Panel):
 	if not picture or not name_label or not action_button:
 		print("Panel missing required nodes!")
 		return
+	
+	# Apply custom font to name_label
+	if name_label:
+		name_label.add_theme_font_override("font", custom_font)
+	
+	# Apply custom font to price_label
+	if price_label:
+		price_label.add_theme_font_override("font", custom_font)
 	
 	# Get picture data
 	var picture_path = picture.texture.resource_path if picture.texture else ""
@@ -89,7 +108,7 @@ func setup_panel(panel: Panel):
 	action_button.pressed.connect(_on_action_button_pressed.bind(action_button))
 	
 	# Update button based on purchase status
-	update_button_for_panel(panel, picture_path, action_button, price_label, price)
+	update_button_for_panel(panel, picture_path, action_button, price_label, price, custom_font)
 
 func find_child_by_type(parent: Node, type, name_hint: String = "") -> Node:
 	for child in parent.get_children():
@@ -98,7 +117,11 @@ func find_child_by_type(parent: Node, type, name_hint: String = "") -> Node:
 				return child
 	return null
 
-func update_button_for_panel(panel: Panel, picture_path: String, button: TextureButton, price_label: Label, price: int):
+func update_button_for_panel(panel: Panel, picture_path: String, button: TextureButton, price_label: Label, price: int, custom_font: Font = null):
+	# Load font if not provided
+	if custom_font == null:
+		custom_font = load("res://assets/font/Planes_ValMore.ttf")
+	
 	# Remove any existing status labels
 	for child in panel.get_children():
 		if child is Label and child.name == "StatusLabel":
@@ -116,6 +139,8 @@ func update_button_for_panel(panel: Panel, picture_path: String, button: Texture
 		if price_label:
 			price_label.visible = true
 			price_label.add_theme_color_override("font_color", Color.YELLOW)
+			# Ensure price label uses custom font
+			price_label.add_theme_font_override("font", custom_font)
 		
 	elif is_purchased and not is_equipped:
 		# Purchased but not equipped - show SELECT button
@@ -124,6 +149,8 @@ func update_button_for_panel(panel: Panel, picture_path: String, button: Texture
 		if price_label:
 			price_label.text = "OWNED"
 			price_label.add_theme_color_override("font_color", Color.GREEN)
+			# Ensure OWNED text uses custom font
+			price_label.add_theme_font_override("font", custom_font)
 		
 	elif is_equipped:
 		# Currently equipped - hide button, show EQUIPPED label
@@ -131,11 +158,14 @@ func update_button_for_panel(panel: Panel, picture_path: String, button: Texture
 		if price_label:
 			price_label.text = "EQUIPPED"
 			price_label.add_theme_color_override("font_color", Color.GREEN)
+			# Ensure EQUIPPED text uses custom font
+			price_label.add_theme_font_override("font", custom_font)
 		
 		var equipped_label = Label.new()
 		equipped_label.name = "StatusLabel"
 		equipped_label.text = "EQUIPPED"
 		equipped_label.add_theme_color_override("font_color", Color.GREEN)
+		equipped_label.add_theme_font_override("font", custom_font)  # Apply custom font to status label
 		equipped_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		equipped_label.position = button.position
 		equipped_label.size = button.size
@@ -187,6 +217,9 @@ func show_message(text: String, color: Color = Color.WHITE):
 	# Position it center-screen
 	label.position = Vector2(324, 600)
 	label.add_theme_color_override("font_color", color)
+	# Apply custom font to feedback message
+	var custom_font = load("res://assets/font/Planes_ValMore.ttf")
+	label.add_theme_font_override("font", custom_font)
 	add_child(label)
 	label.get_node("AnimationPlayer").play("notification_pop")
 	# Auto-remove after animation finishes

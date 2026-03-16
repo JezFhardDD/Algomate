@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://bsrtgx2yweede"]
+[gd_scene load_steps=29 format=3 uid="uid://bsrtgx2yweede"]
 
 [ext_resource type="Script" uid="uid://bpvf113nkcdkk" path="res://scripts/shop.gd" id="1_032fp"]
 [ext_resource type="Shader" path="res://scripts/lectures_bg.gdshader" id="2_2fc2m"]
@@ -39,10 +39,6 @@ border_color = Color(0.7575125, 0.44526106, 0.10527188, 1)
 shadow_color = Color(0, 0, 0, 0.32941177)
 shadow_size = 40
 shadow_offset = Vector2(0, 9.6)
-
-[sub_resource type="LabelSettings" id="LabelSettings_heatd"]
-font = ExtResource("3_8r1wq")
-font_size = 45
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_njwbg"]
 atlas = ExtResource("6_1v8qu")
@@ -142,7 +138,7 @@ offset_bottom = 165.0
 grow_horizontal = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_m4ofw")
 
-[node name="TitleLabel" type="Label" parent="TopBar"]
+[node name="Label" type="Label" parent="TopBar"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -152,12 +148,18 @@ anchor_bottom = 0.5
 offset_left = -22.0
 offset_top = -11.5
 offset_right = 22.0
-offset_bottom = 11.5
+offset_bottom = 12.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0.7372549, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0.36078432, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("3_44xle")
+theme_override_font_sizes/font_size = 40
 text = "SHOP"
-label_settings = SubResource("LabelSettings_heatd")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 1
@@ -407,6 +409,7 @@ offset_left = 122.34355
 offset_top = 350.34357
 offset_right = 180.34355
 offset_bottom = 391.34357
+theme_override_fonts/font = ExtResource("3_44xle")
 text = "0"
 label_settings = SubResource("LabelSettings_24it5")
 

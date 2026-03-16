@@ -53,9 +53,6 @@ offset_bottom = 492.0
 [node name="DequeuedContainer" parent="." index="8"]
 visible = false
 
-[node name="CppPopup" parent="." index="12"]
-visible = false
-
 [node name="HSeparator2" parent="CppPopup/VBoxContainer/TutorialPanel" index="0"]
 offset_left = 0.0
 offset_top = 0.0

@@ -7,7 +7,6 @@ extends Control
 @onready var lecture_button: Button = %lecture_button
 @onready var navigation: Control = $navigation
 
-
 # For RichTextLabel
 
 # Tab animation
@@ -29,8 +28,16 @@ func _ready():
 	
 	if Global.has_profile():
 		navigation.update_profile_display()
+	
+	# Load the custom font
 	var font = load("res://assets/font/Planes_ValMore.ttf")
 	
+	# Apply font to the three main action buttons
+	lecture_button.add_theme_font_override("font", font)
+	assessement_button.add_theme_font_override("font", font)
+	code_button.add_theme_font_override("font", font)
+	
+	# Apply font to RichTextLabels
 	var styled_labels = [
 		$tab_control/assessment_tab/TextureRect/RichTextLabel,
 		$tab_control/lecture_tab/TextureRect/RichTextLabel,
@@ -62,33 +69,32 @@ func animate_tab(tab: Button, target_pos: Vector2, z: int):
 		.set_trans(Tween.TRANS_BACK)\
 		.set_ease(Tween.EASE_OUT)
 
-
-
 func _on_lecture_tab_pressed() -> void:
 	select_tab($tab_control/lecture_tab)
 	lecture_button.show()
 	assessement_button.hide()
 	code_button.hide()
+	
 func _on_assessment_tab_pressed() -> void:
 	select_tab($tab_control/assessment_tab)
 	assessement_button.show()
 	lecture_button.hide()
 	code_button.hide()
+	
 func _on_code_tab_pressed() -> void:
 	select_tab($tab_control/code_tab)
 	code_button.show()
 	lecture_button.hide()
 	assessement_button.hide()
 
-
 func _on_lecture_button_pressed() -> void:
 	AudioManager.play_click_sound()
 	SceneManager.change_scene("res://scenes/lectures.tscn")
 
-
 func _on_assessement_button_pressed() -> void:
 	AudioManager.play_click_sound()
 	SceneManager.change_scene("res://scenes/assessment.tscn")
+	
 func _on_code_button_pressed() -> void:
 	AudioManager.play_click_sound()
 	SceneManager.change_scene("res://scene/Compiler.tscn")
