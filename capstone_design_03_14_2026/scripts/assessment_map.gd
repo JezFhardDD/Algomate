@@ -12,6 +12,18 @@ var popup_active: bool = false
 var popup_just_opened: bool = false
 var popup_open_time: float = 0.0
 
+# Drag scrolling variables
+var dragging: bool = false
+var drag_start_position: Vector2
+var panel_initial_position: Vector2
+var drag_threshold: float = 10.0  # Minimum drag distance to activate
+var drag_inertia: Vector2 = Vector2.ZERO
+var last_drag_position: Vector2
+var drag_velocity: Vector2 = Vector2.ZERO
+var velocity_smoothing: float = 0.1  # Lower = smoother
+var bounds_margin: float = 200.0  # How far you can drag beyond content
+var return_speed: float = 10.0  # Speed to return to bounds
+
 func _ready():
 	print("=== SETUP ===")
 	print("Popup found: ", difficulty_popup != null)
@@ -22,6 +34,12 @@ func _ready():
 	if difficulty_popup:
 		difficulty_popup.difficulty_selected.connect(_on_difficulty_selected)
 		difficulty_popup.popup_closed.connect(_on_popup_closed)
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.mouse_default_cursor_shape = Control.CURSOR_DRAG
+	
+	# Enable touch/mouse tracking
+	set_process_input(true)
+	set_process(true)
 
 func find_topic_buttons():
 	for child in bg.get_children():
@@ -127,38 +145,170 @@ func animate_button_press(button: TextureButton):
 	tween.tween_property(button, "scale", original_scale, 0.1)
 
 func _input(event):
-	if not popup_active:
-		return
-	
-	# Ignore ALL input for 300ms after popup opens
-	var time_since_open = Time.get_ticks_msec() - popup_open_time
-	if time_since_open < 300:
-		get_viewport().set_input_as_handled()
-		return
-	
-	if event is InputEventMouseMotion and event.button_mask == MOUSE_BUTTON_MASK_LEFT:
-		get_viewport().set_input_as_handled()
-		return
-	if event is InputEventScreenDrag:
-		get_viewport().set_input_as_handled()
-		return
-	
-	var click_pos = Vector2.ZERO
-	var is_click = false
-	
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		click_pos = get_global_mouse_position()
-		is_click = true
-	elif event is InputEventScreenTouch and event.pressed:
-		click_pos = event.position
-		is_click = true
-	
-	if is_click:
-		var popup_rect = Rect2(difficulty_popup.global_position, difficulty_popup.size)
-		if not popup_rect.has_point(click_pos):
-			difficulty_popup.hide_popup()
+	# Handle popup blocking first
+	if popup_active:
+		# Ignore ALL input for 300ms after popup opens
+		var time_since_open = Time.get_ticks_msec() - popup_open_time
+		if time_since_open < 300:
 			get_viewport().set_input_as_handled()
+			return
+		
+		# Check for clicks outside popup
+		var click_pos = Vector2.ZERO
+		var is_click = false
+		
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			click_pos = get_global_mouse_position()
+			is_click = true
+		elif event is InputEventScreenTouch and event.pressed:
+			click_pos = event.position
+			is_click = true
+		
+		if is_click:
+			var popup_rect = Rect2(difficulty_popup.global_position, difficulty_popup.size)
+			if not popup_rect.has_point(click_pos):
+				difficulty_popup.hide_popup()
+				get_viewport().set_input_as_handled()
+				return
+	
+	# Handle drag scrolling
+	if not popup_active:
+		# Mouse/Touch press
+		if (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT) or event is InputEventScreenTouch:
+			if event.pressed:
+				# Start potential drag
+				dragging = true
+				if event is InputEventMouseButton:
+					drag_start_position = get_global_mouse_position()
+				else:  # Screen touch
+					drag_start_position = event.position
+				panel_initial_position = panel.position
+				last_drag_position = drag_start_position
+				drag_velocity = Vector2.ZERO
+				drag_inertia = Vector2.ZERO
+				# Don't set as handled yet - let buttons get the press event
+			else:
+				# Release - check if this was a drag or a click
+				if dragging:
+					var release_pos: Vector2
+					if event is InputEventMouseButton:
+						release_pos = get_global_mouse_position()
+					else:
+						release_pos = event.position
+					
+					var drag_distance = (release_pos - drag_start_position).length()
+					
+					# If it was a short drag, treat as click (let buttons handle)
+					if drag_distance < drag_threshold:
+						# This was a click/tap, not a drag
+						dragging = false
+						# Don't handle the event - let it pass to buttons
+						return
+					else:
+						# This was a drag - apply inertia
+						# In the release section, update the inertia code:
+						if drag_inertia.length() > 5.0:
+							var tween = create_tween()
+							tween.set_trans(Tween.TRANS_CUBIC)
+							tween.set_ease(Tween.EASE_OUT)
+							
+							var target_pos = panel.position + drag_inertia * 2.0
+							target_pos = _clamp_panel_position(target_pos)  # Changed from _apply_rubber_band
+							tween.tween_property(panel, "position", target_pos, 0.5)
+		
+		# Mouse/Touch drag motion
+		elif dragging and (event is InputEventMouseMotion or event is InputEventScreenDrag):
+			var current_pos: Vector2
+			if event is InputEventMouseMotion:
+				current_pos = get_global_mouse_position()
+			else:  # Screen drag
+				current_pos = event.position
+			
+			# Check if we've moved enough to consider this a drag
+			var drag_distance = (current_pos - drag_start_position).length()
+			
+# Find this section in the drag motion handler and update it:
+			if drag_distance > drag_threshold:
+				# We're definitely dragging now - handle the event
+				var drag_delta = current_pos - last_drag_position
+				
+				# Calculate new position
+				var new_pos = panel.position + drag_delta
+				# Use strict clamp instead of rubber band
+				new_pos = _clamp_panel_position(new_pos)  # Changed from _apply_rubber_band
+				
+				# Only update position if it actually changed (prevents micro-movements at edges)
+				if new_pos != panel.position:
+					panel.position = new_pos
+					
+					# Calculate velocity for inertia (only when moving)
+					drag_velocity = drag_delta
+					drag_inertia = drag_inertia.lerp(drag_delta * 10.0, velocity_smoothing)
+				
+				last_drag_position = current_pos
+				get_viewport().set_input_as_handled()
+			else:
+				# Not yet dragging - let buttons receive the event
+				pass
 
+func _process(delta):
+	# Smoothly return to bounds when not dragging
+	if not dragging and not popup_active:
+		var clamped_pos = _clamp_panel_position(panel.position)
+		if panel.position != clamped_pos:
+			# Smooth return to bounds
+			panel.position = panel.position.lerp(clamped_pos, return_speed * delta)
+			
+			# Snap if very close
+			if panel.position.distance_to(clamped_pos) < 1.0:
+				panel.position = clamped_pos
+
+func _clamp_panel_position(pos: Vector2) -> Vector2:
+	# Calculate bounds based on your map size (1889x2000)
+	var content_size = Vector2(1889, 2000)
+	var viewport_size = get_viewport().get_visible_rect().size
+	
+	# Top offset to account for navigation bar (adjust this value as needed)
+	var top_offset = 150  # Pixels reserved for top bar/navigation
+	
+	# Calculate min and max positions with top offset
+	var min_x = viewport_size.x - content_size.x
+	var max_x = 0
+	
+	var min_y = viewport_size.y - content_size.y - top_offset  # Add top offset here
+	var max_y = top_offset  # This ensures top content starts below navigation
+	
+	return Vector2(
+		clamp(pos.x, min_x, max_x),
+		clamp(pos.y, min_y, max_y)
+	)
+
+func _apply_rubber_band(pos: Vector2) -> Vector2:
+	# Small amount of overscroll resistance before stopping
+	var clamped = _clamp_panel_position(pos)
+	var resistance = 0.15  # Lower = harder to pull (0.0 = no pull, 1.0 = full pull)
+	var max_overscroll = 50.0  # Maximum pixels you can pull beyond bounds
+	
+	if pos.x < clamped.x:
+		var overscroll = (clamped.x - pos.x) * resistance
+		overscroll = min(overscroll, max_overscroll)
+		pos.x = clamped.x - overscroll
+	elif pos.x > clamped.x:
+		var overscroll = (pos.x - clamped.x) * resistance
+		overscroll = min(overscroll, max_overscroll)
+		pos.x = clamped.x + overscroll
+		
+	if pos.y < clamped.y:
+		var overscroll = (clamped.y - pos.y) * resistance
+		overscroll = min(overscroll, max_overscroll)
+		pos.y = clamped.y - overscroll
+	elif pos.y > clamped.y:
+		var overscroll = (pos.y - clamped.y) * resistance
+		overscroll = min(overscroll, max_overscroll)
+		pos.y = clamped.y + overscroll
+	
+	return pos
+	
 func _on_difficulty_selected(difficulty: String, topic: String):
 	print("Selected: ", difficulty, " for ", topic)
 	popup_active = false
@@ -240,3 +390,17 @@ func _on_back_button_pressed():
 		popup_active = false
 	AudioManager.play_back_sound()
 	SceneManager.go_back()
+
+func _touch_dragged(relative: Vector2) -> void:
+	if not dragging or popup_active:
+		return
+	
+	# Move panel with touch
+	var new_pos = panel.position + relative
+	new_pos = _apply_rubber_band(new_pos)
+	panel.position = new_pos
+	
+	# Update velocity for inertia
+	drag_velocity = relative
+	drag_inertia = drag_inertia.lerp(relative * 30.0, velocity_smoothing)
+	

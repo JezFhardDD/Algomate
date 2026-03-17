@@ -7,14 +7,14 @@
 [ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="5_mjuy6"]
 [ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="6_yllib"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ntrf0"]
-texture = ExtResource("4_udute")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_f6iuy"]
+texture = ExtResource("6_yllib")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_v75d0"]
 texture = ExtResource("5_mjuy6")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_f6iuy"]
-texture = ExtResource("6_yllib")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ntrf0"]
+texture = ExtResource("4_udute")
 
 [node name="Main" instance=ExtResource("1_3kr7l")]
 script = ExtResource("2_oyuhw")
@@ -22,14 +22,20 @@ script = ExtResource("2_oyuhw")
 [node name="PassButton" type="Button" parent="VBoxContainer" index="3"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("3_qely6")
 theme_override_font_sizes/font_size = 24
-theme_override_styles/hover = SubResource("StyleBoxTexture_ntrf0")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_v75d0")
 theme_override_styles/normal = SubResource("StyleBoxTexture_f6iuy")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_v75d0")
+theme_override_styles/hover = SubResource("StyleBoxTexture_ntrf0")
 text = "Pass"
+
+[node name="SCS_Logo" parent="." index="22"]
+visible = false
+
+[node name="Label" parent="." index="23"]
+visible = false
 
 [connection signal="pressed" from="VBoxContainer/PassButton" to="." method="_on_pass_button_pressed"]

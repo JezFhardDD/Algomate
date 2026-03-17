@@ -131,90 +131,90 @@ shader_parameter/accent_color = Color(0, 0.659627, 0.685006, 1)
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hhcpw"]
 texture = ExtResource("2_eik88")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iylwy"]
-texture = ExtResource("6_3sxgj")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mxvw5"]
+texture = ExtResource("8_764rb")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8k277"]
 texture = ExtResource("7_x4yfu")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_mxvw5"]
-texture = ExtResource("8_764rb")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_iylwy"]
+texture = ExtResource("6_3sxgj")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ene7r"]
 texture = ExtResource("2_eik88")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yw08f"]
-texture = ExtResource("6_3sxgj")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_goqcv"]
+texture = ExtResource("8_764rb")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0auj7"]
 texture = ExtResource("7_x4yfu")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_goqcv"]
-texture = ExtResource("8_764rb")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_141t2"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yw08f"]
 texture = ExtResource("6_3sxgj")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2pgkw"]
-texture = ExtResource("7_x4yfu")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lk2p4"]
 texture = ExtResource("8_764rb")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3np2r"]
-texture = ExtResource("6_3sxgj")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jkxv2"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2pgkw"]
 texture = ExtResource("7_x4yfu")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_141t2"]
+texture = ExtResource("6_3sxgj")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wren1"]
 texture = ExtResource("8_764rb")
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jkxv2"]
+texture = ExtResource("7_x4yfu")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3np2r"]
+texture = ExtResource("6_3sxgj")
+
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_x4yfu"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c6i3y"]
-texture = ExtResource("6_3sxgj")
-modulate_color = Color(0.54902, 1, 1, 1)
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r0du0"]
+texture = ExtResource("8_764rb")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5tuhn"]
 texture = ExtResource("7_x4yfu")
 modulate_color = Color(0.713726, 0.388235, 1, 1)
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r0du0"]
-texture = ExtResource("8_764rb")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j4qnp"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c6i3y"]
 texture = ExtResource("6_3sxgj")
 modulate_color = Color(0.54902, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3dxm6"]
+texture = ExtResource("8_764rb")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_devvj"]
 texture = ExtResource("7_x4yfu")
 modulate_color = Color(0.713726, 0.388235, 1, 1)
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3dxm6"]
-texture = ExtResource("8_764rb")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fpfj3"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j4qnp"]
 texture = ExtResource("6_3sxgj")
 modulate_color = Color(0.54902, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lgr22"]
+texture = ExtResource("8_764rb")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3b0ty"]
 texture = ExtResource("7_x4yfu")
 modulate_color = Color(0.713726, 0.388235, 1, 1)
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lgr22"]
-texture = ExtResource("8_764rb")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sc1dx"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fpfj3"]
 texture = ExtResource("6_3sxgj")
 modulate_color = Color(0.54902, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_trn2v"]
+texture = ExtResource("8_764rb")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bg4s2"]
 texture = ExtResource("7_x4yfu")
 modulate_color = Color(0.713726, 0.388235, 1, 1)
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_trn2v"]
-texture = ExtResource("8_764rb")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sc1dx"]
+texture = ExtResource("6_3sxgj")
+modulate_color = Color(0.54902, 1, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cm0pq"]
 bg_color = Color(0.145098, 0.729412, 0.282353, 1)
@@ -241,50 +241,50 @@ expand_margin_bottom = 10.0
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wkp8b"]
 texture = ExtResource("2_eik88")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2h030"]
-texture = ExtResource("6_3sxgj")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7kf0j"]
+texture = ExtResource("8_764rb")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_crx51"]
 texture = ExtResource("7_x4yfu")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7kf0j"]
-texture = ExtResource("8_764rb")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2h030"]
+texture = ExtResource("6_3sxgj")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_20pc6"]
 content_margin_top = 4.0
 content_margin_bottom = 9.0
 texture = ExtResource("2_eik88")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ei8tx"]
-texture = ExtResource("7_x4yfu")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dt2wr"]
+texture = ExtResource("8_764rb")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q0hkp"]
 texture = ExtResource("6_3sxgj")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dt2wr"]
-texture = ExtResource("8_764rb")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ei8tx"]
+texture = ExtResource("7_x4yfu")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hri7i"]
 texture = ExtResource("2_eik88")
 texture_margin_left = 25.0
 texture_margin_right = 31.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ob58h"]
-texture = ExtResource("6_3sxgj")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3hqfm"]
-
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5mvff"]
 texture = ExtResource("8_764rb")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_08k7p"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3hqfm"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ob58h"]
 texture = ExtResource("6_3sxgj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_40n85"]
+texture = ExtResource("8_764rb")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8cuns"]
 texture = ExtResource("7_x4yfu")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_40n85"]
-texture = ExtResource("8_764rb")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_08k7p"]
+texture = ExtResource("6_3sxgj")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sqvbp"]
 texture = ExtResource("6_764rb")
@@ -292,17 +292,7 @@ texture_margin_left = 18.0
 texture_margin_top = 40.0
 texture_margin_right = 15.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2487w"]
-bg_color = Color(0, 0.752941, 0.572549, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-expand_margin_left = 2.0
-expand_margin_right = 2.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h4h5g"]
-bg_color = Color(0, 0.752941, 0.572549, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f2pwb"]
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
@@ -319,7 +309,8 @@ corner_radius_bottom_left = 8
 expand_margin_left = 2.0
 expand_margin_right = 2.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f2pwb"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h4h5g"]
+bg_color = Color(0, 0.752941, 0.572549, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
@@ -327,32 +318,41 @@ corner_radius_bottom_left = 8
 expand_margin_left = 2.0
 expand_margin_right = 2.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gjnlk"]
-texture = ExtResource("6_3sxgj")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kxuod"]
-texture = ExtResource("7_x4yfu")
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2487w"]
+bg_color = Color(0, 0.752941, 0.572549, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 2.0
+expand_margin_right = 2.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sph85"]
 texture = ExtResource("8_764rb")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1dr5g"]
-texture = ExtResource("6_3sxgj")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wosyn"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kxuod"]
 texture = ExtResource("7_x4yfu")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gjnlk"]
+texture = ExtResource("6_3sxgj")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vi5kq"]
 texture = ExtResource("8_764rb")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6qs0r"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wosyn"]
+texture = ExtResource("7_x4yfu")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1dr5g"]
 texture = ExtResource("6_3sxgj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_oin8c"]
+texture = ExtResource("8_764rb")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_75v45"]
 texture = ExtResource("7_x4yfu")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_oin8c"]
-texture = ExtResource("8_764rb")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6qs0r"]
+texture = ExtResource("6_3sxgj")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xrxkg"]
 texture = ExtResource("8_764rb")
@@ -547,23 +547,23 @@ animations = [{
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_uiejy"]
 texture = ExtResource("2_eik88")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dq3mc"]
-texture = ExtResource("6_3sxgj")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tgqhd"]
+texture = ExtResource("8_764rb")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hmh3n"]
 texture = ExtResource("7_x4yfu")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tgqhd"]
-texture = ExtResource("8_764rb")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_puvaq"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dq3mc"]
 texture = ExtResource("6_3sxgj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vq81u"]
+texture = ExtResource("8_764rb")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lcaa3"]
 texture = ExtResource("7_x4yfu")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vq81u"]
-texture = ExtResource("8_764rb")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_puvaq"]
+texture = ExtResource("6_3sxgj")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_764rb"]
 texture = ExtResource("2_eik88")
@@ -571,44 +571,44 @@ texture = ExtResource("2_eik88")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tuai4"]
 texture = ExtResource("8_764rb")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cg3r1"]
-texture = ExtResource("6_3sxgj")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_aex65"]
+texture = ExtResource("8_764rb")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_72c0u"]
 texture = ExtResource("7_x4yfu")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_aex65"]
-texture = ExtResource("8_764rb")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pn0cg"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cg3r1"]
 texture = ExtResource("6_3sxgj")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cqmtw"]
-texture = ExtResource("7_x4yfu")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hrl0l"]
 texture = ExtResource("8_764rb")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r5aow"]
-texture = ExtResource("2_eik88")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cqmtw"]
+texture = ExtResource("7_x4yfu")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wuire"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pn0cg"]
 texture = ExtResource("6_3sxgj")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nnk1c"]
-texture = ExtResource("7_x4yfu")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r5aow"]
+texture = ExtResource("2_eik88")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ldlja"]
 texture = ExtResource("8_764rb")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1ihg2"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nnk1c"]
+texture = ExtResource("7_x4yfu")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wuire"]
 texture = ExtResource("6_3sxgj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ftvp4"]
+texture = ExtResource("8_764rb")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_32nmk"]
 texture = ExtResource("7_x4yfu")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ftvp4"]
-texture = ExtResource("8_764rb")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1ihg2"]
+texture = ExtResource("6_3sxgj")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1qtut"]
 texture = ExtResource("2_eik88")
@@ -616,62 +616,62 @@ texture = ExtResource("2_eik88")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_43j8o"]
 texture = ExtResource("2_eik88")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_rwiys"]
-texture = ExtResource("7_x4yfu")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fohba"]
-texture = ExtResource("6_3sxgj")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_v1evy"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_u8yls"]
 texture = ExtResource("8_764rb")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c4fv3"]
-texture = ExtResource("7_x4yfu")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dp0h7"]
 texture = ExtResource("6_3sxgj")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_u8yls"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c4fv3"]
+texture = ExtResource("7_x4yfu")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_v1evy"]
 texture = ExtResource("8_764rb")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ya7da"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fohba"]
 texture = ExtResource("6_3sxgj")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6xsba"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_rwiys"]
 texture = ExtResource("7_x4yfu")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ia2xj"]
 texture = ExtResource("8_764rb")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fh3cp"]
-texture = ExtResource("6_3sxgj")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dk2pn"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6xsba"]
 texture = ExtResource("7_x4yfu")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ya7da"]
+texture = ExtResource("6_3sxgj")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bp33t"]
 texture = ExtResource("8_764rb")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a6847"]
-texture = ExtResource("2_eik88")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dk2pn"]
+texture = ExtResource("7_x4yfu")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d5i4e"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fh3cp"]
 texture = ExtResource("6_3sxgj")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ph3ti"]
-texture = ExtResource("7_x4yfu")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a6847"]
+texture = ExtResource("2_eik88")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qaqtq"]
 texture = ExtResource("8_764rb")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r1tel"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ph3ti"]
+texture = ExtResource("7_x4yfu")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d5i4e"]
 texture = ExtResource("6_3sxgj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ms5ap"]
+texture = ExtResource("8_764rb")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2hth1"]
 texture = ExtResource("7_x4yfu")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ms5ap"]
-texture = ExtResource("8_764rb")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r1tel"]
+texture = ExtResource("6_3sxgj")
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -811,9 +811,9 @@ size_flags_vertical = 8
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
-theme_override_styles/hover = SubResource("StyleBoxTexture_iylwy")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_8k277")
 theme_override_styles/normal = SubResource("StyleBoxTexture_mxvw5")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_8k277")
+theme_override_styles/hover = SubResource("StyleBoxTexture_iylwy")
 text = "next"
 
 [node name="PointerSprite" type="Sprite2D" parent="TutorialOverlay"]
@@ -865,9 +865,9 @@ offset_bottom = 405.0
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 28
-theme_override_styles/hover = SubResource("StyleBoxTexture_yw08f")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_0auj7")
 theme_override_styles/normal = SubResource("StyleBoxTexture_goqcv")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_0auj7")
+theme_override_styles/hover = SubResource("StyleBoxTexture_yw08f")
 text = "Prev"
 
 [node name="skip" type="Button" parent="TutorialOverlay/Intro_popup"]
@@ -881,9 +881,9 @@ grow_vertical = 0
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 28
-theme_override_styles/hover = SubResource("StyleBoxTexture_141t2")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_2pgkw")
 theme_override_styles/normal = SubResource("StyleBoxTexture_lk2p4")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_2pgkw")
+theme_override_styles/hover = SubResource("StyleBoxTexture_141t2")
 text = "Skip"
 
 [node name="next" type="Button" parent="TutorialOverlay/Intro_popup"]
@@ -896,9 +896,9 @@ grow_vertical = 0
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 28
-theme_override_styles/hover = SubResource("StyleBoxTexture_3np2r")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_jkxv2")
 theme_override_styles/normal = SubResource("StyleBoxTexture_wren1")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_jkxv2")
+theme_override_styles/hover = SubResource("StyleBoxTexture_3np2r")
 text = "Next"
 
 [node name="TextureRect" type="TextureRect" parent="."]
@@ -976,53 +976,53 @@ alignment = 1
 [node name="SortButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 26
-theme_override_styles/hover = SubResource("StyleBoxTexture_c6i3y")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_5tuhn")
 theme_override_styles/normal = SubResource("StyleBoxTexture_r0du0")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_5tuhn")
+theme_override_styles/hover = SubResource("StyleBoxTexture_c6i3y")
 text = "Next Step"
 
 [node name="WaitingElements" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
-theme_override_styles/hover = SubResource("StyleBoxTexture_j4qnp")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_devvj")
 theme_override_styles/normal = SubResource("StyleBoxTexture_3dxm6")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_devvj")
+theme_override_styles/hover = SubResource("StyleBoxTexture_j4qnp")
 text = "Auto Sort"
 
 [node name="TimelineButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 26
-theme_override_styles/hover = SubResource("StyleBoxTexture_fpfj3")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_3b0ty")
 theme_override_styles/normal = SubResource("StyleBoxTexture_lgr22")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_3b0ty")
+theme_override_styles/hover = SubResource("StyleBoxTexture_fpfj3")
 text = "Timeline"
 
 [node name="SimulateNew" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
-theme_override_styles/hover = SubResource("StyleBoxTexture_sc1dx")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_bg4s2")
 theme_override_styles/normal = SubResource("StyleBoxTexture_trn2v")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_bg4s2")
+theme_override_styles/hover = SubResource("StyleBoxTexture_sc1dx")
 text = "Simulate
 New"
 
@@ -1147,9 +1147,9 @@ grow_vertical = 0
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
-theme_override_styles/hover = SubResource("StyleBoxTexture_2h030")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_crx51")
 theme_override_styles/normal = SubResource("StyleBoxTexture_7kf0j")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_crx51")
+theme_override_styles/hover = SubResource("StyleBoxTexture_2h030")
 text = "Okay"
 
 [node name="TimelinePopup" type="PopupPanel" parent="."]
@@ -1191,9 +1191,9 @@ size_flags_vertical = 8
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
-theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_ei8tx")
-theme_override_styles/hover = SubResource("StyleBoxTexture_q0hkp")
 theme_override_styles/normal = SubResource("StyleBoxTexture_dt2wr")
+theme_override_styles/hover = SubResource("StyleBoxTexture_q0hkp")
+theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_ei8tx")
 text = "Close"
 
 [node name="SimulationCompletePopup" type="PopupPanel" parent="."]
@@ -1225,9 +1225,9 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 30
-theme_override_styles/hover = SubResource("StyleBoxTexture_ob58h")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_3hqfm")
 theme_override_styles/normal = SubResource("StyleBoxTexture_5mvff")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_3hqfm")
+theme_override_styles/hover = SubResource("StyleBoxTexture_ob58h")
 text = "Show Code"
 
 [node name="CloseButton" type="Button" parent="SimulationCompletePopup/VBoxContainer"]
@@ -1235,9 +1235,9 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 30
-theme_override_styles/hover = SubResource("StyleBoxTexture_08k7p")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_8cuns")
 theme_override_styles/normal = SubResource("StyleBoxTexture_40n85")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_8cuns")
+theme_override_styles/hover = SubResource("StyleBoxTexture_08k7p")
 text = "Close"
 
 [node name="ProcessLabel" type="Label" parent="SimulationCompletePopup/VBoxContainer"]
@@ -1282,40 +1282,40 @@ layout_mode = 2
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
-theme_override_styles/focus = SubResource("StyleBoxFlat_2487w")
-theme_override_styles/hover = SubResource("StyleBoxFlat_h4h5g")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_wblxr")
 theme_override_styles/normal = SubResource("StyleBoxFlat_f2pwb")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_wblxr")
+theme_override_styles/hover = SubResource("StyleBoxFlat_h4h5g")
+theme_override_styles/focus = SubResource("StyleBoxFlat_2487w")
 text = "C++"
 
 [node name="Py_btn" type="Button" parent="CppPopup/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
-theme_override_styles/focus = SubResource("StyleBoxFlat_2487w")
-theme_override_styles/hover = SubResource("StyleBoxFlat_h4h5g")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_wblxr")
 theme_override_styles/normal = SubResource("StyleBoxFlat_f2pwb")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_wblxr")
+theme_override_styles/hover = SubResource("StyleBoxFlat_h4h5g")
+theme_override_styles/focus = SubResource("StyleBoxFlat_2487w")
 text = "Python"
 
 [node name="Java_btn" type="Button" parent="CppPopup/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
-theme_override_styles/focus = SubResource("StyleBoxFlat_2487w")
-theme_override_styles/hover = SubResource("StyleBoxFlat_h4h5g")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_wblxr")
 theme_override_styles/normal = SubResource("StyleBoxFlat_f2pwb")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_wblxr")
+theme_override_styles/hover = SubResource("StyleBoxFlat_h4h5g")
+theme_override_styles/focus = SubResource("StyleBoxFlat_2487w")
 text = "Java"
 
 [node name="C_btn" type="Button" parent="CppPopup/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
-theme_override_styles/focus = SubResource("StyleBoxFlat_2487w")
-theme_override_styles/hover = SubResource("StyleBoxFlat_h4h5g")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_wblxr")
 theme_override_styles/normal = SubResource("StyleBoxFlat_f2pwb")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_wblxr")
+theme_override_styles/hover = SubResource("StyleBoxFlat_h4h5g")
+theme_override_styles/focus = SubResource("StyleBoxFlat_2487w")
 text = "C Language"
 
 [node name="HSeparator" type="HSeparator" parent="CppPopup/VBoxContainer"]
@@ -1334,9 +1334,9 @@ layout_mode = 2
 theme_override_constants/align_to_largest_stylebox = 1
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 26
-theme_override_styles/hover = SubResource("StyleBoxTexture_gjnlk")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_kxuod")
 theme_override_styles/normal = SubResource("StyleBoxTexture_sph85")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_kxuod")
+theme_override_styles/hover = SubResource("StyleBoxTexture_gjnlk")
 text = "Close
 "
 icon = ExtResource("12_gjnlk")
@@ -1345,9 +1345,9 @@ icon = ExtResource("12_gjnlk")
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 26
-theme_override_styles/hover = SubResource("StyleBoxTexture_1dr5g")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_wosyn")
 theme_override_styles/normal = SubResource("StyleBoxTexture_vi5kq")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_wosyn")
+theme_override_styles/hover = SubResource("StyleBoxTexture_1dr5g")
 text = "Next"
 icon = ExtResource("13_kxuod")
 
@@ -1355,9 +1355,9 @@ icon = ExtResource("13_kxuod")
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 28
-theme_override_styles/hover = SubResource("StyleBoxTexture_6qs0r")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_75v45")
 theme_override_styles/normal = SubResource("StyleBoxTexture_oin8c")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_75v45")
+theme_override_styles/hover = SubResource("StyleBoxTexture_6qs0r")
 text = "compile"
 icon = ExtResource("14_1dr5g")
 
@@ -1405,8 +1405,8 @@ offset_left = 1044.0
 offset_top = 60.0
 offset_right = 1144.0
 offset_bottom = 105.0
-theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("3_pnqar")
 theme_override_font_sizes/font_size = 26
@@ -1428,8 +1428,8 @@ offset_top = 8.0
 offset_right = -9.0
 offset_bottom = 53.0
 grow_horizontal = 0
-theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("3_pnqar")
 theme_override_font_sizes/font_size = 30
@@ -1514,9 +1514,9 @@ offset_bottom = 165.0
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 22
-theme_override_styles/hover = SubResource("StyleBoxTexture_dq3mc")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_hmh3n")
 theme_override_styles/normal = SubResource("StyleBoxTexture_tgqhd")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_hmh3n")
+theme_override_styles/hover = SubResource("StyleBoxTexture_dq3mc")
 text = "Yes"
 
 [node name="NoButton" type="Button" parent="ConfigChoiceModal"]
@@ -1528,9 +1528,9 @@ offset_bottom = 212.0
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 22
-theme_override_styles/hover = SubResource("StyleBoxTexture_puvaq")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_lcaa3")
 theme_override_styles/normal = SubResource("StyleBoxTexture_vq81u")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_lcaa3")
+theme_override_styles/hover = SubResource("StyleBoxTexture_puvaq")
 text = "No"
 
 [node name="ConfigSizeElementsModal" type="Panel" parent="."]
@@ -1582,9 +1582,9 @@ offset_top = 223.5
 offset_right = 362.0
 offset_bottom = 254.5
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
-theme_override_styles/hover = SubResource("StyleBoxTexture_cg3r1")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_72c0u")
 theme_override_styles/normal = SubResource("StyleBoxTexture_aex65")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_72c0u")
+theme_override_styles/hover = SubResource("StyleBoxTexture_cg3r1")
 text = "Set"
 
 [node name="CancelButton" type="Button" parent="ConfigSizeElementsModal"]
@@ -1594,9 +1594,9 @@ offset_top = 265.5
 offset_right = 362.0
 offset_bottom = 296.5
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
-theme_override_styles/hover = SubResource("StyleBoxTexture_pn0cg")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_cqmtw")
 theme_override_styles/normal = SubResource("StyleBoxTexture_hrl0l")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_cqmtw")
+theme_override_styles/hover = SubResource("StyleBoxTexture_pn0cg")
 text = "Cancel"
 
 [node name="Label" type="Label" parent="ConfigSizeElementsModal"]
@@ -1612,11 +1612,13 @@ Note: any element placed above or below the
 array size will be randomized"
 
 [node name="SCS_Logo" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(1096, 595.1)
 scale = Vector2(0.09375, 0.0876953)
 texture = ExtResource("13_aex65")
 
 [node name="Label" type="Label" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -1685,9 +1687,9 @@ offset_bottom = 226.0
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 28
-theme_override_styles/hover = SubResource("StyleBoxTexture_wuire")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_nnk1c")
 theme_override_styles/normal = SubResource("StyleBoxTexture_ldlja")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_nnk1c")
+theme_override_styles/hover = SubResource("StyleBoxTexture_wuire")
 text = "No"
 
 [node name="yes" type="Button" parent="Simulate_new_confirmation"]
@@ -1699,9 +1701,9 @@ offset_bottom = 226.0
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 28
-theme_override_styles/hover = SubResource("StyleBoxTexture_1ihg2")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_32nmk")
 theme_override_styles/normal = SubResource("StyleBoxTexture_ftvp4")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_32nmk")
+theme_override_styles/hover = SubResource("StyleBoxTexture_1ihg2")
 text = "Yes"
 
 [node name="simulate_new success" type="Panel" parent="."]
@@ -1776,14 +1778,14 @@ offset_right = 164.0
 offset_bottom = 56.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/buttons_width = 50
 theme_override_constants/buttons_vertical_separation = 17
-theme_override_styles/down_background_pressed = SubResource("StyleBoxTexture_rwiys")
-theme_override_styles/down_background_hovered = SubResource("StyleBoxTexture_fohba")
-theme_override_styles/down_background = SubResource("StyleBoxTexture_v1evy")
-theme_override_styles/up_background_pressed = SubResource("StyleBoxTexture_c4fv3")
-theme_override_styles/up_background_hovered = SubResource("StyleBoxTexture_dp0h7")
+theme_override_constants/buttons_width = 50
 theme_override_styles/up_background = SubResource("StyleBoxTexture_u8yls")
+theme_override_styles/up_background_hovered = SubResource("StyleBoxTexture_dp0h7")
+theme_override_styles/up_background_pressed = SubResource("StyleBoxTexture_c4fv3")
+theme_override_styles/down_background = SubResource("StyleBoxTexture_v1evy")
+theme_override_styles/down_background_hovered = SubResource("StyleBoxTexture_fohba")
+theme_override_styles/down_background_pressed = SubResource("StyleBoxTexture_rwiys")
 min_value = 5.0
 max_value = 7.0
 value = 5.0
@@ -1798,9 +1800,9 @@ offset_bottom = 365.0
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 28
-theme_override_styles/hover = SubResource("StyleBoxTexture_ya7da")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_6xsba")
 theme_override_styles/normal = SubResource("StyleBoxTexture_ia2xj")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_6xsba")
+theme_override_styles/hover = SubResource("StyleBoxTexture_ya7da")
 text = "Back"
 
 [node name="NextButton" type="Button" parent="ConfigSizeModal"]
@@ -1812,9 +1814,9 @@ offset_bottom = 365.0
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 28
-theme_override_styles/hover = SubResource("StyleBoxTexture_fh3cp")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_dk2pn")
 theme_override_styles/normal = SubResource("StyleBoxTexture_bp33t")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_dk2pn")
+theme_override_styles/hover = SubResource("StyleBoxTexture_fh3cp")
 text = "Next"
 
 [node name="ConfigElementsModal" type="Panel" parent="."]
@@ -1877,9 +1879,9 @@ grow_vertical = 0
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 28
-theme_override_styles/hover = SubResource("StyleBoxTexture_d5i4e")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_ph3ti")
 theme_override_styles/normal = SubResource("StyleBoxTexture_qaqtq")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_ph3ti")
+theme_override_styles/hover = SubResource("StyleBoxTexture_d5i4e")
 text = "Back"
 
 [node name="DoneButton" type="Button" parent="ConfigElementsModal"]
@@ -1898,9 +1900,9 @@ grow_vertical = 0
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 28
-theme_override_styles/hover = SubResource("StyleBoxTexture_r1tel")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_2hth1")
 theme_override_styles/normal = SubResource("StyleBoxTexture_ms5ap")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_2hth1")
+theme_override_styles/hover = SubResource("StyleBoxTexture_r1tel")
 text = "Done"
 
 [connection signal="pressed" from="TutorialOverlay/TutorialBox/VBoxContainer/NextButton" to="." method="_on_next_button_pressed"]

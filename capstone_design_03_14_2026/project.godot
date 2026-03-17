@@ -14,6 +14,7 @@ config/name="CAPSTONE_DESIGN"
 run/main_scene="uid://ca1fd4q7tw5tf"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+quit_on_go_back_request=false
 
 [autoload]
 

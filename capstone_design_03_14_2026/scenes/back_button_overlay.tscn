@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://bbowmtxs7unw8"]
+
+[ext_resource type="Script" uid="uid://lpllgvu71jcd" path="res://script/back_button_overlay.gd" id="1_7nr81"]
+[ext_resource type="Texture2D" uid="uid://bqrfq2sdlbftd" path="res://assets/MAIN_MENU/Back_button_pressed.png" id="2_xt2yg"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qroxf"]
+texture = ExtResource("2_xt2yg")
+
+[node name="BackButtonOverlay" type="CanvasLayer"]
+script = ExtResource("1_7nr81")
+
+[node name="Button" type="Button" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -218.0
+offset_top = -108.0
+offset_right = -18.0
+offset_bottom = -18.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/normal = SubResource("StyleBoxTexture_qroxf")

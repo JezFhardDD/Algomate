@@ -245,6 +245,8 @@ func _get_time_limit() -> float:
 	return 90.0
 
 func _ready() -> void:
+	var back_overlay = preload("res://scenes/back_button_overlay.tscn").instantiate()
+	add_child(back_overlay)
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
 	print("=== DEBUG: Node References ===")
 	print("array_container: ", array_container)
@@ -2166,5 +2168,5 @@ func _on_translate_code_pressed() -> void:
 func _exit_tree():
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_PORTRAIT)
 	# Swap back to portrait dimensions
-	get_tree().root.content_scale_size = Vector2i(648, 1152)
+	 
 	

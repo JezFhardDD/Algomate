@@ -332,7 +332,7 @@ func _enter_tree():
 		
 func _exit_tree():
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_PORTRAIT)
-	get_tree().root.content_scale_size = Vector2i(648, 1152)
+	 
 
 func _get_array_size() -> int:
 	match difficulty:
@@ -352,6 +352,8 @@ func _get_time_limit() -> float:
 #   READY & INITIALIZATION (UPDATED)
 # ==============================================
 func _ready() -> void:
+	var back_overlay = preload("res://scenes/back_button_overlay.tscn").instantiate()
+	add_child(back_overlay)
 	# ADDED: Get difficulty from Global
 	difficulty = Global.current_difficulty
 	if difficulty == 0:

@@ -195,6 +195,8 @@ var tutorial_in_progress: bool = false
 
 
 func _ready() -> void:
+	var back_overlay = preload("res://scenes/back_button_overlay.tscn").instantiate()
+	add_child(back_overlay)
 	difficulty = Global.current_difficulty
 	if difficulty == 0:
 		difficulty = 1
@@ -2053,4 +2055,4 @@ func _end_tutorial() -> void:
 			pointer_sprite.get_meta("tween").kill()
 func _exit_tree():
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_PORTRAIT)
-	get_tree().root.content_scale_size = Vector2i(648, 1152)
+	 

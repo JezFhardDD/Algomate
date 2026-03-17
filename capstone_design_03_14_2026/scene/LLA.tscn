@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://scm81yeruglh"]
+[gd_scene load_steps=4 format=3 uid="uid://uc1jxl22wsro"]
 
 [ext_resource type="PackedScene" uid="uid://dq6ebtkxu3lbb" path="res://scene/ArrayA.tscn" id="1_acqi7"]
 [ext_resource type="Script" uid="uid://vy47rx6s7lre" path="res://script/lla.gd" id="2_bfq85"]
@@ -9,6 +9,23 @@ script = ExtResource("2_bfq85")
 
 [node name="AnimatedSprite2D" parent="Queue_full" index="2"]
 frame_progress = 0.318798
+
+[node name="HSeparator2" parent="CppPopup/VBoxContainer/TutorialPanel" index="0"]
+custom_minimum_size = Vector2(0, 0)
+layout_mode = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+
+[node name="CancelButton" parent="ArrayActionModal/ModalContent/ActionButtons" index="0"]
+theme_override_font_sizes/font_size = 50
+
+[node name="TargetLabel" parent="." index="31"]
+custom_minimum_size = Vector2(0, 0)
+layout_mode = 1
+theme_override_colors/font_color = Color(0.638753, 0.758185, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+text = "Find: 99"
 
 [node name="ArrowLayer" type="Control" parent="." index="36"]
 anchors_preset = 0

@@ -10,6 +10,7 @@ var seed: float
 var start_pos: Vector2
 var time_accum: float = 0.0
 
+
 func _ready():
 	# Store initial position
 	start_pos = position

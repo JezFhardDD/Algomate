@@ -1933,11 +1933,13 @@ Note: any element placed above or below the
 array size will be randomized"
 
 [node name="SCS_Logo" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(1096, 595.1)
 scale = Vector2(0.09375, 0.0876953)
 texture = ExtResource("22_e0o2a")
 
 [node name="Label" type="Label" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0

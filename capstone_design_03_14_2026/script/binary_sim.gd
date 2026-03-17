@@ -203,6 +203,8 @@ var cpp_tutorial_data = [
 #   READY
 # ==============================================
 func _ready() -> void:
+	var back_overlay = preload("res://scenes/back_button_overlay.tscn").instantiate()
+	add_child(back_overlay)
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
 	print("Program started — initializing Binary Search...")
 	randomize()
@@ -275,7 +277,7 @@ func _enter_tree():
 
 func _exit_tree():
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_PORTRAIT)
-	get_tree().root.content_scale_size = Vector2i(648, 1152)
+	 
 	
 # ==============================================
 #   COMPILER SETUP FUNCTIONS

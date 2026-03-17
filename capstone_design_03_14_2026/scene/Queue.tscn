@@ -1214,8 +1214,8 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_hri7i")
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -225.0
-offset_right = 219.0
+offset_left = 25.0
+offset_right = 469.0
 offset_bottom = 300.0
 grow_horizontal = 2
 size_flags_horizontal = 3
@@ -1636,11 +1636,13 @@ Note: any element placed above or below the
 array size will be randomized"
 
 [node name="SCS_Logo" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(1096, 595.1)
 scale = Vector2(0.09375, 0.0876953)
 texture = ExtResource("13_aex65")
 
 [node name="Label" type="Label" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0

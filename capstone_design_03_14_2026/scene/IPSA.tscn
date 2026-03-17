@@ -19,7 +19,6 @@ offset_bottom = 502.0
 
 [node name="CppPopup" parent="." index="12"]
 size = Vector2i(789, 659)
-visible = true
 
 [node name="VBoxContainer" parent="CppPopup" index="1"]
 offset_right = 774.0

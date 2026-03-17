@@ -238,6 +238,8 @@ var c_tutorial_data = [
 #   READY
 # ==============================================
 func _ready() -> void:
+	var back_overlay = preload("res://scenes/back_button_overlay.tscn").instantiate()
+	add_child(back_overlay)
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
 	print("Program started — initializing BFS visualizer...")
 	randomize()
@@ -316,7 +318,7 @@ func _enter_tree():
 
 func _exit_tree():
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_PORTRAIT)
-	get_tree().root.content_scale_size = Vector2i(648, 1152)
+	 
 	
 # ==============================================
 #   COMPILER SETUP FUNCTIONS
@@ -1494,3 +1496,6 @@ func _on_yes_pressed():
 	_show_config_modal()
 func _on_no_pressed(): sim_confirmation.hide()
 func _on_help_button_pressed(): start_tutorial()
+func _notification(what):
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		SceneManager.go_back()

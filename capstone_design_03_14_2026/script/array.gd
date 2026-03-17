@@ -198,6 +198,8 @@ enum ActionType { ACCESS, INSERT_AT_END, INSERT_AT_INDEX, DELETE }
 #   READY FUNCTION
 # ==============================================
 func _ready() -> void:
+	var back_overlay = preload("res://scenes/back_button_overlay.tscn").instantiate()
+	add_child(back_overlay)
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
 	print("Array Simulation starting...")
 	randomize()
@@ -1795,4 +1797,4 @@ func _end_tutorial():
 func _exit_tree():
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_PORTRAIT)
 	# Swap back to portrait dimensions
-	get_tree().root.content_scale_size = Vector2i(648, 1152)
+	 

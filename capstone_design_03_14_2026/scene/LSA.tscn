@@ -38,6 +38,12 @@ offset_top = 0.0
 offset_right = 594.0
 offset_bottom = 4.0
 
+[node name="SCS_Logo" parent="." index="22"]
+visible = false
+
+[node name="Label" parent="." index="23"]
+visible = false
+
 [node name="TextureRect" parent="MarginContainer/HBoxContainer2" index="0"]
 custom_minimum_size = Vector2(550, 0)
 

@@ -9,50 +9,53 @@
 [ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="7_rsgdm"]
 [ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="8_2oo6p"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dq125"]
-texture = ExtResource("6_x3etq")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_njl6h"]
+texture = ExtResource("8_2oo6p")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xywgn"]
 texture = ExtResource("7_rsgdm")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_njl6h"]
-texture = ExtResource("8_2oo6p")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dq125"]
+texture = ExtResource("6_x3etq")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r5aow"]
 texture = ExtResource("3_dq125")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wuire"]
-texture = ExtResource("6_x3etq")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ldlja"]
+texture = ExtResource("8_2oo6p")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nnk1c"]
 texture = ExtResource("7_rsgdm")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ldlja"]
-texture = ExtResource("8_2oo6p")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1ihg2"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wuire"]
 texture = ExtResource("6_x3etq")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_32nmk"]
-texture = ExtResource("7_rsgdm")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ftvp4"]
 texture = ExtResource("8_2oo6p")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_21xc6"]
-texture = ExtResource("3_dq125")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_32nmk"]
+texture = ExtResource("7_rsgdm")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bm4w0"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1ihg2"]
 texture = ExtResource("6_x3etq")
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jhjhp"]
-texture = ExtResource("7_rsgdm")
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_21xc6"]
+texture = ExtResource("3_dq125")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c1j5l"]
 texture = ExtResource("8_2oo6p")
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_jhjhp"]
+texture = ExtResource("7_rsgdm")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bm4w0"]
+texture = ExtResource("6_x3etq")
+
 [node name="Main" instance=ExtResource("1_85hwj")]
 script = ExtResource("2_sjaiv")
+
+[node name="TimeUpPopup" parent="." index="0"]
+oversampling_override = 1.0
 
 [node name="DimBackground" parent="TutorialOverlay" index="0"]
 z_index = -5
@@ -73,53 +76,53 @@ visible = false
 [node name="AccessButton" type="Button" parent="VBoxContainer" index="1"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("5_njl6h")
 theme_override_font_sizes/font_size = 26
-theme_override_styles/hover = SubResource("StyleBoxTexture_dq125")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_xywgn")
 theme_override_styles/normal = SubResource("StyleBoxTexture_njl6h")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_xywgn")
+theme_override_styles/hover = SubResource("StyleBoxTexture_dq125")
 text = "Access [i]"
 
 [node name="InsertAtEndButton" type="Button" parent="VBoxContainer" index="2"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("5_njl6h")
 theme_override_font_sizes/font_size = 26
-theme_override_styles/hover = SubResource("StyleBoxTexture_dq125")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_xywgn")
 theme_override_styles/normal = SubResource("StyleBoxTexture_njl6h")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_xywgn")
+theme_override_styles/hover = SubResource("StyleBoxTexture_dq125")
 text = " Insert at End "
 
 [node name="InsertAtIButton" type="Button" parent="VBoxContainer" index="3"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("5_njl6h")
 theme_override_font_sizes/font_size = 26
-theme_override_styles/hover = SubResource("StyleBoxTexture_dq125")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_xywgn")
 theme_override_styles/normal = SubResource("StyleBoxTexture_njl6h")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_xywgn")
+theme_override_styles/hover = SubResource("StyleBoxTexture_dq125")
 text = "Insert at  [i]"
 
 [node name="DeleteButton" type="Button" parent="VBoxContainer" index="4"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("5_njl6h")
 theme_override_font_sizes/font_size = 26
-theme_override_styles/hover = SubResource("StyleBoxTexture_dq125")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_xywgn")
 theme_override_styles/normal = SubResource("StyleBoxTexture_njl6h")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_xywgn")
+theme_override_styles/hover = SubResource("StyleBoxTexture_dq125")
 text = "Delete [i]"
 
 [node name="SortButton" parent="VBoxContainer" index="5"]
@@ -138,6 +141,12 @@ offset_right = 457.0
 offset_bottom = 439.0
 
 [node name="TryAgainButton" parent="." index="14"]
+visible = false
+
+[node name="SCS_Logo" parent="." index="22"]
+visible = false
+
+[node name="Label" parent="." index="23"]
 visible = false
 
 [node name="End_simulation_confirmation" type="Panel" parent="." index="24"]
@@ -187,9 +196,9 @@ offset_bottom = 226.0
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("5_njl6h")
 theme_override_font_sizes/font_size = 28
-theme_override_styles/hover = SubResource("StyleBoxTexture_wuire")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_nnk1c")
 theme_override_styles/normal = SubResource("StyleBoxTexture_ldlja")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_nnk1c")
+theme_override_styles/hover = SubResource("StyleBoxTexture_wuire")
 text = "No"
 
 [node name="yes" type="Button" parent="End_simulation_confirmation" index="2"]
@@ -201,9 +210,9 @@ offset_bottom = 226.0
 theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
 theme_override_fonts/font = ExtResource("5_njl6h")
 theme_override_font_sizes/font_size = 28
-theme_override_styles/hover = SubResource("StyleBoxTexture_1ihg2")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_32nmk")
 theme_override_styles/normal = SubResource("StyleBoxTexture_ftvp4")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_32nmk")
+theme_override_styles/hover = SubResource("StyleBoxTexture_1ihg2")
 text = "Yes"
 
 [node name="Label" parent="Simulate_new_confirmation" index="0"]
@@ -297,8 +306,8 @@ text = "Index:"
 [node name="IndexSpinBox" type="SpinBox" parent="ArrayActionModal/ModalContent/InputContainer/SingleInputRow" index="1"]
 custom_minimum_size = Vector2(200, 80)
 layout_mode = 2
-theme_override_constants/set_min_buttons_width_from_icons = 10
 theme_override_constants/buttons_width = 10
+theme_override_constants/set_min_buttons_width_from_icons = 10
 max_value = 10.0
 alignment = 1
 
@@ -319,8 +328,8 @@ text = "Value:"
 [node name="ValueSpinBox" type="SpinBox" parent="ArrayActionModal/ModalContent/InputContainer/DoubleInputContainer/HBoxContainer" index="1"]
 custom_minimum_size = Vector2(200, 80)
 layout_mode = 2
-theme_override_constants/set_min_buttons_width_from_icons = 10
 theme_override_constants/buttons_width = 10
+theme_override_constants/set_min_buttons_width_from_icons = 10
 min_value = 1.0
 max_value = 99.0
 value = 1.0
@@ -338,8 +347,8 @@ text = "Index:"
 [node name="InsertIndexSpinBox" type="SpinBox" parent="ArrayActionModal/ModalContent/InputContainer/DoubleInputContainer/HBoxContainer2" index="1"]
 custom_minimum_size = Vector2(200, 80)
 layout_mode = 2
-theme_override_constants/set_min_buttons_width_from_icons = 10
 theme_override_constants/buttons_width = 10
+theme_override_constants/set_min_buttons_width_from_icons = 10
 max_value = 10.0
 value = 1.0
 alignment = 1
@@ -361,27 +370,27 @@ theme_override_constants/separation = 30
 [node name="CancelButton" type="Button" parent="ArrayActionModal/ModalContent/ActionButtons" index="0"]
 custom_minimum_size = Vector2(200, 70)
 layout_mode = 2
-theme_override_colors/font_outline_color = Color(0.795181, 0.541662, 0.621549, 1)
 theme_override_colors/font_color = Color(0.839463, 4.32695e-05, 0.367964, 1)
+theme_override_colors/font_outline_color = Color(0.795181, 0.541662, 0.621549, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("5_njl6h")
 theme_override_font_sizes/font_size = 50
-theme_override_styles/hover = SubResource("StyleBoxTexture_bm4w0")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_jhjhp")
 theme_override_styles/normal = SubResource("StyleBoxTexture_c1j5l")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_jhjhp")
+theme_override_styles/hover = SubResource("StyleBoxTexture_bm4w0")
 text = "Cancel"
 
 [node name="ConfirmButton" type="Button" parent="ArrayActionModal/ModalContent/ActionButtons" index="1"]
 custom_minimum_size = Vector2(200, 70)
 layout_mode = 2
-theme_override_colors/font_outline_color = Color(0.689629, 0.365104, 0.0311437, 1)
 theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0.689629, 0.365104, 0.0311437, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("5_njl6h")
 theme_override_font_sizes/font_size = 50
-theme_override_styles/hover = SubResource("StyleBoxTexture_bm4w0")
-theme_override_styles/pressed = SubResource("StyleBoxTexture_jhjhp")
 theme_override_styles/normal = SubResource("StyleBoxTexture_c1j5l")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_jhjhp")
+theme_override_styles/hover = SubResource("StyleBoxTexture_bm4w0")
 text = "Confirm"
 
 [node name="TargetLabel" type="Label" parent="." index="31"]

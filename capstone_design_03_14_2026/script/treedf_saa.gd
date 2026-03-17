@@ -191,6 +191,8 @@ var intro_texts = [
 # =======================================================
 
 func _ready() -> void:
+	var back_overlay = preload("res://scenes/back_button_overlay.tscn").instantiate()
+	add_child(back_overlay)
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
 	print("BFS Assessment mode initialized")
 	randomize()
@@ -1592,4 +1594,4 @@ func _on_help_button_pressed():
 func _exit_tree():
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_PORTRAIT)
 	# Swap back to portrait dimensions
-	get_tree().root.content_scale_size = Vector2i(648, 1152)
+	 

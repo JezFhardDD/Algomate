@@ -5,3 +5,9 @@
 
 [node name="Main2" instance=ExtResource("1_2d1d7")]
 script = ExtResource("2_uj15k")
+
+[node name="SCS_Logo" parent="." index="22"]
+visible = false
+
+[node name="Label" parent="." index="23"]
+visible = false

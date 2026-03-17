@@ -1,28 +1,29 @@
 [gd_scene load_steps=32 format=3 uid="uid://i0whnlrt0wjn"]
-[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="planes_font_ref"]
+
 [ext_resource type="Shader" uid="uid://bwo8f725t8nm5" path="res://scenes/assessment_map.gdshader" id="1_tik64"]
 [ext_resource type="Script" uid="uid://ctxmitissoiqd" path="res://scripts/assessment_map.gd" id="1_uirgf"]
-[ext_resource type="Script" uid="uid://fi0te7782ccb" path="res://scripts/panel.gd" id="1_v00f7"]
-[ext_resource type="Texture2D" uid="uid://cj4qa842i3e58" path="res://assets/ASSESSMENT/Floating_blocks_square.png" id="2_8nxpu"]
-[ext_resource type="Shader" uid="uid://cp6fn0n5y16lg" path="res://scripts/floating_island.gdshader" id="3_bik13"]
-[ext_resource type="Texture2D" uid="uid://dmu5w5b77ijvo" path="res://assets/ASSESSMENT/Floating_blocks_L.png" id="4_j3ako"]
-[ext_resource type="Texture2D" uid="uid://vtwuew4s14nd" path="res://assets/ASSESSMENT/Floating_blocks_L_orange.png" id="5_2o42q"]
-[ext_resource type="Texture2D" uid="uid://buqqybvdd3hum" path="res://assets/ASSESSMENT/Floating_blocks_L_purple.png" id="5_70feh"]
-[ext_resource type="Texture2D" uid="uid://cy6kx6llrkn0e" path="res://assets/ASSESSMENT/Floating_blocks_rectangle.png" id="5_bik13"]
-[ext_resource type="Texture2D" uid="uid://cqgyv4ft3h533" path="res://assets/ASSESSMENT/Floating_blocks_LL.png" id="6_2o42q"]
-[ext_resource type="Texture2D" uid="uid://s1gfd666j7aq" path="res://assets/ASSESSMENT/Floating_blocks_smallsquare.png" id="6_gwkt8"]
-[ext_resource type="Texture2D" uid="uid://dqqqgk61afgtw" path="res://assets/ASSESSMENT/Assessment_topics.png" id="7_cu04t"]
-[ext_resource type="Texture2D" uid="uid://ci3jijjyfgn08" path="res://assets/ASSESSMENT/Floating_blocks_L2_purple.png" id="8_ems15"]
+[ext_resource type="Script" path="res://scripts/panel.gd" id="1_v00f7"]
+[ext_resource type="Texture2D" uid="uid://dtkjjd7qwdplf" path="res://assets/ASSESSMENT/Floating_blocks_square.png" id="2_8nxpu"]
+[ext_resource type="Shader" path="res://scripts/floating_island.gdshader" id="3_bik13"]
+[ext_resource type="Texture2D" uid="uid://b0pq4wt04k7th" path="res://assets/ASSESSMENT/Floating_blocks_L.png" id="4_j3ako"]
+[ext_resource type="Texture2D" uid="uid://c1abq8qu8ctsh" path="res://assets/ASSESSMENT/Floating_blocks_L_orange.png" id="5_2o42q"]
+[ext_resource type="Texture2D" uid="uid://8msd4vpjbsuv" path="res://assets/ASSESSMENT/Floating_blocks_L_purple.png" id="5_70feh"]
+[ext_resource type="Texture2D" uid="uid://cjumg3e51n5ac" path="res://assets/ASSESSMENT/Floating_blocks_rectangle.png" id="5_bik13"]
+[ext_resource type="Texture2D" uid="uid://bxbnqol47vayu" path="res://assets/ASSESSMENT/Floating_blocks_LL.png" id="6_2o42q"]
+[ext_resource type="Texture2D" uid="uid://bix1tpuanw675" path="res://assets/ASSESSMENT/Floating_blocks_smallsquare.png" id="6_gwkt8"]
+[ext_resource type="Texture2D" uid="uid://dqhtyt1dkw1tt" path="res://assets/ASSESSMENT/Assessment_topics.png" id="7_cu04t"]
+[ext_resource type="Texture2D" uid="uid://l3nhvdpejh47" path="res://assets/ASSESSMENT/Floating_blocks_L2_purple.png" id="8_ems15"]
 [ext_resource type="Script" uid="uid://ds24osho6plla" path="res://scripts/assessment_array.gd" id="8_oqmdg"]
-[ext_resource type="Texture2D" uid="uid://dlxtwvn5d00x7" path="res://assets/ASSESSMENT/Floating_blocks_rectangle_orange.png" id="8_rdfvb"]
-[ext_resource type="Texture2D" uid="uid://txhgmvrxunhn" path="res://assets/ASSESSMENT/Floating_blocks_square_orange.png" id="10_iwndo"]
-[ext_resource type="Texture2D" uid="uid://vnfgp36jfyql" path="res://assets/ASSESSMENT/Floating_blocks_rectangle_purple.png" id="11_63ret"]
-[ext_resource type="Texture2D" uid="uid://c8swavoj6xset" path="res://assets/ASSESSMENT/Floating_blocks_square_purple.png" id="14_cq7wo"]
-[ext_resource type="Script" uid="uid://da61yy1t5evg" path="res://scripts/assessment_titles.gd" id="17_ix1c0"]
-[ext_resource type="Shader" uid="uid://dtc3gywxeie31" path="res://scripts/intro.gdshader" id="18_63ret"]
-[ext_resource type="Texture2D" uid="uid://dh4yfhfe0xnpv" path="res://assets/MAIN_MENU/ALGOMATE_LOGO.png" id="19_cq7wo"]
-[ext_resource type="Texture2D" uid="uid://cr42f7sut8qo6" path="res://assets/ui/lock.png" id="19_fq2gl"]
+[ext_resource type="Texture2D" uid="uid://ccqcqeehl7r3g" path="res://assets/ASSESSMENT/Floating_blocks_rectangle_orange.png" id="8_rdfvb"]
+[ext_resource type="Texture2D" uid="uid://dn516lbttojny" path="res://assets/ASSESSMENT/Floating_blocks_square_orange.png" id="10_iwndo"]
+[ext_resource type="Texture2D" uid="uid://bkuy153jb14yv" path="res://assets/ASSESSMENT/Floating_blocks_rectangle_purple.png" id="11_63ret"]
+[ext_resource type="Texture2D" uid="uid://c7dxxcp0t5t7h" path="res://assets/ASSESSMENT/Floating_blocks_square_purple.png" id="14_cq7wo"]
+[ext_resource type="Script" path="res://scripts/assessment_titles.gd" id="17_ix1c0"]
+[ext_resource type="Shader" path="res://scripts/intro.gdshader" id="18_63ret"]
+[ext_resource type="Texture2D" uid="uid://bfiagjnegdly1" path="res://assets/MAIN_MENU/ALGOMATE_LOGO.png" id="19_cq7wo"]
+[ext_resource type="Texture2D" uid="uid://b6thii8cgc4rl" path="res://assets/ui/lock.png" id="19_fq2gl"]
 [ext_resource type="PackedScene" uid="uid://qq8h2spv5c" path="res://scenes/difficulty_popup.tscn" id="20_cq7wo"]
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="planes_font_ref"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_h3g18"]
 shader = ExtResource("1_tik64")
@@ -62,8 +63,6 @@ shader_parameter/min_height = 0.05
 shader_parameter/max_height = 0.009
 shader_parameter/min_rotation = 1.0
 shader_parameter/max_rotation = 1.9
-
-subpixel_positioning = 0
 
 [sub_resource type="LabelSettings" id="LabelSettings_ubyvv"]
 line_spacing = -5.485
@@ -425,7 +424,7 @@ anchors_preset = -1
 anchor_left = 0.05240868
 anchor_top = 0.1485
 anchor_right = 0.12383225
-anchor_bottom = 0.18572979
+anchor_bottom = 0.1854413
 offset_right = -70.91911
 offset_bottom = -35.459564
 scale = Vector2(2.1081111, 2.1081111)
@@ -1325,7 +1324,5 @@ texture = ExtResource("19_cq7wo")
 [node name="DifficultyPopup" parent="." instance=ExtResource("20_cq7wo")]
 layout_mode = 0
 anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
 grow_horizontal = 1
 grow_vertical = 1

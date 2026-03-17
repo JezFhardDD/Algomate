@@ -35,6 +35,9 @@ func set_lesson(id: String) -> void:
 	lesson_id = id
 
 func _ready() -> void:
+	var margin = $MarginContainer
+	margin.offset_left = 0
+	margin.offset_right = 0
 	if lesson_id.is_empty() and not Global.last_lesson_id.is_empty():
 		lesson_id = Global.last_lesson_id
 	student_speaker.visible = false
@@ -59,25 +62,21 @@ func _ready() -> void:
 	load_profile_picture()
 	
 	# Connect to Global signals to detect profile changes
-	if Global.has_signal("profile_updated"):
-		Global.profile_updated.connect(_on_profile_updated)
-		print("Connected to profile_updated signal")
-	
-	if Global.has_signal("purchases_updated"):
-		Global.purchases_updated.connect(_on_profile_updated)
-		print("Connected to purchases_updated signal")
+# Disconnect first to prevent duplicate connections on reload
+	if Global.profile_updated.is_connected(_on_profile_updated):
+		Global.profile_updated.disconnect(_on_profile_updated)
+	if Global.purchases_updated.is_connected(_on_profile_updated):
+		Global.purchases_updated.disconnect(_on_profile_updated)
 
+	# Now connect safely
+	Global.profile_updated.connect(_on_profile_updated, CONNECT_DEFERRED)
+	Global.purchases_updated.connect(_on_profile_updated, CONNECT_DEFERRED)
+	print("Connected to profile_updated signal")
+	print("Connected to purchases_updated signal")
 # 🔥 NEW: Debug function to print all available voices
 func _debug_print_all_voices():
 	print("\n=== AVAILABLE VOICES ===")
 	print("Total voices found: ", voices.size())
-	for i in range(voices.size()):
-		var v = voices[i]
-		print("Voice ", i, ":")
-		print("  ID: ", v.get("id", "N/A"))
-		print("  Language: ", v.get("language", "N/A"))
-		print("  Name: ", v.get("name", "N/A"))
-	print("========================\n")
 
 # 🔥 NEW: Called when profile changes
 func _on_profile_updated():
@@ -303,6 +302,10 @@ func _exit_tree() -> void:
 	DisplayServer.tts_stop()
 	if float_tween:
 		float_tween.kill()
+	if Global.profile_updated.is_connected(_on_profile_updated):
+		Global.profile_updated.disconnect(_on_profile_updated)
+	if Global.purchases_updated.is_connected(_on_profile_updated):
+		Global.purchases_updated.disconnect(_on_profile_updated)
 
 func _show_student_sprite() -> void:
 	student_speaker.visible = true

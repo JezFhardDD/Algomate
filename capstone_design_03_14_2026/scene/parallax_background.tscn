@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://c08efy8q3pd7b" path="res://assets/PARALLAX_FG.png" id="4_hy12d"]
 
 [node name="ParallaxBackground" type="ParallaxBackground"]
+visible = false
 script = ExtResource("1_2pwms")
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="."]

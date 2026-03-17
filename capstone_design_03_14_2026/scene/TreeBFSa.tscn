@@ -8,3 +8,9 @@ script = ExtResource("2_la03u")
 
 [node name="CppPopup" parent="." index="15"]
 oversampling_override = 1.0
+
+[node name="SCS_Logo" parent="." index="24"]
+visible = false
+
+[node name="Label" parent="." index="25"]
+visible = false
