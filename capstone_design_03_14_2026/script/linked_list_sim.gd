@@ -1,7 +1,8 @@
 extends Control
 
-#    LINKED LIST SIMULATION - FINAL (Custom UI Nodes)
-
+# ==============================================
+#   UI NODES & REFERENCES
+# ==============================================
 
 # --- MAIN BUTTONS ---
 @onready var sort_btn: Button = $VBoxContainer/SortButton          
@@ -102,28 +103,15 @@ const RESULT_POPUP_SCENE := preload("res://scene/ResultPopup.tscn")
 @onready var c_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/C_btn
 
 # ==============================================
-#   COMPILER INTEGRATION - API KEYS
+#   STATE VARIABLES
 # ==============================================
 const API_KEYS = {
-	"cpp": {
-		"clientId": "2401da4c28f2c97e0bed9ca3957a31c7",
-		"clientSecret": "6fdf1a280c510b6d61ba5f964a272a8fa30a5f207cbc395bdece31e781588e73"
-	},
-	"c": {
-		"clientId": "1b1bc8decbed095d6bf0d7399224b9eb",
-		"clientSecret": "e520c9852647730c46853932941226b1c6c47badaf6409c4f34e0a89dcc8611a"
-	},
-	"java": {
-		"clientId": "14e8bb1335d07711f04c72a2a81ad16e",
-		"clientSecret": "c59ca7898c39d69a3fa54a867e52ba35a950fb74707ef3e288d913bbf6a492af"
-	},
-	"python": {
-		"clientId": "36c21fabf5976c192d192ab04af4c8f9",
-		"clientSecret": "a2d0c24c91d4ab4193a2f242307967d61d5f70a2a422734d7458d240c9c596c4"
-	}
+	"cpp": {"clientId": "2401da4c28f2c97e0bed9ca3957a31c7", "clientSecret": "6fdf1a280c510b6d61ba5f964a272a8fa30a5f207cbc395bdece31e781588e73"},
+	"c": {"clientId": "1b1bc8decbed095d6bf0d7399224b9eb", "clientSecret": "e520c9852647730c46853932941226b1c6c47badaf6409c4f34e0a89dcc8611a"},
+	"java": {"clientId": "14e8bb1335d07711f04c72a2a81ad16e", "clientSecret": "c59ca7898c39d69a3fa54a867e52ba35a950fb74707ef3e288d913bbf6a492af"},
+	"python": {"clientId": "36c21fabf5976c192d192ab04af4c8f9", "clientSecret": "a2d0c24c91d4ab4193a2f242307967d61d5f70a2a422734d7458d240c9c596c4"}
 }
 
-# --- LINKED LIST & SEARCH VARIABLES ---
 var main_array: Array[int] = []
 var initial_elements: Array[int] = []      
 var action_history: Array[Dictionary] = [] 
@@ -140,11 +128,10 @@ var sorting_complete: bool = false
 var is_sorting: bool = false
 var is_auto_playing: bool = false
 
-# Code generation variables
 var code_lines: Array[String] = []
 var current_code_language: String = "cpp"
 
-# Result Popup
+# Result Popup Variables
 var result_popup: PopupPanel
 var result_title: Label
 var score_summary: Label
@@ -156,12 +143,13 @@ var try_again_result_btn: Button
 var back_result_btn: Button
 var translate_code_btn: Button
 
+# Layout Variables
 var BLOCK_WIDTH: float = 64.0 
 var BLOCK_SPACING: float = 40.0 
 var START_POSITION: Vector2 = Vector2(50, 100)
 var ANIM_SPEED: float = 1.5 
 
-# --- INPUT DIALOG ELEMENTS ---
+# --- INPUT DIALOG ELEMENTS (Hard-Coded) ---
 var target_input_dialog: ConfirmationDialog
 var target_spinbox: SpinBox
 var pos_input_dialog: ConfirmationDialog
@@ -185,7 +173,6 @@ var intro_texts = [
 var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
 
-# --- TUTORIAL HIGHLIGHTING DATA (RE-MAPPED TO MATCH FULL CODE STRINGS) ---
 var tutorial_data_map = {
 	"cpp": [
 		{ "lines": [0], "text": "1. Complexity: [color=yellow]Time O(N)[/color], [color=yellow]Space O(N)[/color]" },
@@ -238,7 +225,6 @@ func _ready() -> void:
 	back_result_btn = result_popup.get_node("TextureRect/VBoxContainer/HBoxContainer2/BackButton")
 	translate_code_btn = result_popup.get_node("TextureRect/VBoxContainer/translate_code_btn")
 	
-	# Connect result buttons
 	try_again_result_btn.pressed.connect(_on_try_again_pressed)
 	back_result_btn.pressed.connect(_on_back_pressed)
 	translate_code_btn.pressed.connect(_on_translate_code_pressed)
@@ -261,7 +247,6 @@ func _ready() -> void:
 	
 	if ptr_left: ptr_left.hide()
 	if ptr_right: ptr_right.hide()
-	
 	if cpp_code_button: cpp_code_button.hide()
 	
 	if sort_btn: sort_btn.text = "Find Element"
@@ -277,12 +262,9 @@ func _ready() -> void:
 	if cpp_next_btn: _ensure_connected(cpp_next_btn, "pressed", _on_cpp_next_pressed)
 	
 	_connect_configuration_buttons()
-	
-	# Setup compiler
 	_setup_compiler()
 	
 	_show_config_modal() 
-	
 	call_deferred("show_introduction")
 	
 	if q_mark_sprite: q_mark_sprite.play("default")
@@ -300,12 +282,11 @@ func _enter_tree():
 func _exit_tree():
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_PORTRAIT)
 	get_tree().root.content_scale_size = Vector2i(648, 1152)
-	
+
 # ==============================================
 #   COMPILER SETUP FUNCTIONS
 # ==============================================
 func _setup_compiler() -> void:
-	"""Setup compiler button and popup"""
 	if compile_btn:
 		if compile_btn.is_connected("pressed", _on_compile_button_pressed):
 			compile_btn.disconnect("pressed", _on_compile_button_pressed)
@@ -315,33 +296,23 @@ func _setup_compiler() -> void:
 		var popup_scene = preload("res://scene/CompilerOutput.tscn")
 		compiler_output_popup = popup_scene.instantiate()
 		add_child(compiler_output_popup)
-		
 		compiler_output_popup.recompile_requested.connect(_on_recompile_requested)
 		compiler_output_popup.closed.connect(_on_compiler_output_closed)
 
-
 func _on_compile_button_pressed() -> void:
 	btn_sound.play()
-	
 	var code = _generate_code_for_language(current_code_language)
 	
 	if compiler_output_popup and compiler_output_popup.has_cached_result(current_code_language):
 		var cached = compiler_output_popup.get_cached_result(current_code_language)
-		var fake_response = {
-			"output": cached.output,
-			"error": cached.error,
-			"memory": cached.memory,
-			"cpu": cached.cpu
-		}
+		var fake_response = { "output": cached.output, "error": cached.error, "memory": cached.memory, "cpu": cached.cpu }
 		compiler_output_popup.show_output(current_code_language, fake_response, self, false)
 		show_feedback("Using cached result!", Color.YELLOW, Vector2(200, 200))
 	else:
 		_compile_code(code)
 
-
 func _compile_code(code: String) -> void:
 	show_feedback("Compiling...", Color.YELLOW, Vector2(200, 200))
-	
 	var keys = API_KEYS[current_code_language]
 	
 	var http_request = HTTPRequest.new()
@@ -352,9 +323,7 @@ func _compile_code(code: String) -> void:
 	var headers = ["Content-Type: application/json"]
 	
 	var api_language = current_code_language
-	match current_code_language:
-		"python":
-			api_language = "python3"
+	if current_code_language == "python": api_language = "python3"
 	
 	var body = JSON.new().stringify({
 		"clientId": keys["clientId"],
@@ -363,67 +332,73 @@ func _compile_code(code: String) -> void:
 		"language": api_language,
 		"versionIndex": _get_version_index(current_code_language)
 	})
-	
-	print("=== Linked List Compile Request ===")
-	print("Language: ", current_code_language, " → API: ", api_language)
-	print("Script preview: ", code.substr(0, 50) + "...")
-	
-	var error = http_request.request(url, headers, HTTPClient.METHOD_POST, body)
-	if error != OK:
-		show_feedback("Network error!", Color.RED, Vector2(200, 200))
-
+	http_request.request(url, headers, HTTPClient.METHOD_POST, body)
 
 func _get_version_index(lang: String) -> String:
 	match lang:
 		"cpp": return "5"
-		"c": return "4"
-		"java": return "4"
-		"python": return "4"
+		"c", "java", "python": return "4"
 		_: return "0"
-
 
 func _on_compile_completed(result, response_code, headers, body, http_request, language: String) -> void:
 	http_request.queue_free()
-	
 	if response_code != 200:
 		show_feedback("API Error: " + str(response_code), Color.RED, Vector2(200, 200))
 		return
 	
 	var json = JSON.new()
 	var parse_result = json.parse(body.get_string_from_utf8())
-	
 	if parse_result != OK:
 		show_feedback("Parse error!", Color.RED, Vector2(200, 200))
 		return
 	
-	var response = json.data
-	
 	if compiler_output_popup:
-		compiler_output_popup.show_output(language, response, self, false)
-
+		compiler_output_popup.show_output(language, json.data, self, false)
 
 func _on_recompile_requested(language: String) -> void:
-	var code = _generate_code_for_language(language)
-	_compile_code(code)
-
+	_compile_code(_generate_code_for_language(language))
 
 func _on_compiler_output_closed() -> void:
 	print("Compiler output closed")
 
-
 func reset_cache_for_scene() -> void:
-	if compiler_output_popup:
-		compiler_output_popup.reset_cache_for_scene()
-		print("Compiler cache reset for new simulation")
+	if compiler_output_popup: compiler_output_popup.reset_cache_for_scene()
 
+# ==============================================
+#   DIALOG CREATION & MENU SETUP
+# ==============================================
 func _setup_menu_buttons():
+	var modern_panel = _get_modern_stylebox()
+	var hover_style = _get_modern_stylebox(Color(0.25, 0.25, 0.3, 1.0))
+	hover_style.shadow_size = 0 # Flat hover inside menu
+	
 	if insert_menu:
 		var in_popup = insert_menu.get_popup()
 		in_popup.clear()
 		in_popup.add_item("Insert at Beginning", 0)
 		in_popup.add_item("Insert at End", 1)
 		in_popup.add_item("Insert at Position", 2)
+		
+		# Apply Modern Theme to Insert Dropdown
+		in_popup.add_theme_stylebox_override("panel", modern_panel)
+		in_popup.add_theme_stylebox_override("hover", hover_style)
+		in_popup.add_theme_constant_override("v_separation", 12)
+		in_popup.add_theme_font_size_override("font_size", 16)
 		in_popup.id_pressed.connect(_on_insert_selected)
+		
+	if delete_menu:
+		var del_popup = delete_menu.get_popup()
+		del_popup.clear()
+		del_popup.add_item("Delete at Beginning", 0)
+		del_popup.add_item("Delete at End", 1)
+		del_popup.add_item("Delete at Position", 2)
+		
+		# Apply Modern Theme to Delete Dropdown
+		del_popup.add_theme_stylebox_override("panel", modern_panel)
+		del_popup.add_theme_stylebox_override("hover", hover_style)
+		del_popup.add_theme_constant_override("v_separation", 12)
+		del_popup.add_theme_font_size_override("font_size", 16)
+		del_popup.id_pressed.connect(_on_delete_selected)
 		
 	if delete_menu:
 		var del_popup = delete_menu.get_popup()
@@ -434,46 +409,96 @@ func _setup_menu_buttons():
 		del_popup.id_pressed.connect(_on_delete_selected)
 
 func _create_input_dialogs():
+	var modern_panel = _get_modern_stylebox(Color(0.12, 0.12, 0.14, 0.95))
+	
+	# --- 1. Basic Target Value Dialog ---
 	target_input_dialog = ConfirmationDialog.new()
+	target_input_dialog.add_theme_stylebox_override("panel", modern_panel)
+	
 	var vbox = VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 15) # Add breathing room
 	target_input_dialog.add_child(vbox)
+	
 	var lbl = Label.new()
 	lbl.text = "Enter value:"
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.add_theme_font_size_override("font_size", 18)
 	vbox.add_child(lbl)
+	
 	target_spinbox = SpinBox.new()
 	target_spinbox.min_value = 0
 	target_spinbox.max_value = 999
+	target_spinbox.alignment = HORIZONTAL_ALIGNMENT_CENTER # Center the number
 	vbox.add_child(target_spinbox)
 	add_child(target_input_dialog)
 	
+	# --- 2. Position & Value Dialog ---
 	pos_input_dialog = ConfirmationDialog.new()
+	pos_input_dialog.add_theme_stylebox_override("panel", modern_panel)
+	
 	var pvbox = VBoxContainer.new()
+	pvbox.add_theme_constant_override("separation", 12) # Add breathing room
 	pos_input_dialog.add_child(pvbox)
 	
 	var plbl = Label.new()
 	plbl.text = "Enter Index (0 is Head):"
+	plbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	plbl.add_theme_font_size_override("font_size", 16)
 	pvbox.add_child(plbl)
+	
 	pos_spinbox = SpinBox.new()
 	pos_spinbox.min_value = 0
-	pos_spinbox.max_value = 999
+	pos_spinbox.max_value = 999 
+	pos_spinbox.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	pvbox.add_child(pos_spinbox)
 	
 	val_label = Label.new()
 	val_label.text = "Enter Value to Insert:"
+	val_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	val_label.add_theme_font_size_override("font_size", 16)
 	pvbox.add_child(val_label)
 	
 	val_spinbox = SpinBox.new()
 	val_spinbox.min_value = 0
 	val_spinbox.max_value = 999
+	val_spinbox.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	pvbox.add_child(val_spinbox)
-	
 	add_child(pos_input_dialog)
+	
 	pos_input_dialog.confirmed.connect(_on_pos_dialog_confirmed)
+	
+	# Try to style the default OK/Cancel buttons on both dialogs
+	call_deferred("_style_dialog_buttons", target_input_dialog)
+	call_deferred("_style_dialog_buttons", pos_input_dialog)
+
+func _style_dialog_buttons(dialog: ConfirmationDialog):
+	# The ConfirmationDialog generates an OK and Cancel button internally.
+	# We can grab them and make them look modern.
+	var ok_btn = dialog.get_ok_button()
+	var cancel_btn = dialog.get_cancel_button()
+	
+	for btn in [ok_btn, cancel_btn]:
+		if btn:
+			btn.add_theme_stylebox_override("normal", _get_modern_button_style(false))
+			btn.add_theme_stylebox_override("hover", _get_modern_button_style(true))
+			btn.add_theme_stylebox_override("pressed", _get_modern_button_style(false))
+			btn.add_theme_font_size_override("font_size", 16)
+			# Make cancel button a bit darker to differentiate
+			if btn == cancel_btn:
+				btn.add_theme_stylebox_override("normal", _get_modern_stylebox(Color(0.3, 0.3, 0.35, 1.0)))
+				btn.add_theme_stylebox_override("hover", _get_modern_stylebox(Color(0.4, 0.4, 0.45, 1.0)))
+
+func _disconnect_target_signals():
+	if target_input_dialog.confirmed.is_connected(_on_search_confirmed): 
+		target_input_dialog.confirmed.disconnect(_on_search_confirmed)
+	if target_input_dialog.confirmed.is_connected(_insert_beginning): 
+		target_input_dialog.confirmed.disconnect(_insert_beginning)
+	if target_input_dialog.confirmed.is_connected(_insert_end): 
+		target_input_dialog.confirmed.disconnect(_insert_end)
 
 # ==============================================
 #   LINKED LIST OPERATIONS
 # ==============================================
-
 func _on_insert_selected(id: int):
 	btn_sound.play()
 	if is_sorting: return
@@ -488,13 +513,12 @@ func _on_insert_selected(id: int):
 		return
 		
 	target_input_dialog.title = "Insert Value"
+	_disconnect_target_signals()
 	
 	if id == 0: 
-		_disconnect_target_signals()
 		target_input_dialog.confirmed.connect(_insert_beginning)
 		target_input_dialog.popup_centered()
 	elif id == 1: 
-		_disconnect_target_signals()
 		target_input_dialog.confirmed.connect(_insert_end)
 		target_input_dialog.popup_centered()
 	elif id == 2: 
@@ -521,16 +545,10 @@ func _on_delete_selected(id: int):
 		pos_spinbox.max_value = main_array.size() - 1
 		pos_input_dialog.popup_centered()
 
-func _disconnect_target_signals():
-	if target_input_dialog.confirmed.is_connected(_on_search_confirmed): target_input_dialog.confirmed.disconnect(_on_search_confirmed)
-	if target_input_dialog.confirmed.is_connected(_insert_beginning): target_input_dialog.confirmed.disconnect(_insert_beginning)
-	if target_input_dialog.confirmed.is_connected(_insert_end): target_input_dialog.confirmed.disconnect(_insert_end)
-
 func _on_pos_dialog_confirmed():
 	var pos = int(pos_spinbox.value)
 	if current_op_type == 0:
-		var val = int(val_spinbox.value)
-		_insert_at(pos, val)
+		_insert_at(pos, int(val_spinbox.value))
 	else:
 		_delete_at(pos)
 
@@ -541,14 +559,8 @@ func _insert_at(index: int, val: int):
 	if main_array.size() >= 6: return 
 	if index < 0 or index > main_array.size(): return
 	
-	# Add code line for insert operation
 	_add_code_line("INSERT", index, val)
-	
-	action_history.append({
-		"type": "insert",
-		"index": index,
-		"value": val
-	})
+	action_history.append({"type": "insert", "index": index, "value": val})
 	
 	main_array.insert(index, val)
 	var new_block = BLOCK_SCENE.instantiate()
@@ -564,13 +576,8 @@ func _insert_at(index: int, val: int):
 func _delete_at(index: int):
 	if index < 0 or index >= main_array.size(): return
 	
-	# Add code line for delete operation
 	_add_code_line("DELETE", index, main_array[index])
-	
-	action_history.append({
-		"type": "delete",
-		"index": index
-	})
+	action_history.append({"type": "delete", "index": index})
 	
 	var val = main_array.pop_at(index)
 	var block = block_nodes.pop_at(index)
@@ -587,7 +594,6 @@ func _delete_at(index: int):
 # ==============================================
 #   VISUAL UPDATES (POINTERS & LINKS)
 # ==============================================
-
 func _resnap_blocks() -> void:
 	is_sorting = true
 	var x = START_POSITION.x
@@ -641,24 +647,16 @@ func _draw_pointers_and_links():
 # ==============================================
 #   INITIALIZATION
 # ==============================================
-
 func _initialize_with_elements(elements: Array[int]) -> void:
-	# Reset cache for new simulation
 	reset_cache_for_scene()
-	
-	# Clear code lines
 	code_lines.clear()
-	
-	print("Initializing Linked List with:", elements)
 	audio_player.play()
 	
 	main_array = elements.duplicate()
 	initial_elements = elements.duplicate() 
 	action_history.clear()
 	
-	# Add initial code line
 	_add_code_line("INITIAL", 0, 0)
-	
 	block_nodes.clear()
 	timeline_log.clear()
 	
@@ -674,7 +672,6 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 		current_x += (new_block.size.x * new_block.scale.x) + BLOCK_SPACING
 		
 	_draw_pointers_and_links()
-	
 	search_target = 0
 	status_label.text = "Linked List Ready. Use Insert, Delete, or Search."
 	
@@ -701,7 +698,6 @@ func _ensure_connected(node: Node, signal_name: String, method: Callable):
 # ==============================================
 #   SEARCH TRAVERSAL LOGIC
 # ==============================================
-
 func _on_search_pressed() -> void:
 	btn_sound.play()
 	target_input_dialog.title = "Search Linked List"
@@ -715,13 +711,8 @@ func _on_search_confirmed():
 	status_label.text = "Searching list for: %d" % search_target
 	timeline_log.append("Started Traversal for: %d" % search_target)
 	
-	# Add code line for search
 	_add_code_line("SEARCH", 0, search_target)
-	
-	action_history.append({
-		"type": "search",
-		"value": search_target
-	})
+	action_history.append({"type": "search", "value": search_target})
 	
 	current_idx = 0
 	search_found = false
@@ -818,22 +809,19 @@ func _finish_simulation():
 
 func _compute_grade() -> Dictionary:
 	var passed = search_found
-	var coins = 5 if passed else 0
-	
 	return {
 		"passed": passed,
 		"accuracy": 100.0 if passed else 0.0,
 		"correct_moves": 1 if passed else 0,
 		"bad_moves": comparison_counter,
 		"time_used": 0,
-		"coins": coins,
+		"coins": 5 if passed else 0,
 		"required": 60
 	}
 
 # ==============================================
 #   UI & POPUPS
 # ==============================================
-
 func _update_ui_labels():
 	compare_label.text = "Nodes Checked: %d" % [comparison_counter]
 
@@ -859,7 +847,6 @@ func _on_timeline_close_pressed() -> void:
 # ==============================================
 #   CODE GENERATION
 # ==============================================
-
 func _add_code_line(op: String, index: int, value: int) -> void:
 	code_lines.append("%s|%d|%d" % [op, index, value])
 
@@ -879,14 +866,12 @@ using namespace std;
 struct Node {
 	int data;
 	Node* next;
-	
 	Node(int val) : data(val), next(nullptr) {}
 };
 
 class LinkedList {
 private:
 	Node* head;
-	
 public:
 	LinkedList() : head(nullptr) {}
 	
@@ -1117,25 +1102,17 @@ if __name__ == '__main__':
 
 func _gen_java_code() -> String:
 	var base_code = """/* Linked List Simulation - Operations Log */
-// Complexity: Time O(N) for search, O(1) for insert/delete at ends
 import java.util.*;
 
 class Node {
 	int data;
 	Node next;
-	
-	Node(int val) {
-		data = val;
-		next = null;
-	}
+	Node(int val) { data = val; next = null; }
 }
 
 class LinkedList {
 	Node head;
-	
-	LinkedList() {
-		head = null;
-	}
+	LinkedList() { head = null; }
 	
 	void printList() {
 		Node temp = head;
@@ -1246,7 +1223,6 @@ public class Main {
 
 func _gen_c_code() -> String:
 	var base_code = """/* Linked List Simulation - Operations Log */
-// Complexity: Time O(N) for search, O(1) for insert/delete at ends
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -1371,7 +1347,7 @@ void linearSearch(struct Node* head, int target) {
 }"""
 	
 	var action_code = _build_action_code("c")
-	return base_code + "\n\n" + action_code
+	return base_code + "\n\nint main() {\n    struct Node* head = NULL;\n" + action_code + "\n    return 0;\n}"
 
 func _build_action_code(lang: String) -> String:
 	var code = "\n"
@@ -1380,7 +1356,6 @@ func _build_action_code(lang: String) -> String:
 			code += "    // Initial elements\n"
 			for val in initial_elements:
 				code += "    list.insertEnd(%d);\n" % val
-			
 			if initial_elements.size() > 0:
 				code += "    cout << \"Initial list: \";\n"
 				code += "    list.printList();\n\n"
@@ -1389,36 +1364,28 @@ func _build_action_code(lang: String) -> String:
 			for action in action_history:
 				if action["type"] == "insert":
 					if action["index"] == 0:
-						code += "    // Step %d: Insert at beginning\n" % step
-						code += "    list.insertBeginning(%d);\n" % action["value"]
+						code += "    // Step %d: Insert at beginning\n    list.insertBeginning(%d);\n" % [step, action["value"]]
 					elif action["index"] == initial_elements.size():
-						code += "    // Step %d: Insert at end\n" % step
-						code += "    list.insertEnd(%d);\n" % action["value"]
+						code += "    // Step %d: Insert at end\n    list.insertEnd(%d);\n" % [step, action["value"]]
 					else:
-						code += "    // Step %d: Insert at index %d\n" % [step, action["index"]]
-						code += "    list.insertAtIndex(%d, %d);\n" % [action["index"], action["value"]]
+						code += "    // Step %d: Insert at index %d\n    list.insertAtIndex(%d, %d);\n" % [step, action["index"], action["index"], action["value"]]
 					step += 1
 				elif action["type"] == "delete":
 					if action["index"] == 0:
-						code += "    // Step %d: Delete at beginning\n" % step
-						code += "    list.deleteBeginning();\n"
+						code += "    // Step %d: Delete at beginning\n    list.deleteBeginning();\n" % step
 					elif action["index"] == initial_elements.size() - 1:
-						code += "    // Step %d: Delete at end\n" % step
-						code += "    list.deleteEnd();\n"
+						code += "    // Step %d: Delete at end\n    list.deleteEnd();\n" % step
 					else:
-						code += "    // Step %d: Delete at index %d\n" % [step, action["index"]]
-						code += "    list.deleteAtIndex(%d);\n" % action["index"]
+						code += "    // Step %d: Delete at index %d\n    list.deleteAtIndex(%d);\n" % [step, action["index"], action["index"]]
 					step += 1
 				elif action["type"] == "search":
-					code += "    // Step %d: Search for %d\n" % [step, action["value"]]
-					code += "    list.linearSearch(%d);\n" % action["value"]
+					code += "    // Step %d: Search for %d\n    list.linearSearch(%d);\n" % [step, action["value"], action["value"]]
 					step += 1
 		
 		"python":
 			code += "    # Initial elements\n"
 			for val in initial_elements:
 				code += "    llist.insert_end(%d)\n" % val
-			
 			if initial_elements.size() > 0:
 				code += "    print('Initial list: ', end='')\n"
 				code += "    llist.print_list()\n\n"
@@ -1427,92 +1394,71 @@ func _build_action_code(lang: String) -> String:
 			for action in action_history:
 				if action["type"] == "insert":
 					if action["index"] == 0:
-						code += "    # Step %d: Insert at beginning\n" % step
-						code += "    llist.insert_beginning(%d)\n" % action["value"]
+						code += "    # Step %d: Insert at beginning\n    llist.insert_beginning(%d)\n" % [step, action["value"]]
 					elif action["index"] == initial_elements.size():
-						code += "    # Step %d: Insert at end\n" % step
-						code += "    llist.insert_end(%d)\n" % action["value"]
+						code += "    # Step %d: Insert at end\n    llist.insert_end(%d)\n" % [step, action["value"]]
 					else:
-						code += "    # Step %d: Insert at index %d\n" % [step, action["index"]]
-						code += "    llist.insert_at_index(%d, %d)\n" % [action["index"], action["value"]]
+						code += "    # Step %d: Insert at index %d\n    llist.insert_at_index(%d, %d)\n" % [step, action["index"], action["index"], action["value"]]
 					step += 1
 				elif action["type"] == "delete":
 					if action["index"] == 0:
-						code += "    # Step %d: Delete at beginning\n" % step
-						code += "    llist.delete_beginning()\n"
+						code += "    # Step %d: Delete at beginning\n    llist.delete_beginning()\n" % step
 					elif action["index"] == initial_elements.size() - 1:
-						code += "    # Step %d: Delete at end\n" % step
-						code += "    llist.delete_end()\n"
+						code += "    # Step %d: Delete at end\n    llist.delete_end()\n" % step
 					else:
-						code += "    # Step %d: Delete at index %d\n" % [step, action["index"]]
-						code += "    llist.delete_at_index(%d)\n" % action["index"]
+						code += "    # Step %d: Delete at index %d\n    llist.delete_at_index(%d)\n" % [step, action["index"], action["index"]]
 					step += 1
 				elif action["type"] == "search":
-					code += "    # Step %d: Search for %d\n" % [step, action["value"]]
-					code += "    llist.linear_search(%d)\n" % action["value"]
+					code += "    # Step %d: Search for %d\n    llist.linear_search(%d)\n" % [step, action["value"], action["value"]]
 					step += 1
 		
 		"java", "c":
 			code += "        // Initial elements\n"
 			for val in initial_elements:
-				code += "        list.insertEnd(%d);\n" % val
-			
+				if lang == "c":
+					code += "        head = insertEnd(head, %d);\n" % val
+				else:
+					code += "        list.insertEnd(%d);\n" % val
 			if initial_elements.size() > 0:
 				if lang == "java":
-					code += "        System.out.print(\"Initial list: \");\n"
-					code += "        list.printList();\n\n"
+					code += "        System.out.print(\"Initial list: \");\n        list.printList();\n\n"
 				else:
-					code += "        printf(\"Initial list: \");\n"
-					code += "        printList(head);\n\n"
+					code += "        printf(\"Initial list: \");\n        printList(head);\n\n"
 			
 			var step = 1
 			for action in action_history:
 				if action["type"] == "insert":
 					if action["index"] == 0:
 						code += "        // Step %d: Insert at beginning\n" % step
-						if lang == "c":
-							code += "        head = insertBeginning(head, %d);\n" % action["value"]
-						else:
-							code += "        list.insertBeginning(%d);\n" % action["value"]
+						if lang == "c": code += "        head = insertBeginning(head, %d);\n" % action["value"]
+						else: code += "        list.insertBeginning(%d);\n" % action["value"]
 					elif action["index"] == initial_elements.size():
 						code += "        // Step %d: Insert at end\n" % step
-						if lang == "c":
-							code += "        head = insertEnd(head, %d);\n" % action["value"]
-						else:
-							code += "        list.insertEnd(%d);\n" % action["value"]
+						if lang == "c": code += "        head = insertEnd(head, %d);\n" % action["value"]
+						else: code += "        list.insertEnd(%d);\n" % action["value"]
 					else:
 						code += "        // Step %d: Insert at index %d\n" % [step, action["index"]]
-						if lang == "c":
-							code += "        head = insertAtIndex(head, %d, %d);\n" % [action["index"], action["value"]]
-						else:
-							code += "        list.insertAtIndex(%d, %d);\n" % [action["index"], action["value"]]
+						if lang == "c": code += "        head = insertAtIndex(head, %d, %d);\n" % [action["index"], action["value"]]
+						else: code += "        list.insertAtIndex(%d, %d);\n" % [action["index"], action["value"]]
 					step += 1
 				elif action["type"] == "delete":
 					if action["index"] == 0:
 						code += "        // Step %d: Delete at beginning\n" % step
-						if lang == "c":
-							code += "        head = deleteBeginning(head);\n"
-						else:
-							code += "        list.deleteBeginning();\n"
+						if lang == "c": code += "        head = deleteBeginning(head);\n"
+						else: code += "        list.deleteBeginning();\n"
 					elif action["index"] == initial_elements.size() - 1:
 						code += "        // Step %d: Delete at end\n" % step
-						if lang == "c":
-							code += "        head = deleteEnd(head);\n"
-						else:
-							code += "        list.deleteEnd();\n"
+						if lang == "c": code += "        head = deleteEnd(head);\n"
+						else: code += "        list.deleteEnd();\n"
 					else:
 						code += "        // Step %d: Delete at index %d\n" % [step, action["index"]]
-						if lang == "c":
-							code += "        head = deleteAtIndex(head, %d);\n" % action["index"]
-						else:
-							code += "        list.deleteAtIndex(%d);\n" % action["index"]
+						if lang == "c": code += "        head = deleteAtIndex(head, %d);\n" % action["index"]
+						else: code += "        list.deleteAtIndex(%d);\n" % action["index"]
 					step += 1
 				elif action["type"] == "search":
 					code += "        // Step %d: Search for %d\n" % [step, action["value"]]
-					if lang == "c":
-						code += "        linearSearch(head, %d);\n" % action["value"]
-					else:
-						code += "        list.linearSearch(%d);\n" % action["value"]
+					if lang == "c": code += "        linearSearch(head, %d);\n" % action["value"]
+					else: code += "        list.linearSearch(%d);\n" % action["value"]
 					step += 1
 	return code
 
@@ -1533,7 +1479,6 @@ func _show_cpp_popup() -> void:
 	
 	if cpp_next_btn: cpp_next_btn.show()
 	if cpp_tutorial_panel: cpp_tutorial_panel.show()
-	
 	_update_cpp_tutorial()
 
 func _on_cpp_next_pressed() -> void:
@@ -1554,7 +1499,6 @@ func _update_cpp_tutorial() -> void:
 	
 	if cpp_label:
 		var code = _generate_code_for_language(current_code_language)
-			
 		var lines = code.split("\n")
 		var highlighted_code = ""
 		var indices = data["lines"]
@@ -1590,7 +1534,6 @@ func _on_translate_code_pressed() -> void:
 # ==============================================
 #   RESULT POPUP HANDLERS
 # ==============================================
-
 func _on_try_again_pressed() -> void:
 	btn_sound.play()
 	result_popup.hide()
@@ -1601,25 +1544,19 @@ func _on_back_pressed() -> void:
 	result_popup.hide()
 
 func _show_result_popup(result: String, grade: Dictionary) -> void:
-	if not result_popup:
-		return
+	if not result_popup: return
 	
 	if result == "PASS":
 		result_title.text = "FOUND!"
 		result_title.modulate = Color.GREEN
-		if translate_code_btn:
-			translate_code_btn.show()
-		if cpp_code_button:
-			cpp_code_button.show()
-			if code_anim: code_anim.play("default")
 	else:
 		result_title.text = "NOT FOUND"
 		result_title.modulate = Color.RED
-		if translate_code_btn:
-			translate_code_btn.show()
-		if cpp_code_button:
-			cpp_code_button.show()
-			if code_anim: code_anim.play("default")
+		
+	if translate_code_btn: translate_code_btn.show()
+	if cpp_code_button:
+		cpp_code_button.show()
+		if code_anim: code_anim.play("default")
 	
 	score_summary.text = "Nodes Checked: %d" % grade.get("bad_moves", 0)
 	accuracy_label.text = "Target: %d" % search_target
@@ -1627,9 +1564,7 @@ func _show_result_popup(result: String, grade: Dictionary) -> void:
 	coins_label.text = "+%d" % grade.get("coins", 0)
 	
 	result_popup.popup_centered()
-	
-	if grade.get("coins", 0) > 0 and coins_anim:
-		coins_anim.play("default")
+	if grade.get("coins", 0) > 0 and coins_anim: coins_anim.play("default")
 
 func show_feedback(text: String, color: Color, position: Vector2):
 	var feedback_scene = preload("res://scene/FeedbackLabel.tscn")
@@ -1646,7 +1581,6 @@ func show_feedback(text: String, color: Color, position: Vector2):
 # ==============================================
 #   CONFIG HANDLERS
 # ==============================================
-
 func _connect_configuration_buttons() -> void:
 	_ensure_connected(yes_btn, "pressed", _on_config_yes_pressed)
 	_ensure_connected(no_btn, "pressed", _on_config_no_pressed)
@@ -1699,33 +1633,26 @@ func _show_config_elements_modal() -> void:
 	grid.add_theme_constant_override("h_separation", 20)
 	grid.add_theme_constant_override("v_separation", 20)
 	grid.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	
 	elements_container.add_child(grid)
 	
 	var count = int(size_input.value)
 	for i in range(count):
 		var le = LineEdit.new()
 		le.placeholder_text = str(randi_range(1, 99))
-		
 		le.custom_minimum_size = Vector2(80, 50) 
 		le.alignment = HORIZONTAL_ALIGNMENT_CENTER 
 		le.max_length = 3 
-		
 		le.text_changed.connect(_on_element_input_changed.bind(le))
-		
 		element_inputs.append(le)
 		grid.add_child(le)
-		
 	config_elements_modal.show()
 
 func _on_element_input_changed(new_text: String, le: LineEdit) -> void:
 	var filtered_text = ""
-	
 	for i in range(new_text.length()):
 		var char = new_text[i]
 		if (char >= "0" and char <= "9") or (i == 0 and char == "-"):
 			filtered_text += char
-			
 	if filtered_text != new_text:
 		le.text = filtered_text
 		le.caret_column = filtered_text.length()
@@ -1755,7 +1682,6 @@ func _on_elements_back_pressed(): config_elements_modal.hide(); config_size_moda
 # ==============================================
 #   INTRO & TUTORIAL SEQUENCE
 # ==============================================
-
 func show_introduction():
 	if tutorial_overlay: tutorial_overlay.show()
 	if not intro_popup: return
@@ -1856,7 +1782,6 @@ func end_tutorial():
 # ==============================================
 #   HELPER / UTILS
 # ==============================================
-
 func _on_cpp_close_pressed(): 
 	btn_sound.play()
 	cpp_popup.hide()
@@ -1893,3 +1818,30 @@ func _connect_language_buttons():
 func _set_lang_and_show(lang: String):
 	current_code_language = lang
 	_show_cpp_popup()
+
+func _get_modern_stylebox(bg_color: Color = Color(0.15, 0.15, 0.17, 1.0)) -> StyleBoxFlat:
+	var style = StyleBoxFlat.new()
+	style.bg_color = bg_color
+	style.corner_radius_top_left = 12
+	style.corner_radius_top_right = 12
+	style.corner_radius_bottom_left = 12
+	style.corner_radius_bottom_right = 12
+	style.shadow_color = Color(0, 0, 0, 0.4)
+	style.shadow_size = 8
+	style.shadow_offset = Vector2(0, 4)
+	style.content_margin_left = 15
+	style.content_margin_right = 15
+	style.content_margin_top = 15
+	style.content_margin_bottom = 15
+	return style
+
+func _get_modern_button_style(is_hover: bool = false) -> StyleBoxFlat:
+	var style = _get_modern_stylebox(Color(0.25, 0.45, 0.85, 1.0) if is_hover else Color(0.2, 0.35, 0.7, 1.0))
+	style.shadow_size = 2
+	style.corner_radius_top_left = 8
+	style.corner_radius_top_right = 8
+	style.corner_radius_bottom_left = 8
+	style.corner_radius_bottom_right = 8
+	style.content_margin_top = 8
+	style.content_margin_bottom = 8
+	return style

@@ -560,8 +560,71 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	# Add initial code line
 	_add_code_line("INITIAL", 0, 0)
 	
-	# Rest of your _initialize_with_elements function continues...
-	# ... (keep all your existing code below this line)
+	# Connect other buttons - FIXED FUNCTION NAMES
+	if waiting_btn: 
+		if not waiting_btn.is_connected("pressed", _on_waiting_pressed):
+			waiting_btn.pressed.connect(_on_waiting_pressed)
+	
+	if dequeued_btn: 
+		if not dequeued_btn.is_connected("pressed", _on_dequeued_pressed):
+			dequeued_btn.pressed.connect(_on_dequeued_pressed)
+	
+	if timeline_btn: 
+		if not timeline_btn.is_connected("pressed", _on_timeline_pressed):
+			timeline_btn.pressed.connect(_on_timeline_pressed)
+	
+	if simulate_new_btn: 
+		if not simulate_new_btn.is_connected("pressed", _on_simulate_new_pressed):
+			simulate_new_btn.pressed.connect(_on_simulate_new_pressed)
+	
+	# Connect popup buttons
+	if complete_ok_btn: 
+		if not complete_ok_btn.is_connected("pressed", _on_complete_ok_pressed):
+			complete_ok_btn.pressed.connect(_on_complete_ok_pressed)
+	
+	if show_cpp_btn: 
+		if not show_cpp_btn.is_connected("pressed", _on_show_cpp_pressed):
+			show_cpp_btn.pressed.connect(_on_show_cpp_pressed)
+	
+	if dequeued_close_btn: 
+		if not dequeued_close_btn.is_connected("pressed", _on_dequeued_close_pressed):
+			dequeued_close_btn.pressed.connect(_on_dequeued_close_pressed)
+	
+	# Connect C++ buttons
+	if cpp_close_btn: 
+		if not cpp_close_btn.is_connected("pressed", _on_cpp_close_pressed):
+			cpp_close_btn.pressed.connect(_on_cpp_close_pressed)
+	
+	# Connect top-right "C++ Code" button
+	if cpp_code_button:
+		if not cpp_code_button.is_connected("pressed", _on_cpp_code_button_pressed):
+			cpp_code_button.pressed.connect(_on_cpp_code_button_pressed)
+		cpp_code_button.hide()
+	
+	# Connect tutorial buttons
+	if tutorial_next: 
+		if not tutorial_next.is_connected("pressed", _on_next_button_pressed):
+			tutorial_next.pressed.connect(_on_next_button_pressed)
+	
+	# Connect enqueue/dequeue buttons
+	if enqueue_btn: 
+		if not enqueue_btn.is_connected("pressed", _on_enqueue_pressed):
+			enqueue_btn.pressed.connect(_on_enqueue_pressed)
+	
+	if dequeue_btn: 
+		if not dequeue_btn.is_connected("pressed", _on_dequeue_pressed):
+			dequeue_btn.pressed.connect(_on_dequeue_pressed)
+	
+	# Hide popups initially
+	if dequeued_container: dequeued_container.hide()
+	if cpp_popup: cpp_popup.hide()
+	if tutorial_overlay: tutorial_overlay.hide()
+	if waiting_popup: waiting_popup.hide()
+	if timeline_popup: timeline_popup.hide()
+	
+	_update_labels()
+	_update_front_rear_visibility()
+	print(" Initialization complete — ready to simulate!\n")
 
 # ADD THIS NEW FUNCTION RIGHT HERE (after _initialize_with_elements but before start_tutorial)
 func _add_code_line(op: String, index: int, value: int) -> void:
@@ -1025,7 +1088,9 @@ func _animate_queue_shift() -> void:
 		child.original_position = Vector2(x, START_POSITION.y)
 		x += child.size.x + BLOCK_SPACING
 
-func _on_WaitingElements_pressed() -> void:
+
+
+func _on_waiting_pressed() -> void:
 	# Check if in tutorial
 	if tutorial_in_progress and tutorial_sequence_index < tutorial_sequence.size():
 		var current_step = tutorial_sequence[tutorial_sequence_index]
@@ -1118,6 +1183,7 @@ func _on_dequeued_close_pressed() -> void:
 	if front2_icon: front2_icon.hide()
 	if rear2_icon: rear2_icon.hide()
 	current_popup = null
+
 
 func _show_complete_popup() -> void:
 	# Use the existing SimulationCompletePopup, not the ResultPopup scene
