@@ -52,10 +52,19 @@ texture = ExtResource("7_rsgdm")
 texture = ExtResource("6_x3etq")
 
 [node name="Main" instance=ExtResource("1_85hwj")]
+custom_minimum_size = Vector2(0, 648)
+rotation = 9.12525e-05
 script = ExtResource("2_sjaiv")
 
 [node name="TimeUpPopup" parent="." index="0"]
 oversampling_override = 1.0
+
+[node name="ColorRect" parent="." index="2"]
+custom_minimum_size = Vector2(0, 1000)
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
 
 [node name="DimBackground" parent="TutorialOverlay" index="0"]
 z_index = -5
@@ -141,12 +150,6 @@ offset_right = 457.0
 offset_bottom = 439.0
 
 [node name="TryAgainButton" parent="." index="14"]
-visible = false
-
-[node name="SCS_Logo" parent="." index="22"]
-visible = false
-
-[node name="Label" parent="." index="23"]
 visible = false
 
 [node name="End_simulation_confirmation" type="Panel" parent="." index="24"]

@@ -8,7 +8,11 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5s2yj"]
 
 [node name="Main" instance=ExtResource("1_m37xw")]
+custom_minimum_size = Vector2(0, 0)
 script = ExtResource("2_u66xf")
+
+[node name="ColorRect" parent="." index="2"]
+custom_minimum_size = Vector2(0, 1000)
 
 [node name="DiificultyLabel" parent="." index="5"]
 visible = true
@@ -58,12 +62,6 @@ offset_left = 0.0
 offset_top = 0.0
 offset_right = 594.0
 offset_bottom = 4.0
-
-[node name="SCS_Logo" parent="." index="22"]
-visible = false
-
-[node name="Label" parent="." index="23"]
-visible = false
 
 [node name="TargetLabel" parent="." index="31"]
 visible = true

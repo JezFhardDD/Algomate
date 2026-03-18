@@ -43,6 +43,14 @@ extends Control
 ]
 
 # =========================
+# PAGE INDICATOR
+# =========================
+@onready var indicator_container = $PageIndicator/IndicatorContainer
+@onready var page_indicator = $PageIndicator
+
+var indicator_dots: Array[Control] = []
+
+# =========================
 # SETTINGS
 # =========================
 @export var press_scale := Vector2(0.9, 0.9)
@@ -59,7 +67,6 @@ var drag_start := Vector2.ZERO
 var dragging := false
 var is_animating := false
 
-
 # =========================
 # READY
 # =========================
@@ -71,7 +78,52 @@ func _ready():
 	for i in pages.size():
 		pages[i].visible = (i == current_index)
 		pages[i].position = Vector2.ZERO
+	
+	# Create page indicators
+	_create_page_indicators()
+	_update_indicators()
 
+func _create_page_indicators():
+	# Clear any existing dots
+	for child in indicator_container.get_children():
+		child.queue_free()
+	indicator_dots.clear()
+	
+	# Create dots for each page
+	for i in range(pages.size()):
+		var dot = Panel.new()
+		dot.custom_minimum_size = Vector2(12, 12)
+		
+		# Style the dot
+		var style = StyleBoxFlat.new()
+		style.bg_color = Color(1, 1, 1, 0.5)  # Semi-transparent white
+		style.corner_radius_top_left = 6
+		style.corner_radius_top_right = 6
+		style.corner_radius_bottom_left = 6
+		style.corner_radius_bottom_right = 6
+		dot.add_theme_stylebox_override("panel", style)
+		
+		indicator_container.add_child(dot)
+		indicator_dots.append(dot)
+	
+	# Show the indicator
+	page_indicator.show()
+
+func _update_indicators():
+	for i in range(indicator_dots.size()):
+		var dot = indicator_dots[i]
+		var style = dot.get_theme_stylebox("panel").duplicate()
+		
+		if i == current_index:
+			# Current page - larger and brighter
+			dot.custom_minimum_size = Vector2(18, 12)
+			style.bg_color = Color(1, 1, 1, 1)  # Bright white
+		else:
+			# Other pages - smaller and dimmer
+			dot.custom_minimum_size = Vector2(8, 8)
+			style.bg_color = Color(1, 1, 1, 0.4)  # Dimmer
+		
+		dot.add_theme_stylebox_override("panel", style)
 
 # =========================
 # INPUT (MOUSE + TOUCH)
@@ -151,6 +203,9 @@ func animate_page(next_index: int, direction: int):
 		current.visible = false
 		current.position = Vector2.ZERO
 		current_index = next_index
+		
+		# Update page indicators
+		_update_indicators()
 		
 		# SAVE the new index to Global
 		Global.lectures_page_index = current_index

@@ -5,27 +5,17 @@
 [ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="3_ah1c7"]
 
 [node name="Main" instance=ExtResource("1_acqi7")]
+rotation = 0.0
 script = ExtResource("2_bfq85")
 
 [node name="AnimatedSprite2D" parent="Queue_full" index="2"]
 frame_progress = 0.318798
 
-[node name="HSeparator2" parent="CppPopup/VBoxContainer/TutorialPanel" index="0"]
-custom_minimum_size = Vector2(0, 0)
-layout_mode = 0
-size_flags_horizontal = 1
-size_flags_vertical = 1
-
-[node name="CancelButton" parent="ArrayActionModal/ModalContent/ActionButtons" index="0"]
-theme_override_font_sizes/font_size = 50
-
-[node name="TargetLabel" parent="." index="31"]
-custom_minimum_size = Vector2(0, 0)
-layout_mode = 1
-theme_override_colors/font_color = Color(0.638753, 0.758185, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 4
-text = "Find: 99"
+[node name="ColorRect" parent="." index="2"]
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 28.0
+offset_bottom = -8.0
 
 [node name="ArrowLayer" type="Control" parent="." index="36"]
 anchors_preset = 0

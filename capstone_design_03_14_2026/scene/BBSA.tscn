@@ -909,6 +909,7 @@ texture = ExtResource("5_retsm")
 texture = ExtResource("4_a4f7h")
 
 [node name="Main" type="Control"]
+custom_minimum_size = Vector2(0, 1000)
 layout_mode = 3
 anchors_preset = 0
 offset_left = 4.0
@@ -1763,7 +1764,6 @@ autoplay = "default"
 frame_progress = 0.83007
 
 [node name="ParallaxBackground" parent="." instance=ExtResource("19_xu27h")]
-visible = false
 
 [node name="bgm" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("20_d13ap")

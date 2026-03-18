@@ -4,19 +4,17 @@
 [ext_resource type="Script" uid="uid://b6chsy40nbxm2" path="res://script/lsa.gd" id="2_nth5j"]
 
 [node name="Main" instance=ExtResource("1_x2va3")]
+custom_minimum_size = Vector2(0, 648)
 script = ExtResource("2_nth5j")
+
+[node name="ColorRect" parent="." index="2"]
+custom_minimum_size = Vector2(0, 1000)
 
 [node name="HSeparator2" parent="CppPopup/VBoxContainer/TutorialPanel" index="0"]
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 594.0
 offset_bottom = 4.0
-
-[node name="SCS_Logo" parent="." index="22"]
-visible = false
-
-[node name="Label" parent="." index="23"]
-visible = false
 
 [node name="MarginContainer" parent="." index="28"]
 custom_minimum_size = Vector2(300, 0)

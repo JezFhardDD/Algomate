@@ -4,10 +4,8 @@
 [ext_resource type="Script" uid="uid://dgebsv1w87d1r" path="res://script/sla.gd" id="2_uj15k"]
 
 [node name="Main2" instance=ExtResource("1_2d1d7")]
+custom_minimum_size = Vector2(0, 648)
 script = ExtResource("2_uj15k")
 
-[node name="SCS_Logo" parent="." index="22"]
-visible = false
-
-[node name="Label" parent="." index="23"]
-visible = false
+[node name="ColorRect" parent="." index="2"]
+custom_minimum_size = Vector2(0, 1000)

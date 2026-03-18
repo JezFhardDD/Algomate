@@ -17,7 +17,11 @@ texture = ExtResource("5_ab2ih")
 texture = ExtResource("4_v6pnl")
 
 [node name="Main" instance=ExtResource("1_tnwqp")]
+custom_minimum_size = Vector2(0, 0)
 script = ExtResource("2_xmomj")
+
+[node name="ColorRect" parent="." index="2"]
+custom_minimum_size = Vector2(0, 1000)
 
 [node name="DiscardLeftButton" type="Button" parent="VBoxContainer" index="2"]
 layout_mode = 2

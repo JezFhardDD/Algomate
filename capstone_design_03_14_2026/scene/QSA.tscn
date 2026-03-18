@@ -18,7 +18,11 @@ texture = ExtResource("5_nwtjd")
 texture = ExtResource("4_au56b")
 
 [node name="Main2" instance=ExtResource("1_tle6u")]
+custom_minimum_size = Vector2(0, 0)
 script = ExtResource("2_jigj7")
+
+[node name="ColorRect" parent="." index="2"]
+custom_minimum_size = Vector2(0, 1000)
 
 [node name="VBoxContainer" parent="." index="6"]
 offset_left = 38.0

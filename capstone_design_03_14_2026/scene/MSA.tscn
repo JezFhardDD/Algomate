@@ -4,7 +4,11 @@
 [ext_resource type="Script" uid="uid://bxdxjqopms3eu" path="res://script/msa.gd" id="2_675dr"]
 
 [node name="Main" instance=ExtResource("1_unxoj")]
+custom_minimum_size = Vector2(0, 0)
 script = ExtResource("2_675dr")
+
+[node name="ColorRect" parent="." index="2"]
+custom_minimum_size = Vector2(0, 1000)
 
 [node name="MarginContainer" parent="." index="28"]
 offset_left = -250.0

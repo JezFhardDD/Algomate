@@ -17,7 +17,11 @@ texture = ExtResource("5_mjuy6")
 texture = ExtResource("4_udute")
 
 [node name="Main" instance=ExtResource("1_3kr7l")]
+custom_minimum_size = Vector2(0, 648)
 script = ExtResource("2_oyuhw")
+
+[node name="ColorRect" parent="." index="2"]
+custom_minimum_size = Vector2(0, 1000)
 
 [node name="PassButton" type="Button" parent="VBoxContainer" index="3"]
 layout_mode = 2
@@ -31,11 +35,5 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_f6iuy")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_v75d0")
 theme_override_styles/hover = SubResource("StyleBoxTexture_ntrf0")
 text = "Pass"
-
-[node name="SCS_Logo" parent="." index="22"]
-visible = false
-
-[node name="Label" parent="." index="23"]
-visible = false
 
 [connection signal="pressed" from="VBoxContainer/PassButton" to="." method="_on_pass_button_pressed"]

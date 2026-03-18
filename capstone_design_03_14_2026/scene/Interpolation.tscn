@@ -293,6 +293,7 @@ theme_override_font_sizes/font_size = 30
 text = "Warning !"
 
 [node name="TutorialOverlay" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="DimBackground" type="ColorRect" parent="TutorialOverlay"]
 visible = false
@@ -1065,6 +1066,7 @@ offset_bottom = 508.0
 text = "Done"
 
 [node name="SearchInputModal" type="ConfirmationDialog" parent="."]
+oversampling_override = 1.0
 title = "Find Element"
 
 [node name="TargetSpinBox" type="SpinBox" parent="SearchInputModal"]

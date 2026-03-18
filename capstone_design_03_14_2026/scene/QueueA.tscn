@@ -4,23 +4,20 @@
 [ext_resource type="Script" uid="uid://bw021s8kwts4f" path="res://script/queue_a.gd" id="2_1mxj6"]
 
 [node name="Main" instance=ExtResource("1_8i6n7")]
+rotation = 0.0
 script = ExtResource("2_1mxj6")
 
-[node name="skip" parent="TutorialOverlay/Intro_popup" index="2"]
-offset_left = 70.0
-offset_top = 351.0
-offset_right = 166.0
-offset_bottom = 405.0
-text = "Skip"
+[node name="ColorRect" parent="." index="2"]
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 28.0
+offset_bottom = -8.0
 
 [node name="rear" parent="TextureRect" index="0"]
 offset_left = 882.0
 offset_top = 341.0
 offset_right = 969.0
 offset_bottom = 386.0
-grow_horizontal = 1
-grow_vertical = 1
-theme_override_font_sizes/font_size = 36
 text = "Rear"
 
 [node name="rear3" parent="TextureRect" index="1"]
@@ -47,95 +44,53 @@ offset_top = 9.0
 offset_right = 90.0
 offset_bottom = 209.0
 
-[node name="TutorialPanel" parent="CppPopup/VBoxContainer" index="4"]
-visible = true
-
 [node name="CppCodeButton" parent="." index="13"]
-layout_mode = 0
-
-[node name="Label" parent="." index="23"]
-offset_left = -216.0
-offset_top = -29.0
-offset_right = -101.0
-offset_bottom = -6.0
-text = "Presented by :"
-horizontal_alignment = 0
-vertical_alignment = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 100.0
+offset_bottom = 45.0
 
 [node name="MarginContainer" parent="." index="29"]
-layout_mode = 1
 offset_left = -114.5
 offset_top = -85.0
 offset_right = 135.5
 offset_bottom = -15.0
 
 [node name="TargetLabel" parent="." index="31"]
-visible = true
 offset_left = -164.5
 offset_top = 17.0
 offset_right = 390.5
 offset_bottom = 72.0
-scale = Vector2(1, 1)
 
 [node name="CommandProgressLabel" parent="." index="32"]
-visible = true
 anchors_preset = 5
-anchor_left = 0.5
 anchor_top = 0.0
-anchor_right = 0.5
 anchor_bottom = 0.0
 offset_left = -87.0
 offset_top = 63.0
 offset_right = 313.0
 offset_bottom = 108.0
-grow_horizontal = 2
 grow_vertical = 1
-theme_override_colors/font_shadow_color = Color(0.745, 0.745, 0.745, 0.425)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 5
-theme_override_constants/shadow_offset_y = 3
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 40
 text = "hh"
 justification_flags = 160
 
 [node name="SpawnArea" parent="." index="33"]
-layout_mode = 0
-anchors_preset = 0
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
 offset_left = 848.0
 offset_top = 151.0
 offset_right = 1018.0
 offset_bottom = 321.0
-grow_horizontal = 1
-grow_vertical = 1
 
 [node name="Label" parent="SpawnArea" index="0"]
-layout_mode = 0
-anchors_preset = 0
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 40.0
 offset_bottom = 23.0
-grow_horizontal = 1
-grow_vertical = 1
-theme_override_colors/font_shadow_color = Color(0.745098, 0.745098, 0.745098, 1)
-theme_override_constants/shadow_offset_y = 5
-theme_override_constants/outline_size = 7
-text = "NEXT:"
-autowrap_mode = 0
 
 [node name="SpawnSlot" parent="SpawnArea" index="1"]
-anchors_preset = 15
+offset_left = 0.0
 offset_top = 42.0
 offset_right = -18.0
+offset_bottom = 0.0
 
 [node name="Area2D" parent="." index="34"]
 position = Vector2(364, 186)
@@ -143,6 +98,3 @@ position = Vector2(364, 186)
 [node name="Label2" parent="." index="35"]
 offset_top = 265.0
 offset_bottom = 330.0
-scale = Vector2(1, 1)
-
-[connection signal="pressed" from="CppCodeButton" to="." method="_on_cpp_code_button_pressed"]

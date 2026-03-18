@@ -755,6 +755,7 @@ frame_progress = 0.15497
 [node name="ColorRect" type="ColorRect" parent="."]
 z_index = -5
 material = SubResource("ShaderMaterial_tuai4")
+custom_minimum_size = Vector2(0, 1000)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1452,7 +1453,6 @@ sprite_frames = SubResource("SpriteFrames_vq81u")
 frame_progress = 0.500425
 
 [node name="ParallaxBackground" parent="." instance=ExtResource("7_aex65")]
-visible = false
 
 [node name="bgm" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("11_x4yfu")

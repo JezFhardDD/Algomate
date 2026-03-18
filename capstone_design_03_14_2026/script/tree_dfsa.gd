@@ -143,7 +143,7 @@ const API_KEYS = {
 # =======================================================
 
 # --- TOPIC IDENTIFICATION (ADDED) ---
-const CURRENT_TOPIC = "dfs_tree_search"
+const CURRENT_TOPIC = "depth_first_search"
 
 enum SimMode { LECTURE, ASSESSMENT }
 var sim_mode: SimMode = SimMode.ASSESSMENT
@@ -488,6 +488,9 @@ func _initialize_assessment_for_intro():
 	time_remaining = assessment_time_limit
 	timer_running = false  # Timer not running yet
 	
+	# CRITICAL: Update timer visibility based on difficulty
+	_update_timer_visibility()
+	
 	# Update difficulty label
 	_update_difficulty_label()
 	
@@ -523,7 +526,7 @@ func _initialize_assessment_for_intro():
 	
 	# Log start
 	timeline_log.append("--- DFS Assessment Ready ---")
-	timeline_log.append("Target: %d" % [target_value])
+	timeline_log.append("Target: %d" % target_value)
 
 func _hide_lecture_elements():
 	# Hide lecture-specific buttons (they should be removed from scene, but just in case)
@@ -662,10 +665,10 @@ func _get_array_size() -> int:
 
 func _get_time_limit() -> float:
 	match difficulty:
-		1: return 0.0   # Easy (no timer)
-		2: return 900.0  # Medium (15 minutes)
+		1: return 0.0   # Easy - NO TIMER
+		2: return 90.0  # Medium (15 minutes)
 		3: return 60.0   # Hard (1 minute)
-	return 90.0
+	return 0.0
 
 func _update_difficulty_label():
 	if not difficulty_label:
@@ -744,9 +747,16 @@ func _initialize_assessment_tree(values: Array[int]):
 # =======================================================
 
 func _on_assessment_node_clicked(index: int):
-	if has_completed_assessment or not timer_running:
-		show_feedback("Assessment complete!", Color.YELLOW, get_global_mouse_position())
-		return
+	# For Easy mode, ignore timer_running check
+	if difficulty == 1:
+		if has_completed_assessment:
+			show_feedback("Assessment complete!", Color.YELLOW, get_global_mouse_position())
+			return
+	else:
+		# For Medium/Hard, check both conditions
+		if has_completed_assessment or not timer_running:
+			show_feedback("Assessment complete!", Color.YELLOW, get_global_mouse_position())
+			return
 	
 	# Check if node exists and is valid
 	if index >= tree_nodes.size() or tree_nodes[index] == null:
@@ -1074,6 +1084,10 @@ func _process(delta: float) -> void:
 	if not timer_running or has_completed_assessment:
 		return
 	
+	# CRITICAL: Skip timer for Easy difficulty
+	if difficulty == 1:
+		return
+	
 	time_remaining -= delta
 	
 	if time_remaining <= 0:
@@ -1319,6 +1333,9 @@ func _reset_assessment():
 	assessment_time_limit = _get_time_limit()
 	time_remaining = assessment_time_limit
 	timer_running = false
+	
+	# CRITICAL: Update timer visibility based on difficulty
+	_update_timer_visibility()
 	_update_timer_display()
 	
 	# Set status
@@ -1333,7 +1350,7 @@ func _reset_assessment():
 	
 	# Log start
 	timeline_log.append("--- DFS Assessment Ready ---")
-	timeline_log.append("Target: %d at node %d" % [target_value, target_index])
+	timeline_log.append("Target: %d" % target_value)
 
 # =======================================================
 # UI HELPER FUNCTIONS
@@ -2079,10 +2096,22 @@ func _on_intro_skip_pressed():
 
 # Add this new function
 func _start_assessment_timer():
+	# For Easy mode, don't start timer but enable buttons
+	if difficulty == 1:
+		timer_running = false  # Keep it false
+		match_btn.disabled = false
+		undo_btn.disabled = true  # Still disabled until first move
+		redo_btn.disabled = true
+		if status_label:
+			status_label.text = "Tap nodes in DFS order"
+		return
+	
+	# For Medium/Hard, start timer normally
 	timer_running = true
 	match_btn.disabled = false
-	undo_btn.disabled = true  # Still disabled until first move
+	undo_btn.disabled = true
 	redo_btn.disabled = true
+	
 	if status_label:
 		status_label.text = "Tap nodes in DFS order"
 
@@ -2123,3 +2152,21 @@ func _on_help_button_pressed():
 func _on_close_button_pressed() -> void:
 	btn_sound.play()
 	timeline_popup.hide()
+
+func _update_timer_visibility():
+	if not timer_label or not clock:
+		return
+	
+	match difficulty:
+		1:  # Easy
+			timer_label.visible = false
+			if clock: clock.visible = false
+			# Ensure timer doesn't run
+			timer_running = false
+			time_remaining = 0
+		2:  # Medium
+			timer_label.visible = true
+			if clock: clock.visible = true
+		3:  # Hard
+			timer_label.visible = true
+			if clock: clock.visible = true

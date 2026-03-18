@@ -6,11 +6,8 @@
 [node name="Main" instance=ExtResource("1_n4hte")]
 script = ExtResource("2_la03u")
 
+[node name="ColorRect" parent="." index="3"]
+custom_minimum_size = Vector2(0, 1000)
+
 [node name="CppPopup" parent="." index="15"]
 oversampling_override = 1.0
-
-[node name="SCS_Logo" parent="." index="24"]
-visible = false
-
-[node name="Label" parent="." index="25"]
-visible = false

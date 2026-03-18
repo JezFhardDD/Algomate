@@ -198,8 +198,7 @@ offset_left = 32.0
 offset_top = 27.0
 offset_right = 211.0
 offset_bottom = 68.0
-text = "ORANGE
-CAT"
+text = "CAT"
 label_settings = ExtResource("5_m4ofw")
 horizontal_alignment = 1
 
@@ -247,8 +246,7 @@ offset_left = 10.0
 offset_top = 28.0
 offset_right = 190.0
 offset_bottom = 69.0
-text = "WILD
-BOAR"
+text = "BOAR"
 label_settings = ExtResource("5_m4ofw")
 horizontal_alignment = 1
 

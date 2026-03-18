@@ -5,7 +5,7 @@ extends Control
 # =========================
 @onready var grid_container = $ScrollContainer/GridContainer
 @onready var back_button = $BackButton
-@onready var title_label = $TopBar/TitleLabel
+@onready var title_label = $TopBar/Label  # Fixed: was TitleLabel but in scene it's just "Label"
 const FEEDBACK_SCENE = preload("res://scene/FeedbackLabel.tscn")
 
 # =========================
@@ -17,7 +17,7 @@ func _ready():
 	# Load the custom font
 	var custom_font = load("res://assets/font/Planes_ValMore.ttf")
 	
-	# Apply font to TitleLabel (TopBar/TitleLabel)
+	# Apply font to TitleLabel (TopBar/Label)
 	if title_label:
 		title_label.add_theme_font_override("font", custom_font)
 	
@@ -62,6 +62,7 @@ func setup_panel(panel: Panel, custom_font: Font):
 	var picture = find_child_by_type(panel, TextureRect)
 	var name_label = find_child_by_type(panel, Label)
 	var price_label = find_child_by_type(panel, Label, "PriceLabel")
+	var coin_icon = find_child_by_type(panel, AnimatedSprite2D)
 	var action_button = find_child_by_type(panel, TextureButton)
 	
 	if not picture or not name_label or not action_button:
@@ -101,6 +102,7 @@ func setup_panel(panel: Panel, custom_font: Font):
 	action_button.set_meta("price", price)
 	action_button.set_meta("panel", panel)
 	action_button.set_meta("price_label", price_label)
+	action_button.set_meta("coin_icon", coin_icon)
 	
 	print("Stored price for ", picture_name, ": ", price)
 	
@@ -108,7 +110,7 @@ func setup_panel(panel: Panel, custom_font: Font):
 	action_button.pressed.connect(_on_action_button_pressed.bind(action_button))
 	
 	# Update button based on purchase status
-	update_button_for_panel(panel, picture_path, action_button, price_label, price, custom_font)
+	update_button_for_panel(panel, picture_path, action_button, price_label, coin_icon, price, custom_font)
 
 func find_child_by_type(parent: Node, type, name_hint: String = "") -> Node:
 	for child in parent.get_children():
@@ -117,7 +119,7 @@ func find_child_by_type(parent: Node, type, name_hint: String = "") -> Node:
 				return child
 	return null
 
-func update_button_for_panel(panel: Panel, picture_path: String, button: TextureButton, price_label: Label, price: int, custom_font: Font = null):
+func update_button_for_panel(panel: Panel, picture_path: String, button: TextureButton, price_label: Label, coin_icon: AnimatedSprite2D, price: int, custom_font: Font = null):
 	# Load font if not provided
 	if custom_font == null:
 		custom_font = load("res://assets/font/Planes_ValMore.ttf")
@@ -133,42 +135,52 @@ func update_button_for_panel(panel: Panel, picture_path: String, button: Texture
 	print("Updating panel - ", picture_path, " Purchased: ", is_purchased, " Equipped: ", is_equipped)
 	
 	if not is_purchased:
-		# Not purchased - show BUY button
+		# NOT PURCHASED - Show price, coin icon, and BUY button
 		button.texture_normal = preload("res://assets/ui/buy_button.png")
 		button.visible = true
+		
 		if price_label:
 			price_label.visible = true
+			price_label.text = str(price)  # Show the price
 			price_label.add_theme_color_override("font_color", Color.YELLOW)
-			# Ensure price label uses custom font
 			price_label.add_theme_font_override("font", custom_font)
+		
+		if coin_icon:
+			coin_icon.visible = true  # Show coin icon for unpurchased items
 		
 	elif is_purchased and not is_equipped:
-		# Purchased but not equipped - show SELECT button
+		# PURCHASED BUT NOT EQUIPPED - Hide price, hide coin icon, show SELECT button, no text in price label
 		button.texture_normal = preload("res://assets/ui/select_button.png")
 		button.visible = true
+		
 		if price_label:
-			price_label.text = "OWNED"
-			price_label.add_theme_color_override("font_color", Color.GREEN)
-			# Ensure OWNED text uses custom font
+			price_label.visible = true
+			price_label.text = ""  # Empty text (just space/nothing)
+			# Keep font but no text, or could set a blank character
 			price_label.add_theme_font_override("font", custom_font)
+		
+		if coin_icon:
+			coin_icon.visible = false  # Hide coin icon for owned items
 		
 	elif is_equipped:
-		# Currently equipped - hide button, show EQUIPPED label
+		# EQUIPPED - Hide button, show CHECK MARK, hide price text, hide coin icon
 		button.visible = false
-		if price_label:
-			price_label.text = "EQUIPPED"
-			price_label.add_theme_color_override("font_color", Color.GREEN)
-			# Ensure EQUIPPED text uses custom font
-			price_label.add_theme_font_override("font", custom_font)
 		
+		if price_label:
+			price_label.visible = true
+			price_label.text = "✓"  # Check mark symbol
+			price_label.add_theme_color_override("font_color", Color.GREEN)
+			price_label.add_theme_font_override("font", custom_font)
+			# Make check mark bigger and bolder
+			price_label.add_theme_font_size_override("font_size", 40)
+		
+		if coin_icon:
+			coin_icon.visible = false  # Hide coin icon for equipped items
+		
+		# Remove any existing status label just in case
 		var equipped_label = Label.new()
 		equipped_label.name = "StatusLabel"
-		equipped_label.text = "EQUIPPED"
-		equipped_label.add_theme_color_override("font_color", Color.GREEN)
-		equipped_label.add_theme_font_override("font", custom_font)  # Apply custom font to status label
-		equipped_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		equipped_label.position = button.position
-		equipped_label.size = button.size
+		equipped_label.visible = false  # Hidden - we're using price label for check mark
 		panel.add_child(equipped_label)
 
 func _on_action_button_pressed(button: TextureButton):

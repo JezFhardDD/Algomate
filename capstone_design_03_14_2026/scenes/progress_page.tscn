@@ -128,7 +128,8 @@ size_flags_vertical = 0
 
 [node name="easybadge" type="Label" parent="progressreport/EASY/Easy"]
 layout_mode = 2
-text = "EASY BADGE"
+text = "EASY
+BADGE"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
@@ -267,7 +268,8 @@ size_flags_vertical = 0
 
 [node name="easybadge" type="Label" parent="progressreport/EASY2/Easy"]
 layout_mode = 2
-text = "EASY BADGE"
+text = "EASY
+BADGE"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
@@ -374,8 +376,7 @@ offset_left = 10.815792
 offset_top = 7.612007
 offset_right = 10.815781
 offset_bottom = 7.612015
-text = "Graph/Tree
-Searching"
+text = "Search"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
@@ -406,7 +407,8 @@ size_flags_vertical = 0
 
 [node name="easybadge" type="Label" parent="progressreport/EASY3/Easy"]
 layout_mode = 2
-text = "EASY BADGE"
+text = "EASY
+BADGE"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 

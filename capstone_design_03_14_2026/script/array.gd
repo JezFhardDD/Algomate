@@ -219,6 +219,7 @@ func _ready() -> void:
 	_setup_array_buttons()
 	_setup_action_modal()
 	_setup_compiler()  # Add compiler setup
+	action_modal.set_main_scene(self)
 	
 	config_modal.hide()
 	config_size_modal.hide()
@@ -744,14 +745,24 @@ func _update_array_size_label():
 		label.text = "Array Size: %d/%d" % [current_array_size, max_array_size]
 
 func _update_button_states():
-	# Insert at End enabled only if not full
-	insert_end_btn.disabled = (current_array_size >= max_array_size)
+	# Buttons are ALWAYS fully visible - no visual indication of state
+	if insert_end_btn:
+		insert_end_btn.modulate = Color(1, 1, 1, 1.0)  # Always full opacity
 	
-	# Other buttons enabled only if array is not empty
-	var has_elements = current_array_size > 0
-	access_btn.disabled = not has_elements
-	insert_i_btn.disabled = false  # Always enabled (can insert into empty array)
-	delete_btn.disabled = not has_elements
+	if insert_i_btn:
+		insert_i_btn.modulate = Color(1, 1, 1, 1.0)
+	
+	if delete_btn:
+		delete_btn.modulate = Color(1, 1, 1, 1.0)
+	
+	if access_btn:
+		access_btn.modulate = Color(1, 1, 1, 1.0)
+	
+	# Don't disable buttons - they should always be clickable
+	insert_end_btn.disabled = false
+	insert_i_btn.disabled = false
+	delete_btn.disabled = false
+	access_btn.disabled = false
 
 func show_status_message(message: String):
 	# Fix this - it was hardcoded to "Array Simulation Ready"
@@ -763,7 +774,7 @@ func show_status_message(message: String):
 func _on_access_button_pressed():
 	btn_sound.play()
 	if current_array_size == 0:
-		show_feedback("Array is empty!", Color.RED, Vector2(500, 300))
+		show_feedback("Array is empty! No elements to access.", Color.ORANGE, get_global_mouse_position())
 		return
 	
 	action_modal.show_for_action(ActionType.ACCESS, current_array_size - 1, 
@@ -772,7 +783,7 @@ func _on_access_button_pressed():
 func _on_insert_end_button_pressed():
 	btn_sound.play()
 	if current_array_size >= max_array_size:
-		show_feedback("Array is full!", Color.ORANGE, Vector2(500, 300))
+		show_feedback("Array is full! Can't insert more elements.", Color.ORANGE, get_global_mouse_position())
 		return
 	
 	action_modal.show_for_action(ActionType.INSERT_AT_END, max_array_size - current_array_size,
@@ -780,13 +791,17 @@ func _on_insert_end_button_pressed():
 
 func _on_insert_i_button_pressed():
 	btn_sound.play()
+	if current_array_size >= max_array_size:
+		show_feedback("Array is full! Can't insert more elements.", Color.ORANGE, get_global_mouse_position())
+		return
+	
 	action_modal.show_for_action(ActionType.INSERT_AT_INDEX, current_array_size,
 		func(value, index): _execute_insert_at_index(value, index))
 
 func _on_delete_button_pressed():
 	btn_sound.play()
 	if current_array_size == 0:
-		show_feedback("Array is empty!", Color.RED, Vector2(500, 300))
+		show_feedback("Array is empty! Nothing to delete.", Color.ORANGE, get_global_mouse_position())
 		return
 	
 	action_modal.show_for_action(ActionType.DELETE, current_array_size - 1,

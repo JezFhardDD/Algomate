@@ -5,7 +5,14 @@
 [ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="3_babkl"]
 
 [node name="Main2" instance=ExtResource("1_uagsq")]
+rotation = 0.0
 script = ExtResource("2_8anxq")
+
+[node name="ColorRect" parent="." index="2"]
+offset_left = -4.0
+offset_top = -8.0
+offset_right = 28.0
+offset_bottom = -8.0
 
 [node name="rear" parent="TextureRect" index="0"]
 visible = true
@@ -48,12 +55,6 @@ grow_horizontal = 2
 grow_vertical = 2
 metadata/_edit_use_anchors_ = true
 
-[node name="HSeparator2" parent="CppPopup/VBoxContainer/TutorialPanel" index="0"]
-custom_minimum_size = Vector2(0, 0)
-layout_mode = 0
-size_flags_horizontal = 1
-size_flags_vertical = 1
-
 [node name="CppCodeButton" parent="." index="13"]
 visible = false
 
@@ -66,12 +67,7 @@ offset_bottom = -108.0
 [node name="TextureRect" parent="MarginContainer/HBoxContainer2" index="0"]
 custom_minimum_size = Vector2(20, 0)
 
-[node name="CancelButton" parent="ArrayActionModal/ModalContent/ActionButtons" index="0"]
-theme_override_font_sizes/font_size = 50
-
 [node name="TargetLabel" parent="." index="31"]
-custom_minimum_size = Vector2(0, 0)
-layout_mode = 1
 anchors_preset = 5
 anchor_top = 0.0
 anchor_bottom = 0.0
@@ -80,10 +76,6 @@ offset_top = 307.0
 offset_right = 536.5
 offset_bottom = 364.0
 grow_vertical = 1
-theme_override_colors/font_color = Color(0.638753, 0.758185, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 4
-text = "Find: 99"
 horizontal_alignment = 1
 
 [node name="CommandProgressLabel" parent="." index="32"]
