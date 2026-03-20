@@ -682,8 +682,8 @@ func _finish_simulation():
 		if code_anim: code_anim.play("default")
 	
 	# Show result popup
-	var grade = _compute_grade()
-	_show_result_popup("PASS" if grade["passed"] else "FAIL", grade)
+	#var grade = _compute_grade()
+	#_show_result_popup("PASS" if grade["passed"] else "FAIL", grade)
 
 func _compute_grade() -> Dictionary:
 	var total_moves = comparison_counter + swap_counter

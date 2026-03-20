@@ -1099,14 +1099,15 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_fos0i")
 text = "Statistics:"
 
 [node name="QueueContainer" type="Control" parent="."]
+z_index = -1
 custom_minimum_size = Vector2(200, 200)
 layout_direction = 1
 layout_mode = 1
 anchors_preset = 0
-offset_left = 205.0
-offset_top = 278.0
-offset_right = 405.0
-offset_bottom = 478.0
+offset_left = 260.0
+offset_top = 272.0
+offset_right = 460.0
+offset_bottom = 472.0
 mouse_filter = 2
 
 [node name="DequeuedContainer" type="HBoxContainer" parent="."]
@@ -1222,6 +1223,7 @@ theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_ei8tx")
 text = "Close"
 
 [node name="SimulationCompletePopup" type="PopupPanel" parent="."]
+oversampling_override = 1.0
 size = Vector2i(500, 300)
 theme_override_styles/panel = SubResource("StyleBoxTexture_hri7i")
 
@@ -1229,14 +1231,17 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_hri7i")
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = 25.0
-offset_right = 469.0
+offset_left = -225.0
+offset_right = 219.0
 offset_bottom = 300.0
 grow_horizontal = 2
 alignment = 1
 
 [node name="Label" type="Label" parent="SimulationCompletePopup/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.14509805, 0.8235294, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 30
 text = "Simulation Complete!"
@@ -1244,6 +1249,7 @@ horizontal_alignment = 1
 
 [node name="ShowCppButton" type="Button" parent="SimulationCompletePopup/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.8352941, 0.29411766, 0.65882355, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxTexture_5mvff")
@@ -1253,6 +1259,7 @@ text = "Show Code"
 
 [node name="CloseButton" type="Button" parent="SimulationCompletePopup/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.8352941, 0.29411766, 0.65882355, 1)
 theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxTexture_40n85")
@@ -1262,10 +1269,14 @@ text = "Close"
 
 [node name="ProcessLabel" type="Label" parent="SimulationCompletePopup/VBoxContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.14509805, 0.8235294, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
 theme_override_fonts/font = ExtResource("3_pnqar")
 theme_override_font_sizes/font_size = 30
 
 [node name="CppPopup" type="PopupPanel" parent="."]
+oversampling_override = 1.0
 size = Vector2i(653, 650)
 theme_override_styles/panel = SubResource("StyleBoxTexture_sqvbp")
 
@@ -1404,10 +1415,10 @@ anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = 17.0
-offset_top = -63.0
-offset_right = -23.0
-offset_bottom = -60.0
+offset_left = 22.0
+offset_top = -47.0
+offset_right = -18.0
+offset_bottom = -44.0
 grow_horizontal = 2
 grow_vertical = 2
 fit_content = true

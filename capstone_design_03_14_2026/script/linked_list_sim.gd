@@ -55,6 +55,10 @@ const BLOCK_SCENE := preload("res://LinkedBlock.tscn")
 const POINTER_TEX := preload("res://assets/point_left.png")
 const RESULT_POPUP_SCENE := preload("res://scene/ResultPopup.tscn")
 
+# --- bg texture and font ---
+const DIALOG_BG_TEX = preload("res://assets/CONTAINER.png")
+const CUSTOM_FONT = preload("res://assets/font/Planes_ValMore.ttf") # <-- Change this to your actual font file name!
+
 # --- POINTERS ---
 @onready var ptr_left: Node = $TextureRect/front   
 @onready var ptr_right: Node = $TextureRect/rear   
@@ -369,113 +373,143 @@ func reset_cache_for_scene() -> void:
 # ==============================================
 #   DIALOG CREATION & MENU SETUP
 # ==============================================
+# ==============================================
+#   DIALOG CREATION & MENU SETUP
+# ==============================================
 func _setup_menu_buttons():
-	var modern_panel = _get_modern_stylebox()
-	var hover_style = _get_modern_stylebox(Color(0.25, 0.25, 0.3, 1.0))
-	hover_style.shadow_size = 0 # Flat hover inside menu
+	var custom_bg_style = _get_texture_stylebox(DIALOG_BG_TEX)
+	var hover_style = StyleBoxFlat.new()
+	hover_style.bg_color = Color(1, 1, 1, 0.1) 
 	
 	if insert_menu:
+		# --- 2. FORCE THE MAIN BUTTON SIZE ---
+		insert_menu.custom_minimum_size = Vector2(250, 60) # Adjust Width, Height here!
+		insert_menu.add_theme_font_override("font", CUSTOM_FONT)
+		insert_menu.add_theme_font_size_override("font_size", 18)
+		
 		var in_popup = insert_menu.get_popup()
 		in_popup.clear()
 		in_popup.add_item("Insert at Beginning", 0)
 		in_popup.add_item("Insert at End", 1)
 		in_popup.add_item("Insert at Position", 2)
 		
-		# Apply Modern Theme to Insert Dropdown
-		in_popup.add_theme_stylebox_override("panel", modern_panel)
+		# --- 3. WIDEN THE DROPDOWN LIST & MAKE ITEMS TALLER ---
+		in_popup.add_theme_constant_override("item_start_padding", 30) # Pushes text right
+		in_popup.add_theme_constant_override("item_end_padding", 50)   # Adds empty space on the right (makes it wider)
+		in_popup.add_theme_constant_override("v_separation", 24)       # Height between items
+		
+		in_popup.add_theme_stylebox_override("panel", custom_bg_style)
 		in_popup.add_theme_stylebox_override("hover", hover_style)
-		in_popup.add_theme_constant_override("v_separation", 12)
+		in_popup.add_theme_font_override("font", CUSTOM_FONT)
 		in_popup.add_theme_font_size_override("font_size", 16)
 		in_popup.id_pressed.connect(_on_insert_selected)
 		
 	if delete_menu:
+		# --- 2. FORCE THE MAIN BUTTON SIZE ---
+		delete_menu.custom_minimum_size = Vector2(250, 60) # Adjust Width, Height here!
+		
+		delete_menu.add_theme_font_override("font", CUSTOM_FONT)
+		delete_menu.add_theme_font_size_override("font_size", 18)
+		
 		var del_popup = delete_menu.get_popup()
 		del_popup.clear()
 		del_popup.add_item("Delete at Beginning", 0)
 		del_popup.add_item("Delete at End", 1)
 		del_popup.add_item("Delete at Position", 2)
 		
-		# Apply Modern Theme to Delete Dropdown
-		del_popup.add_theme_stylebox_override("panel", modern_panel)
+		# --- 3. WIDEN THE DROPDOWN LIST & MAKE ITEMS TALLER ---
+		del_popup.add_theme_constant_override("item_start_padding", 30)
+		del_popup.add_theme_constant_override("item_end_padding", 50)
+		del_popup.add_theme_constant_override("v_separation", 24)
+		
+		del_popup.add_theme_stylebox_override("panel", custom_bg_style)
 		del_popup.add_theme_stylebox_override("hover", hover_style)
-		del_popup.add_theme_constant_override("v_separation", 12)
+		del_popup.add_theme_font_override("font", CUSTOM_FONT)
 		del_popup.add_theme_font_size_override("font_size", 16)
-		del_popup.id_pressed.connect(_on_delete_selected)
-		
-	if delete_menu:
-		var del_popup = delete_menu.get_popup()
-		del_popup.clear()
-		del_popup.add_item("Delete at Beginning", 0)
-		del_popup.add_item("Delete at End", 1)
-		del_popup.add_item("Delete at Position", 2)
 		del_popup.id_pressed.connect(_on_delete_selected)
 
 func _create_input_dialogs():
-	var modern_panel = _get_modern_stylebox(Color(0.12, 0.12, 0.14, 0.95))
+	var custom_bg_style = _get_texture_stylebox(DIALOG_BG_TEX)
 	
 	# --- 1. Basic Target Value Dialog ---
 	target_input_dialog = ConfirmationDialog.new()
-	target_input_dialog.add_theme_stylebox_override("panel", modern_panel)
+	target_input_dialog.borderless = true # Removes the gray native background
+	target_input_dialog.min_size = Vector2i(350, 160) # Adjusts Width and Height
+	target_input_dialog.add_theme_stylebox_override("panel", custom_bg_style)
 	
 	var vbox = VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 15) # Add breathing room
+	vbox.add_theme_constant_override("separation", 15)
 	target_input_dialog.add_child(vbox)
 	
 	var lbl = Label.new()
 	lbl.text = "Enter value:"
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	lbl.add_theme_font_size_override("font_size", 18)
+	lbl.add_theme_font_override("font", CUSTOM_FONT)
+	lbl.add_theme_font_size_override("font_size", 20)
 	vbox.add_child(lbl)
 	
 	target_spinbox = SpinBox.new()
 	target_spinbox.min_value = 0
 	target_spinbox.max_value = 999
-	target_spinbox.alignment = HORIZONTAL_ALIGNMENT_CENTER # Center the number
+	target_spinbox.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	target_spinbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL # Stretches to fill width
+	target_spinbox.custom_minimum_size = Vector2(200, 50)
+	target_spinbox.get_line_edit().add_theme_font_override("font", CUSTOM_FONT)
+	target_spinbox.get_line_edit().add_theme_font_size_override("font_size", 18)
 	vbox.add_child(target_spinbox)
 	add_child(target_input_dialog)
 	
 	# --- 2. Position & Value Dialog ---
 	pos_input_dialog = ConfirmationDialog.new()
-	pos_input_dialog.add_theme_stylebox_override("panel", modern_panel)
+	pos_input_dialog.borderless = true # Removes the gray native background
+	pos_input_dialog.min_size = Vector2i(350, 260) # Adjusts Width and Height
+	pos_input_dialog.add_theme_stylebox_override("panel", custom_bg_style)
 	
 	var pvbox = VBoxContainer.new()
-	pvbox.add_theme_constant_override("separation", 12) # Add breathing room
+	pvbox.add_theme_constant_override("separation", 12) 
 	pos_input_dialog.add_child(pvbox)
 	
 	var plbl = Label.new()
 	plbl.text = "Enter Index (0 is Head):"
 	plbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	plbl.add_theme_font_size_override("font_size", 16)
+	plbl.add_theme_font_override("font", CUSTOM_FONT)
+	plbl.add_theme_font_size_override("font_size", 18)
 	pvbox.add_child(plbl)
 	
 	pos_spinbox = SpinBox.new()
 	pos_spinbox.min_value = 0
 	pos_spinbox.max_value = 999 
 	pos_spinbox.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	pos_spinbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	target_spinbox.custom_minimum_size = Vector2(200, 50)
+	pos_spinbox.get_line_edit().add_theme_font_override("font", CUSTOM_FONT)
+	pos_spinbox.get_line_edit().add_theme_font_size_override("font_size", 16)
 	pvbox.add_child(pos_spinbox)
 	
 	val_label = Label.new()
 	val_label.text = "Enter Value to Insert:"
 	val_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	val_label.add_theme_font_size_override("font_size", 16)
+	val_label.add_theme_font_override("font", CUSTOM_FONT)
+	val_label.add_theme_font_size_override("font_size", 18)
 	pvbox.add_child(val_label)
 	
 	val_spinbox = SpinBox.new()
 	val_spinbox.min_value = 0
 	val_spinbox.max_value = 999
 	val_spinbox.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	val_spinbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	target_spinbox.custom_minimum_size = Vector2(200, 50)
+	val_spinbox.get_line_edit().add_theme_font_override("font", CUSTOM_FONT)
+	val_spinbox.get_line_edit().add_theme_font_size_override("font_size", 16)
 	pvbox.add_child(val_spinbox)
 	add_child(pos_input_dialog)
 	
 	pos_input_dialog.confirmed.connect(_on_pos_dialog_confirmed)
 	
-	# Try to style the default OK/Cancel buttons on both dialogs
 	call_deferred("_style_dialog_buttons", target_input_dialog)
 	call_deferred("_style_dialog_buttons", pos_input_dialog)
 
 func _style_dialog_buttons(dialog: ConfirmationDialog):
-	# The ConfirmationDialog generates an OK and Cancel button internally.
-	# We can grab them and make them look modern.
 	var ok_btn = dialog.get_ok_button()
 	var cancel_btn = dialog.get_cancel_button()
 	
@@ -484,8 +518,9 @@ func _style_dialog_buttons(dialog: ConfirmationDialog):
 			btn.add_theme_stylebox_override("normal", _get_modern_button_style(false))
 			btn.add_theme_stylebox_override("hover", _get_modern_button_style(true))
 			btn.add_theme_stylebox_override("pressed", _get_modern_button_style(false))
+			btn.add_theme_font_override("font", CUSTOM_FONT)
 			btn.add_theme_font_size_override("font_size", 16)
-			# Make cancel button a bit darker to differentiate
+			
 			if btn == cancel_btn:
 				btn.add_theme_stylebox_override("normal", _get_modern_stylebox(Color(0.3, 0.3, 0.35, 1.0)))
 				btn.add_theme_stylebox_override("hover", _get_modern_stylebox(Color(0.4, 0.4, 0.45, 1.0)))
@@ -1846,4 +1881,20 @@ func _get_modern_button_style(is_hover: bool = false) -> StyleBoxFlat:
 	style.corner_radius_bottom_right = 8
 	style.content_margin_top = 8
 	style.content_margin_bottom = 8
+	return style
+
+func _get_texture_stylebox(tex: Texture2D) -> StyleBoxTexture:
+	var style = StyleBoxTexture.new()
+	style.texture = tex
+	
+	# Adjust these values based on the border thickness of your CONTAINER.png
+	style.texture_margin_left = 16
+	style.texture_margin_right = 16
+	style.texture_margin_top = 16
+	style.texture_margin_bottom = 16
+	
+	style.content_margin_left = 20
+	style.content_margin_right = 20
+	style.content_margin_top = 20
+	style.content_margin_bottom = 20
 	return style
