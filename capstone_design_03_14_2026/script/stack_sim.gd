@@ -943,7 +943,7 @@ func _on_dequeue_pressed() -> void:
 
 	var exit_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
 	# Move UP instead of left for a stack pop
-	exit_tween.tween_property(top_block, "position", top_block.position + Vector2(150, 0), 0.4)
+	exit_tween.tween_property(top_block, "position", top_block.position + Vector2(0, -150), 0.4)
 	exit_tween.tween_property(top_block, "modulate:a", 0.0, 0.3)
 	
 	await exit_tween.finished

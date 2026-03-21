@@ -237,7 +237,8 @@ var intro_texts = [
 # Configuration variables
 var element_inputs: Array[LineEdit] = []
 var user_configuration_step = 1  # 1: Size, 2: Elements
-
+# Add this with your other runtime data variables (around line 100)
+var initial_waiting_elements: Array[int] = []  # Store the initial configuration
 var is_dequeuing_active: bool = false
 
 # 🏁 Ready
@@ -558,6 +559,8 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	
 	# Set waiting elements to the configured elements
 	waiting_elements = elements.duplicate()
+	# SAVE THE INITIAL ELEMENTS FOR CODE GENERATION
+	initial_waiting_elements = elements.duplicate()
 	
 	# Add initial code line
 	_add_code_line("INITIAL", 0, 0)
@@ -1237,14 +1240,14 @@ func _show_cpp_popup() -> void:
 	cpp_tutorialcode_index = 0
 	
 	if cpp_popup and cpp_text:
-		# Generate code in current selected language
+		# Generate code using INITIAL elements, not current waiting_elements
 		var source_arr: Array = []
-		if dequeued_elements.size() > 0:
+		if initial_waiting_elements.size() > 0:
+			source_arr = initial_waiting_elements.duplicate()
+		elif dequeued_elements.size() > 0:
 			source_arr = dequeued_elements.duplicate()
 		elif queue.size() > 0:
 			source_arr = queue.duplicate()
-		elif waiting_elements.size() > 0:
-			source_arr = waiting_elements.duplicate()
 		else:
 			source_arr = [10, 20, 30]
 			
@@ -1491,12 +1494,12 @@ func refresh_code_display() -> void:
 	"""Refresh the code display with current language"""
 	if cpp_popup and cpp_popup.visible and cpp_text:
 		var source_arr: Array = []
-		if dequeued_elements.size() > 0:
+		if initial_waiting_elements.size() > 0:
+			source_arr = initial_waiting_elements.duplicate()
+		elif dequeued_elements.size() > 0:
 			source_arr = dequeued_elements.duplicate()
 		elif queue.size() > 0:
 			source_arr = queue.duplicate()
-		elif waiting_elements.size() > 0:
-			source_arr = waiting_elements.duplicate()
 		else:
 			source_arr = [10, 20, 30]
 		
@@ -1882,14 +1885,14 @@ func start_cpp_code_tutorial() -> void:
 	cpp_tutorialcode_index = 0
 	cpp_tutorial_panel.show()
 	
-	# Generate fresh code for the tutorial
+	# Generate fresh code using initial elements
 	var source_arr: Array = []
-	if dequeued_elements.size() > 0:
+	if initial_waiting_elements.size() > 0:
+		source_arr = initial_waiting_elements.duplicate()
+	elif dequeued_elements.size() > 0:
 		source_arr = dequeued_elements.duplicate()
 	elif queue.size() > 0:
 		source_arr = queue.duplicate()
-	elif waiting_elements.size() > 0:
-		source_arr = waiting_elements.duplicate()
 	else:
 		source_arr = [10, 20, 30]
 	
@@ -1921,14 +1924,14 @@ func clear_cpp_highlight() -> void:
 	if not cpp_text:
 		return
 	
-	# Regenerate the original code
+	# Regenerate the original code using initial elements
 	var source_arr: Array = []
-	if dequeued_elements.size() > 0:
+	if initial_waiting_elements.size() > 0:
+		source_arr = initial_waiting_elements.duplicate()
+	elif dequeued_elements.size() > 0:
 		source_arr = dequeued_elements.duplicate()
 	elif queue.size() > 0:
 		source_arr = queue.duplicate()
-	elif waiting_elements.size() > 0:
-		source_arr = waiting_elements.duplicate()
 	else:
 		source_arr = [10, 20, 30]
 	
@@ -2244,7 +2247,18 @@ func _setup_compiler() -> void:
 func _on_compile_button_pressed() -> void:
 	btn_sound.play()
 	
-	var code = generate_code_in_language(current_code_language, waiting_elements)
+	# Use initial waiting elements for code generation
+	var source_arr: Array = []
+	if initial_waiting_elements.size() > 0:
+		source_arr = initial_waiting_elements.duplicate()
+	elif dequeued_elements.size() > 0:
+		source_arr = dequeued_elements.duplicate()
+	elif queue.size() > 0:
+		source_arr = queue.duplicate()
+	else:
+		source_arr = [10, 20, 30]
+	
+	var code = generate_code_in_language(current_code_language, source_arr)
 	
 	if compiler_output_popup and compiler_output_popup.has_cached_result(current_code_language):
 		var cached = compiler_output_popup.get_cached_result(current_code_language)
@@ -2324,7 +2338,17 @@ func _on_compile_completed(result, response_code, headers, body, http_request, l
 
 
 func _on_recompile_requested(language: String) -> void:
-	var code = generate_code_in_language(language, waiting_elements)
+	var source_arr: Array = []
+	if initial_waiting_elements.size() > 0:
+		source_arr = initial_waiting_elements.duplicate()
+	elif dequeued_elements.size() > 0:
+		source_arr = dequeued_elements.duplicate()
+	elif queue.size() > 0:
+		source_arr = queue.duplicate()
+	else:
+		source_arr = [10, 20, 30]
+	
+	var code = generate_code_in_language(language, source_arr)
 	_compile_code(code)
 
 
