@@ -14,6 +14,8 @@ var pic_buttons: Array[TextureButton] = []
 var selected_pic_path: String = ""
 var selected_pic_index: int = -1
 
+var regex = RegEx.new()
+
 var profile_pictures = [
 	preload("res://assets/profile_pics/boyCCT2.jpg"),
 	preload("res://assets/profile_pics/girlCCT2.jpeg")
@@ -22,7 +24,9 @@ var profile_pictures = [
 func _ready():
 	popup_window = true
 	exclusive = true 
-	
+	# --- NEW CODE ---
+	name_input.max_length = 14
+	regex.compile("[^ a-zA-Z0-9]") 
 	done_button.pressed.connect(_on_done_pressed)
 	cancel_button.pressed.connect(_on_cancel_pressed)
 	done_button.disabled = true
@@ -86,7 +90,19 @@ func _on_pic_selected(button: TextureButton):
 	
 	check_form_complete()
 
-func _on_name_changed(_new_text: String):
+func _on_name_changed(new_text: String):
+	# Replace any special characters with nothing ("")
+	var filtered_text = regex.sub(new_text, "", true) 
+	
+	# If the text contained special characters, update the LineEdit
+	if filtered_text != new_text:
+		var current_caret = name_input.caret_column
+		var difference = new_text.length() - filtered_text.length()
+		
+		name_input.text = filtered_text
+		# Adjust the cursor position so it doesn't snap to the beginning
+		name_input.caret_column = current_caret - difference
+		
 	check_form_complete()
 
 func check_form_complete():

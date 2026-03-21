@@ -1,10 +1,10 @@
 [gd_scene load_steps=9 format=3 uid="uid://ca1fd4q7tw5tf"]
 
-[ext_resource type="Script" path="res://scripts/intro.gd" id="1_4bx60"]
+[ext_resource type="Script" uid="uid://co52jvvidam4u" path="res://scripts/intro.gd" id="1_4bx60"]
 [ext_resource type="Texture2D" uid="uid://bfiagjnegdly1" path="res://assets/MAIN_MENU/ALGOMATE_LOGO.png" id="1_ioskq"]
-[ext_resource type="Shader" path="res://scripts/bg.gdshader" id="2_i2l1n"]
-[ext_resource type="Shader" path="res://scripts/lectures_bg.gdshader" id="2_wfs7u"]
-[ext_resource type="Shader" path="res://scripts/intro.gdshader" id="3_i2l1n"]
+[ext_resource type="Shader" uid="uid://djtrt387a1e54" path="res://scripts/bg.gdshader" id="2_i2l1n"]
+[ext_resource type="Shader" uid="uid://dm5tlgdpgj58y" path="res://scripts/lectures_bg.gdshader" id="2_wfs7u"]
+[ext_resource type="Shader" uid="uid://dtc3gywxeie31" path="res://scripts/intro.gdshader" id="3_i2l1n"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_0naf5"]
 shader = ExtResource("2_wfs7u")

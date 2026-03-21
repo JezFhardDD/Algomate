@@ -691,27 +691,35 @@ vertical_alignment = 1
 
 [node name="TimelinePopup" type="PopupPanel" parent="."]
 oversampling_override = 1.0
-size = Vector2i(450, 400)
+size = Vector2i(600, 500)
 theme_override_styles/panel = SubResource("StyleBoxTexture_20pc6")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="TimelinePopup"]
-offset_top = 4.0
-offset_right = 450.0
-offset_bottom = 391.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -246.0
+offset_right = 300.0
+offset_bottom = 241.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TimelinePopup/ScrollContainer"]
-custom_minimum_size = Vector2(300, 0)
+custom_minimum_size = Vector2(550, 0)
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_horizontal = 6
 
 [node name="Label" type="Label" parent="TimelinePopup/ScrollContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 0
+size_flags_vertical = 2
 theme_override_fonts/font = ExtResource("3_pnqar")
 theme_override_font_sizes/font_size = 30
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 3
 
 [node name="CppPopup" type="PopupPanel" parent="."]
 oversampling_override = 1.0
@@ -983,6 +991,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_gjnlk")
 text = "No"
 
 [node name="ConfigSizeModal" type="Panel" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1236,8 +1245,8 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_wfnl0")
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -200.0
-offset_right = 194.0
+offset_left = 25.0
+offset_right = 419.0
 offset_bottom = 300.0
 grow_horizontal = 2
 alignment = 1

@@ -201,15 +201,16 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -66.5
-offset_top = 5.855957
-offset_right = 66.5
-offset_bottom = 30.855957
+offset_left = -116.7753
+offset_top = 13.3070755
+offset_right = 117.2247
+offset_bottom = 44.307076
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_fonts/font = ExtResource("11_njwbg")
 text = "PROFILE NAME"
 label_settings = SubResource("LabelSettings_i5qcw")
+horizontal_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="sidebar_container/container"]
 anchors_preset = 15
@@ -233,8 +234,8 @@ offset_left = 56.818237
 offset_top = 11.0424
 offset_right = 181.81824
 offset_bottom = 42.0424
-label_settings = SubResource("LabelSettings_i5qcw")
 text = "Progress"
+label_settings = SubResource("LabelSettings_i5qcw")
 
 [node name="help" type="TextureButton" parent="sidebar_container/container/VBoxContainer"]
 layout_mode = 2
@@ -246,8 +247,8 @@ offset_left = 56.818237
 offset_top = 11.042404
 offset_right = 171.81824
 offset_bottom = 42.042404
-label_settings = SubResource("LabelSettings_i5qcw")
 text = "Help"
+label_settings = SubResource("LabelSettings_i5qcw")
 
 [node name="feedback" type="TextureButton" parent="sidebar_container/container/VBoxContainer"]
 layout_mode = 2
@@ -259,8 +260,8 @@ offset_left = 56.818237
 offset_top = 11.042404
 offset_right = 189.81824
 offset_bottom = 42.042404
-label_settings = SubResource("LabelSettings_i5qcw")
 text = "Feedback"
+label_settings = SubResource("LabelSettings_i5qcw")
 
 [node name="settings" type="TextureButton" parent="sidebar_container/container/VBoxContainer"]
 layout_mode = 2
@@ -272,8 +273,8 @@ offset_left = 56.818237
 offset_top = 11.042404
 offset_right = 171.81824
 offset_bottom = 42.042404
-label_settings = SubResource("LabelSettings_i5qcw")
 text = "Settings"
+label_settings = SubResource("LabelSettings_i5qcw")
 
 [node name="about" type="TextureButton" parent="sidebar_container/container/VBoxContainer"]
 layout_mode = 2
@@ -285,8 +286,8 @@ offset_left = 56.818237
 offset_top = 11.042389
 offset_right = 171.81824
 offset_bottom = 42.04239
-label_settings = SubResource("LabelSettings_i5qcw")
 text = "About"
+label_settings = SubResource("LabelSettings_i5qcw")
 
 [node name="exit" type="TextureButton" parent="sidebar_container/container/VBoxContainer"]
 layout_mode = 2
@@ -298,9 +299,9 @@ offset_left = 57.59697
 offset_top = 11.186523
 offset_right = 172.59697
 offset_bottom = 76.18652
-label_settings = SubResource("LabelSettings_i5qcw")
 text = "Exit
 "
+label_settings = SubResource("LabelSettings_i5qcw")
 
 [connection signal="pressed" from="shop" to="." method="_on_shop_pressed"]
 [connection signal="pressed" from="sidebar_button" to="." method="_on_sidebar_button_pressed"]
