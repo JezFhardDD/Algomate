@@ -1,0 +1,567 @@
+[gd_scene load_steps=49 format=3 uid="uid://oi4fv0417k3j"]
+
+[ext_resource type="Script" uid="uid://b5dsxh6txhven" path="res://scripts/lectures.gd" id="1_8jt5q"]
+[ext_resource type="Shader" uid="uid://dm5tlgdpgj58y" path="res://scripts/lectures_bg.gdshader" id="1_eou7u"]
+[ext_resource type="Texture2D" uid="uid://binxvpneifapc" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/BACK_BUTTON_GREEN.png" id="4_4u4to"]
+[ext_resource type="Texture2D" uid="uid://ct0asa0put1hp" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/DATA_STRUCTURES_GREEN.png" id="5_4u4to"]
+[ext_resource type="Shader" uid="uid://bgxe5n6w2k0ku" path="res://scripts/lecture_floating_buttons.gdshader" id="7_4u4to"]
+[ext_resource type="PackedScene" uid="uid://fn2lsok5rgx1" path="res://scenes/lesson_view.tscn" id="7_femnd"]
+[ext_resource type="Texture2D" uid="uid://ckg8qu8nfl7es" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/topic_array.png" id="9_eo2cl"]
+[ext_resource type="Script" uid="uid://btl0ptjoyyuox" path="res://scripts/linked_list.gd" id="9_mhrye"]
+[ext_resource type="Script" uid="uid://iepeyav7j4t1" path="res://scripts/array_script.gd" id="10_jt67q"]
+[ext_resource type="Texture2D" uid="uid://cqc337i7sri0k" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/topic_linked_list.png" id="10_q8lyd"]
+[ext_resource type="Texture2D" uid="uid://bv7wniivpgf0x" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/topic_stackt.png" id="11_bec04"]
+[ext_resource type="Script" uid="uid://bab8thsn1w7i0" path="res://scripts/stack.gd" id="11_pr0rh"]
+[ext_resource type="Texture2D" uid="uid://doqvsc7ifeg51" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/topic_queue.png" id="12_6luls"]
+[ext_resource type="Texture2D" uid="uid://buoupvi5wgoqf" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/topic_tree.png" id="13_4mrc5"]
+[ext_resource type="Script" uid="uid://bho4c0niefmmg" path="res://scripts/read_lesson.gd" id="13_k4o4g"]
+[ext_resource type="Texture2D" uid="uid://xngqmkqiv35b" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/topic_binary_tree.png" id="14_jt67q"]
+[ext_resource type="Texture2D" uid="uid://be7dmits71khh" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/topic_binary_searchtree.png" id="15_nngdg"]
+[ext_resource type="PackedScene" uid="uid://pw1kjcephyld" path="res://scenes/navigation.tscn" id="16_4mrc5"]
+[ext_resource type="Texture2D" uid="uid://nhw6ljk5iukn" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/topic_graph.png" id="16_i5s1w"]
+[ext_resource type="Texture2D" uid="uid://fm1mb7qr6bcq" path="res://assets/HOMEPAGE/LECTURES_SORTING_ALGO/sorting_algorithms.png" id="17_femnd"]
+[ext_resource type="Texture2D" uid="uid://b1or7m6qqxs3n" path="res://assets/HOMEPAGE/LECTURES_SORTING_ALGO/topic_bubble.png" id="18_mhrye"]
+[ext_resource type="Script" uid="uid://brv0fs6txn31f" path="res://scripts/bubble_sort.gd" id="18_tjhoo"]
+[ext_resource type="Texture2D" uid="uid://dpkbym6selvif" path="res://assets/HOMEPAGE/LECTURES_SORTING_ALGO/topic_selection_sort.png" id="19_tjhoo"]
+[ext_resource type="Texture2D" uid="uid://14f0sja6bjoy" path="res://assets/HOMEPAGE/LECTURES_SORTING_ALGO/topic_insertion_sort.png" id="20_pr0rh"]
+[ext_resource type="Texture2D" uid="uid://cdwavtehsnw1t" path="res://assets/HOMEPAGE/LECTURES_SORTING_ALGO/topic_merge_sort.png" id="21_k4o4g"]
+[ext_resource type="Texture2D" uid="uid://dl0jemqhkljvx" path="res://assets/HOMEPAGE/LECTURES_SORTING_ALGO/topic_quick_sort.png" id="22_7eo25"]
+[ext_resource type="Texture2D" uid="uid://bbwkxpbx1j2yl" path="res://assets/HOMEPAGE/LECTURES_SORTING_ALGO/topic_shell_sort.png" id="23_1favx"]
+[ext_resource type="Texture2D" uid="uid://bmrb6xesaw7mj" path="res://assets/HOMEPAGE/LECTURES_SORTING_ALGO/searching_algorithms.png" id="26_7eo25"]
+[ext_resource type="Texture2D" uid="uid://dbbhed8med10c" path="res://assets/HOMEPAGE/LECTURES_SORTING_ALGO/linear_search.png" id="27_lqy4i"]
+[ext_resource type="Texture2D" uid="uid://jnsyfgcbthn3" path="res://assets/HOMEPAGE/LECTURES_SORTING_ALGO/interpolation_search.png" id="28_x070o"]
+[ext_resource type="Texture2D" uid="uid://dhufocfwcsaaa" path="res://assets/HOMEPAGE/LECTURES_SORTING_ALGO/graphtree_search.png" id="29_xm302"]
+[ext_resource type="Texture2D" uid="uid://b6j2nqeoc2ica" path="res://assets/HOMEPAGE/LECTURES_SORTING_ALGO/DFS_search.png" id="30_n5066"]
+[ext_resource type="Texture2D" uid="uid://c7gh676s8hcyv" path="res://assets/HOMEPAGE/LECTURES_SORTING_ALGO/binary_search.png" id="31_wf7o1"]
+[ext_resource type="Texture2D" uid="uid://wk75kd5nsobm" path="res://assets/HOMEPAGE/LECTURES_SORTING_ALGO/BFS_search.png" id="32_bx68a"]
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="planes_font"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8jt5q"]
+shader = ExtResource("1_eou7u")
+shader_parameter/speed = -0.01
+shader_parameter/density = 5.105
+shader_parameter/min_size = 0.06
+shader_parameter/max_size = 0.67
+shader_parameter/min_alpha = 0.03
+shader_parameter/max_alpha = 0.26
+shader_parameter/bg_color = Color(0.0991255, 0.14671892, 0.02534871, 1)
+shader_parameter/block_color = Color(0.61546767, 0.94360113, 0.644786, 1)
+shader_parameter/accent_color = Color(0.8366481, 0.6679535, 0.3425281, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_eou7u"]
+shader = ExtResource("7_4u4to")
+shader_parameter/speed = 2.0
+shader_parameter/strength = 0.05
+shader_parameter/tilt_strength = 0.03
+
+[sub_resource type="Theme" id="Theme_4u4to"]
+default_font = ExtResource("planes_font")
+default_font_size = 0
+Label/fonts/font = ExtResource("planes_font")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4mrc5"]
+shader = ExtResource("7_4u4to")
+shader_parameter/speed = 2.0
+shader_parameter/strength = 0.05
+shader_parameter/tilt_strength = 0.03
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jt67q"]
+shader = ExtResource("7_4u4to")
+shader_parameter/speed = 2.0
+shader_parameter/strength = 0.05
+shader_parameter/tilt_strength = 0.03
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nngdg"]
+shader = ExtResource("7_4u4to")
+shader_parameter/speed = 2.0
+shader_parameter/strength = 0.05
+shader_parameter/tilt_strength = 0.03
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i5s1w"]
+shader = ExtResource("7_4u4to")
+shader_parameter/speed = 2.0
+shader_parameter/strength = 0.05
+shader_parameter/tilt_strength = 0.03
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ccly4"]
+shader = ExtResource("7_4u4to")
+shader_parameter/speed = 2.0
+shader_parameter/strength = 0.05
+shader_parameter/tilt_strength = 0.03
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5ea51"]
+shader = ExtResource("7_4u4to")
+shader_parameter/speed = 2.0
+shader_parameter/strength = 0.05
+shader_parameter/tilt_strength = 0.03
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ir8sa"]
+shader = ExtResource("7_4u4to")
+shader_parameter/speed = 2.0
+shader_parameter/strength = 0.05
+shader_parameter/tilt_strength = 0.03
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wjndy"]
+shader = ExtResource("7_4u4to")
+shader_parameter/speed = 2.0
+shader_parameter/strength = 0.05
+shader_parameter/tilt_strength = 0.03
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lqy4i"]
+shader = ExtResource("7_4u4to")
+shader_parameter/speed = 2.0
+shader_parameter/strength = 0.05
+shader_parameter/tilt_strength = 0.03
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_x070o"]
+shader = ExtResource("7_4u4to")
+shader_parameter/speed = 2.0
+shader_parameter/strength = 0.05
+shader_parameter/tilt_strength = 0.03
+
+[node name="lectures" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8jt5q")
+
+[node name="BG" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_8jt5q")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.47843137, 0.6627451, 0.22352941, 1)
+
+[node name="data_structures" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="title_data__structures" type="TextureButton" parent="data_structures"]
+layout_mode = 0
+offset_left = 200.0
+offset_top = 110.0
+offset_right = 495.0
+offset_bottom = 211.0
+texture_normal = ExtResource("5_4u4to")
+script = ExtResource("13_k4o4g")
+lesson_id = "intro"
+lesson_scene = ExtResource("7_femnd")
+
+[node name="array" type="TextureButton" parent="data_structures"]
+material = SubResource("ShaderMaterial_eou7u")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.047839507
+anchor_top = 0.28211805
+anchor_right = 0.47993827
+anchor_bottom = 0.39124715
+grow_vertical = 2
+theme = SubResource("Theme_4u4to")
+texture_normal = ExtResource("9_eo2cl")
+script = ExtResource("10_jt67q")
+lesson_id = "array"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="linked_list" type="TextureButton" parent="data_structures"]
+material = SubResource("ShaderMaterial_eou7u")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.50771606
+anchor_top = 0.35850695
+anchor_right = 0.9398148
+anchor_bottom = 0.467636
+offset_left = 12.0
+offset_top = -14.0
+offset_right = 12.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_4u4to")
+texture_normal = ExtResource("10_q8lyd")
+script = ExtResource("9_mhrye")
+lesson_id = "linked_list"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="stack" type="TextureButton" parent="data_structures"]
+material = SubResource("ShaderMaterial_eou7u")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.047839507
+anchor_top = 0.4357639
+anchor_right = 0.47993827
+anchor_bottom = 0.54489297
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_4u4to")
+texture_normal = ExtResource("11_bec04")
+script = ExtResource("11_pr0rh")
+lesson_id = "stack"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="queue" type="TextureButton" parent="data_structures"]
+material = SubResource("ShaderMaterial_eou7u")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.49382716
+anchor_top = 0.5182292
+anchor_right = 0.9259259
+anchor_bottom = 0.6273582
+offset_left = 12.0
+offset_top = -14.0
+offset_right = 12.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_4u4to")
+texture_normal = ExtResource("12_6luls")
+script = ExtResource("13_k4o4g")
+lesson_id = "queue"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="tree" type="TextureButton" parent="data_structures"]
+material = SubResource("ShaderMaterial_4mrc5")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.040123463
+anchor_top = 0.6092794
+anchor_right = 0.4722222
+anchor_bottom = 0.71840847
+texture_normal = ExtResource("13_4mrc5")
+script = ExtResource("13_k4o4g")
+lesson_id = "tree"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="binary tree" type="TextureButton" parent="data_structures"]
+material = SubResource("ShaderMaterial_jt67q")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.70057
+anchor_right = 0.9367284
+anchor_bottom = 0.7960069
+texture_normal = ExtResource("14_jt67q")
+script = ExtResource("13_k4o4g")
+lesson_id = "bt"
+metadata/_edit_use_anchors_ = true
+
+[node name="binary search tree" type="TextureButton" parent="data_structures"]
+material = SubResource("ShaderMaterial_nngdg")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.06481481
+anchor_top = 0.7907986
+anchor_right = 0.49691358
+anchor_bottom = 0.8999277
+texture_normal = ExtResource("15_nngdg")
+script = ExtResource("13_k4o4g")
+lesson_id = "bst"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="graph" type="TextureButton" parent="data_structures"]
+material = SubResource("ShaderMaterial_i5s1w")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5231481
+anchor_top = 0.8550347
+anchor_right = 0.9552469
+anchor_bottom = 0.9641639
+texture_normal = ExtResource("16_i5s1w")
+script = ExtResource("13_k4o4g")
+lesson_id = "graph"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="sorting_algorithms" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="sorting_algorithms" type="TextureButton" parent="sorting_algorithms"]
+layout_mode = 0
+offset_left = 200.0
+offset_top = 110.0
+offset_right = 495.0
+offset_bottom = 211.0
+texture_normal = ExtResource("17_femnd")
+script = ExtResource("13_k4o4g")
+lesson_id = "algo_intro_sort"
+lesson_scene = ExtResource("7_femnd")
+
+[node name="bubble_sort" type="TextureButton" parent="sorting_algorithms"]
+material = SubResource("ShaderMaterial_ccly4")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.052469134
+anchor_top = 0.28211805
+anchor_right = 0.48456803
+anchor_bottom = 0.3900019
+texture_normal = ExtResource("18_mhrye")
+script = ExtResource("18_tjhoo")
+lesson_id = "bubble_sort"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="selection_sort" type="TextureButton" parent="sorting_algorithms"]
+material = SubResource("ShaderMaterial_5ea51")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5308642
+anchor_top = 0.3454861
+anchor_right = 0.962963
+anchor_bottom = 0.45336995
+texture_normal = ExtResource("19_tjhoo")
+script = ExtResource("13_k4o4g")
+lesson_id = "selection_sort"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="insertion_sort" type="TextureButton" parent="sorting_algorithms"]
+material = SubResource("ShaderMaterial_ir8sa")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.050925925
+anchor_top = 0.4331597
+anchor_right = 0.4830247
+anchor_bottom = 0.5410435
+texture_normal = ExtResource("20_pr0rh")
+script = ExtResource("13_k4o4g")
+lesson_id = "insertion_sort"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="merge_sort" type="TextureButton" parent="sorting_algorithms"]
+material = SubResource("ShaderMaterial_wjndy")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5154321
+anchor_top = 0.5095486
+anchor_right = 0.947531
+anchor_bottom = 0.6174324
+texture_normal = ExtResource("21_k4o4g")
+script = ExtResource("13_k4o4g")
+lesson_id = "merge_sort"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="quick_sort" type="TextureButton" parent="sorting_algorithms"]
+material = SubResource("ShaderMaterial_lqy4i")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.043209877
+anchor_top = 0.6085069
+anchor_right = 0.47530866
+anchor_bottom = 0.7163907
+texture_normal = ExtResource("22_7eo25")
+script = ExtResource("13_k4o4g")
+lesson_id = "quick_sort"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="shell_sort" type="TextureButton" parent="sorting_algorithms"]
+material = SubResource("ShaderMaterial_x070o")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.50308645
+anchor_top = 0.7022569
+anchor_right = 0.9351852
+anchor_bottom = 0.81014085
+texture_normal = ExtResource("23_1favx")
+script = ExtResource("13_k4o4g")
+lesson_id = "shell_sort"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="searching_algorithms" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="searching_algorithms" type="TextureButton" parent="searching_algorithms"]
+layout_mode = 0
+offset_left = 200.0
+offset_top = 110.0
+offset_right = 500.0
+offset_bottom = 211.0
+texture_normal = ExtResource("26_7eo25")
+script = ExtResource("13_k4o4g")
+lesson_id = "algo_intro_search"
+lesson_scene = ExtResource("7_femnd")
+
+[node name="linear_search" type="TextureButton" parent="searching_algorithms"]
+material = SubResource("ShaderMaterial_ccly4")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.052469134
+anchor_top = 0.28211805
+anchor_right = 0.48456803
+anchor_bottom = 0.3900019
+texture_normal = ExtResource("27_lqy4i")
+script = ExtResource("13_k4o4g")
+lesson_id = "linear_search"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="interpolation_search" type="TextureButton" parent="searching_algorithms"]
+material = SubResource("ShaderMaterial_5ea51")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5308642
+anchor_top = 0.3454861
+anchor_right = 0.962963
+anchor_bottom = 0.45336995
+texture_normal = ExtResource("28_x070o")
+script = ExtResource("13_k4o4g")
+lesson_id = "interpolation_search"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="graph_tree_search" type="TextureButton" parent="searching_algorithms"]
+material = SubResource("ShaderMaterial_ir8sa")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.050925925
+anchor_top = 0.4331597
+anchor_right = 0.4830247
+anchor_bottom = 0.5410435
+texture_normal = ExtResource("29_xm302")
+script = ExtResource("13_k4o4g")
+lesson_id = "graph_tree_searching"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="depth_first_search" type="TextureButton" parent="searching_algorithms"]
+material = SubResource("ShaderMaterial_wjndy")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5154321
+anchor_top = 0.5095486
+anchor_right = 0.947531
+anchor_bottom = 0.6174324
+texture_normal = ExtResource("30_n5066")
+script = ExtResource("13_k4o4g")
+lesson_id = "depth_first_search"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="binary_search" type="TextureButton" parent="searching_algorithms"]
+material = SubResource("ShaderMaterial_lqy4i")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.043209877
+anchor_top = 0.6085069
+anchor_right = 0.47530866
+anchor_bottom = 0.7163907
+texture_normal = ExtResource("31_wf7o1")
+script = ExtResource("13_k4o4g")
+lesson_id = "binary_search"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="breadth_first_search" type="TextureButton" parent="searching_algorithms"]
+material = SubResource("ShaderMaterial_x070o")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.50308645
+anchor_top = 0.7022569
+anchor_right = 0.9351852
+anchor_bottom = 0.81014085
+texture_normal = ExtResource("32_bx68a")
+script = ExtResource("13_k4o4g")
+lesson_id = "breadth_first_search"
+lesson_scene = ExtResource("7_femnd")
+metadata/_edit_use_anchors_ = true
+
+[node name="navigation" parent="." instance=ExtResource("16_4mrc5")]
+layout_mode = 1
+
+[node name="back_button" type="TextureButton" parent="."]
+z_index = 10
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.032407407
+anchor_top = 0.111111104
+anchor_right = 0.11364198
+anchor_bottom = 0.202717
+offset_right = -28.639996
+offset_bottom = -57.416016
+scale = Vector2(2.1933331, 2.1933331)
+texture_normal = ExtResource("4_4u4to")
+metadata/_edit_use_anchors_ = true
+
+[node name="PageIndicator" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -75.0
+offset_top = -60.0
+offset_right = 75.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="PageIndicator"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -10.0
+offset_right = 40.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[connection signal="pressed" from="data_structures/array" to="." method="_on_array_pressed"]
+[connection signal="pressed" from="data_structures/linked_list" to="." method="_on_linked_list_pressed"]
+[connection signal="pressed" from="data_structures/stack" to="." method="_on_stack_pressed"]
+[connection signal="pressed" from="data_structures/queue" to="." method="_on_queue_pressed"]
+[connection signal="pressed" from="data_structures/tree" to="." method="_on_tree_pressed"]
+[connection signal="pressed" from="data_structures/binary tree" to="." method="_on_binary_tree_pressed"]
+[connection signal="pressed" from="data_structures/binary search tree" to="." method="_on_binary_search_tree_pressed"]
+[connection signal="pressed" from="data_structures/graph" to="." method="_on_graph_pressed"]
+[connection signal="pressed" from="sorting_algorithms/bubble_sort" to="." method="_on_bubble_sort_pressed"]
+[connection signal="pressed" from="sorting_algorithms/selection_sort" to="." method="_on_selection_sort_pressed"]
+[connection signal="pressed" from="sorting_algorithms/insertion_sort" to="." method="_on_insertion_sort_pressed"]
+[connection signal="pressed" from="sorting_algorithms/merge_sort" to="." method="_on_merge_sort_pressed"]
+[connection signal="pressed" from="sorting_algorithms/quick_sort" to="." method="_on_quick_sort_pressed"]
+[connection signal="pressed" from="sorting_algorithms/shell_sort" to="." method="_on_shell_sort_pressed"]
+[connection signal="pressed" from="searching_algorithms/linear_search" to="." method="_on_linear_search_pressed"]
+[connection signal="pressed" from="searching_algorithms/interpolation_search" to="." method="_on_interpolation_search_pressed"]
+[connection signal="pressed" from="searching_algorithms/graph_tree_search" to="." method="_on_graph_tree_search_pressed"]
+[connection signal="pressed" from="searching_algorithms/depth_first_search" to="." method="_on_depth_first_search_pressed"]
+[connection signal="pressed" from="searching_algorithms/binary_search" to="." method="_on_binary_search_pressed"]
+[connection signal="pressed" from="searching_algorithms/breadth_first_search" to="." method="_on_breadth_first_search_pressed"]
+[connection signal="pressed" from="back_button" to="." method="_on_back_button_pressed"]

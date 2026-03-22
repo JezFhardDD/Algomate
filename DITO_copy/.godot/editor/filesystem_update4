@@ -1,7 +1,0 @@
-res://scene/Queue.tscn
-res://Bubblemain.gd
-res://script/queue_sim.gd
-res://scene/ShellSort.tscn
-res://scene/Linear.tscn
-res://scene/Binary.tscn
-res://scene/Bubble.tscn

@@ -1,0 +1,4 @@
+res://scenes/lesson_view.tscn
+res://scripts/lesson_view.gd
+res://scenes/lectures.tscn
+res://scenes/navigation.tscn
