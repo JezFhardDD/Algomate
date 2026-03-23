@@ -4,14 +4,7 @@
 [ext_resource type="Script" uid="uid://bw021s8kwts4f" path="res://script/queue_a.gd" id="2_1mxj6"]
 
 [node name="Main" instance=ExtResource("1_8i6n7")]
-rotation = 0.0
 script = ExtResource("2_1mxj6")
-
-[node name="ColorRect" parent="." index="2"]
-offset_left = -4.0
-offset_top = -8.0
-offset_right = 28.0
-offset_bottom = -8.0
 
 [node name="rear" parent="TextureRect" index="0"]
 offset_left = 882.0
@@ -45,10 +38,9 @@ offset_right = 90.0
 offset_bottom = 209.0
 
 [node name="CppCodeButton" parent="." index="13"]
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 100.0
-offset_bottom = 45.0
+visible = true
+offset_top = 72.0
+offset_bottom = 117.0
 
 [node name="MarginContainer" parent="." index="29"]
 offset_left = -114.5
