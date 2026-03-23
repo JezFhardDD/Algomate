@@ -234,7 +234,7 @@ func toggle_sidebar() -> void:
 func _on_exit_pressed() -> void:
 	AudioManager.play_click_sound()
 	await animate_sidebar_close()
-	# Small delay to show the animation
-	await get_tree().create_timer(0.2).timeout
+	get_node("QuitConfirmation").show()
+	#await get_tree().create_timer(0.2).timeout
 	# Exit the application
-	get_tree().quit()
+	#get_tree().quit()
