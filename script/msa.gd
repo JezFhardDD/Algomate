@@ -1810,15 +1810,14 @@ public class Main {
 	
 	public static void main(String args[]) {
 		int arr[] = {%s};
-		sort(arr);
 		
 		System.out.print("Initial array (unsorted): ");
-		ob.printArray(arr);
+		printArray(arr);
 		
-		ob.sort(arr);
+		sort(arr);
 		
 		System.out.print("Sorted array: ");
-		ob.printArray(arr);
+		printArray(arr);
 	}
 }""" % arr
 

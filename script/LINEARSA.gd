@@ -1278,8 +1278,8 @@ public class Main {
 	}
 	
 	public static void main(String args[]) {
-		int arr[] = {ARR};
-		int target = {TARGET};
+		int arr[] = { %s };
+		int target = %d;
 		
 		System.out.print("Array: ");
 		printArray(arr);
@@ -1293,9 +1293,7 @@ public class Main {
 			System.out.println("Element " + target + " not found in the array");
 	}
 }"""
-	code = code.replace("{ARR}", arr)
-	code = code.replace("{TARGET}", str(target))
-	return code
+	return code % [arr, target]
 
 func get_c_linear_code(arr: String, target: int) -> String:
 	var code = """/* Linear Search - Time Complexity: O(n) */
@@ -1319,9 +1317,9 @@ void printArray(int arr[], int n) {
 }
 
 int main() {
-	int arr[] = {ARR};
+	int arr[] = {ARR_PLACEHOLDER};
 	int n = sizeof(arr) / sizeof(arr[0]);
-	int target = {TARGET};
+	int target = TARGET_PLACEHOLDER;
 	
 	printf("Array: ");
 	printArray(arr, n);
@@ -1336,8 +1334,8 @@ int main() {
 	
 	return 0;
 }"""
-	code = code.replace("{ARR}", arr)
-	code = code.replace("{TARGET}", str(target))
+	code = code.replace("ARR_PLACEHOLDER", arr)
+	code = code.replace("TARGET_PLACEHOLDER", str(target))
 	return code
 
 # ==============================================

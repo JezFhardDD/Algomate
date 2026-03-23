@@ -1485,7 +1485,8 @@ func _gen_python() -> String:
 			"ENQUEUE":
 				code += "# Enqueue %d\n" % val
 				code += "q.append(%d)\n" % val
-				code += "print('After enqueue %d:' % %d, list(q))\n\n" % [val, val]
+				# FIXED: Use f-string format
+				code += "print(f\"After enqueue %d: {list(q)}\")\n\n" % val
 			"DEQUEUE":
 				code += "# Dequeue front element\n"
 				code += "print('Dequeued:', q[0])\n"
