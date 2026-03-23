@@ -1,0 +1,89 @@
+[gd_scene load_steps=14 format=3 uid="uid://bbndacfyvo3qs"]
+
+[ext_resource type="Texture2D" uid="uid://dhsf43ym0xyus" path="res://assets/containers/CONTAINER.png" id="1_emptl"]
+[ext_resource type="Script" uid="uid://b7j0xea6fkmkc" path="res://scripts/quit_confirmation.gd" id="1_lx7tg"]
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="3_hfg2d"]
+[ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="4_28gg4"]
+[ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="5_l6r5b"]
+[ext_resource type="Texture2D" uid="uid://dcxstyoycht1w" path="res://assets/BUTTON_HOVERED.png" id="6_4gsyc"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5qmt3"]
+texture = ExtResource("1_emptl")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vbta6"]
+texture = ExtResource("4_28gg4")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ggl3i"]
+texture = ExtResource("5_l6r5b")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ggaf6"]
+texture = ExtResource("6_4gsyc")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a4di3"]
+texture = ExtResource("4_28gg4")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ey3ob"]
+texture = ExtResource("5_l6r5b")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_uia0p"]
+texture = ExtResource("6_4gsyc")
+
+[node name="QuitConfirmation" type="Panel"]
+custom_minimum_size = Vector2(400, 250)
+offset_right = 304.0
+offset_bottom = 200.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_5qmt3")
+script = ExtResource("1_lx7tg")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -112.0
+offset_top = -36.0
+offset_right = 104.0
+offset_bottom = -13.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(3.465414e-06, 0.7055467, 0.25570375, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("3_hfg2d")
+theme_override_font_sizes/font_size = 24
+text = "Do You Really Want to Quit?"
+
+[node name="YesBtn" type="Button" parent="."]
+custom_minimum_size = Vector2(80, 40)
+layout_mode = 0
+offset_left = 32.0
+offset_top = 184.0
+offset_right = 128.0
+offset_bottom = 224.0
+theme_override_colors/font_color = Color(0.8745098, 0.3372549, 0.8745098, 1)
+theme_override_fonts/font = ExtResource("3_hfg2d")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxTexture_vbta6")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_ggl3i")
+theme_override_styles/hover = SubResource("StyleBoxTexture_ggaf6")
+text = "Yes"
+
+[node name="NoBtn" type="Button" parent="."]
+custom_minimum_size = Vector2(80, 40)
+layout_mode = 0
+offset_left = 280.0
+offset_top = 184.0
+offset_right = 376.0
+offset_bottom = 224.0
+theme_override_colors/font_color = Color(0.8745098, 0.3372549, 0.8745098, 1)
+theme_override_fonts/font = ExtResource("3_hfg2d")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxTexture_a4di3")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_ey3ob")
+theme_override_styles/hover = SubResource("StyleBoxTexture_uia0p")
+text = "No"
+
+[connection signal="pressed" from="YesBtn" to="." method="_on_yes_btn_pressed"]
+[connection signal="pressed" from="NoBtn" to="." method="_on_no_btn_pressed"]
