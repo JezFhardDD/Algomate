@@ -1265,7 +1265,6 @@ theme_override_font_sizes/font_size = 22
 [node name="CppPopup" type="PopupPanel" parent="."]
 oversampling_override = 1.0
 size = Vector2i(700, 655)
-visible = true
 theme_override_styles/panel = SubResource("StyleBoxTexture_sqvbp")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CppPopup"]
