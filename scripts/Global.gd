@@ -6,6 +6,7 @@ var lectures_page_index: int = 0
 var current_topic: String = ""
 var current_difficulty: int = 0
 
+var next_scene_path: String = ""
 # These stay for in-memory access / signals
 var purchased_pictures: Array = []
 var equipped_picture: String = ""

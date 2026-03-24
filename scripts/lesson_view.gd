@@ -336,9 +336,16 @@ func start_floating_animation():
 func _on_simulate_button_pressed() -> void:
 	print("Simulate button pressed! lesson_id: ", lesson_id)
 	var path = _get_simulation_path()
+	
 	if path != "":
 		Global.last_lesson_id = lesson_id
-		SceneManager.change_scene(path)
+		
+		# 1. Save the target simulation path to your Global script
+		Global.next_scene_path = path
+		
+		# 2. Go to the Loading Screen (which will then load the 'path')
+		# If your SceneManager handles transitions, you can use SceneManager.change_scene instead
+		get_tree().change_scene_to_file("res://scenes/loading_screen.tscn")
 
 func _on_back_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/lectures.tscn")
