@@ -1,12 +1,15 @@
-[gd_scene load_steps=11 format=3 uid="uid://cqykovu26m42q"]
+[gd_scene load_steps=23 format=3 uid="uid://cqykovu26m42q"]
 
 [ext_resource type="Script" uid="uid://c347jr1w4l0" path="res://scripts/homepage.gd" id="1_afsfg"]
-[ext_resource type="Shader" path="res://scripts/lectures_bg.gdshader" id="2_afsfg"]
+[ext_resource type="Shader" uid="uid://dm5tlgdpgj58y" path="res://scripts/lectures_bg.gdshader" id="2_afsfg"]
 [ext_resource type="Texture2D" uid="uid://gr6olf1hmvue" path="res://assets/HOMEPAGE/HOME_PAGE_GREEN/LECTURE_GREEN.png" id="2_m75kp"]
 [ext_resource type="Texture2D" uid="uid://nmvkwsjgvssc" path="res://assets/HOMEPAGE/HOME_PAGE_GREEN/ASSESSMENT_GREEN.png" id="3_afsfg"]
 [ext_resource type="Texture2D" uid="uid://dhkxb41te0yt2" path="res://assets/HOMEPAGE/HOME_PAGE_GREEN/CODE_GREEN.png" id="4_8rasq"]
 [ext_resource type="PackedScene" uid="uid://pw1kjcephyld" path="res://scenes/navigation.tscn" id="6_afsfg"]
-[ext_resource type="Shader" path="res://scripts/lesson_view_BG.gdshader" id="6_ur2nx"]
+[ext_resource type="Shader" uid="uid://bffd66uffkamt" path="res://scripts/lesson_view_BG.gdshader" id="6_ur2nx"]
+[ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="6_vpfph"]
+[ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="7_wx083"]
+[ext_resource type="Texture2D" uid="uid://dcxstyoycht1w" path="res://assets/BUTTON_HOVERED.png" id="8_flo1l"]
 [ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="8_vpfph"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8rasq"]
@@ -25,6 +28,33 @@ shader_parameter/accent_color = Color(0.8366481, 0.6679535, 0.3425281, 1)
 shader = ExtResource("6_ur2nx")
 shader_parameter/grain_strength = 0.0750000035625
 shader_parameter/shadow_strength = 0.1090000051775
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_7mfhq"]
+texture = ExtResource("6_vpfph")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wjdee"]
+texture = ExtResource("7_wx083")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_yhjr5"]
+texture = ExtResource("8_flo1l")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hln58"]
+texture = ExtResource("6_vpfph")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1r4o6"]
+texture = ExtResource("7_wx083")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_22eir"]
+texture = ExtResource("8_flo1l")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sr2nw"]
+texture = ExtResource("6_vpfph")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pyvcy"]
+texture = ExtResource("7_wx083")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a7o8t"]
+texture = ExtResource("8_flo1l")
 
 [node name="homepage" type="Control"]
 layout_mode = 3
@@ -122,6 +152,9 @@ anchor_bottom = 5.7995114
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_fonts/font = ExtResource("8_vpfph")
+theme_override_styles/normal = SubResource("StyleBoxTexture_7mfhq")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_wjdee")
+theme_override_styles/hover = SubResource("StyleBoxTexture_yhjr5")
 text = "START CODE"
 metadata/_edit_use_anchors_ = true
 
@@ -181,6 +214,9 @@ anchor_bottom = 5.959969
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_fonts/font = ExtResource("8_vpfph")
+theme_override_styles/normal = SubResource("StyleBoxTexture_hln58")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_1r4o6")
+theme_override_styles/hover = SubResource("StyleBoxTexture_22eir")
 text = "START ASSESSMENT"
 metadata/_edit_use_anchors_ = true
 
@@ -236,6 +272,9 @@ anchor_bottom = 6.025358
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_fonts/font = ExtResource("8_vpfph")
+theme_override_styles/normal = SubResource("StyleBoxTexture_sr2nw")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_pyvcy")
+theme_override_styles/hover = SubResource("StyleBoxTexture_a7o8t")
 text = "START LECTURE"
 metadata/_edit_use_anchors_ = true
 

@@ -1,0 +1,71 @@
+[gd_scene load_steps=6 format=3 uid="uid://kcced8jlxbf2"]
+
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="1_ep5rh"]
+[ext_resource type="Script" uid="uid://b6fk4wqp0b5ee" path="res://scripts/loading_screen.gd" id="1_ku3bi"]
+[ext_resource type="Texture2D" uid="uid://bfiagjnegdly1" path="res://assets/MAIN_MENU/ALGOMATE_LOGO.png" id="2_hprjd"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hprjd"]
+bg_color = Color(0.6230817, 0.5796256, 0.5576072, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ku3bi"]
+bg_color = Color(0, 0.7019608, 0.54509807, 1)
+
+[node name="LoadingScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1152.0
+offset_bottom = 720.0
+script = ExtResource("1_ku3bi")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.12955844, 0.12955847, 0.12955844, 1)
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = 116.0
+offset_right = 320.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_ep5rh")
+theme_override_styles/background = SubResource("StyleBoxFlat_hprjd")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ku3bi")
+min_value = 1.0
+value = 1.0
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -93.0
+offset_top = 212.0
+offset_right = 93.0
+offset_bottom = 277.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(7.412136e-06, 0.7446782, 0.608016, 1)
+theme_override_colors/font_outline_color = Color(0.6408197, 0, 0.1310763, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("1_ep5rh")
+theme_override_font_sizes/font_size = 30
+text = "Loading..
+Please Wait."
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(576, 248)
+texture = ExtResource("2_hprjd")
