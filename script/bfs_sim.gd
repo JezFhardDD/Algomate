@@ -405,7 +405,7 @@ func _on_compile_completed(result, response_code, headers, body, http_request, l
 	http_request.queue_free()
 	
 	if response_code != 200:
-		show_feedback("API Error: " + str(response_code), Color.RED, Vector2(200, 200))
+		show_feedback("Please Check Your Connection Before Compiling !" + str(response_code), Color.RED, Vector2(200, 200))
 		return
 	
 	var json = JSON.new()

@@ -183,20 +183,53 @@ var intro_step: int = 0
 var intro_texts = [
 	"Welcome to Binary Search!\nBinary Search is a 'Divide and Conquer' algorithm. It is much faster than Linear Search but requires the list to be SORTED.",
 	"The Algorithm:\n\n1. Find the Middle Element.\n2. Is Middle > Target? Discard the Right half.\n3. Is Middle < Target? Discard the Left half.\n4. Repeat until found.",
+	"Complexity Analysis:\n\nTime: O(log n) - It halves the search space each step.\nSpace: O(1) - It only uses a few pointers for searching iteratively.",
 	"Visual Elements:\n\n• Low Pointer (Start)\n• High Pointer (End)\n• Mid Pointer (Current Check)",
 	"How to Use:\n\n1. Click 'FIND ELEMENT' to set target.\n2. Click 'BINARY STEP' to divide and conquer."
 ]
 
-
 var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
+
+# --- CODE TUTORIAL HIGHLIGHTING DATA ---
 var cpp_tutorial_data = [
-	{ "lines": [0, 1, 2], "text": "1. Setup:\nInitialize 'low' to 0 and 'high' to array length - 1." },
-	{ "lines": [4, 5], "text": "2. The Loop:\nWhile low is less than or equal to high..." },
-	{ "lines": [6, 7], "text": "3. Calculate Mid:\nmid = low + (high - low) / 2." },
+	{ "lines": [46, 47, 48, 49, 50], "text": "[b]Complexity Analysis:[/b]\n• [b]Time:[/b] [color=green]O(log n)[/color] since search space halves.\n• [b]Space:[/b] [color=green]O(1)[/color] (Iterative)." },
+	{ "lines": [12], "text": "1. Setup:\nPass 'low' and 'high' bounds into the function." },
+	{ "lines": [13], "text": "2. The Loop:\nWhile low is less than or equal to high..." },
+	{ "lines": [14, 15], "text": "3. Calculate Mid:\nFind the middle index." },
+	{ "lines": [17, 18, 19, 20], "text": "4. Check Match:\nIf arr[mid] == target, return index 'mid'. Found!" },
+	{ "lines": [22, 23, 24, 25], "text": "5. Ignore Left Half:\nIf arr[mid] < target, element must be in right half. low = mid + 1." },
+	{ "lines": [25, 26, 27, 28], "text": "6. Ignore Right Half:\nIf arr[mid] > target, element must be in left half. high = mid - 1." }
+]
+
+var python_tutorial_data = [
+	{ "lines": [35, 36, 37, 38, 39], "text": "[b]Complexity Analysis:[/b]\n• [b]Time:[/b] [color=green]O(log n)[/color] since search space halves.\n• [b]Space:[/b] [color=green]O(1)[/color] (Iterative)." },
+	{ "lines": [1, 2], "text": "1. Setup:\nInitialize 'low' and 'high' bounds." },
+	{ "lines": [4], "text": "2. The Loop:\nWhile low is less than or equal to high..." },
+	{ "lines": [5, 6], "text": "3. Calculate Mid:\nFind the middle index." },
 	{ "lines": [8, 9, 10], "text": "4. Check Match:\nIf arr[mid] == target, return index 'mid'. Found!" },
-	{ "lines": [11, 12, 13], "text": "5. Ignore Left Half:\nIf arr[mid] < target, element must be in right half. low = mid + 1." },
-	{ "lines": [14, 15, 16], "text": "6. Ignore Right Half:\nIf arr[mid] > target, element must be in left half. high = mid - 1." }
+	{ "lines": [12, 13, 14], "text": "5. Ignore Left Half:\nIf arr[mid] < target, element must be in right half. low = mid + 1." },
+	{ "lines": [16, 17, 18], "text": "6. Ignore Right Half:\nIf arr[mid] > target, element must be in left half. high = mid - 1." }
+]
+
+var java_tutorial_data = [
+	{ "lines": [38, 39, 40, 41, 42], "text": "[b]Complexity Analysis:[/b]\n• [b]Time:[/b] [color=green]O(log n)[/color] since search space halves.\n• [b]Space:[/b] [color=green]O(1)[/color] (Iterative)." },
+	{ "lines": [4, 5], "text": "1. Setup:\nInitialize 'low' and 'high' bounds." },
+	{ "lines": [7], "text": "2. The Loop:\nWhile low is less than or equal to high..." },
+	{ "lines": [8, 9], "text": "3. Calculate Mid:\nFind the middle index." },
+	{ "lines": [11, 12, 13, 14], "text": "4. Check Match:\nIf arr[mid] == target, return index 'mid'. Found!" },
+	{ "lines": [16, 17, 18], "text": "5. Ignore Left Half:\nIf arr[mid] < target, element must be in right half. low = mid + 1." },
+	{ "lines": [19, 20, 21, 22], "text": "6. Ignore Right Half:\nIf arr[mid] > target, element must be in left half. high = mid - 1." }
+]
+
+var c_tutorial_data = [
+	{ "lines": [45, 46, 47, 48, 49], "text": "[b]Complexity Analysis:[/b]\n• [b]Time:[/b] [color=green]O(log n)[/color] since search space halves.\n• [b]Space:[/b] [color=green]O(1)[/color] (Iterative)." },
+	{ "lines": [11], "text": "1. Setup:\nPass 'low' and 'high' bounds into the function." },
+	{ "lines": [12], "text": "2. The Loop:\nWhile low is less than or equal to high..." },
+	{ "lines": [13, 14], "text": "3. Calculate Mid:\nFind the middle index." },
+	{ "lines": [16, 17, 18, 19], "text": "4. Check Match:\nIf arr[mid] == target, return index 'mid'. Found!" },
+	{ "lines": [21, 22, 23], "text": "5. Ignore Left Half:\nIf arr[mid] < target, element must be in right half. low = mid + 1." },
+	{ "lines": [24, 25, 26, 27], "text": "6. Ignore Right Half:\nIf arr[mid] > target, element must be in left half. high = mid - 1." }
 ]
 
 # ==============================================
@@ -283,7 +316,6 @@ func _exit_tree():
 #   COMPILER SETUP FUNCTIONS
 # ==============================================
 func _setup_compiler() -> void:
-	"""Setup compiler button and popup"""
 	if compile_btn:
 		if compile_btn.is_connected("pressed", _on_compile_button_pressed):
 			compile_btn.disconnect("pressed", _on_compile_button_pressed)
@@ -342,10 +374,6 @@ func _compile_code(code: String) -> void:
 		"versionIndex": _get_version_index(current_code_language)
 	})
 	
-	print("=== Binary Search Compile Request ===")
-	print("Language: ", current_code_language, " → API: ", api_language)
-	print("Script preview: ", code.substr(0, 50) + "...")
-	
 	var error = http_request.request(url, headers, HTTPClient.METHOD_POST, body)
 	if error != OK:
 		show_feedback("Network error!", Color.RED, Vector2(200, 200))
@@ -386,13 +414,11 @@ func _on_recompile_requested(language: String) -> void:
 
 
 func _on_compiler_output_closed() -> void:
-	print("Compiler output closed")
-
+	pass
 
 func reset_cache_for_scene() -> void:
 	if compiler_output_popup:
 		compiler_output_popup.reset_cache_for_scene()
-		print("Compiler cache reset for new simulation")
 
 func _setup_pointer_labels():
 	_set_node_label_text(ptr_low, "Low")
@@ -460,9 +486,8 @@ func _create_sort_info_popup():
 	sort_info_popup.dialog_text = "Binary Search requires a sorted array.\n\nClick OK to perform Bubble Sort..."
 	sort_info_popup.min_size = Vector2(350, 150)
 	
-	# Apply Green Style
 	var style = StyleBoxFlat.new()
-	style.bg_color = Color(0.0, 0.5, 0.2, 1.0) # Green background
+	style.bg_color = Color(0.0, 0.5, 0.2, 1.0)
 	style.border_width_left = 2
 	style.border_width_top = 2
 	style.border_width_right = 2
@@ -473,14 +498,10 @@ func _create_sort_info_popup():
 	style.corner_radius_bottom_right = 8
 	style.corner_radius_bottom_left = 8
 	
-	# We apply this style to the internal panel
 	sort_info_popup.add_theme_stylebox_override("panel", style)
-	
 	add_child(sort_info_popup)
-	# Connect the OK button signal
 	sort_info_popup.confirmed.connect(_on_sort_confirmed)
 
-# --- TRIGGERED WHEN USER CLICKS OK ---
 func _on_sort_confirmed():
 	status_label.text = "Sorting Data..."
 	_run_visual_bubble_sort()
@@ -521,41 +542,21 @@ func _reset_search_for_new_target(new_val: int):
 		
 	_update_ui_labels()
 
-func _connect_language_buttons():
-	if cpp_lang_btn: cpp_lang_btn.pressed.connect(func(): _set_language("cpp"))
-	if python_lang_btn: python_lang_btn.pressed.connect(func(): _set_language("python"))
-	if java_lang_btn: java_lang_btn.pressed.connect(func(): _set_language("java"))
-	if c_lang_btn: c_lang_btn.pressed.connect(func(): _set_language("c"))
-
-func _set_language(lang: String):
-	btn_sound.play()
-	current_code_language = lang
-	_show_cpp_popup()
-
 # ==============================================
 #   INITIALIZATION WITH VISUAL SORT
 # ==============================================
 
 func _initialize_with_elements(elements: Array[int]) -> void:
-	# Reset cache for new simulation
 	reset_cache_for_scene()
-	
-	# Clear code lines
 	code_lines.clear()
-	
-	print("Initializing Array with:", elements)
 	audio_player.play()
 	
 	main_array = elements.duplicate()
-	# DO NOT SORT HERE - We will wait for popup
-	
 	block_nodes.clear()
 	timeline_log.clear()
 	code_lines.clear()
 	
-	# Add initial code line
 	_add_code_line("INITIAL", 0, 0)
-	
 	_set_main_ui_enabled(false)
 	status_label.text = "Waiting for Sort..."
 	
@@ -589,38 +590,31 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 
 	if cpp_code_button: cpp_code_button.hide()
 	
-	# --- SHOW POPUP AND WAIT FOR OK ---
+	# Show Popup and wait for OK to sort
 	sort_info_popup.popup_centered()
-	# Code stops here conceptually until user clicks OK
 
-# --- VISUAL BUBBLE SORT (SLOWER) ---
 func _run_visual_bubble_sort():
 	var n = block_nodes.size()
 	
 	for i in range(n - 1):
 		for j in range(n - i - 1):
 			
-			# Highlight comparison
-			block_nodes[j].modulate = Color(1, 1, 0, 1) # Yellow
+			block_nodes[j].modulate = Color(1, 1, 0, 1)
 			block_nodes[j+1].modulate = Color(1, 1, 0, 1)
 			
-			await get_tree().create_timer(1.0).timeout # Slower comparison
+			await get_tree().create_timer(1.0).timeout
 			
-			# If needed, swap
 			if block_nodes[j].value > block_nodes[j+1].value:
-				
-				# Visual Swap (Tween Positions)
 				var nodeA = block_nodes[j]
 				var nodeB = block_nodes[j+1]
 				var posA = nodeA.position
 				var posB = nodeB.position
 				
 				var tw = create_tween().set_parallel(true)
-				tw.tween_property(nodeA, "position", posB, 1.0) # Slower movement
+				tw.tween_property(nodeA, "position", posB, 1.0)
 				tw.tween_property(nodeB, "position", posA, 1.0)
 				await tw.finished
 				
-				# Data Swap
 				var temp_val = main_array[j]
 				main_array[j] = main_array[j+1]
 				main_array[j+1] = temp_val
@@ -631,11 +625,9 @@ func _run_visual_bubble_sort():
 				
 				_add_code_line("SWAP", j, main_array[j])
 			
-			# Reset Colors
 			block_nodes[j].modulate = Color(1, 1, 1, 1)
 			block_nodes[j+1].modulate = Color(1, 1, 1, 1)
 	
-	# --- SORTING DONE ---
 	search_target = 0
 	status_label.text = "Sorted! Click 'Find Element' to start."
 	_set_main_ui_enabled(true)
@@ -784,7 +776,7 @@ func _on_timeline_close_pressed() -> void:
 		timeline_popup.hide()
 
 # ==============================================
-#   CODE GENERATION
+#   CODE GENERATION WITH COMPLEXITY INJECTION
 # ==============================================
 
 func _add_code_line(op: String, index: int, value: int) -> void:
@@ -798,170 +790,200 @@ func _generate_code_for_language(lang: String) -> String:
 		_: return _gen_cpp_code()
 
 func _gen_cpp_code() -> String:
-	var code = "/* Binary Search Simulation - Operations Log */\n"
-	code += "#include <iostream>\nusing namespace std;\n\n"
-	code += "void printArray(int arr[], int n) {\n"
-	code += "    cout << \"[\";\n"
-	code += "    for(int i = 0; i < n; i++) {\n"
-	code += "        cout << arr[i];\n"
-	code += "        if(i < n-1) cout << \", \";\n"
-	code += "    }\n"
-	code += "    cout << \"]\" << endl;\n"
-	code += "}\n\n"
-	code += "int binarySearch(int arr[], int low, int high, int target) {\n"
-	code += "    while(low <= high) {\n"
-	code += "        int mid = low + (high - low) / 2;\n"
-	code += "        cout << \"Checking mid \" << mid << \": \" << arr[mid] << endl;\n"
-	code += "        \n"
-	code += "        if(arr[mid] == target) {\n"
-	code += "            cout << \"Found target at index \" << mid << \"!\" << endl;\n"
-	code += "            return mid;\n"
-	code += "        }\n"
-	code += "        \n"
-	code += "        if(arr[mid] < target) {\n"
-	code += "            cout << arr[mid] << \" < \" << target << \", moving right\" << endl;\n"
-	code += "            low = mid + 1;\n"
-	code += "        } else {\n"
-	code += "            cout << arr[mid] << \" > \" << target << \", moving left\" << endl;\n"
-	code += "            high = mid - 1;\n"
-	code += "        }\n"
-	code += "    }\n"
-	code += "    cout << \"Target not found\" << endl;\n"
-	code += "    return -1;\n"
-	code += "}\n\n"
-	code += "int main() {\n"
-	code += "    int arr[] = {%s};\n" % _array_to_string(main_array)
-	code += "    int n = sizeof(arr)/sizeof(arr[0]);\n"
-	code += "    int target = %d;\n\n" % search_target
-	code += "    cout << \"Initial array: \";\n"
-	code += "    printArray(arr, n);\n"
-	code += "    cout << \"Searching for: \" << target << endl << endl;\n\n"
-	code += "    int result = binarySearch(arr, 0, n-1, target);\n\n"
-	code += "    return 0;\n"
-	code += "}\n"
-	code += "/* Complexity: Time O(log n) | Space O(1) */"
-	return code
+	var arr_str = _array_to_string(main_array)
+	return """#include <iostream>
+using namespace std;
+
+void printArray(int arr[], int n) {
+	cout << "[";
+	for(int i = 0; i < n; i++) {
+		cout << arr[i];
+		if(i < n-1) cout << ", ";
+	}
+	cout << "]" << endl;
+}
+
+int binarySearch(int arr[], int low, int high, int target) {
+	while(low <= high) {
+		int mid = low + (high - low) / 2;
+		cout << "Checking mid " << mid << ": " << arr[mid] << endl;
+		
+		if(arr[mid] == target) {
+			cout << "Found target at index " << mid << "!" << endl;
+			return mid;
+		}
+		
+		if(arr[mid] < target) {
+			cout << arr[mid] << " < " << target << ", moving right" << endl;
+			low = mid + 1;
+		} else {
+			cout << arr[mid] << " > " << target << ", moving left" << endl;
+			high = mid - 1;
+		}
+	}
+	cout << "Target not found" << endl;
+	return -1;
+}
+
+int main() {
+	int arr[] = {%s};
+	int n = sizeof(arr)/sizeof(arr[0]);
+	int target = %d;
+
+	cout << "Initial array: ";
+	printArray(arr, n);
+	cout << "Searching for: " << target << "\\n\\n";
+
+	int result = binarySearch(arr, 0, n-1, target);
+	return 0;
+}
+/*
+ * COMPLEXITY:
+ * Time: O(log n)
+ * Space: O(1)
+ */""" % [arr_str, search_target]
 
 func _gen_python_code() -> String:
-	var code = "# Binary Search Simulation - Operations Log\n\n"
-	code += "def print_array(arr):\n"
-	code += "    print('[', end='')\n"
-	code += "    for i in range(len(arr)):\n"
-	code += "        print(arr[i], end='')\n"
-	code += "        if i < len(arr) - 1:\n"
-	code += "            print(', ', end='')\n"
-	code += "    print(']')\n\n"
-	code += "def binary_search(arr, target):\n"
-	code += "    low, high = 0, len(arr) - 1\n"
-	code += "    while low <= high:\n"
-	code += "        mid = (low + high) // 2\n"
-	code += "        print(f'Checking mid {mid}: {arr[mid]}')\n"
-	code += "        if arr[mid] == target:\n"
-	code += "            print(f'Found target at index {mid}!')\n"
-	code += "            return mid\n"
-	code += "        elif arr[mid] < target:\n"
-	code += "            print(f'{arr[mid]} < {target}, moving right')\n"
-	code += "            low = mid + 1\n"
-	code += "        else:\n"
-	code += "            print(f'{arr[mid]} > {target}, moving left')\n"
-	code += "            high = mid - 1\n"
-	code += "    print('Target not found')\n"
-	code += "    return -1\n\n"
-	code += "arr = [%s]\n" % _array_to_string(main_array)
-	code += "target = %d\n\n" % search_target
-	code += "print('Initial array: ', end='')\n"
-	code += "print_array(arr)\n"
-	code += "print(f'Searching for: {target}\\n')\n"
-	code += "binary_search(arr, target)\n"
-	code += "''' Complexity: Time O(log n) | Space O(1) '''"
-	return code
+	var arr_str = _array_to_string(main_array)
+	return """def binary_search(arr, target):
+	low = 0
+	high = len(arr) - 1
+	
+	while low <= high:
+		mid = (low + high) // 2
+		print(f"Checking mid {mid}: {arr[mid]}")
+		
+		if arr[mid] == target:
+			print(f"Found target at index {mid}!")
+			return mid
+			
+		elif arr[mid] < target:
+			print(f"{arr[mid]} < {target}, moving right")
+			low = mid + 1
+			
+		else:
+			print(f"{arr[mid]} > {target}, moving left")
+			high = mid - 1
+			
+	print("Target not found")
+	return -1
+
+def main():
+	arr = [%s]
+	target = %d
+	
+	print(f"Initial array: {arr}")
+	print(f"Searching for: {target}\\n")
+	
+	binary_search(arr, target)
+
+if __name__ == "__main__":
+	main()
+
+'''
+ COMPLEXITY:
+ Time: O(log n)
+ Space: O(1)
+'''""" % [arr_str, search_target]
 
 func _gen_java_code() -> String:
-	var code = "/* Binary Search Simulation - Operations Log */\n"
-	code += "import java.util.*;\n\n"
-	code += "public class BinarySearchSim {\n"
-	code += "    public static void printArray(int[] arr) {\n"
-	code += "        System.out.print(\"[\");\n"
-	code += "        for(int i = 0; i < arr.length; i++) {\n"
-	code += "            System.out.print(arr[i]);\n"
-	code += "            if(i < arr.length-1) System.out.print(\", \");\n"
-	code += "        }\n"
-	code += "        System.out.println(\"]\");\n"
-	code += "    }\n\n"
-	code += "    public static int binarySearch(int[] arr, int target) {\n"
-	code += "        int low = 0, high = arr.length - 1;\n"
-	code += "        while(low <= high) {\n"
-	code += "            int mid = low + (high - low) / 2;\n"
-	code += "            System.out.println(\"Checking mid \" + mid + \": \" + arr[mid]);\n"
-	code += "            if(arr[mid] == target) {\n"
-	code += "                System.out.println(\"Found target at index \" + mid + \"!\");\n"
-	code += "                return mid;\n"
-	code += "            }\n"
-	code += "            if(arr[mid] < target) {\n"
-	code += "                System.out.println(arr[mid] + \" < \" + target + \", moving right\");\n"
-	code += "                low = mid + 1;\n"
-	code += "            } else {\n"
-	code += "                System.out.println(arr[mid] + \" > \" + target + \", moving left\");\n"
-	code += "                high = mid - 1;\n"
-	code += "            }\n"
-	code += "        }\n"
-	code += "        System.out.println(\"Target not found\");\n"
-	code += "        return -1;\n"
-	code += "    }\n\n"
-	code += "    public static void main(String[] args) {\n"
-	code += "        int[] arr = {%s};\n" % _array_to_string(main_array)
-	code += "        int target = %d;\n\n" % search_target
-	code += "        System.out.print(\"Initial array: \");\n"
-	code += "        printArray(arr);\n"
-	code += "        System.out.println(\"Searching for: \" + target + \"\\n\");\n"
-	code += "        binarySearch(arr, target);\n"
-	code += "    }\n"
-	code += "}\n"
-	code += "/* Complexity: Time O(log n) | Space O(1) */"
-	return code
+	var arr_str = _array_to_string(main_array)
+	return """import java.util.Arrays;
+
+public class BinarySearchSim {
+	public static int binarySearch(int[] arr, int target) {
+		int low = 0;
+		int high = arr.length - 1;
+		
+		while(low <= high) {
+			int mid = low + (high - low) / 2;
+			System.out.println("Checking mid " + mid + ": " + arr[mid]);
+			
+			if(arr[mid] == target) {
+				System.out.println("Found target at index " + mid + "!");
+				return mid;
+			}
+			
+			if(arr[mid] < target) {
+				System.out.println(arr[mid] + " < " + target + ", moving right");
+				low = mid + 1;
+			} else {
+				System.out.println(arr[mid] + " > " + target + ", moving left");
+				high = mid - 1;
+			}
+		}
+		System.out.println("Target not found");
+		return -1;
+	}
+
+	public static void main(String[] args) {
+		int[] arr = {%s};
+		int target = %d;
+		
+		System.out.println("Initial array: " + Arrays.toString(arr));
+		System.out.println("Searching for: " + target + "\\n");
+		
+		binarySearch(arr, target);
+	}
+}
+/*
+ * COMPLEXITY:
+ * Time: O(log n)
+ * Space: O(1)
+ */""" % [arr_str, search_target]
 
 func _gen_c_code() -> String:
-	var code = "/* Binary Search Simulation - Operations Log */\n"
-	code += "#include <stdio.h>\n\n"
-	code += "void printArray(int arr[], int n) {\n"
-	code += "    printf(\"[\");\n"
-	code += "    for(int i = 0; i < n; i++) {\n"
-	code += "        printf(\"%d\", arr[i]);\n"
-	code += "        if(i < n-1) printf(\", \");\n"
-	code += "    }\n"
-	code += "    printf(\"]\\n\");\n"
-	code += "}\n\n"
-	code += "int binarySearch(int arr[], int low, int high, int target) {\n"
-	code += "    while(low <= high) {\n"
-	code += "        int mid = low + (high - low) / 2;\n"
-	code += "        printf(\"Checking mid %d: %d\\n\", mid, arr[mid]);\n"
-	code += "        if(arr[mid] == target) {\n"
-	code += "            printf(\"Found target at index %d!\\n\", mid);\n"
-	code += "            return mid;\n"
-	code += "        }\n"
-	code += "        if(arr[mid] < target) {\n"
-	code += "            printf(\"%d < %d, moving right\\n\", arr[mid], target);\n"
-	code += "            low = mid + 1;\n"
-	code += "        } else {\n"
-	code += "            printf(\"%d > %d, moving left\\n\", arr[mid], target);\n"
-	code += "            high = mid - 1;\n"
-	code += "        }\n"
-	code += "    }\n"
-	code += "    printf(\"Target not found\\n\");\n"
-	code += "    return -1;\n"
-	code += "}\n\n"
-	code += "int main() {\n"
-	code += "    int arr[] = {%s};\n" % _array_to_string(main_array)
-	code += "    int n = sizeof(arr)/sizeof(arr[0]);\n"
-	code += "    int target = %d;\n\n" % search_target
-	code += "    printf(\"Initial array: \");\n"
-	code += "    printArray(arr, n);\n"
-	code += "    printf(\"Searching for: %d\\n\\n\", target);\n"
-	code += "    binarySearch(arr, 0, n-1, target);\n"
-	code += "    return 0;\n"
-	code += "}\n"
-	code += "/* Complexity: Time O(log n) | Space O(1) */"
-	return code
+	var arr_str = _array_to_string(main_array)
+	return """#include <stdio.h>
+
+void printArray(int arr[], int n) {
+	printf("[");
+	for(int i = 0; i < n; i++) {
+		printf("%d", arr[i]);
+		if(i < n-1) printf(", ");
+	}
+	printf("]\\n");
+}
+
+int binarySearch(int arr[], int low, int high, int target) {
+	while(low <= high) {
+		int mid = low + (high - low) / 2;
+		printf("Checking mid %d: %d\\n", mid, arr[mid]);
+		
+		if(arr[mid] == target) {
+			printf("Found target at index %d!\\n", mid);
+			return mid;
+		}
+		
+		if(arr[mid] < target) {
+			printf("%d < %d, moving right\\n", arr[mid], target);
+			low = mid + 1;
+		} else {
+			printf("%d > %d, moving left\\n", arr[mid], target);
+			high = mid - 1;
+		}
+	}
+	printf("Target not found\\n");
+	return -1;
+}
+
+int main() {
+	int arr[] = {%s};
+	int n = sizeof(arr)/sizeof(arr[0]);
+	int target = %d;
+	
+	printf("Initial array: ");
+	printArray(arr, n);
+	printf("Searching for: %d\\n\\n", target);
+	
+	binarySearch(arr, 0, n-1, target);
+	return 0;
+}
+/*
+ * COMPLEXITY:
+ * Time: O(log n)
+ * Space: O(1)
+ */""" % [arr_str, search_target]
 
 func _array_to_string(arr: Array) -> String:
 	var parts: Array[String] = []
@@ -988,23 +1010,34 @@ func _show_cpp_popup() -> void:
 	
 	cpp_popup.popup_centered()
 	
-	if current_code_language == "cpp":
-		cpp_tutorial_step = 0
-		if cpp_next_btn:
-			if not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
-				cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
-		_update_cpp_tutorial()
+	cpp_tutorial_step = 0
+	if cpp_next_btn:
+		if not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
+			cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
+	_update_cpp_tutorial()
 
 func _on_cpp_next_pressed() -> void:
 	btn_sound.play()
 	cpp_tutorial_step += 1
-	if cpp_tutorial_step >= cpp_tutorial_data.size():
+	var max_steps = 0
+	match current_code_language:
+		"cpp": max_steps = cpp_tutorial_data.size()
+		"python": max_steps = python_tutorial_data.size()
+		"java": max_steps = java_tutorial_data.size()
+		"c": max_steps = c_tutorial_data.size()
+		
+	if cpp_tutorial_step >= max_steps:
 		cpp_tutorial_step = 0
 	_update_cpp_tutorial()
 
 func _update_cpp_tutorial() -> void:
-	if cpp_tutorial_data.is_empty(): return
-	var data = cpp_tutorial_data[cpp_tutorial_step]
+	var data = {}
+	match current_code_language:
+		"cpp": data = cpp_tutorial_data[cpp_tutorial_step]
+		"python": data = python_tutorial_data[cpp_tutorial_step]
+		"java": data = java_tutorial_data[cpp_tutorial_step]
+		"c": data = c_tutorial_data[cpp_tutorial_step]
+		
 	if cpp_explanation_lbl:
 		cpp_explanation_lbl.bbcode_enabled = true
 		cpp_explanation_lbl.text = data["text"]
@@ -1024,7 +1057,9 @@ func _update_cpp_tutorial() -> void:
 		cpp_label.text = highlighted_code
 		
 		if cpp_scroll and indices.size() > 0:
-			cpp_scroll.scroll_vertical = indices[0] * 25
+			var target_scroll = indices[0] * 20
+			var tween = create_tween()
+			tween.tween_property(cpp_scroll, "scroll_vertical", target_scroll, 0.2).set_trans(Tween.TRANS_SINE)
 
 func _on_translate_code_pressed() -> void:
 	btn_sound.play()
@@ -1352,3 +1387,26 @@ func _on_no_pressed():
 
 func _on_help_button_pressed():
 	start_tutorial()
+
+# ==============================================
+#   LANGUAGE BUTTON HANDLERS (RESTORED)
+# ==============================================
+
+func _connect_language_buttons() -> void:
+	if cpp_lang_btn and not cpp_lang_btn.is_connected("pressed", _set_language.bind("cpp")):
+		cpp_lang_btn.pressed.connect(_set_language.bind("cpp"))
+		
+	if python_lang_btn and not python_lang_btn.is_connected("pressed", _set_language.bind("python")):
+		python_lang_btn.pressed.connect(_set_language.bind("python"))
+		
+	if java_lang_btn and not java_lang_btn.is_connected("pressed", _set_language.bind("java")):
+		java_lang_btn.pressed.connect(_set_language.bind("java"))
+		
+	if c_lang_btn and not c_lang_btn.is_connected("pressed", _set_language.bind("c")):
+		c_lang_btn.pressed.connect(_set_language.bind("c"))
+
+func _set_language(lang: String) -> void:
+	if btn_sound:
+		btn_sound.play()
+	current_code_language = lang
+	_show_cpp_popup()
