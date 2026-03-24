@@ -1225,6 +1225,7 @@ theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 24
 
 [node name="CppPopup" type="PopupPanel" parent="."]
+oversampling_override = 1.0
 size = Vector2i(648, 650)
 theme_override_styles/panel = SubResource("StyleBoxTexture_sqvbp")
 
@@ -1363,9 +1364,9 @@ anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
 offset_left = 20.0
-offset_top = -61.0
+offset_top = -47.0
 offset_right = -20.0
-offset_bottom = -58.0
+offset_bottom = -44.0
 grow_horizontal = 2
 grow_vertical = 2
 bbcode_enabled = true
