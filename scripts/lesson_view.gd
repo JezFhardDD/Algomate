@@ -334,17 +334,11 @@ func start_floating_animation():
 	float_tween.tween_property(profile_pic, "position:y", original_sprite_position.y + 5, 1.5)
 
 func _on_simulate_button_pressed() -> void:
-	print("Simulate button pressed! lesson_id: ", lesson_id)
 	var path = _get_simulation_path()
-	
 	if path != "":
 		Global.last_lesson_id = lesson_id
-		Global.next_scene_path = path
-		
-		# Create loading screen as child of root (so it stays on top)
-		var loading = load("res://scenes/loading_screen.tscn").instantiate()
-		get_tree().root.add_child(loading)
-		# No need to call anything - loading screen's _ready will run automatically
+		SceneManager.scene_stack.append("res://scenes/lesson_view.tscn")
+		GlobalLoading.load_scene(path)
 
 func _on_back_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/lectures.tscn")

@@ -330,7 +330,8 @@ func _on_difficulty_selected(difficulty: String, topic: String):
 
 	var scene_path = _get_simulation_scene(topic)
 	if scene_path != "":
-		SceneManager.change_scene(scene_path)
+		SceneManager.scene_stack.append("res://scenes/assessment_map.tscn")
+		GlobalLoading.load_scene(scene_path)
 	else:
 		_show_under_development()
 
