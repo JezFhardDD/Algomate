@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://kcced8jlxbf2"]
+[gd_scene load_steps=7 format=3 uid="uid://kcced8jlxbf2"]
 
 [ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="1_ep5rh"]
 [ext_resource type="Script" uid="uid://b6fk4wqp0b5ee" path="res://scripts/loading_screen.gd" id="1_ku3bi"]
 [ext_resource type="Texture2D" uid="uid://bfiagjnegdly1" path="res://assets/MAIN_MENU/ALGOMATE_LOGO.png" id="2_hprjd"]
+[ext_resource type="Texture2D" uid="uid://g3gxwo4kpabr" path="res://assets/SCS LOGO 2.png" id="4_5phy8"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hprjd"]
 bg_color = Color(0.6230817, 0.5796256, 0.5576072, 1)
@@ -69,3 +70,17 @@ Please Wait."
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(576, 248)
 texture = ExtResource("2_hprjd")
+
+[node name="Container" type="Container" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -128.0
+offset_bottom = 128.0
+grow_horizontal = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Container"]
+position = Vector2(64.00003, 64)
+scale = Vector2(0.12499994, 0.128125)
+texture = ExtResource("4_5phy8")
