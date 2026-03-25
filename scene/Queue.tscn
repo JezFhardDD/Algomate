@@ -188,6 +188,17 @@ modulate_color = Color(0.713726, 0.388235, 1, 1)
 texture = ExtResource("6_3sxgj")
 modulate_color = Color(0.54902, 1, 1, 1)
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_trn2v"]
+texture = ExtResource("8_764rb")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bg4s2"]
+texture = ExtResource("7_x4yfu")
+modulate_color = Color(0.713726, 0.388235, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sc1dx"]
+texture = ExtResource("6_3sxgj")
+modulate_color = Color(0.54902, 1, 1, 1)
+
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fos0i"]
 texture = ExtResource("8_764rb")
 
@@ -218,17 +229,6 @@ texture = ExtResource("7_x4yfu")
 modulate_color = Color(0.713726, 0.388235, 1, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fpfj3"]
-texture = ExtResource("6_3sxgj")
-modulate_color = Color(0.54902, 1, 1, 1)
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_trn2v"]
-texture = ExtResource("8_764rb")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bg4s2"]
-texture = ExtResource("7_x4yfu")
-modulate_color = Color(0.713726, 0.388235, 1, 1)
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sc1dx"]
 texture = ExtResource("6_3sxgj")
 modulate_color = Color(0.54902, 1, 1, 1)
 
@@ -1020,6 +1020,19 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_5tuhn")
 theme_override_styles/hover = SubResource("StyleBoxTexture_c6i3y")
 text = "Dequeue"
 
+[node name="PeakButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_08k7p")
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxTexture_trn2v")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_bg4s2")
+theme_override_styles/hover = SubResource("StyleBoxTexture_sc1dx")
+text = "Peak"
+
 [node name="DequeuedElements" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -1027,7 +1040,7 @@ theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
 theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("3_08k7p")
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 26
 theme_override_styles/normal = SubResource("StyleBoxTexture_fos0i")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_2gh4u")
 theme_override_styles/hover = SubResource("StyleBoxTexture_c2ibq")
@@ -1041,7 +1054,7 @@ theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
 theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("3_08k7p")
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 26
 theme_override_styles/normal = SubResource("StyleBoxTexture_3dxm6")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_devvj")
 theme_override_styles/hover = SubResource("StyleBoxTexture_j4qnp")
@@ -1068,7 +1081,7 @@ theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
 theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
 theme_override_constants/outline_size = 5
 theme_override_fonts/font = ExtResource("3_08k7p")
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 26
 theme_override_styles/normal = SubResource("StyleBoxTexture_trn2v")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_bg4s2")
 theme_override_styles/hover = SubResource("StyleBoxTexture_sc1dx")
