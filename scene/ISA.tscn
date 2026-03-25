@@ -1,14 +1,43 @@
-[gd_scene load_steps=3 format=3 uid="uid://4tfwege4lgj7"]
+[gd_scene load_steps=5 format=3 uid="uid://4tfwege4lgj7"]
 
 [ext_resource type="PackedScene" uid="uid://cnlp6jn1v8wse" path="res://scene/BBSA.tscn" id="1_x2va3"]
 [ext_resource type="Script" uid="uid://b6chsy40nbxm2" path="res://script/lsa.gd" id="2_nth5j"]
+[ext_resource type="Shader" uid="uid://bwo8f725t8nm5" path="res://scenes/assessment_map.gdshader" id="3_2jdrj"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_eb3nm"]
+shader = ExtResource("3_2jdrj")
+shader_parameter/speed = 0.01
+shader_parameter/density = 6.375
+shader_parameter/min_size = 0.46
+shader_parameter/max_size = 0.29
+shader_parameter/min_alpha = 0.24
+shader_parameter/max_alpha = 0.41
+shader_parameter/bg_color = Color(0.03059341, 0.05709792, 0.049740538, 1)
+shader_parameter/block_color = Color(0.1472519, 0.4392342, 0.27983412, 1)
+shader_parameter/accent_color = Color(0.32266304, 0.27621198, 0.31138393, 1)
 
 [node name="Main" instance=ExtResource("1_x2va3")]
 custom_minimum_size = Vector2(0, 648)
 script = ExtResource("2_nth5j")
 
 [node name="ColorRect" parent="." index="2"]
+visible = false
 custom_minimum_size = Vector2(0, 1000)
+
+[node name="ColorRect2" type="ColorRect" parent="." index="3"]
+z_index = -5
+material = SubResource("ShaderMaterial_eb3nm")
+custom_minimum_size = Vector2(0, 1000)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = -184.0
+offset_right = -5.0
+offset_bottom = 168.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="HSeparator2" parent="CppPopup/VBoxContainer/TutorialPanel" index="0"]
 offset_left = 0.0
@@ -16,7 +45,7 @@ offset_top = 0.0
 offset_right = 594.0
 offset_bottom = 4.0
 
-[node name="MarginContainer" parent="." index="28"]
+[node name="MarginContainer" parent="." index="29"]
 custom_minimum_size = Vector2(300, 0)
 
 [node name="Label" parent="MarginContainer/HBoxContainer2/TextureRect" index="0"]

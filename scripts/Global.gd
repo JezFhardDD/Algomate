@@ -137,3 +137,6 @@ func equip_picture(picture_path: String):
 
 func is_picture_purchased(picture_path: String) -> bool:
 	return purchased_pictures.has(picture_path)
+
+func load_scene_with_loading(scene_path: String):
+	GlobalLoading.load_scene(scene_path)

@@ -1,9 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://kcced8jlxbf2"]
+[gd_scene load_steps=9 format=3 uid="uid://kcced8jlxbf2"]
 
 [ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="1_ep5rh"]
 [ext_resource type="Script" uid="uid://b6fk4wqp0b5ee" path="res://scripts/loading_screen.gd" id="1_ku3bi"]
 [ext_resource type="Texture2D" uid="uid://bfiagjnegdly1" path="res://assets/MAIN_MENU/ALGOMATE_LOGO.png" id="2_hprjd"]
+[ext_resource type="Texture2D" uid="uid://dat8hni5cmx8c" path="res://assets/BLOCK_ORANGE.png" id="3_qygbf"]
 [ext_resource type="Texture2D" uid="uid://g3gxwo4kpabr" path="res://assets/SCS LOGO 2.png" id="4_5phy8"]
+[ext_resource type="Texture2D" uid="uid://dhkga8tjxyuej" path="res://assets/BLOCK_GREEN.png" id="4_pu4a1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hprjd"]
 bg_color = Color(0.6230817, 0.5796256, 0.5576072, 1)
@@ -19,6 +21,7 @@ offset_bottom = 720.0
 script = ExtResource("1_ku3bi")
 
 [node name="ColorRect" type="ColorRect" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,50 +29,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.12955844, 0.12955847, 0.12955844, 1)
-
-[node name="ProgressBar" type="ProgressBar" parent="."]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -320.0
-offset_top = 116.0
-offset_right = 320.0
-offset_bottom = 180.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_fonts/font = ExtResource("1_ep5rh")
-theme_override_styles/background = SubResource("StyleBoxFlat_hprjd")
-theme_override_styles/fill = SubResource("StyleBoxFlat_ku3bi")
-min_value = 1.0
-value = 1.0
-
-[node name="Label" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -93.0
-offset_top = 212.0
-offset_right = 93.0
-offset_bottom = 277.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(7.412136e-06, 0.7446782, 0.608016, 1)
-theme_override_colors/font_outline_color = Color(0.6408197, 0, 0.1310763, 1)
-theme_override_constants/outline_size = 6
-theme_override_fonts/font = ExtResource("1_ep5rh")
-theme_override_font_sizes/font_size = 30
-text = "Loading..
-Please Wait."
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(576, 248)
-texture = ExtResource("2_hprjd")
 
 [node name="Container" type="Container" parent="."]
 layout_mode = 1
@@ -84,3 +43,749 @@ grow_horizontal = 0
 position = Vector2(64.00003, 64)
 scale = Vector2(0.12499994, 0.128125)
 texture = ExtResource("4_5phy8")
+
+[node name="Blocks" type="Control" parent="."]
+modulate = Color(0.23921569, 0.43137255, 0.16470589, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -9.0
+offset_bottom = -9.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Block10" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 214.0
+offset_top = 7.0000153
+offset_right = 298.00003
+offset_bottom = 91.000015
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block1" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 362.99997
+offset_top = 3.9999998
+offset_right = 446.99997
+offset_bottom = 88.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block6" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 264.00003
+offset_top = 132.99998
+offset_right = 348.00003
+offset_bottom = 216.99998
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block2" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 417.99997
+offset_top = 147.99998
+offset_right = 502.0
+offset_bottom = 231.99998
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block7" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 229.0
+offset_top = 285.0
+offset_right = 313.00003
+offset_bottom = 369.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block3" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 377.00003
+offset_top = 284.99997
+offset_right = 461.00003
+offset_bottom = 368.99997
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block8" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 272.00003
+offset_top = 426.0
+offset_right = 356.00003
+offset_bottom = 510.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block4" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 420.0
+offset_top = 426.99994
+offset_right = 504.0
+offset_bottom = 510.99994
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block9" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 246.0
+offset_top = 566.0
+offset_right = 330.0
+offset_bottom = 650.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block5" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 393.00003
+offset_top = 566.0
+offset_right = 477.00003
+offset_bottom = 650.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block11" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -83.99997
+offset_top = 9.000015
+offset_right = 6.1035156e-05
+offset_bottom = 93.000015
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block22" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -168.0
+offset_top = 143.99998
+offset_right = -83.99997
+offset_bottom = 227.99998
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block12" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 65.0
+offset_top = 5.9999995
+offset_right = 149.0
+offset_bottom = 90.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block13" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -33.999943
+offset_top = 134.99998
+offset_right = 50.000057
+offset_bottom = 218.99998
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block14" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 149.99998
+offset_right = 204.00003
+offset_bottom = 233.99998
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block15" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -68.99997
+offset_top = 287.0
+offset_right = 15.000061
+offset_bottom = 371.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block21" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -170.0
+offset_top = 422.0
+offset_right = -85.99997
+offset_bottom = 506.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block16" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 79.00006
+offset_top = 286.99997
+offset_right = 163.00006
+offset_bottom = 370.99997
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block17" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -25.999943
+offset_top = 428.0
+offset_right = 58.000057
+offset_bottom = 512.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block18" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 122.00003
+offset_top = 428.99994
+offset_right = 206.00003
+offset_bottom = 512.99994
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block19" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -51.999973
+offset_top = 568.0
+offset_right = 32.000027
+offset_bottom = 652.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block20" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 95.00006
+offset_top = 568.0
+offset_right = 179.00006
+offset_bottom = 652.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block23" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 807.99994
+offset_top = 7.0000153
+offset_right = 892.0
+offset_bottom = 91.000015
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block24" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 956.9999
+offset_top = 4.0
+offset_right = 1040.9999
+offset_bottom = 88.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block25" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 858.0
+offset_top = 132.99998
+offset_right = 942.0
+offset_bottom = 216.99998
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block26" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 1011.9999
+offset_top = 147.99998
+offset_right = 1095.9999
+offset_bottom = 231.99998
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block46" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 1122.9999
+offset_top = 292.0
+offset_right = 1206.9999
+offset_bottom = 376.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block47" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 1129.0001
+offset_top = 571.0
+offset_right = 1213.0001
+offset_bottom = 655.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block45" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 1103.9999
+offset_top = 1.5258789e-05
+offset_right = 1187.9999
+offset_bottom = 84.000015
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block27" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 822.99994
+offset_top = 285.0
+offset_right = 907.0
+offset_bottom = 369.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block28" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 971.0
+offset_top = 284.99997
+offset_right = 1055.0
+offset_bottom = 368.99997
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block29" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 866.0
+offset_top = 426.0
+offset_right = 950.0
+offset_bottom = 510.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block30" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 1013.99994
+offset_top = 426.99994
+offset_right = 1098.0
+offset_bottom = 510.99994
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block31" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 839.99994
+offset_top = 566.0
+offset_right = 923.99994
+offset_bottom = 650.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block32" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 987.0
+offset_top = 566.0
+offset_right = 1071.0
+offset_bottom = 650.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block33" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 509.99997
+offset_top = 9.000015
+offset_right = 594.0
+offset_bottom = 93.000015
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block34" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 425.99994
+offset_top = 143.99998
+offset_right = 509.99997
+offset_bottom = 227.99998
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block35" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 658.99994
+offset_top = 5.9999995
+offset_right = 742.99994
+offset_bottom = 90.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block36" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 560.0
+offset_top = 134.99998
+offset_right = 644.0
+offset_bottom = 218.99998
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block37" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 713.99994
+offset_top = 149.99998
+offset_right = 798.0
+offset_bottom = 233.99998
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block38" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 525.0
+offset_top = 287.0
+offset_right = 609.0
+offset_bottom = 371.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block39" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 423.99994
+offset_top = 422.0
+offset_right = 507.99997
+offset_bottom = 506.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block40" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 673.0
+offset_top = 286.99997
+offset_right = 757.0
+offset_bottom = 370.99997
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block41" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 568.0
+offset_top = 428.0
+offset_right = 652.0
+offset_bottom = 512.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block42" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 716.0
+offset_top = 428.99994
+offset_right = 800.0
+offset_bottom = 512.99994
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block43" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 541.99994
+offset_top = 568.0
+offset_right = 625.99994
+offset_bottom = 652.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block48" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 269.00003
+offset_top = 716.0
+offset_right = 353.00003
+offset_bottom = 800.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block49" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 243.0
+offset_top = 856.0
+offset_right = 327.0
+offset_bottom = 940.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block50" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 390.00003
+offset_top = 856.0
+offset_right = 474.00003
+offset_bottom = 940.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block51" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -173.0
+offset_top = 712.0
+offset_right = -88.99997
+offset_bottom = 796.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block52" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -28.999943
+offset_top = 718.0
+offset_right = 55.000057
+offset_bottom = 802.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block53" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 119.00003
+offset_top = 718.9999
+offset_right = 203.00003
+offset_bottom = 802.9999
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block54" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -54.999973
+offset_top = 858.0
+offset_right = 29.000027
+offset_bottom = 942.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block55" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 92.00006
+offset_top = 858.0
+offset_right = 176.00006
+offset_bottom = 942.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block56" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 420.99994
+offset_top = 712.0
+offset_right = 504.99997
+offset_bottom = 796.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block57" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 565.0
+offset_top = 718.0
+offset_right = 649.0
+offset_bottom = 802.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block58" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 538.99994
+offset_top = 858.0
+offset_right = 622.99994
+offset_bottom = 942.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block59" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 248.00003
+offset_top = 988.0
+offset_right = 332.00003
+offset_bottom = 1072.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block60" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 222.0
+offset_top = 1128.0
+offset_right = 306.0
+offset_bottom = 1212.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block61" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 369.00003
+offset_top = 1128.0
+offset_right = 453.00003
+offset_bottom = 1212.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block62" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -194.0
+offset_top = 984.0
+offset_right = -109.99997
+offset_bottom = 1068.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block63" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -49.99994
+offset_top = 990.0
+offset_right = 34.00006
+offset_bottom = 1074.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block64" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 98.00003
+offset_top = 990.9999
+offset_right = 182.00003
+offset_bottom = 1074.9999
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block65" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -75.99997
+offset_top = 1130.0
+offset_right = 8.0000305
+offset_bottom = 1214.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block66" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 71.00006
+offset_top = 1130.0
+offset_right = 155.00006
+offset_bottom = 1214.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block67" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 399.99994
+offset_top = 984.0
+offset_right = 483.99997
+offset_bottom = 1068.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block68" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 544.0
+offset_top = 990.0
+offset_right = 628.0
+offset_bottom = 1074.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block69" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 517.99994
+offset_top = 1130.0
+offset_right = 601.99994
+offset_bottom = 1214.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block44" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 689.0
+offset_top = 568.0
+offset_right = 773.0
+offset_bottom = 652.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(576, 248)
+texture = ExtResource("2_hprjd")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -93.0
+offset_top = 145.0
+offset_right = 93.0
+offset_bottom = 244.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(7.412136e-06, 0.7446782, 0.608016, 1)
+theme_override_colors/font_outline_color = Color(0.6408197, 0, 0.1310763, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("1_ep5rh")
+theme_override_font_sizes/font_size = 30
+text = "Loading..
+Please Wait."
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = 61.0
+offset_right = 320.0
+offset_bottom = 125.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_ep5rh")
+theme_override_styles/background = SubResource("StyleBoxFlat_hprjd")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ku3bi")
+min_value = 1.0
+value = 1.0

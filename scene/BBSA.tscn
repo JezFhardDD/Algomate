@@ -1,4 +1,4 @@
-[gd_scene load_steps=205 format=3 uid="uid://cnlp6jn1v8wse"]
+[gd_scene load_steps=207 format=3 uid="uid://cnlp6jn1v8wse"]
 
 [ext_resource type="Script" uid="uid://dx12ivb8i1dwd" path="res://Bubblemain.gd" id="1_vjpvp"]
 [ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="2_6uxki"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="6_qrmvo"]
 [ext_resource type="Texture2D" uid="uid://bb1nd27pe7mu3" path="res://assets/alert.png" id="7_qb3cw"]
 [ext_resource type="Shader" uid="uid://b2q0owni5kbm8" path="res://scene/BG.gdshader" id="8_5s4b5"]
+[ext_resource type="Shader" uid="uid://bwo8f725t8nm5" path="res://scenes/assessment_map.gdshader" id="9_6uxki"]
 [ext_resource type="Texture2D" uid="uid://doo4unotakvkq" path="res://assets/point_left.png" id="9_yc78y"]
 [ext_resource type="Texture2D" uid="uid://dr0xlyatjnld8" path="res://assets/clock-Sheet.png" id="10_s23xy"]
 [ext_resource type="Texture2D" uid="uid://c7pesy50pmngs" path="res://assets/C++_CONTAINER.png" id="11_qcln8"]
@@ -151,6 +152,18 @@ shader_parameter/max_alpha = 0.72
 shader_parameter/bg_color = Color(0.243137, 0.133333, 0.635294, 1)
 shader_parameter/block_color = Color(0, 0.577389, 0.0417808, 1)
 shader_parameter/accent_color = Color(0, 0.659627, 0.685006, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nsppc"]
+shader = ExtResource("9_6uxki")
+shader_parameter/speed = 0.01
+shader_parameter/density = 6.375
+shader_parameter/min_size = 0.46
+shader_parameter/max_size = 0.29
+shader_parameter/min_alpha = 0.24
+shader_parameter/max_alpha = 0.41
+shader_parameter/bg_color = Color(0.03059341, 0.05709792, 0.049740538, 1)
+shader_parameter/block_color = Color(0.1472519, 0.4392342, 0.27983412, 1)
+shader_parameter/accent_color = Color(0.32266304, 0.27621198, 0.31138393, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hhcpw"]
 texture = ExtResource("2_6uxki")
@@ -1043,6 +1056,7 @@ sprite_frames = SubResource("SpriteFrames_08k7p")
 frame_progress = 0.15497
 
 [node name="ColorRect" type="ColorRect" parent="."]
+visible = false
 z_index = -5
 material = SubResource("ShaderMaterial_tuai4")
 layout_mode = 1
@@ -1053,6 +1067,21 @@ offset_left = -4.0
 offset_top = -8.0
 offset_right = 28.0
 offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+z_index = -5
+material = SubResource("ShaderMaterial_nsppc")
+custom_minimum_size = Vector2(0, 1000)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = -8.0
+offset_right = -5.0
+offset_bottom = 344.0
 grow_horizontal = 2
 grow_vertical = 2
 

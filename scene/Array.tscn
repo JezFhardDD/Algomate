@@ -1,13 +1,26 @@
-[gd_scene load_steps=23 format=3 uid="uid://dt60pmkulclpg"]
+[gd_scene load_steps=25 format=3 uid="uid://dt60pmkulclpg"]
 
 [ext_resource type="PackedScene" uid="uid://cnlp6jn1v8wse" path="res://scene/BBSA.tscn" id="1_85hwj"]
 [ext_resource type="Script" uid="uid://63r0il4jv1uy" path="res://script/array.gd" id="2_sjaiv"]
 [ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="3_dq125"]
+[ext_resource type="Shader" uid="uid://bwo8f725t8nm5" path="res://scenes/assessment_map.gdshader" id="3_xywgn"]
 [ext_resource type="Script" uid="uid://bs2yddbychbqq" path="res://script/array_action_modal.gd" id="4_xywgn"]
 [ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="5_njl6h"]
 [ext_resource type="Texture2D" uid="uid://dcxstyoycht1w" path="res://assets/BUTTON_HOVERED.png" id="6_x3etq"]
 [ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="7_rsgdm"]
 [ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="8_2oo6p"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_njl6h"]
+shader = ExtResource("3_xywgn")
+shader_parameter/speed = 0.01
+shader_parameter/density = 6.375
+shader_parameter/min_size = 0.46
+shader_parameter/max_size = 0.29
+shader_parameter/min_alpha = 0.24
+shader_parameter/max_alpha = 0.41
+shader_parameter/bg_color = Color(0.03059341, 0.05709792, 0.049740538, 1)
+shader_parameter/block_color = Color(0.1472519, 0.4392342, 0.27983412, 1)
+shader_parameter/accent_color = Color(0.32266304, 0.27621198, 0.31138393, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_njl6h"]
 texture = ExtResource("8_2oo6p")
@@ -60,19 +73,20 @@ script = ExtResource("2_sjaiv")
 oversampling_override = 1.0
 
 [node name="ColorRect" parent="." index="2"]
+material = SubResource("ShaderMaterial_njl6h")
 custom_minimum_size = Vector2(0, 1000)
 offset_left = 0.0
 offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
+offset_right = -1.0
+offset_bottom = 352.0
 
 [node name="DimBackground" parent="TutorialOverlay" index="0"]
 z_index = -5
 
-[node name="DiificultyLabel" parent="." index="5"]
+[node name="DiificultyLabel" parent="." index="6"]
 visible = false
 
-[node name="VBoxContainer" parent="." index="6"]
+[node name="VBoxContainer" parent="." index="7"]
 offset_left = 33.0
 offset_top = 20.0
 offset_right = 277.0
@@ -143,13 +157,13 @@ text = " END SIMULATION "
 [node name="TimelineButton" parent="VBoxContainer" index="7"]
 text = "TIMELINE"
 
-[node name="QueueContainer" parent="." index="7"]
+[node name="QueueContainer" parent="." index="8"]
 offset_left = 257.0
 offset_top = 239.0
 offset_right = 457.0
 offset_bottom = 439.0
 
-[node name="TryAgainButton" parent="." index="14"]
+[node name="TryAgainButton" parent="." index="15"]
 visible = false
 
 [node name="End_simulation_confirmation" type="Panel" parent="." index="24"]

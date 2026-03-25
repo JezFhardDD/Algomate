@@ -1,4 +1,4 @@
-[gd_scene load_steps=171 format=3 uid="uid://ugb37dltywrs"]
+[gd_scene load_steps=173 format=3 uid="uid://ugb37dltywrs"]
 
 [ext_resource type="Script" uid="uid://crtbaqbvlne5k" path="res://script/insertion_sim.gd" id="1_wb75v"]
 [ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="2_eik88"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://doo4unotakvkq" path="res://assets/point_left.png" id="5_764rb"]
 [ext_resource type="Texture2D" uid="uid://dcxstyoycht1w" path="res://assets/BUTTON_HOVERED.png" id="6_3sxgj"]
 [ext_resource type="Texture2D" uid="uid://c7pesy50pmngs" path="res://assets/C++_CONTAINER.png" id="6_764rb"]
+[ext_resource type="Shader" uid="uid://bwo8f725t8nm5" path="res://scenes/assessment_map.gdshader" id="6_r0mpf"]
 [ext_resource type="PackedScene" uid="uid://bemnu780b65s5" path="res://scene/parallax_background.tscn" id="7_aex65"]
 [ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="7_x4yfu"]
 [ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="8_764rb"]
@@ -127,6 +128,18 @@ shader_parameter/max_alpha = 0.72
 shader_parameter/bg_color = Color(0.243137, 0.133333, 0.635294, 1)
 shader_parameter/block_color = Color(0, 0.577389, 0.0417808, 1)
 shader_parameter/accent_color = Color(0, 0.659627, 0.685006, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qg85s"]
+shader = ExtResource("6_r0mpf")
+shader_parameter/speed = 0.01
+shader_parameter/density = 6.375
+shader_parameter/min_size = 0.46
+shader_parameter/max_size = 0.29
+shader_parameter/min_alpha = 0.24
+shader_parameter/max_alpha = 0.41
+shader_parameter/bg_color = Color(0.03059341, 0.05709792, 0.049740538, 1)
+shader_parameter/block_color = Color(0.1472519, 0.4392342, 0.27983412, 1)
+shader_parameter/accent_color = Color(0.32266304, 0.27621198, 0.31138393, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hhcpw"]
 texture = ExtResource("2_eik88")
@@ -781,6 +794,7 @@ sprite_frames = SubResource("SpriteFrames_08k7p")
 frame_progress = 0.15497
 
 [node name="ColorRect" type="ColorRect" parent="."]
+visible = false
 z_index = -5
 material = SubResource("ShaderMaterial_tuai4")
 custom_minimum_size = Vector2(0, 1000)
@@ -788,6 +802,20 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+z_index = -5
+material = SubResource("ShaderMaterial_qg85s")
+custom_minimum_size = Vector2(0, 1000)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -177.0
+offset_right = -1.0
+offset_bottom = 496.0
 grow_horizontal = 2
 grow_vertical = 2
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=15 format=3 uid="uid://n74hr1lti5wc"]
 
 [ext_resource type="Script" uid="uid://bskopphl4nod1" path="res://scripts/progress_page.gd" id="1_823gq"]
-[ext_resource type="Shader" path="res://scripts/lectures_bg.gdshader" id="1_fvj5j"]
+[ext_resource type="Shader" uid="uid://dm5tlgdpgj58y" path="res://scripts/lectures_bg.gdshader" id="1_fvj5j"]
 [ext_resource type="PackedScene" uid="uid://pw1kjcephyld" path="res://scenes/navigation.tscn" id="2_4h6h3"]
 [ext_resource type="Texture2D" uid="uid://b32exav1p5s6v" path="res://assets/containers/C++_CONTAINER.png" id="3_nfqvn"]
 [ext_resource type="Texture2D" uid="uid://dqhtyt1dkw1tt" path="res://assets/ASSESSMENT/Assessment_topics.png" id="4_823gq"]

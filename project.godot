@@ -22,6 +22,7 @@ DB="*res://scripts/DatabaseManager.gd"
 Global="*res://scripts/Global.gd"
 SceneManager="*res://scripts/SceneManager.gd"
 AudioManager="*res://autoloads/AudioManager.gd"
+GlobalLoading="*res://scripts/GlobalLoading.gd"
 
 [display]
 

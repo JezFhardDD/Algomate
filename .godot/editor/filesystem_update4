@@ -1,4 +1,2 @@
-res://scenes/lesson_view.tscn
-res://scripts/lesson_view.gd
-res://scenes/lectures.tscn
-res://scenes/navigation.tscn
+res://scene/MSA.tscn
+res://scene/BG.gdshader

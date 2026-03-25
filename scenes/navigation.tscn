@@ -252,6 +252,7 @@ text = "Help"
 label_settings = SubResource("LabelSettings_i5qcw")
 
 [node name="feedback" type="TextureButton" parent="sidebar_container/container/VBoxContainer"]
+visible = false
 layout_mode = 2
 texture_normal = ExtResource("9_74kvt")
 

@@ -236,7 +236,7 @@ func _apply_lesson() -> void:
 
 func _get_simulation_path() -> String:
 	var sim_map = {
-		"array":                "res://scene/Array.tscn",
+		"array":                "res://scene/Array.tscn",  # Changed from "scene" to "scene"
 		"linked_list":          "res://scene/Linked.tscn",
 		"doubly_linked_list":   "res://scene/Linked.tscn",
 		"stack":                "res://scene/Stack.tscn",
@@ -339,13 +339,12 @@ func _on_simulate_button_pressed() -> void:
 	
 	if path != "":
 		Global.last_lesson_id = lesson_id
-		
-		# 1. Save the target simulation path to your Global script
 		Global.next_scene_path = path
 		
-		# 2. Go to the Loading Screen (which will then load the 'path')
-		# If your SceneManager handles transitions, you can use SceneManager.change_scene instead
-		get_tree().change_scene_to_file("res://scenes/loading_screen.tscn")
+		# Create loading screen as child of root (so it stays on top)
+		var loading = load("res://scenes/loading_screen.tscn").instantiate()
+		get_tree().root.add_child(loading)
+		# No need to call anything - loading screen's _ready will run automatically
 
 func _on_back_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/lectures.tscn")

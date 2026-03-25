@@ -1,12 +1,25 @@
-[gd_scene load_steps=11 format=3 uid="uid://k04bubif72v"]
+[gd_scene load_steps=13 format=3 uid="uid://k04bubif72v"]
 
 [ext_resource type="PackedScene" uid="uid://dpvktvrg6xmxb" path="res://scene/SSA.tscn" id="1_tle6u"]
 [ext_resource type="Script" uid="uid://1g7h1g67vsp6" path="res://script/qsa.gd" id="2_jigj7"]
 [ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="3_77nty"]
+[ext_resource type="Shader" uid="uid://bwo8f725t8nm5" path="res://scenes/assessment_map.gdshader" id="3_au56b"]
 [ext_resource type="Texture2D" uid="uid://dcxstyoycht1w" path="res://assets/BUTTON_HOVERED.png" id="4_au56b"]
 [ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="5_nwtjd"]
 [ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="6_sqki8"]
 [ext_resource type="Texture2D" uid="uid://d0fqltlbp2rjh" path="res://assets/crown.png" id="7_77nty"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nwtjd"]
+shader = ExtResource("3_au56b")
+shader_parameter/speed = 0.01
+shader_parameter/density = 6.375
+shader_parameter/min_size = 0.46
+shader_parameter/max_size = 0.29
+shader_parameter/min_alpha = 0.24
+shader_parameter/max_alpha = 0.41
+shader_parameter/bg_color = Color(0.03059341, 0.05709792, 0.049740538, 1)
+shader_parameter/block_color = Color(0.1472519, 0.4392342, 0.27983412, 1)
+shader_parameter/accent_color = Color(0.32266304, 0.27621198, 0.31138393, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xr2c2"]
 texture = ExtResource("6_sqki8")
@@ -21,7 +34,25 @@ texture = ExtResource("4_au56b")
 custom_minimum_size = Vector2(0, 0)
 script = ExtResource("2_jigj7")
 
-[node name="VBoxContainer" parent="." index="6"]
+[node name="ColorRect" parent="." index="2"]
+visible = false
+
+[node name="ColorRect2" type="ColorRect" parent="." index="3"]
+z_index = -5
+material = SubResource("ShaderMaterial_nwtjd")
+custom_minimum_size = Vector2(0, 1000)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = -185.0
+offset_right = -5.0
+offset_bottom = 169.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" parent="." index="7"]
 offset_left = 38.0
 offset_bottom = 579.0
 theme_override_constants/separation = 20
@@ -91,7 +122,7 @@ visible = false
 [node name="PassButton" parent="VBoxContainer" index="7"]
 visible = false
 
-[node name="RecursionMap" type="Control" parent="." index="29"]
+[node name="RecursionMap" type="Control" parent="." index="30"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -101,7 +132,7 @@ offset_right = 281.5
 offset_bottom = 217.0
 grow_horizontal = 2
 
-[node name="StatusLabel" type="Label" parent="." index="30"]
+[node name="StatusLabel" type="Label" parent="." index="31"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -118,7 +149,7 @@ theme_override_fonts/font = ExtResource("3_77nty")
 theme_override_font_sizes/font_size = 30
 text = "ccccccc"
 
-[node name="SubArrayOutlineLeft" type="ColorRect" parent="." index="31"]
+[node name="SubArrayOutlineLeft" type="ColorRect" parent="." index="32"]
 visible = false
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 0
@@ -127,7 +158,7 @@ offset_bottom = 40.0
 mouse_filter = 2
 color = Color(0, 0, 1, 0.3)
 
-[node name="SubArrayOutlineRight" type="ColorRect" parent="." index="32"]
+[node name="SubArrayOutlineRight" type="ColorRect" parent="." index="33"]
 visible = false
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 0
@@ -136,5 +167,5 @@ offset_bottom = 40.0
 mouse_filter = 2
 color = Color(1, 1, 0, 0.3)
 
-[node name="PivotIndicator" type="Sprite2D" parent="." index="33"]
+[node name="PivotIndicator" type="Sprite2D" parent="." index="34"]
 texture = ExtResource("7_77nty")

@@ -1,13 +1,40 @@
-[gd_scene load_steps=3 format=3 uid="uid://dcuh2qhoppuxb"]
+[gd_scene load_steps=5 format=3 uid="uid://dcuh2qhoppuxb"]
 
 [ext_resource type="PackedScene" uid="uid://dkpvdlk5xevgv" path="res://scene/TreeDFSA.tscn" id="1_n4hte"]
 [ext_resource type="Script" uid="uid://cdcf28a8j6lq4" path="res://script/tree_bfsa.gd" id="2_la03u"]
+[ext_resource type="Shader" uid="uid://bwo8f725t8nm5" path="res://scenes/assessment_map.gdshader" id="3_rbgdb"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_08y4g"]
+shader = ExtResource("3_rbgdb")
+shader_parameter/speed = 0.01
+shader_parameter/density = 6.375
+shader_parameter/min_size = 0.46
+shader_parameter/max_size = 0.29
+shader_parameter/min_alpha = 0.24
+shader_parameter/max_alpha = 0.41
+shader_parameter/bg_color = Color(0.03059341, 0.05709792, 0.049740538, 1)
+shader_parameter/block_color = Color(0.1472519, 0.4392342, 0.27983412, 1)
+shader_parameter/accent_color = Color(0.32266304, 0.27621198, 0.31138393, 1)
 
 [node name="Main" instance=ExtResource("1_n4hte")]
 script = ExtResource("2_la03u")
 
 [node name="ColorRect" parent="." index="3"]
-custom_minimum_size = Vector2(0, 1000)
+visible = false
 
-[node name="CppPopup" parent="." index="15"]
+[node name="ColorRect2" type="ColorRect" parent="." index="4"]
+z_index = -5
+material = SubResource("ShaderMaterial_08y4g")
+custom_minimum_size = Vector2(0, 1000)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -177.0
+offset_right = -1.0
+offset_bottom = 177.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CppPopup" parent="." index="16"]
 oversampling_override = 1.0

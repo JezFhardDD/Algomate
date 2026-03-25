@@ -1,9 +1,34 @@
-[gd_scene load_steps=6 format=3 uid="uid://dq6ebtkxu3lbb"]
+[gd_scene load_steps=15 format=3 uid="uid://dq6ebtkxu3lbb"]
 
 [ext_resource type="PackedScene" uid="uid://dt60pmkulclpg" path="res://scene/Array.tscn" id="1_m37xw"]
 [ext_resource type="Script" uid="uid://cpntyh86bqj0e" path="res://script/array_a.gd" id="2_u66xf"]
 [ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="3_q7tw4"]
+[ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="3_tvjy5"]
 [ext_resource type="Texture2D" uid="uid://5airignmj45l" path="res://assets/trashcan.png" id="4_7o1pq"]
+[ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="4_fjgfx"]
+[ext_resource type="Texture2D" uid="uid://dcxstyoycht1w" path="res://assets/BUTTON_HOVERED.png" id="5_2p1rw"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3dxm6"]
+texture = ExtResource("3_tvjy5")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_devvj"]
+texture = ExtResource("4_fjgfx")
+modulate_color = Color(0.713726, 0.388235, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j4qnp"]
+texture = ExtResource("5_2p1rw")
+modulate_color = Color(0.54902, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lgr22"]
+texture = ExtResource("3_tvjy5")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3b0ty"]
+texture = ExtResource("4_fjgfx")
+modulate_color = Color(0.713726, 0.388235, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_fpfj3"]
+texture = ExtResource("5_2p1rw")
+modulate_color = Color(0.54902, 1, 1, 1)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5s2yj"]
 
@@ -12,10 +37,16 @@ custom_minimum_size = Vector2(0, 0)
 script = ExtResource("2_u66xf")
 
 [node name="ColorRect" parent="." index="2"]
-custom_minimum_size = Vector2(0, 1000)
+visible = true
 
 [node name="DiificultyLabel" parent="." index="5"]
 visible = true
+offset_left = 55.0
+offset_top = 30.0
+offset_right = 394.0
+offset_bottom = 70.0
+theme_override_font_sizes/font_size = 40
+text = "Difficulty: "
 
 [node name="VBoxContainer" parent="." index="6"]
 offset_left = 52.0
@@ -26,9 +57,14 @@ theme_override_constants/separation = 25
 
 [node name="HBoxContainer" parent="VBoxContainer" index="0"]
 visible = true
+layout_mode = 2
+alignment = 0
 
 [node name="AnimatedSprite2D" parent="VBoxContainer/HBoxContainer" index="0"]
 position = Vector2(11, 14)
+
+[node name="Label2" parent="VBoxContainer/HBoxContainer" index="1"]
+text = ""
 
 [node name="AccessButton" parent="VBoxContainer" index="1"]
 visible = false
@@ -44,15 +80,31 @@ text = "REDO"
 
 [node name="SortButton" parent="VBoxContainer" index="5"]
 visible = false
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 26
 
 [node name="WaitingElements" parent="VBoxContainer" index="6"]
 visible = false
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxTexture_3dxm6")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_devvj")
+theme_override_styles/hover = SubResource("StyleBoxTexture_j4qnp")
+
+[node name="TimelineButton" parent="VBoxContainer" index="7"]
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxTexture_lgr22")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_3b0ty")
+theme_override_styles/hover = SubResource("StyleBoxTexture_fpfj3")
 
 [node name="QueueContainer" parent="." index="7"]
+layout_mode = 1
 offset_left = 297.0
 offset_top = 292.0
 offset_right = 497.0
 offset_bottom = 492.0
+size_flags_vertical = 1
 
 [node name="DequeuedContainer" parent="." index="8"]
 visible = false
@@ -62,6 +114,37 @@ offset_left = 0.0
 offset_top = 0.0
 offset_right = 594.0
 offset_bottom = 4.0
+
+[node name="code_anim" parent="CppCodeButton" index="0"]
+visible = true
+
+[node name="TryAgainButton" parent="." index="14"]
+scale = Vector2(1, 1)
+
+[node name="Label" parent="Simulate_new_confirmation" index="0"]
+visible = true
+anchors_preset = 5
+anchor_top = 0.0
+anchor_bottom = 0.0
+offset_left = -216.0
+offset_top = 36.0
+offset_right = 220.0
+offset_bottom = 88.0
+grow_vertical = 1
+
+[node name="ConfigElementsModal" parent="." index="28"]
+offset_top = -200.0
+offset_bottom = 200.0
+
+[node name="Label" parent="ConfigElementsModal" index="0"]
+visible = true
+custom_minimum_size = Vector2(0, 0)
+anchors_preset = 5
+anchor_top = 0.0
+anchor_bottom = 0.0
+offset_left = -194.5
+offset_right = 194.5
+grow_vertical = 1
 
 [node name="TargetLabel" parent="." index="31"]
 visible = true
@@ -151,3 +234,7 @@ theme_override_font_sizes/font_size = 30
 text = "GARBAGE
 COLLECTOR"
 horizontal_alignment = 1
+
+[connection signal="pressed" from="VBoxContainer/SortButton" to="." method="_on_sort_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/WaitingElements" to="." method="_on_waiting_pressed"]
+[connection signal="pressed" from="TryAgainButton" to="." method="_on_try_again_button_pressed"]
