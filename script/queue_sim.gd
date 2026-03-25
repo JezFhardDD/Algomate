@@ -7,6 +7,7 @@ extends Control
 @onready var dequeued_btn: Button = $VBoxContainer/DequeuedElements
 @onready var timeline_btn: Button = $VBoxContainer/TimelineButton
 @onready var simulate_new_btn: Button = $VBoxContainer/SimulateNew
+@onready var peek_btn: Button = $VBoxContainer/PeakButton
 
 @onready var enqueue_label: Label = $HBoxContainer/Label
 @onready var dequeue_label: Label = $HBoxContainer2/Label
@@ -620,6 +621,9 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 		if not dequeue_btn.is_connected("pressed", _on_dequeue_pressed):
 			dequeue_btn.pressed.connect(_on_dequeue_pressed)
 	
+	if peek_btn: 
+		if not peek_btn.is_connected("pressed", _on_peek_pressed):
+			peek_btn.pressed.connect(_on_peek_pressed)
 	# Hide popups initially
 	if dequeued_container: dequeued_container.hide()
 	if cpp_popup: cpp_popup.hide()
@@ -684,7 +688,17 @@ func start_tutorial() -> void:
 			"pointer_position": "center",
 			"popup_to_close": "dequeued"
 		},
-		# Step 4: Waiting Elements button
+		{
+			"node": peek_btn,
+			"text": "This is the PEEK button. It lets you view the front element without removing it. Press this button to continue.",
+			"action": "press",
+			"highlight_only": false,
+			"pointer_position": "center",
+			"popup_to_close": null,
+			"pre_action": "_setup_for_peek_tutorial" # We'll create this function below
+		},
+		
+		# ... (Next step: Dequeued Elements button) ...
 		{
 			"node": waiting_btn,
 			"text": "Here you can view waiting elements that will enter the queue next. Press this button to continue.",
@@ -826,8 +840,7 @@ func apply_highlight_effect(node: Control, highlight_only: bool) -> void:
 		tween.tween_property(node, "modulate", Color(2.0, 2.0, 0.5, 1), 0.5)
 
 func clear_highlights() -> void:
-	# Stop any running tweens first
-	var nodes_to_clear = [enqueue_btn, dequeue_btn, waiting_btn, dequeued_btn, timeline_btn, simulate_new_btn, enqueue_label, dequeue_label]
+	var nodes_to_clear = [enqueue_btn, dequeue_btn, peek_btn, waiting_btn, dequeued_btn, timeline_btn, simulate_new_btn, enqueue_label, dequeue_label]
 	
 	for node in nodes_to_clear:
 		if node and node.has_meta("tween"):
@@ -845,6 +858,7 @@ func clear_highlights() -> void:
 	if simulate_new_btn: simulate_new_btn.modulate = Color(1, 1, 1, 1)
 	if enqueue_label: enqueue_label.modulate = Color(1, 1, 1, 1)
 	if dequeue_label: dequeue_label.modulate = Color(1, 1, 1, 1)
+	if peek_btn: peek_btn.modulate = Color(1, 1, 1, 1)
 
 func enable_only_target_button(target_node: Control) -> void:
 	# Disable all buttons except the target
@@ -857,6 +871,11 @@ func enable_only_target_button(target_node: Control) -> void:
 		dequeue_btn.disabled = true
 		if target_node == dequeue_btn:
 			dequeue_btn.disabled = false
+	
+	if peek_btn: 
+		peek_btn.disabled = true
+		if target_node == peek_btn:
+			peek_btn.disabled = false
 	
 	if waiting_btn: 
 		waiting_btn.disabled = true
@@ -884,6 +903,7 @@ func enable_all_buttons() -> void:
 	if dequeued_btn: dequeued_btn.disabled = false
 	if timeline_btn: timeline_btn.disabled = false
 	if simulate_new_btn: simulate_new_btn.disabled = false
+	if peek_btn: peek_btn.disabled = false
 
 func end_tutorial() -> void:
 	print("Tutorial finished!")
@@ -1411,7 +1431,7 @@ public class QueueSim {
 */""" % [arr_str, get_time_complexity(), get_space_complexity()]
 
 func generate_c_code(arr_str: String, _n: int) -> String:
-	return """#include <stdio.h>
+	var code = """#include <stdio.h>
 #define MAX_SIZE 100
 
 typedef struct {
@@ -1443,7 +1463,7 @@ void printQueue(Queue *q) {
 }
 
 int main() {
-	int arr[] = {%s};
+	int arr[] = {{ARR}};
 	int n = sizeof(arr) / sizeof(arr[0]);
 	Queue q;
 	initQueue(&q);
@@ -1468,7 +1488,12 @@ int main() {
 	printf("Simulation finished.\\n");
 	return 0;
 }
-/* Complexity: Time: %s | Space: %s */""" % [arr_str, get_time_complexity(), get_space_complexity()]
+/*
+ * COMPLEXITY:
+ * Time: {TIME}
+ * Space: {SPACE}
+ */"""
+	return code.replace("{ARR}", arr_str).replace("{TIME}", get_time_complexity()).replace("{SPACE}", get_space_complexity())
 
 func _on_cpp_lang_button_pressed() -> void:
 	btn_sound.play()
@@ -1609,6 +1634,13 @@ func _update_labels() -> void:
 		dequeue_btn.modulate = Color(0.5, 0.5, 0.5, 0.7)
 	else:
 		dequeue_btn.modulate = Color.WHITE
+		
+	if peek_btn:
+		peek_btn.disabled = queue.is_empty()
+		if queue.is_empty():
+			peek_btn.modulate = Color(0.5, 0.5, 0.5, 0.7)
+		else:
+			peek_btn.modulate = Color.WHITE
 
 func _hide_queue_full_panel() -> void:
 	if Queue_full and Queue_full.visible:
@@ -1848,6 +1880,7 @@ func _set_main_ui_enabled(enabled: bool) -> void:
 	if simulate_new_btn: simulate_new_btn.disabled = not enabled
 	get_node("HelpButton").disabled = not enabled
 	get_node("CppCodeButton").disabled = not enabled
+	if peek_btn: peek_btn.disabled = not enabled
 
 # Add these missing functions at the end
 
@@ -2136,6 +2169,24 @@ func _setup_for_dequeue_tutorial() -> void:
 	
 	_update_labels()
 
+func _setup_for_peek_tutorial() -> void:
+	"""Prepare tutorial state for peek step"""
+	# Ensure queue has at least one element so peek works
+	if queue.is_empty():
+		queue = [10] # Add a dummy element
+		
+		# Create visual block
+		for child in queue_container.get_children():
+			child.queue_free()
+			
+		var new_block: Control = BLOCK_SCENE.instantiate() as Control
+		if new_block.has_method("set"): 
+			new_block.set("value", queue[0])
+		queue_container.add_child(new_block)
+		_resnap_blocks()
+	
+	_update_labels()
+
 func reset_cpp_tutorial_state() -> void:
 	"""Reset C++ tutorial to initial state"""
 	print("Resetting C++ tutorial state...")
@@ -2360,3 +2411,36 @@ func reset_cache_for_scene() -> void:
 	if compiler_output_popup:
 		compiler_output_popup.reset_cache_for_scene()
 		print("Compiler cache reset for new simulation")
+
+func _on_peek_pressed() -> void:
+	if tutorial_in_progress and tutorial_sequence_index < tutorial_sequence.size():
+		var current_step = tutorial_sequence[tutorial_sequence_index]
+		if current_step["node"] == peek_btn and current_step["action"] == "press":
+			pass
+		else:
+			print("Tutorial: Please press the highlighted button first")
+			return
+
+	btn_sound.play()
+
+	if queue.is_empty():
+		show_feedback("Queue is empty!", Color.RED, peek_btn.global_position + Vector2(100, 0))
+		return
+
+	var front_val: int = queue[0]
+	timeline_log.append("Peeked at front element: %d" % front_val)
+	
+	if queue_container.get_child_count() > 0:
+		var front_block = queue_container.get_child(0)
+		if is_instance_valid(front_block):
+			var tween = create_tween()
+			tween.tween_property(front_block, "modulate", Color(1.5, 1.5, 0.5, 1.0), 0.2)
+			tween.tween_property(front_block, "modulate", Color.WHITE, 0.2)
+
+	show_feedback("Front: " + str(front_val), Color.GREEN, peek_btn.global_position + Vector2(100, -20))
+
+	if tutorial_in_progress and tutorial_sequence_index < tutorial_sequence.size():
+		var current_step = tutorial_sequence[tutorial_sequence_index]
+		if current_step["node"] == peek_btn and current_step["action"] == "press":
+			tutorial_sequence_index += 1
+			show_tutorial_step()
