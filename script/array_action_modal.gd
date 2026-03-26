@@ -1,6 +1,6 @@
 extends Panel
 
-enum ActionType { ACCESS, INSERT_AT_END, INSERT_AT_INDEX, DELETE }
+enum ActionType { ACCESS, INSERT_AT_END, INSERT_AT_INDEX, DELETE, REPLACE }  # NEW: Added REPLACE
 
 var current_action: ActionType
 var confirm_callback: Callable
@@ -139,6 +139,29 @@ func show_for_action(action: ActionType, max_index: int, callback: Callable):
 					line_edit.placeholder_text = "0-%d" % max_index
 			if confirm_btn:
 				confirm_btn.text = "DELETE"
+		
+		ActionType.REPLACE:  # NEW: Replace action
+			if modal_title:
+				modal_title.text = "REPLACE ELEMENT"
+			single_input_row.hide()
+			double_input_container.show()
+			
+			# Show both value and index inputs for replace
+			if double_input_container.get_child_count() >= 2:
+				double_input_container.get_child(0).show()  # Value input row
+				double_input_container.get_child(1).show()  # Index input row
+			
+			if value_spin:
+				value_spin.max_value = 99
+				value_spin.min_value = 1
+				value_spin.value = 1
+			if insert_index_spin:  # Reusing insert_index_spin for replace index
+				insert_index_spin.value = 0
+				var line_edit = insert_index_spin.get_line_edit()
+				if line_edit:
+					line_edit.placeholder_text = "0-%d" % max_index
+			if confirm_btn:
+				confirm_btn.text = "REPLACE"
 	
 	show()
 
@@ -166,6 +189,19 @@ func _on_confirm_pressed():
 				confirm_callback.call(val)
 				
 		ActionType.INSERT_AT_INDEX:
+			if value_spin and insert_index_spin:
+				var idx = int(insert_index_spin.value)
+				if idx < 0 or idx > max_valid_index:
+					var feedback = "Index %d is out of bounds! Valid range: 0-%d" % [idx, max_valid_index]
+					_show_feedback(feedback)
+					return
+				var val = int(value_spin.value)
+				if val < 1 or val > 99:
+					_show_feedback("Value must be between 1 and 99")
+					return
+				confirm_callback.call(val, idx)
+		
+		ActionType.REPLACE:  # NEW: Replace validation
 			if value_spin and insert_index_spin:
 				var idx = int(insert_index_spin.value)
 				if idx < 0 or idx > max_valid_index:

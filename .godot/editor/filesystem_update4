@@ -8,3 +8,5 @@ res://scenes/settings.tscn
 res://scenes/homepage.tscn
 res://scripts/GlobalLoading.gd
 res://scene/ArrayA.tscn
+res://script/array.gd
+res://script/array_action_modal.gd

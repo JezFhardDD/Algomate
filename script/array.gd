@@ -23,10 +23,15 @@ extends Control
 @onready var insert_end_btn: Button = $VBoxContainer/InsertAtEndButton
 @onready var insert_i_btn: Button = $VBoxContainer/InsertAtIButton
 @onready var delete_btn: Button = $VBoxContainer/DeleteButton
+@onready var replace_btn: Button = $VBoxContainer/ReplaceButton  # NEW: Replace button
 
 # --- LABELS & CONTAINERS ---
 @onready var array_container: Control = $QueueContainer
 @onready var dequeued_container: Control = $DequeuedContainer
+
+# --- INDICATORS ---
+@onready var is_full_indicator: TextureRect = $IsFull  # NEW: isFull indicator
+@onready var is_empty_indicator: TextureRect = $IsEmpty  # NEW: isEmpty indicator
 
 # --- POPUPS & MODALS ---
 @onready var waiting_popup: Popup = $WaitingPopup
@@ -125,6 +130,7 @@ const RESULT_POPUP_SCENE := preload("res://scene/ResultPopup.tscn")
 # --- ARRAY SIMULATION VARIABLES ---
 var main_array: Array[int] = []
 var block_nodes: Array[Control] = []
+var index_labels: Array[Label] = []  # NEW: Store index label nodes
 var timeline_log: Array[String] = []
 var action_count: int = 0  # Total actions performed
 var max_array_size: int = 7  # Default max, will be set during config
@@ -134,7 +140,11 @@ var current_array_size: int = 0
 var BLOCK_WIDTH: float = 64.0
 var BLOCK_SPACING: float = 15.0
 var START_POSITION: Vector2 = Vector2(50, 80)
+var INDEX_LABEL_OFFSET: float = 100.0 # NEW: Vertical offset for index labels
 var ANIM_SPEED: float = 0.3
+
+# Store code lines with operation type and array state
+var code_operations: Array = []  # Store {type, details, array_state}
 
 # For animations
 var is_animating: bool = false
@@ -158,6 +168,8 @@ var intro_texts = [
 	"INSERT OPERATIONS:\n\n• INSERT AT END - Adds element to the end (slides in from right)\n• INSERT AT [i] - Adds element at any position (drops in from above)\n• Existing elements shift right to make room\n• Button disabled when array is full",
 	
 	"DELETE OPERATION:\n\n• DELETE [i] - Removes element at any index\n• The block fades out and slides down\n• Remaining elements shift left to fill the gap\n• Button disabled when array is empty",
+	
+	"REPLACE OPERATION:\n\n• REPLACE [i] - Updates an existing element with a new value\n• Enter index and new value\n• The block will flash yellow and update instantly\n• Great for modifying values without changing array size",  # NEW: Replace tutorial
 	
 	"SIMULATION CONTROLS:\n\n• SIMULATE NEW - Start over with new array\n• END SIMULATION - View summary of all actions\n• TIMELINE - See history of all operations\n• CODE VIEW - See your actions translated to code",
 	
@@ -192,7 +204,7 @@ const API_KEYS = {
 }
 
 # Enum for action modal
-enum ActionType { ACCESS, INSERT_AT_END, INSERT_AT_INDEX, DELETE }
+enum ActionType { ACCESS, INSERT_AT_END, INSERT_AT_INDEX, DELETE, REPLACE }  # NEW: Added REPLACE
 
 # ==============================================
 #   READY FUNCTION
@@ -203,6 +215,12 @@ func _ready() -> void:
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
 	print("Array Simulation starting...")
 	randomize()
+	
+	# Play background music
+	if audio_player:
+		audio_player.stream = load("res://assets/sfx/bgm.mp3")
+		audio_player.play()
+		audio_player.bus = "Music"  # Optional: set audio bus
 	
 	$DiificultyLabel.hide()
 	$VBoxContainer/HBoxContainer/AnimatedSprite2D.hide()
@@ -273,6 +291,7 @@ func _ready() -> void:
 	call_deferred("show_introduction")
 	
 	_update_array_size_label()
+	_update_indicators()  # NEW: Update indicators on start
 
 func _enter_tree():
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
@@ -417,7 +436,7 @@ func set_ui_enabled(enabled: bool):
 	ui_enabled = enabled
 	
 	var buttons = [
-		access_btn, insert_end_btn, insert_i_btn, delete_btn,
+		access_btn, insert_end_btn, insert_i_btn, delete_btn, replace_btn,  # NEW: Added replace_btn
 		end_sim_btn, simulate_new_btn, timeline_btn, help_btn,
 		cpp_code_button
 	]
@@ -428,7 +447,7 @@ func set_ui_enabled(enabled: bool):
 
 func _set_config_ui_disabled(disabled: bool):
 	var buttons = [
-		access_btn, insert_end_btn, insert_i_btn, delete_btn,
+		access_btn, insert_end_btn, insert_i_btn, delete_btn, replace_btn,  # NEW: Added replace_btn
 		end_sim_btn, simulate_new_btn, timeline_btn
 	]
 	for btn in buttons:
@@ -441,6 +460,7 @@ func _apply_simulation_ended_state():
 	if insert_end_btn: insert_end_btn.disabled = true
 	if insert_i_btn: insert_i_btn.disabled = true
 	if delete_btn: delete_btn.disabled = true
+	if replace_btn: replace_btn.disabled = true  # NEW: Disable replace
 	if simulate_new_btn: simulate_new_btn.disabled = true  # This is End Simulation btn
 	if end_sim_btn: end_sim_btn.disabled = false   # Simulate New - still enabled
 	if timeline_btn: timeline_btn.disabled = false
@@ -481,6 +501,10 @@ func _setup_array_buttons():
 	if delete_btn:
 		delete_btn.text = "DELETE [i]"
 		delete_btn.pressed.connect(_on_delete_button_pressed)
+	
+	if replace_btn:  # NEW: Setup replace button
+		replace_btn.text = "REPLACE [i]"
+		replace_btn.pressed.connect(_on_replace_button_pressed)
 
 func _setup_action_modal():
 	print("Setting up action modal...")
@@ -696,9 +720,11 @@ func _initialize_array(elements):
 		child.queue_free()
 	
 	block_nodes.clear()
+	index_labels.clear()
 	timeline_log.clear()
 	action_count = 0
-	code_lines = []
+	code_operations.clear()  # Clear operations list
+	code_lines.clear()
 	
 	# Reset cache for new simulation
 	reset_cache_for_scene()
@@ -707,20 +733,24 @@ func _initialize_array(elements):
 	timeline_log.append("[color=cyan]--- Simulation Started ---[/color]")
 	timeline_log.append("[color=cyan]Initial array: [%s] (size %d/%d)[/color]" % [_array_to_string(main_array), current_array_size, max_array_size])
 	
-	_add_code_line("Initial list = " + _array_to_string(main_array))
+	# Store initial array state
+	_add_code_line("Initial list = " + _array_to_string(main_array), main_array.duplicate())
 	
 	await get_tree().process_frame
 	
 	_create_blocks_from_array()
 	_update_array_size_label()
+	_update_indicators()
 	show_feedback("Array Simulation Ready", Color.GREEN, Vector2(500, 300))
 	_update_button_states()
 	_update_timeline_display()
 
 func _create_blocks_from_array():
 	var current_x = START_POSITION.x
+	var index_font = load("res://assets/font/Planes_ValMore.ttf")  # NEW: Load font for indices
 	
 	for i in range(main_array.size()):
+		# Create block
 		var new_block = BLOCK_SCENE.instantiate()
 		new_block.value = main_array[i]
 		new_block.position = Vector2(current_x, START_POSITION.y)
@@ -734,7 +764,73 @@ func _create_blocks_from_array():
 		array_container.add_child(new_block)
 		block_nodes.append(new_block)
 		
+		# NEW: Create index label below the block
+		var index_label = Label.new()
+		index_label.text = str(i)
+		index_label.position = Vector2(current_x + (new_block.size.x / 2) - 15, START_POSITION.y + INDEX_LABEL_OFFSET)
+		index_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		index_label.add_theme_font_override("font", index_font)
+		index_label.add_theme_font_size_override("font_size", 32)  # Large font size (32)
+		index_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		index_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+		index_label.add_theme_constant_override("outline_size", 4)
+		array_container.add_child(index_label)
+		index_labels.append(index_label)
+		
 		current_x += new_block.size.x + BLOCK_SPACING
+
+# NEW: Update indicator colors based on array state
+# NEW: Update indicator colors based on array state
+# Update indicator colors based on array state
+# Update indicator colors based on array state (with debug)
+func _update_indicators():
+	# Get the nodes
+	var is_full_node = get_node_or_null("isFull") as TextureRect
+	var is_empty_node = get_node_or_null("isEmpty") as TextureRect
+	
+	print("Updating indicators - Full node: ", is_full_node, " Empty node: ", is_empty_node)
+	print("Array size: ", current_array_size, "/", max_array_size)
+	
+	if not is_full_node or not is_empty_node:
+		print("ERROR: Could not find indicator nodes!")
+		return
+	
+	# Update isFull indicator
+	if current_array_size >= max_array_size:
+		# Array is FULL: bright green
+		is_full_node.modulate = Color(0, 1, 0, 1)
+		print("Array FULL - setting isFull to green")
+	else:
+		# Array NOT full: dark gray
+		is_full_node.modulate = Color(0.3, 0.3, 0.3, 1)
+		print("Array NOT full - setting isFull to dark gray")
+	
+	# Update isEmpty indicator
+	if current_array_size == 0:
+		# Array is EMPTY: bright pink
+		is_empty_node.modulate = Color(1, 0.5, 0.8, 1)
+		print("Array EMPTY - setting isEmpty to pink")
+	else:
+		# Array NOT empty: dark gray
+		is_empty_node.modulate = Color(0.3, 0.3, 0.3, 1)
+		print("Array NOT empty - setting isEmpty to dark gray")
+
+# NEW: Update index label positions (called after animations)
+func _update_index_labels():
+	var current_x = START_POSITION.x
+	var index_font = load("res://assets/font/Planes_ValMore.ttf")
+	
+	for i in range(block_nodes.size()):
+		var block = block_nodes[i]
+		var label = index_labels[i]
+		
+		# Update label text (index might have changed after insert/delete)
+		label.text = str(i)
+		
+		# Update position to stay below block
+		label.position = Vector2(current_x + (block.size.x / 2) - 15, START_POSITION.y + INDEX_LABEL_OFFSET)
+		
+		current_x += block.size.x + BLOCK_SPACING
 
 # ==============================================
 #   UI UPDATE FUNCTIONS
@@ -758,11 +854,15 @@ func _update_button_states():
 	if access_btn:
 		access_btn.modulate = Color(1, 1, 1, 1.0)
 	
+	if replace_btn:  # NEW: Replace button always visible
+		replace_btn.modulate = Color(1, 1, 1, 1.0)
+	
 	# Don't disable buttons - they should always be clickable
 	insert_end_btn.disabled = false
 	insert_i_btn.disabled = false
 	delete_btn.disabled = false
 	access_btn.disabled = false
+	replace_btn.disabled = false  # NEW: Always enabled, validation happens in action
 
 func show_status_message(message: String):
 	# Fix this - it was hardcoded to "Array Simulation Ready"
@@ -807,6 +907,16 @@ func _on_delete_button_pressed():
 	action_modal.show_for_action(ActionType.DELETE, current_array_size - 1,
 		func(index): _execute_delete(index))
 
+# NEW: Replace button handler
+func _on_replace_button_pressed():
+	btn_sound.play()
+	if current_array_size == 0:
+		show_feedback("Array is empty! Nothing to replace.", Color.ORANGE, get_global_mouse_position())
+		return
+	
+	action_modal.show_for_action(ActionType.REPLACE, current_array_size - 1,
+		func(value, index): _execute_replace(index, value))
+
 func _execute_access(index: int):
 	if index < 0 or index >= current_array_size:
 		show_feedback("Index out of bounds!", Color.RED, Vector2(500, 300))
@@ -826,6 +936,7 @@ func _execute_access(index: int):
 	show_feedback("Value at [%d] = %d" % [index, value], Color.YELLOW, block_nodes[index].global_position)
 	_update_array_size_label()
 	_update_timeline_display()
+	_update_indicators()  # NEW: Update indicators
 
 func _execute_insert_end(value: int):
 	if current_array_size >= max_array_size:
@@ -837,11 +948,15 @@ func _execute_insert_end(value: int):
 	current_array_size += 1
 	_animate_insert_end(value)
 	timeline_log.append("[color=green]Inserted %d at end[/color]" % value)
-	_add_code_line("After insert %d at end = %s" % [value, _array_to_string(main_array)])
+	
+	# Store operation with array state AFTER the operation
+	_add_code_line("After insert %d at end = %s" % [value, _array_to_string(main_array)], main_array.duplicate())
+	
 	show_feedback("Inserted %d at end" % value, Color.GREEN, Vector2(500, 350))
 	_update_button_states()
 	_update_array_size_label()
 	_update_timeline_display()
+	_update_indicators()
 
 func _execute_insert_at_index(value: int, index: int):
 	if index < 0 or index > current_array_size:
@@ -856,11 +971,15 @@ func _execute_insert_at_index(value: int, index: int):
 	current_array_size += 1
 	_animate_insert_at_index(index, value)
 	timeline_log.append("[color=green]Inserted %d at index [%d][/color]" % [value, index])
-	_add_code_line("After insert %d at index[%d] = %s" % [value, index, _array_to_string(main_array)])
+	
+	# Store operation with array state AFTER the operation
+	_add_code_line("After insert %d at index[%d] = %s" % [value, index, _array_to_string(main_array)], main_array.duplicate())
+	
 	show_feedback("Inserted %d at index [%d]" % [value, index], Color.GREEN, Vector2(500, 350))
 	_update_button_states()
 	_update_array_size_label()
 	_update_timeline_display()
+	_update_indicators()
 
 func _execute_delete(index: int):
 	if index < 0 or index >= current_array_size:
@@ -882,11 +1001,47 @@ func _execute_delete(index: int):
 	current_array_size -= 1
 	_animate_delete(index)
 	timeline_log.append("[color=red]Deleted element at [%d]: %d[/color]" % [index, deleted_value])
-	_add_code_line("After delete at index[%d] = %s" % [index, _array_to_string(main_array)])
+	
+	# Store operation with array state AFTER the operation
+	_add_code_line("After delete at index[%d] = %s" % [index, _array_to_string(main_array)], main_array.duplicate())
+	
 	show_feedback("Deleted element at [%d]" % index, Color.ORANGE, Vector2(500, 350))
 	_update_button_states()
 	_update_array_size_label()
 	_update_timeline_display()
+	_update_indicators()
+
+# NEW: Execute replace operation
+func _execute_replace(index: int, value: int):
+	if index < 0 or index >= current_array_size:
+		show_feedback("Index out of bounds!", Color.RED, Vector2(500, 300))
+		return
+	
+	if value < 1 or value > 99:
+		show_feedback("Value must be between 1 and 99!", Color.ORANGE, Vector2(500, 300))
+		return
+	
+	action_count += 1
+	var old_value = main_array[index]
+	main_array[index] = value
+	
+	# Update block visual
+	if index < block_nodes.size():
+		block_nodes[index].value = value
+		# Flash animation for replace
+		var flash_tween = create_tween().set_parallel()
+		flash_tween.tween_property(block_nodes[index], "modulate", Color.YELLOW, 0.1)
+		flash_tween.tween_property(block_nodes[index], "modulate", Color.WHITE, 0.2).set_delay(0.1)
+	
+	timeline_log.append("[color=cyan]Replaced element at [%d]: %d → %d[/color]" % [index, old_value, value])
+	
+	# Store operation with array state AFTER the operation
+	_add_code_line("After replace at index[%d] from %d to %d = %s" % [index, old_value, value, _array_to_string(main_array)], main_array.duplicate())
+	
+	show_feedback("Replaced [%d]: %d → %d" % [index, old_value, value], Color.CYAN, Vector2(500, 350))
+	_update_array_size_label()
+	_update_timeline_display()
+	_update_indicators()
 
 # ==============================================
 #   ANIMATIONS
@@ -907,18 +1062,35 @@ func _animate_insert_end(value: int):
 	new_block.draggable = false
 	array_container.add_child(new_block)
 	
+	# NEW: Create index label for new block
+	var index_label = Label.new()
+	index_label.text = str(block_nodes.size())
+	index_label.position = Vector2(new_x + (new_block.size.x / 2) - 15, START_POSITION.y + INDEX_LABEL_OFFSET)
+	var index_font = load("res://assets/font/Planes_ValMore.ttf")
+	index_label.add_theme_font_override("font", index_font)
+	index_label.add_theme_font_size_override("font_size", 32)
+	index_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	index_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	index_label.add_theme_constant_override("outline_size", 4)
+	array_container.add_child(index_label)
+	
 	# Slide in animation
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(new_block, "position:x", new_x, ANIM_SPEED)
+	tween.parallel().tween_property(index_label, "position:x", new_x + (new_block.size.x / 2) - 15, ANIM_SPEED)
 	
 	# Fade in (already visible, but we'll do a quick scale pop)
 	tween.parallel().tween_property(new_block, "scale", Vector2(1.2, 1.2), 0.1)
 	tween.tween_property(new_block, "scale", Vector2(1.0, 1.0), 0.1)
 	
 	block_nodes.append(new_block)
+	index_labels.append(index_label)
 	
 	await tween.finished
 	is_animating = false
+	
+	# Update all index labels after insertion
+	_update_index_labels()
 
 func _animate_insert_at_index(index: int, value: int):
 	is_animating = true
@@ -933,6 +1105,11 @@ func _animate_insert_at_index(index: int, value: int):
 		var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 		tween.tween_property(block, "position:x", target_x, ANIM_SPEED * 0.7)
 		tweens.append(tween)
+		
+		# Also shift index labels
+		var label = index_labels[i]
+		var label_target_x = target_x + (block.size.x / 2) - 15
+		tween.parallel().tween_property(label, "position:x", label_target_x, ANIM_SPEED * 0.7)
 	
 	# Wait for shifts to complete
 	if tweens.size() > 0:
@@ -951,34 +1128,56 @@ func _animate_insert_at_index(index: int, value: int):
 	new_block.draggable = false
 	array_container.add_child(new_block)
 	
-	# Insert into block_nodes
+	# Create index label for new block
+	var index_label = Label.new()
+	index_label.text = str(index)
+	index_label.position = Vector2(new_x + (new_block.size.x / 2) - 15, START_POSITION.y + INDEX_LABEL_OFFSET - 100)
+	var index_font = load("res://assets/font/Planes_ValMore.ttf")
+	index_label.add_theme_font_override("font", index_font)
+	index_label.add_theme_font_size_override("font_size", 32)
+	index_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	index_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	index_label.add_theme_constant_override("outline_size", 4)
+	array_container.add_child(index_label)
+	
+	# Insert into block_nodes and index_labels
 	block_nodes.insert(index, new_block)
+	index_labels.insert(index, index_label)
 	
 	# Drop down animation
 	var tween = create_tween().set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
 	tween.tween_property(new_block, "position:y", START_POSITION.y, ANIM_SPEED)
+	tween.parallel().tween_property(index_label, "position:y", START_POSITION.y + INDEX_LABEL_OFFSET, ANIM_SPEED)
 	tween.parallel().tween_property(new_block, "scale", Vector2(1.2, 1.2), 0.1)
 	tween.tween_property(new_block, "scale", Vector2(1.0, 1.0), 0.1)
 	
 	await tween.finished
 	is_animating = false
+	
+	# Update all index labels after insertion
+	_update_index_labels()
 
 func _animate_delete(index: int):
 	is_animating = true
 	
 	var deleted_block = block_nodes[index]
+	var deleted_label = index_labels[index]
 	
 	# Fade out and slide down animation
 	var tween = create_tween().set_parallel()
 	tween.tween_property(deleted_block, "modulate:a", 0.0, ANIM_SPEED)
 	tween.tween_property(deleted_block, "position:y", START_POSITION.y + 100, ANIM_SPEED)
 	tween.tween_property(deleted_block, "scale", Vector2(0.8, 0.8), ANIM_SPEED)
+	tween.tween_property(deleted_label, "modulate:a", 0.0, ANIM_SPEED)
+	tween.tween_property(deleted_label, "position:y", START_POSITION.y + INDEX_LABEL_OFFSET + 100, ANIM_SPEED)
 	
 	await tween.finished
 	
-	# Remove the block
+	# Remove the block and label
 	deleted_block.queue_free()
+	deleted_label.queue_free()
 	block_nodes.remove_at(index)
+	index_labels.remove_at(index)
 	
 	# Shift remaining blocks left
 	var tweens = []
@@ -990,11 +1189,19 @@ func _animate_delete(index: int):
 		var shift_tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 		shift_tween.tween_property(block, "position:x", target_x, ANIM_SPEED)
 		tweens.append(shift_tween)
+		
+		# Shift labels
+		var label = index_labels[i]
+		var label_target_x = target_x + (block.size.x / 2) - 15
+		shift_tween.parallel().tween_property(label, "position:x", label_target_x, ANIM_SPEED)
 	
 	if tweens.size() > 0:
 		await tweens[-1].finished
 	
 	is_animating = false
+	
+	# Update index labels after deletion
+	_update_index_labels()
 
 func _highlight_block(index: int, duration: float):
 	if index < 0 or index >= block_nodes.size():
@@ -1156,7 +1363,13 @@ func _update_timeline_display():
 # ==============================================
 #   CODE GENERATION & TRANSLATION
 # ==============================================
-func _add_code_line(line: String):
+func _add_code_line(line: String, array_state: Array = []):
+	# Store the operation with the array state at that moment
+	var operation = {
+		"line": line,
+		"array": array_state.duplicate() if array_state.size() > 0 else []
+	}
+	code_operations.append(operation)
 	code_lines.append(line)
 	_update_code_view()
 
@@ -1207,39 +1420,66 @@ func _generate_cpp_code() -> String:
 	code += "int main() {\n"
 	code += "    vector<int> arr;\n\n"
 	
-	# Add the timeline actions as code
-	for line in code_lines:
+	# Generate actual array operations from stored operations
+	for op in code_operations:
+		var line = op["line"]
+		var array_state = op["array"]
+		
 		if line.begins_with("Initial list"):
 			var nums = line.split(" = ")[1]
 			code += "    // " + line + "\n"
 			code += "    arr = {" + nums + "};\n"
-			code += "    cout << \"Initial array (unsorted): \";\n"
+			code += "    cout << \"Initial array: \";\n"
 			code += "    printArray(arr);\n\n"
-		elif line.begins_with("After insert"):
-			if "end" in line:
-				# Parse "After insert 42 at end = 1,2,3,42"
-				var parts = line.split(" = ")
-				var operation = parts[0].replace("After ", "")
-				code += "    // " + line + "\n"
-				code += "    cout << \"After " + operation + "\" << endl;\n"
-				code += "    printArray(arr);\n\n"
-			else:
-				# Parse "After insert 42 at index[2] = 1,2,42,3"
-				var parts = line.split(" = ")
-				var operation = parts[0].replace("After ", "")
-				code += "    // " + line + "\n"
-				code += "    cout << \"After " + operation + "\" << endl;\n"
-				code += "    printArray(arr);\n\n"
+		
+		elif line.begins_with("After insert") and "end" in line:
+			# Extract value from "After insert 42 at end = ..."
+			var value = line.split(" ")[2]
+			code += "    // " + line + "\n"
+			code += "    arr.push_back(" + value + ");\n"
+			code += "    cout << \"After insert \" << " + value + " << \" at end: \";\n"
+			code += "    printArray(arr);\n\n"
+		
+		elif line.begins_with("After insert") and "index" in line:
+			# Extract value and index from "After insert 45 at index[2] = ..."
+			var parts = line.split(" ")
+			var value = parts[2]  # "45"
+			var index_part = parts[4]  # "index[2]"
+			var index = index_part.replace("index[", "").replace("]", "")
+			code += "    // " + line + "\n"
+			code += "    arr.insert(arr.begin() + " + index + ", " + value + ");\n"
+			code += "    cout << \"After insert \" << " + value + " << \" at index[\" << " + index + " << \"]: \";\n"
+			code += "    printArray(arr);\n\n"
+		
 		elif line.begins_with("After delete"):
-			# Parse "After delete at index[2] = 1,2,4"
-			var parts = line.split(" = ")
-			var operation = parts[0].replace("After ", "")
+			# Extract index from "After delete at index[2] = ..."
+			var parts = line.split(" ")
+			var index_part = parts[3]  # "index[2]"
+			var index = index_part.replace("index[", "").replace("]", "")
 			code += "    // " + line + "\n"
-			code += "    cout << \"After " + operation + "\" << endl;\n"
+			code += "    arr.erase(arr.begin() + " + index + ");\n"
+			code += "    cout << \"After delete at index[\" << " + index + " << \"]: \";\n"
 			code += "    printArray(arr);\n\n"
-		elif line.begins_with("Access"):
+		
+		elif line.begins_with("After replace"):
+			# Extract index and values from "After replace at index[2] from 45 to 90 = ..."
+			var parts = line.split(" ")
+			var index_part = parts[3]  # "index[2]"
+			var index = index_part.replace("index[", "").replace("]", "")
+			var old_val = parts[5]  # "45"
+			var new_val = parts[7]  # "90"
 			code += "    // " + line + "\n"
-			code += "    cout << \"" + line + "\" << endl;\n\n"
+			code += "    arr[" + index + "] = " + new_val + ";\n"
+			code += "    cout << \"After replace at index[\" << " + index + " << \"] from " + old_val + " to " + new_val + ": \";\n"
+			code += "    printArray(arr);\n\n"
+		
+		elif line.begins_with("Access"):
+			# Extract index from "Access at index[3] = 4"
+			var parts = line.split(" ")
+			var index_part = parts[2]  # "index[3]"
+			var index = index_part.replace("index[", "").replace("]", "")
+			code += "    // " + line + "\n"
+			code += "    cout << \"Access at index[\" << " + index + " << \"] = \" << arr[" + index + "] << endl;\n\n"
 	
 	code += "    return 0;\n"
 	code += "}"
@@ -1258,35 +1498,59 @@ func _generate_python_code() -> String:
 	code += "def main():\n"
 	code += "    arr = []\n\n"
 	
-	for line in code_lines:
+	for op in code_operations:
+		var line = op["line"]
+		
 		if line.begins_with("Initial list"):
 			var nums = line.split(" = ")[1]
 			code += "    # " + line + "\n"
 			code += "    arr = [" + nums + "]\n"
-			code += "    print('Initial array (unsorted): ', end='')\n"
+			code += "    print('Initial array: ', end='')\n"
 			code += "    print_array(arr)\n\n"
-		elif line.begins_with("After insert"):
-			if "end" in line:
-				var parts = line.split(" = ")
-				var operation = parts[0].replace("After ", "")
-				code += "    # " + line + "\n"
-				code += "    print('After " + operation + "')\n"
-				code += "    print_array(arr)\n\n"
-			else:
-				var parts = line.split(" = ")
-				var operation = parts[0].replace("After ", "")
-				code += "    # " + line + "\n"
-				code += "    print('After " + operation + "')\n"
-				code += "    print_array(arr)\n\n"
+		
+		elif line.begins_with("After insert") and "end" in line:
+			var value = line.split(" ")[2]
+			code += "    # " + line + "\n"
+			code += "    arr.append(" + value + ")\n"
+			code += "    print(f'After insert " + value + " at end: ', end='')\n"
+			code += "    print_array(arr)\n\n"
+		
+		elif line.begins_with("After insert") and "index" in line:
+			var parts = line.split(" ")
+			var value = parts[2]
+			var index_part = parts[4]
+			var index = index_part.replace("index[", "").replace("]", "")
+			code += "    # " + line + "\n"
+			code += "    arr.insert(" + index + ", " + value + ")\n"
+			code += "    print(f'After insert " + value + " at index[" + index + "]: ', end='')\n"
+			code += "    print_array(arr)\n\n"
+		
 		elif line.begins_with("After delete"):
-			var parts = line.split(" = ")
-			var operation = parts[0].replace("After ", "")
+			var parts = line.split(" ")
+			var index_part = parts[3]
+			var index = index_part.replace("index[", "").replace("]", "")
 			code += "    # " + line + "\n"
-			code += "    print('After " + operation + "')\n"
+			code += "    del arr[" + index + "]\n"
+			code += "    print(f'After delete at index[" + index + "]: ', end='')\n"
 			code += "    print_array(arr)\n\n"
-		elif line.begins_with("Access"):
+		
+		elif line.begins_with("After replace"):
+			var parts = line.split(" ")
+			var index_part = parts[3]
+			var index = index_part.replace("index[", "").replace("]", "")
+			var old_val = parts[5]
+			var new_val = parts[7]
 			code += "    # " + line + "\n"
-			code += "    print('" + line + "')\n\n"
+			code += "    arr[" + index + "] = " + new_val + "\n"
+			code += "    print(f'After replace at index[" + index + "] from " + old_val + " to " + new_val + ": ', end='')\n"
+			code += "    print_array(arr)\n\n"
+		
+		elif line.begins_with("Access"):
+			var parts = line.split(" ")
+			var index_part = parts[2]
+			var index = index_part.replace("index[", "").replace("]", "")
+			code += "    # " + line + "\n"
+			code += "    print(f'Access at index[" + index + "] = {arr[" + index + "]}')\n\n"
 	
 	code += "if __name__ == '__main__':\n"
 	code += "    main()"
@@ -1308,7 +1572,9 @@ func _generate_java_code() -> String:
 	code += "    public static void main(String[] args) {\n"
 	code += "        ArrayList<Integer> arr = new ArrayList<>();\n\n"
 	
-	for line in code_lines:
+	for op in code_operations:
+		var line = op["line"]
+		
 		if line.begins_with("Initial list"):
 			var nums_str = line.split(" = ")[1]
 			var nums = nums_str.split(", ")
@@ -1318,30 +1584,52 @@ func _generate_java_code() -> String:
 				if i > 0: code += ", "
 				code += nums[i]
 			code += "));\n"
-			code += "        System.out.print(\"Initial array (unsorted): \");\n"
+			code += "        System.out.print(\"Initial array: \");\n"
 			code += "        printArray(arr);\n\n"
-		elif line.begins_with("After insert"):
-			if "end" in line:
-				var parts = line.split(" = ")
-				var operation = parts[0].replace("After ", "")
-				code += "        // " + line + "\n"
-				code += "        System.out.println(\"After " + operation + "\");\n"
-				code += "        printArray(arr);\n\n"
-			else:
-				var parts = line.split(" = ")
-				var operation = parts[0].replace("After ", "")
-				code += "        // " + line + "\n"
-				code += "        System.out.println(\"After " + operation + "\");\n"
-				code += "        printArray(arr);\n\n"
+		
+		elif line.begins_with("After insert") and "end" in line:
+			var value = line.split(" ")[2]
+			code += "        // " + line + "\n"
+			code += "        arr.add(" + value + ");\n"
+			code += "        System.out.print(\"After insert " + value + " at end: \");\n"
+			code += "        printArray(arr);\n\n"
+		
+		elif line.begins_with("After insert") and "index" in line:
+			var parts = line.split(" ")
+			var value = parts[2]
+			var index_part = parts[4]
+			var index = index_part.replace("index[", "").replace("]", "")
+			code += "        // " + line + "\n"
+			code += "        arr.add(" + index + ", " + value + ");\n"
+			code += "        System.out.print(\"After insert " + value + " at index[" + index + "]: \");\n"
+			code += "        printArray(arr);\n\n"
+		
 		elif line.begins_with("After delete"):
-			var parts = line.split(" = ")
-			var operation = parts[0].replace("After ", "")
+			var parts = line.split(" ")
+			var index_part = parts[3]
+			var index = index_part.replace("index[", "").replace("]", "")
 			code += "        // " + line + "\n"
-			code += "        System.out.println(\"After " + operation + "\");\n"
+			code += "        arr.remove(" + index + ");\n"
+			code += "        System.out.print(\"After delete at index[" + index + "]: \");\n"
 			code += "        printArray(arr);\n\n"
-		elif line.begins_with("Access"):
+		
+		elif line.begins_with("After replace"):
+			var parts = line.split(" ")
+			var index_part = parts[3]
+			var index = index_part.replace("index[", "").replace("]", "")
+			var old_val = parts[5]
+			var new_val = parts[7]
 			code += "        // " + line + "\n"
-			code += "        System.out.println(\"" + line + "\");\n\n"
+			code += "        arr.set(" + index + ", " + new_val + ");\n"
+			code += "        System.out.print(\"After replace at index[" + index + "] from " + old_val + " to " + new_val + ": \");\n"
+			code += "        printArray(arr);\n\n"
+		
+		elif line.begins_with("Access"):
+			var parts = line.split(" ")
+			var index_part = parts[2]
+			var index = index_part.replace("index[", "").replace("]", "")
+			code += "        // " + line + "\n"
+			code += "        System.out.println(\"Access at index[" + index + "] = \" + arr.get(" + index + "));\n\n"
 	
 	code += "    }\n"
 	code += "}"
@@ -1363,7 +1651,10 @@ func _generate_c_code() -> String:
 	code += "    int arr[" + str(max_array_size) + "];\n"
 	code += "    int size = 0;\n\n"
 	
-	for line in code_lines:
+	var array_index = 0
+	for op in code_operations:
+		var line = op["line"]
+		
 		if line.begins_with("Initial list"):
 			var nums_str = line.split(" = ")[1]
 			var nums = nums_str.split(", ")
@@ -1371,30 +1662,62 @@ func _generate_c_code() -> String:
 			code += "    size = " + str(nums.size()) + ";\n"
 			for i in range(nums.size()):
 				code += "    arr[" + str(i) + "] = " + nums[i] + ";\n"
-			code += "    printf(\"Initial array (unsorted): \");\n"
+			code += "    printf(\"Initial array: \");\n"
 			code += "    printArray(arr, size);\n\n"
-		elif line.begins_with("After insert"):
-			if "end" in line:
-				var parts = line.split(" = ")
-				var operation = parts[0].replace("After ", "")
-				code += "    // " + line + "\n"
-				code += "    printf(\"After " + operation + "\\n\");\n"
-				code += "    printArray(arr, size);\n\n"
-			else:
-				var parts = line.split(" = ")
-				var operation = parts[0].replace("After ", "")
-				code += "    // " + line + "\n"
-				code += "    printf(\"After " + operation + "\\n\");\n"
-				code += "    printArray(arr, size);\n\n"
+		
+		elif line.begins_with("After insert") and "end" in line:
+			var value = line.split(" ")[2]
+			code += "    // " + line + "\n"
+			code += "    arr[size] = " + value + ";\n"
+			code += "    size++;\n"
+			code += "    printf(\"After insert " + value + " at end: \");\n"
+			code += "    printArray(arr, size);\n\n"
+		
+		elif line.begins_with("After insert") and "index" in line:
+			var parts = line.split(" ")
+			var value = parts[2]
+			var index_part = parts[4]
+			var index = index_part.replace("index[", "").replace("]", "")
+			code += "    // " + line + "\n"
+			code += "    // Shift elements to the right\n"
+			code += "    for (int i = size; i > " + index + "; i--) {\n"
+			code += "        arr[i] = arr[i-1];\n"
+			code += "    }\n"
+			code += "    arr[" + index + "] = " + value + ";\n"
+			code += "    size++;\n"
+			code += "    printf(\"After insert " + value + " at index[" + index + "]: \");\n"
+			code += "    printArray(arr, size);\n\n"
+		
 		elif line.begins_with("After delete"):
-			var parts = line.split(" = ")
-			var operation = parts[0].replace("After ", "")
+			var parts = line.split(" ")
+			var index_part = parts[3]
+			var index = index_part.replace("index[", "").replace("]", "")
 			code += "    // " + line + "\n"
-			code += "    printf(\"After " + operation + "\\n\");\n"
+			code += "    // Shift elements to the left\n"
+			code += "    for (int i = " + index + "; i < size - 1; i++) {\n"
+			code += "        arr[i] = arr[i+1];\n"
+			code += "    }\n"
+			code += "    size--;\n"
+			code += "    printf(\"After delete at index[" + index + "]: \");\n"
 			code += "    printArray(arr, size);\n\n"
-		elif line.begins_with("Access"):
+		
+		elif line.begins_with("After replace"):
+			var parts = line.split(" ")
+			var index_part = parts[3]
+			var index = index_part.replace("index[", "").replace("]", "")
+			var old_val = parts[5]
+			var new_val = parts[7]
 			code += "    // " + line + "\n"
-			code += "    printf(\"" + line + "\\n\");\n\n"
+			code += "    arr[" + index + "] = " + new_val + ";\n"
+			code += "    printf(\"After replace at index[" + index + "] from " + old_val + " to " + new_val + ": \");\n"
+			code += "    printArray(arr, size);\n\n"
+		
+		elif line.begins_with("Access"):
+			var parts = line.split(" ")
+			var index_part = parts[2]
+			var index = index_part.replace("index[", "").replace("]", "")
+			code += "    // " + line + "\n"
+			code += "    printf(\"Access at index[" + index + "] = %d\\n\", arr[" + index + "]);\n\n"
 	
 	code += "    return 0;\n"
 	code += "}"
@@ -1524,7 +1847,7 @@ func _build_walkthrough_steps(lang: String) -> Array:
 						"lines": [18 + i * 4, 18 + i * 4 + 3],
 						"explanation": "[b]Initial Array[/b]\nSets up the array with your starting values:\n[color=yellow]%s[/color]" % line.split(" = ")[1]
 					})
-				elif line.begins_with("After insert") or line.begins_with("After delete"):
+				elif line.begins_with("After insert") or line.begins_with("After delete") or line.begins_with("After replace"):  # NEW: Added replace
 					var parts = line.split(" = ")
 					var result = parts[1] if parts.size() > 1 else ""
 					steps.append({
@@ -1563,7 +1886,7 @@ func _build_walkthrough_steps(lang: String) -> Array:
 						"lines": [15 + i * 4, 15 + i * 4 + 3],
 						"explanation": "[b]Initial Array[/b]\n[color=yellow]%s[/color]" % line.split(" = ")[1]
 					})
-				elif line.begins_with("After insert") or line.begins_with("After delete"):
+				elif line.begins_with("After insert") or line.begins_with("After delete") or line.begins_with("After replace"):  # NEW: Added replace
 					steps.append({
 						"lines": [15 + i * 4, 15 + i * 4 + 2],
 						"explanation": "[b]Operation Result[/b]\n[color=green]%s[/color]" % (line.split(" = ")[1] if " = " in line else "")
@@ -1596,7 +1919,7 @@ func _build_walkthrough_steps(lang: String) -> Array:
 						"lines": [15 + i * 5, 15 + i * 5 + 4],
 						"explanation": "[b]Initial Array[/b]\n[color=yellow]%s[/color]" % (line.split(" = ")[1] if " = " in line else line)
 					})
-				elif line.begins_with("After insert") or line.begins_with("After delete"):
+				elif line.begins_with("After insert") or line.begins_with("After delete") or line.begins_with("After replace"):  # NEW: Added replace
 					steps.append({
 						"lines": [15 + i * 5, 15 + i * 5 + 2],
 						"explanation": "[b]Operation Result[/b]\n[color=green]%s[/color]" % (line.split(" = ")[1] if " = " in line else "")
@@ -1618,11 +1941,22 @@ func show_feedback(text: String, color: Color, position: Vector2):
 	label.text = text
 	label.modulate = color
 	label.global_position = position
-	add_child(label)
+	
+	# Create or get a high-layer CanvasLayer for feedback
+	var feedback_layer = get_node_or_null("FeedbackLayer")
+	if not feedback_layer:
+		feedback_layer = CanvasLayer.new()
+		feedback_layer.name = "FeedbackLayer"
+		feedback_layer.layer = 100  # High layer to appear above everything
+		add_child(feedback_layer)
+	
+	feedback_layer.add_child(label)
 	
 	var anim_player: AnimationPlayer = label.get_node("AnimationPlayer")
 	anim_player.play("notification_pop")
-	anim_player.animation_finished.connect(func(_a): label.queue_free())
+	anim_player.animation_finished.connect(func(_a): 
+		label.queue_free()
+	)
 
 # ==============================================
 #   INTRODUCTION FUNCTIONS
@@ -1720,9 +2054,19 @@ func start_tutorial():
 	
 	set_ui_enabled(false)
 	
+	# Updated tutorial nodes to include indicators
 	tutorial_nodes = [
-		access_btn, insert_end_btn, insert_i_btn, delete_btn,
-		end_sim_btn, simulate_new_btn, timeline_btn, array_size_label
+		access_btn, 
+		insert_end_btn, 
+		insert_i_btn, 
+		delete_btn, 
+		replace_btn,
+		end_sim_btn, 
+		simulate_new_btn, 
+		timeline_btn, 
+		array_size_label,
+		get_node_or_null("isFull"),  # Added isFull indicator
+		get_node_or_null("isEmpty")   # Added isEmpty indicator
 	]
 	
 	tutorial_step = 0
@@ -1754,13 +2098,16 @@ func _show_tutorial_step():
 	
 	match tutorial_step:
 		0: tutorial_text.text = "ACCESS [i]\n\nClick to enter an index.\nThe element will highlight and show its value."
-		1: tutorial_text.text = "INSERT AT END\n\nAdds element to end.\nDisabled when array is full."
-		2: tutorial_text.text = "INSERT AT [i]\n\nInsert at any position.\nElements shift right."
-		3: tutorial_text.text = "DELETE [i]\n\nRemoves element at index.\nElements shift left."
-		4: tutorial_text.text = "SIMULATE NEW\n\nStart over with a new array.\nA confirmation will appear."
-		5: tutorial_text.text = "END SIMULATION\n\nFinish and view action summary."
-		6: tutorial_text.text = "TIMELINE\n\nView history of all operations."
-		7: tutorial_text.text = "ARRAY SIZE\n\nShows current size vs max capacity."
+		1: tutorial_text.text = "INSERT AT END\n\nAdds element to end.\nButton shows feedback when array is full."
+		2: tutorial_text.text = "INSERT AT [i]\n\nInsert at any position.\nElements shift right to make room."
+		3: tutorial_text.text = "DELETE [i]\n\nRemoves element at index.\nElements shift left to fill the gap."
+		4: tutorial_text.text = "REPLACE [i]\n\nUpdates an element at a specific index with a new value.\nDoes not change array size."
+		5: tutorial_text.text = "SIMULATE NEW\n\nStart over with a new array.\nA confirmation will appear."
+		6: tutorial_text.text = "END SIMULATION\n\nFinish and view action summary."
+		7: tutorial_text.text = "TIMELINE\n\nView history of all operations."
+		8: tutorial_text.text = "ARRAY SIZE\n\nShows current size vs max capacity."
+		9: tutorial_text.text = "FULL INDICATOR\n\nTurns GREEN when array reaches maximum capacity.\nTurns DARK when there's still space available."
+		10: tutorial_text.text = "EMPTY INDICATOR\n\nTurns RED when array has no elements.\nTurns DARK when the array contains data."
 	
 	if pointer_sprite:
 		pointer_sprite.texture = load("res://assets/point_left.png")
@@ -1812,4 +2159,3 @@ func _end_tutorial():
 func _exit_tree():
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_PORTRAIT)
 	# Swap back to portrait dimensions
-	 
