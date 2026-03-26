@@ -1,12 +1,17 @@
-[gd_scene load_steps=9 format=3 uid="uid://ctb4d5ofl1wv7"]
+[gd_scene load_steps=24 format=3 uid="uid://ctb4d5ofl1wv7"]
 
 [ext_resource type="Script" uid="uid://bwugsn5xfm5ie" path="res://scripts/settings.gd" id="1_83j8s"]
 [ext_resource type="Shader" uid="uid://dm5tlgdpgj58y" path="res://scripts/lectures_bg.gdshader" id="1_r6d6q"]
-[ext_resource type="Texture2D" uid="uid://ckwduru4f5ysx" path="res://assets/SETTINGS/container settings.png" id="2_es4n0"]
-[ext_resource type="Texture2D" uid="uid://caehnf0xty6ep" path="res://assets/SETTINGS/music.png" id="3_gis3k"]
-[ext_resource type="Texture2D" uid="uid://duifqvbqakfe8" path="res://assets/SETTINGS/Sound fx.png" id="4_83j8s"]
+[ext_resource type="Texture2D" uid="uid://dfk7vwkjwqw12" path="res://assets/SETTINGS/container settings.png" id="2_es4n0"]
+[ext_resource type="Texture2D" uid="uid://dr1kkgyo3rgvj" path="res://assets/SETTINGS/music.png" id="3_gis3k"]
+[ext_resource type="Texture2D" uid="uid://dv8tr48kxb46x" path="res://assets/SETTINGS/Sound fx.png" id="4_83j8s"]
 [ext_resource type="PackedScene" uid="uid://pw1kjcephyld" path="res://scenes/navigation.tscn" id="5_gjs24"]
-[ext_resource type="Texture2D" uid="uid://gusdopbthg2r" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/BACK_BUTTON_GREEN.png" id="7_gjs24"]
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="6_1g033"]
+[ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="7_01roj"]
+[ext_resource type="Texture2D" uid="uid://binxvpneifapc" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/BACK_BUTTON_GREEN.png" id="7_gjs24"]
+[ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="8_wqwn7"]
+[ext_resource type="Texture2D" uid="uid://dcxstyoycht1w" path="res://assets/BUTTON_HOVERED.png" id="9_oe2nd"]
+[ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="10_7kvyq"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5p8wc"]
 shader = ExtResource("1_r6d6q")
@@ -19,6 +24,36 @@ shader_parameter/max_alpha = 0.26
 shader_parameter/bg_color = Color(0.0991255, 0.14671892, 0.02534871, 1)
 shader_parameter/block_color = Color(0.61546767, 0.94360113, 0.644786, 1)
 shader_parameter/accent_color = Color(0.8366481, 0.6679535, 0.3425281, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ql1j0"]
+texture = ExtResource("7_01roj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_6dbjw"]
+texture = ExtResource("8_wqwn7")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g5y2q"]
+texture = ExtResource("9_oe2nd")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_k00b3"]
+texture = ExtResource("10_7kvyq")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_aisiw"]
+texture = ExtResource("7_01roj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_f1e71"]
+texture = ExtResource("8_wqwn7")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gcetw"]
+texture = ExtResource("9_oe2nd")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_i24gk"]
+texture = ExtResource("7_01roj")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3gwh8"]
+texture = ExtResource("8_wqwn7")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q4e06"]
+texture = ExtResource("9_oe2nd")
 
 [node name="Settings" type="Control"]
 layout_mode = 3
@@ -45,7 +80,7 @@ scale = Vector2(2.632287, 9.23158)
 texture = ExtResource("2_es4n0")
 
 [node name="music" type="Sprite2D" parent="."]
-position = Vector2(113.12501, 491.1)
+position = Vector2(113.12501, 408.1)
 scale = Vector2(2.6499999, 2.6499999)
 texture = ExtResource("3_gis3k")
 
@@ -67,7 +102,7 @@ value = 1.0
 metadata/_edit_use_anchors_ = true
 
 [node name="soundfx" type="Sprite2D" parent="."]
-position = Vector2(109.5625, 644.5375)
+position = Vector2(109.56251, 561.5375)
 scale = Vector2(2.2638886, 2.2638886)
 texture = ExtResource("4_83j8s")
 
@@ -89,13 +124,29 @@ step = 0.001
 value = 1.0
 metadata/_edit_use_anchors_ = true
 
+[node name="ResetButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 220.0
+offset_top = 839.0
+offset_right = 436.0
+offset_bottom = 915.0
+theme_override_colors/font_color = Color(0.18700334, 0.6344556, 1.92523e-07, 1)
+theme_override_colors/font_outline_color = Color(0, 1, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("6_1g033")
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxTexture_ql1j0")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_6dbjw")
+theme_override_styles/hover = SubResource("StyleBoxTexture_g5y2q")
+text = "Reset Profile"
+
 [node name="CheckBox" type="CheckBox" parent="."]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.34876543
-anchor_top = 0.6545139
+anchor_top = 0.5668403
 anchor_right = 0.6341357
-anchor_bottom = 0.72663194
+anchor_bottom = 0.63895833
 offset_right = -115.91995
 offset_bottom = -52.080017
 grow_horizontal = 2
@@ -103,6 +154,74 @@ grow_vertical = 2
 scale = Vector2(2.68, 2.68)
 text = "Mute"
 metadata/_edit_use_anchors_ = true
+
+[node name="resetProfileConfirmation" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -125.0
+offset_right = 200.0
+offset_bottom = 125.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_k00b3")
+
+[node name="Label" type="Label" parent="resetProfileConfirmation"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -186.24796
+offset_top = 12.856369
+offset_right = 194.38065
+offset_bottom = 168.97113
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.145098, 0.823529, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("6_1g033")
+theme_override_font_sizes/font_size = 25
+text = "Do you really want to
+reset your profile?
+Warning: All progress will 
+be permanently deleted 
+and can't be recovered"
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 0
+
+[node name="no" type="Button" parent="resetProfileConfirmation"]
+layout_mode = 0
+offset_left = 44.0
+offset_top = 176.0
+offset_right = 144.0
+offset_bottom = 226.0
+theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
+theme_override_fonts/font = ExtResource("6_1g033")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxTexture_aisiw")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_f1e71")
+theme_override_styles/hover = SubResource("StyleBoxTexture_gcetw")
+text = "No"
+
+[node name="yes" type="Button" parent="resetProfileConfirmation"]
+layout_mode = 0
+offset_left = 252.0
+offset_top = 176.0
+offset_right = 352.0
+offset_bottom = 226.0
+theme_override_colors/font_color = Color(0.835294, 0.294118, 0.658824, 1)
+theme_override_fonts/font = ExtResource("6_1g033")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxTexture_i24gk")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_3gwh8")
+theme_override_styles/hover = SubResource("StyleBoxTexture_q4e06")
+text = "Yes"
 
 [node name="navigation" parent="." instance=ExtResource("5_gjs24")]
 layout_mode = 1

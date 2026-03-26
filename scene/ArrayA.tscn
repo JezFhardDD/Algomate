@@ -96,6 +96,9 @@ offset_top = 0.0
 offset_right = 594.0
 offset_bottom = 4.0
 
+[node name="Simulate_new_confirmation" parent="." index="26"]
+visible = false
+
 [node name="Label" parent="ConfigElementsModal" index="0"]
 offset_top = 0.0
 offset_bottom = 59.0

@@ -232,10 +232,16 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_32nmk")
 theme_override_styles/hover = SubResource("StyleBoxTexture_1ihg2")
 text = "Yes"
 
+[node name="Simulate_new_confirmation" parent="." index="26"]
+visible = true
+
 [node name="Label" parent="Simulate_new_confirmation" index="0"]
-theme_override_font_sizes/font_size = 40
-text = "Do you really
-want to 
+offset_left = -186.24796
+offset_top = 12.856369
+offset_right = 194.38065
+offset_bottom = 168.97113
+theme_override_font_sizes/font_size = 30
+text = "Do you really want to 
 simulate new?"
 
 [node name="Label" parent="ConfigElementsModal" index="0"]
