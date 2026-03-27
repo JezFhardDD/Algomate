@@ -33,7 +33,7 @@ texture = ExtResource("4_v6pnl")
 custom_minimum_size = Vector2(0, 0)
 script = ExtResource("2_xmomj")
 
-[node name="ColorRect3" type="ColorRect" parent="." index="3"]
+[node name="ColorRect4" type="ColorRect" parent="." index="3"]
 z_index = -5
 material = SubResource("ShaderMaterial_ab2ih")
 custom_minimum_size = Vector2(0, 1000)
@@ -74,7 +74,7 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_4ypsm")
 theme_override_styles/hover = SubResource("StyleBoxTexture_l2kgm")
 text = "Match"
 
-[node name="QueueContainer" parent="." index="9"]
+[node name="QueueContainer" parent="." index="10"]
 offset_left = 225.0
 offset_right = 425.0
 

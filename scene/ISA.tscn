@@ -21,10 +21,9 @@ custom_minimum_size = Vector2(0, 648)
 script = ExtResource("2_nth5j")
 
 [node name="ColorRect" parent="." index="2"]
-visible = false
 custom_minimum_size = Vector2(0, 1000)
 
-[node name="ColorRect2" type="ColorRect" parent="." index="3"]
+[node name="ColorRect3" type="ColorRect" parent="." index="3"]
 z_index = -5
 material = SubResource("ShaderMaterial_eb3nm")
 custom_minimum_size = Vector2(0, 1000)
@@ -45,7 +44,7 @@ offset_top = 0.0
 offset_right = 594.0
 offset_bottom = 4.0
 
-[node name="MarginContainer" parent="." index="29"]
+[node name="MarginContainer" parent="." index="30"]
 custom_minimum_size = Vector2(300, 0)
 
 [node name="Label" parent="MarginContainer/HBoxContainer2/TextureRect" index="0"]

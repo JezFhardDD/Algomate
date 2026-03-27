@@ -21,10 +21,9 @@ custom_minimum_size = Vector2(0, 648)
 script = ExtResource("2_uj15k")
 
 [node name="ColorRect" parent="." index="2"]
-visible = false
 custom_minimum_size = Vector2(0, 1000)
 
-[node name="ColorRect2" type="ColorRect" parent="." index="3"]
+[node name="ColorRect3" type="ColorRect" parent="." index="3"]
 z_index = -5
 material = SubResource("ShaderMaterial_sd10g")
 custom_minimum_size = Vector2(0, 1000)

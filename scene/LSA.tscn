@@ -34,10 +34,9 @@ custom_minimum_size = Vector2(0, 548)
 script = ExtResource("2_j5e1v")
 
 [node name="ColorRect" parent="." index="2"]
-visible = false
 custom_minimum_size = Vector2(0, 1000)
 
-[node name="ColorRect2" type="ColorRect" parent="." index="3"]
+[node name="ColorRect3" type="ColorRect" parent="." index="3"]
 z_index = -5
 material = SubResource("ShaderMaterial_2ww0i")
 custom_minimum_size = Vector2(0, 1000)
@@ -71,9 +70,6 @@ offset_top = 0.0
 offset_right = 594.0
 offset_bottom = 4.0
 
-[node name="TextureRect" parent="MarginContainer/HBoxContainer2" index="0"]
-custom_minimum_size = Vector2(550, 0)
-
 [node name="TargetLabel" type="Label" parent="." index="30"]
 layout_mode = 1
 anchors_preset = 8
@@ -96,3 +92,6 @@ theme_override_constants/outline_size = 4
 theme_override_fonts/font = ExtResource("3_5cg4j")
 theme_override_font_sizes/font_size = 100
 text = "dasdasdsdasd"
+
+[node name="TextureRect" parent="MarginContainer/HBoxContainer2" index="0"]
+custom_minimum_size = Vector2(550, 0)

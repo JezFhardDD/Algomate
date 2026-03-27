@@ -67,16 +67,16 @@ text = "UNDO"
 [node name="DeleteButton" parent="VBoxContainer" index="4"]
 text = "REDO"
 
-[node name="SortButton" parent="VBoxContainer" index="5"]
+[node name="SortButton" parent="VBoxContainer" index="6"]
 visible = false
 
-[node name="WaitingElements" parent="VBoxContainer" index="6"]
+[node name="WaitingElements" parent="VBoxContainer" index="7"]
 visible = false
 theme_override_styles/normal = SubResource("StyleBoxTexture_3dxm6")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_devvj")
 theme_override_styles/hover = SubResource("StyleBoxTexture_j4qnp")
 
-[node name="TimelineButton" parent="VBoxContainer" index="7"]
+[node name="TimelineButton" parent="VBoxContainer" index="8"]
 theme_override_styles/normal = SubResource("StyleBoxTexture_lgr22")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_3b0ty")
 theme_override_styles/hover = SubResource("StyleBoxTexture_fpfj3")
@@ -96,20 +96,14 @@ offset_top = 0.0
 offset_right = 594.0
 offset_bottom = 4.0
 
-[node name="Simulate_new_confirmation" parent="." index="26"]
+[node name="isFull" parent="." index="28"]
+visible = false
+
+[node name="isEmpty" parent="." index="29"]
 visible = false
 
 [node name="Label" parent="ConfigElementsModal" index="0"]
-offset_top = 0.0
 offset_bottom = 59.0
-
-[node name="TargetLabel" parent="." index="31"]
-visible = true
-offset_left = -166.5
-offset_top = -309.0
-offset_right = 471.5
-offset_bottom = -209.0
-theme_override_font_sizes/font_size = 40
 
 [node name="CommandProgressLabel" type="Label" parent="." index="32"]
 layout_mode = 1
@@ -191,3 +185,11 @@ theme_override_font_sizes/font_size = 30
 text = "GARBAGE
 COLLECTOR"
 horizontal_alignment = 1
+
+[node name="TargetLabel" parent="." index="37"]
+visible = true
+offset_left = -166.5
+offset_top = -309.0
+offset_right = 275.63397
+offset_bottom = -209.0
+theme_override_font_sizes/font_size = 40

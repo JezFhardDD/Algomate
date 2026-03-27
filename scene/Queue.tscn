@@ -1,4 +1,4 @@
-[gd_scene load_steps=171 format=3 uid="uid://bmtqnsqspc3nm"]
+[gd_scene load_steps=173 format=3 uid="uid://bmtqnsqspc3nm"]
 
 [ext_resource type="Script" uid="uid://cnondjp0u48rl" path="res://script/queue_sim.gd" id="1_rwt3r"]
 [ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="2_eik88"]
@@ -21,6 +21,8 @@
 [ext_resource type="Texture2D" uid="uid://g3gxwo4kpabr" path="res://assets/SCS LOGO 2.png" id="13_aex65"]
 [ext_resource type="Texture2D" uid="uid://innpkq1wqdv6" path="res://assets/next.png" id="13_kxuod"]
 [ext_resource type="Texture2D" uid="uid://dbln651yvmlp7" path="res://assets/compile.png" id="14_1dr5g"]
+[ext_resource type="Texture2D" uid="uid://b31vqwe610avh" path="res://assets/circles2.png" id="22_a2p3t"]
+[ext_resource type="Texture2D" uid="uid://dcpfk145a6qpt" path="res://assets/circles4.png" id="23_m7syf"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_65lg3"]
 texture = ExtResource("2_eik88")
@@ -1968,6 +1970,71 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_ms5ap")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_2hth1")
 theme_override_styles/hover = SubResource("StyleBoxTexture_r1tel")
 text = "Done"
+
+[node name="isFull" type="TextureRect" parent="."]
+modulate = Color(0.3, 0.3, 0.3, 1)
+layout_mode = 0
+offset_left = 922.0103
+offset_top = 12.915866
+offset_right = 1022.0102
+offset_bottom = 112.91583
+texture = ExtResource("22_a2p3t")
+
+[node name="Label" type="Label" parent="isFull"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.74509805, 0.74509805, 0.74509805, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 3
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_08k7p")
+theme_override_font_sizes/font_size = 20
+text = "is Full"
+
+[node name="isEmpty" type="TextureRect" parent="."]
+modulate = Color(0.3, 0.3, 0.3, 1)
+self_modulate = Color(1, 1, 0, 1)
+layout_mode = 0
+offset_left = 815.01044
+offset_top = 13.925615
+offset_right = 915.01044
+offset_bottom = 113.92558
+texture = ExtResource("23_m7syf")
+
+[node name="Label" type="Label" parent="isEmpty"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.74509805, 0.74509805, 0.74509805, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 3
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_08k7p")
+theme_override_font_sizes/font_size = 20
+text = "is Empty"
 
 [connection signal="pressed" from="TutorialOverlay/TutorialBox/NextButton" to="." method="_on_next_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/EnqueueButton" to="." method="_on_enqueue_pressed"]

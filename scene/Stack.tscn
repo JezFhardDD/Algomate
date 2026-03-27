@@ -1,4 +1,4 @@
-[gd_scene load_steps=171 format=3 uid="uid://qd2apn8hrxak"]
+[gd_scene load_steps=173 format=3 uid="uid://qd2apn8hrxak"]
 
 [ext_resource type="Script" uid="uid://cq44oq5s283w1" path="res://script/stack_sim.gd" id="1_q28tu"]
 [ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="2_eik88"]
@@ -11,8 +11,10 @@
 [ext_resource type="Texture2D" uid="uid://c7pesy50pmngs" path="res://assets/C++_CONTAINER.png" id="6_764rb"]
 [ext_resource type="Shader" uid="uid://bwo8f725t8nm5" path="res://scenes/assessment_map.gdshader" id="6_ovjoe"]
 [ext_resource type="PackedScene" uid="uid://bemnu780b65s5" path="res://scene/parallax_background.tscn" id="7_aex65"]
+[ext_resource type="Texture2D" uid="uid://b31vqwe610avh" path="res://assets/circles2.png" id="7_bghik"]
 [ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="7_x4yfu"]
 [ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="8_764rb"]
+[ext_resource type="Texture2D" uid="uid://dcpfk145a6qpt" path="res://assets/circles4.png" id="8_hhq3s"]
 [ext_resource type="AudioStream" uid="uid://da13h00j85al" path="res://assets/sfx/bgm.mp3" id="11_x4yfu"]
 [ext_resource type="Texture2D" uid="uid://bbm311qanr7lp" path="res://assets/code.png" id="12_3hqfm"]
 [ext_resource type="AudioStream" uid="uid://c20huhk71ynr4" path="res://assets/sfx/b1.mp3" id="12_764rb"]
@@ -791,6 +793,71 @@ offset_bottom = 177.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="isFull" type="TextureRect" parent="ColorRect2"]
+modulate = Color(0.3, 0.3, 0.3, 1)
+layout_mode = 0
+offset_left = 915.9999
+offset_top = 189.0
+offset_right = 1015.99976
+offset_bottom = 288.99997
+texture = ExtResource("7_bghik")
+
+[node name="Label" type="Label" parent="ColorRect2/isFull"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.74509805, 0.74509805, 0.74509805, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 3
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_08k7p")
+theme_override_font_sizes/font_size = 20
+text = "is Full"
+
+[node name="isEmpty" type="TextureRect" parent="ColorRect2"]
+modulate = Color(0.3, 0.3, 0.3, 1)
+self_modulate = Color(1, 1, 0, 1)
+layout_mode = 0
+offset_left = 809.0
+offset_top = 190.00975
+offset_right = 909.0
+offset_bottom = 290.0097
+texture = ExtResource("8_hhq3s")
+
+[node name="Label" type="Label" parent="ColorRect2/isEmpty"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.74509805, 0.74509805, 0.74509805, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 3
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_08k7p")
+theme_override_font_sizes/font_size = 20
+text = "is Empty"
+
 [node name="TutorialOverlay" type="CanvasLayer" parent="."]
 
 [node name="DimBackground" type="ColorRect" parent="TutorialOverlay"]
@@ -1219,6 +1286,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_2h030")
 text = "Okay"
 
 [node name="TimelinePopup" type="PopupPanel" parent="."]
+oversampling_override = 1.0
 size = Vector2i(500, 500)
 theme_override_styles/panel = SubResource("StyleBoxTexture_20pc6")
 
@@ -1294,7 +1362,8 @@ theme_override_fonts/font = ExtResource("3_08k7p")
 theme_override_font_sizes/font_size = 22
 
 [node name="CppPopup" type="PopupPanel" parent="."]
-size = Vector2i(600, 650)
+oversampling_override = 1.0
+size = Vector2i(655, 650)
 theme_override_styles/panel = SubResource("StyleBoxTexture_sqvbp")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CppPopup"]
@@ -1441,7 +1510,6 @@ vertical_alignment = 3
 justification_flags = 160
 
 [node name="CppCodeButton" type="Button" parent="."]
-visible = false
 layout_mode = 0
 offset_left = 1032.0
 offset_top = 68.0
@@ -1461,7 +1529,6 @@ sprite_frames = SubResource("SpriteFrames_6xsba")
 frame_progress = 0.472316
 
 [node name="HelpButton" type="Button" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0

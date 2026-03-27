@@ -19,10 +19,7 @@ shader_parameter/accent_color = Color(0.32266304, 0.27621198, 0.31138393, 1)
 [node name="Main" instance=ExtResource("1_n4hte")]
 script = ExtResource("2_la03u")
 
-[node name="ColorRect" parent="." index="3"]
-visible = false
-
-[node name="ColorRect2" type="ColorRect" parent="." index="4"]
+[node name="ColorRect3" type="ColorRect" parent="." index="4"]
 z_index = -5
 material = SubResource("ShaderMaterial_08y4g")
 custom_minimum_size = Vector2(0, 1000)
@@ -36,5 +33,5 @@ offset_bottom = 177.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CppPopup" parent="." index="16"]
+[node name="CppPopup" parent="." index="17"]
 oversampling_override = 1.0

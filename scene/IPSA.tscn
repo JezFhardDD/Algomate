@@ -21,19 +21,19 @@ shader_parameter/accent_color = Color(0.32266304, 0.27621198, 0.31138393, 1)
 [node name="Main" instance=ExtResource("1_8t01h")]
 script = ExtResource("2_30c7k")
 
-[node name="ColorRect2" parent="." index="3"]
+[node name="ColorRect2" parent="." index="5"]
 material = SubResource("ShaderMaterial_4fc4r")
 
-[node name="DiificultyLabel" parent="." index="6"]
+[node name="DiificultyLabel" parent="." index="8"]
 text = "Difficulty: Medium"
 
-[node name="QueueContainer" parent="." index="8"]
+[node name="QueueContainer" parent="." index="10"]
 offset_left = 244.0
 offset_top = 302.0
 offset_right = 444.0
 offset_bottom = 502.0
 
-[node name="CppPopup" parent="." index="13"]
+[node name="CppPopup" parent="." index="15"]
 size = Vector2i(789, 659)
 
 [node name="VBoxContainer" parent="CppPopup" index="1"]
@@ -42,17 +42,6 @@ offset_right = 774.0
 [node name="HSeparator2" parent="CppPopup/VBoxContainer/TutorialPanel" index="0"]
 offset_left = -2.0
 offset_right = 592.0
-
-[node name="TargetLabel" parent="." index="30"]
-custom_minimum_size = Vector2(0, 0)
-layout_mode = 1
-offset_left = -125.5
-offset_top = -290.0
-offset_right = 355.5
-offset_bottom = -190.0
-size_flags_horizontal = 1
-theme_override_font_sizes/font_size = 30
-text = "GHDQWUODHQWHDOQWIDH"
 
 [node name="FormulaLabel" type="RichTextLabel" parent="." index="31"]
 layout_mode = 1
@@ -82,3 +71,11 @@ offset_top = 150.0
 offset_right = 948.0
 offset_bottom = 461.0
 texture = ExtResource("3_eygce")
+
+[node name="TargetLabel" parent="." index="33"]
+offset_left = -125.5
+offset_top = -290.0
+offset_right = 355.5
+offset_bottom = -190.0
+theme_override_font_sizes/font_size = 30
+text = "GHDQWUODHQWHDOQWIDH"

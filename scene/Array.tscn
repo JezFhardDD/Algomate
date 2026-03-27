@@ -74,12 +74,6 @@ script = ExtResource("2_sjaiv")
 [node name="TimeUpPopup" parent="." index="0"]
 oversampling_override = 1.0
 
-[node name="PanelContainer" parent="TimeUpPopup" index="1"]
-offset_left = -396.0
-offset_top = -496.0
-offset_right = 396.0
-offset_bottom = -4.0
-
 [node name="ColorRect" parent="." index="2"]
 material = SubResource("ShaderMaterial_njl6h")
 custom_minimum_size = Vector2(0, 1000)

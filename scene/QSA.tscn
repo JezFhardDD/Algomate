@@ -34,10 +34,7 @@ texture = ExtResource("4_au56b")
 custom_minimum_size = Vector2(0, 0)
 script = ExtResource("2_jigj7")
 
-[node name="ColorRect" parent="." index="2"]
-visible = false
-
-[node name="ColorRect2" type="ColorRect" parent="." index="3"]
+[node name="ColorRect4" type="ColorRect" parent="." index="3"]
 z_index = -5
 material = SubResource("ShaderMaterial_nwtjd")
 custom_minimum_size = Vector2(0, 1000)
@@ -52,7 +49,7 @@ offset_bottom = 169.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" parent="." index="7"]
+[node name="VBoxContainer" parent="." index="9"]
 offset_left = 38.0
 offset_bottom = 579.0
 theme_override_constants/separation = 20
