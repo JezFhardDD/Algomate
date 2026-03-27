@@ -242,6 +242,13 @@ var user_configuration_step = 1  # 1: Size, 2: Elements
 var initial_waiting_elements: Array[int] = []  # Store the initial configuration
 var is_dequeuing_active: bool = false
 
+var INDEX_LABEL_OFFSET: float = 100.0 # Vertical offset for index labels
+
+# Indicator and Labels
+@onready var is_full_indicator: TextureRect = get_node_or_null("isFull")
+@onready var is_empty_indicator: TextureRect = get_node_or_null("isEmpty")
+var index_labels: Array[Label] = []  # Store index label nodes
+
 # 🏁 Ready
 func _ready() -> void:
 	var back_overlay = preload("res://scenes/back_button_overlay.tscn").instantiate()
@@ -298,7 +305,8 @@ func _ready() -> void:
 	
 	if c_lang_btn and not c_lang_btn.is_connected("pressed", _on_c_lang_button_pressed):
 		c_lang_btn.pressed.connect(_on_c_lang_button_pressed)
-
+	
+	_update_indicators()
 func _enter_tree():
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
 	await get_tree().process_frame
@@ -547,84 +555,48 @@ func _on_elements_done_pressed() -> void:
 	_initialize_with_elements(elements_array)
 
 func _initialize_with_elements(elements: Array[int]) -> void:
-	"""Initialize the simulation with specific elements"""
-	# Reset cache for new simulation
 	reset_cache_for_scene()
-	
-	# Clear code lines
 	code_lines.clear()
 	
+	for lbl in index_labels:
+		if is_instance_valid(lbl): lbl.queue_free()
+	index_labels.clear()
+	
 	print(" Initializing simulation with queue size:", MAX_QUEUE_SIZE, " and elements:", elements)
-	
 	audio_player.play()
-	
-	# Set waiting elements to the configured elements
 	waiting_elements = elements.duplicate()
-	# SAVE THE INITIAL ELEMENTS FOR CODE GENERATION
 	initial_waiting_elements = elements.duplicate()
-	
-	# Add initial code line
 	_add_code_line("INITIAL", 0, 0)
 	
-	# Connect other buttons - FIXED FUNCTION NAMES
-	if waiting_btn: 
-		if not waiting_btn.is_connected("pressed", _on_waiting_pressed):
-			waiting_btn.pressed.connect(_on_waiting_pressed)
-	
-	if dequeued_btn: 
-		if not dequeued_btn.is_connected("pressed", _on_dequeued_pressed):
-			dequeued_btn.pressed.connect(_on_dequeued_pressed)
-	
-	if timeline_btn: 
-		if not timeline_btn.is_connected("pressed", _on_timeline_pressed):
-			timeline_btn.pressed.connect(_on_timeline_pressed)
-	
-	if simulate_new_btn: 
-		if not simulate_new_btn.is_connected("pressed", _on_simulate_new_pressed):
-			simulate_new_btn.pressed.connect(_on_simulate_new_pressed)
-	
-	# Connect popup buttons
-	if complete_ok_btn: 
-		if not complete_ok_btn.is_connected("pressed", _on_complete_ok_pressed):
-			complete_ok_btn.pressed.connect(_on_complete_ok_pressed)
-	
-	if show_cpp_btn: 
-		if not show_cpp_btn.is_connected("pressed", _on_show_cpp_pressed):
-			show_cpp_btn.pressed.connect(_on_show_cpp_pressed)
-	
-	if dequeued_close_btn: 
-		if not dequeued_close_btn.is_connected("pressed", _on_dequeued_close_pressed):
-			dequeued_close_btn.pressed.connect(_on_dequeued_close_pressed)
-	
-	# Connect C++ buttons
-	if cpp_close_btn: 
-		if not cpp_close_btn.is_connected("pressed", _on_cpp_close_pressed):
-			cpp_close_btn.pressed.connect(_on_cpp_close_pressed)
-	
-	# Connect top-right "C++ Code" button
+	if waiting_btn and not waiting_btn.is_connected("pressed", _on_waiting_pressed):
+		waiting_btn.pressed.connect(_on_waiting_pressed)
+	if dequeued_btn and not dequeued_btn.is_connected("pressed", _on_dequeued_pressed):
+		dequeued_btn.pressed.connect(_on_dequeued_pressed)
+	if timeline_btn and not timeline_btn.is_connected("pressed", _on_timeline_pressed):
+		timeline_btn.pressed.connect(_on_timeline_pressed)
+	if simulate_new_btn and not simulate_new_btn.is_connected("pressed", _on_simulate_new_pressed):
+		simulate_new_btn.pressed.connect(_on_simulate_new_pressed)
+	if complete_ok_btn and not complete_ok_btn.is_connected("pressed", _on_complete_ok_pressed):
+		complete_ok_btn.pressed.connect(_on_complete_ok_pressed)
+	if show_cpp_btn and not show_cpp_btn.is_connected("pressed", _on_show_cpp_pressed):
+		show_cpp_btn.pressed.connect(_on_show_cpp_pressed)
+	if dequeued_close_btn and not dequeued_close_btn.is_connected("pressed", _on_dequeued_close_pressed):
+		dequeued_close_btn.pressed.connect(_on_dequeued_close_pressed)
+	if cpp_close_btn and not cpp_close_btn.is_connected("pressed", _on_cpp_close_pressed):
+		cpp_close_btn.pressed.connect(_on_cpp_close_pressed)
 	if cpp_code_button:
 		if not cpp_code_button.is_connected("pressed", _on_cpp_code_button_pressed):
 			cpp_code_button.pressed.connect(_on_cpp_code_button_pressed)
 		cpp_code_button.hide()
+	if tutorial_next and not tutorial_next.is_connected("pressed", _on_next_button_pressed):
+		tutorial_next.pressed.connect(_on_next_button_pressed)
+	if enqueue_btn and not enqueue_btn.is_connected("pressed", _on_enqueue_pressed):
+		enqueue_btn.pressed.connect(_on_enqueue_pressed)
+	if dequeue_btn and not dequeue_btn.is_connected("pressed", _on_dequeue_pressed):
+		dequeue_btn.pressed.connect(_on_dequeue_pressed)
+	if peek_btn and not peek_btn.is_connected("pressed", _on_peek_pressed):
+		peek_btn.pressed.connect(_on_peek_pressed)
 	
-	# Connect tutorial buttons
-	if tutorial_next: 
-		if not tutorial_next.is_connected("pressed", _on_next_button_pressed):
-			tutorial_next.pressed.connect(_on_next_button_pressed)
-	
-	# Connect enqueue/dequeue buttons
-	if enqueue_btn: 
-		if not enqueue_btn.is_connected("pressed", _on_enqueue_pressed):
-			enqueue_btn.pressed.connect(_on_enqueue_pressed)
-	
-	if dequeue_btn: 
-		if not dequeue_btn.is_connected("pressed", _on_dequeue_pressed):
-			dequeue_btn.pressed.connect(_on_dequeue_pressed)
-	
-	if peek_btn: 
-		if not peek_btn.is_connected("pressed", _on_peek_pressed):
-			peek_btn.pressed.connect(_on_peek_pressed)
-	# Hide popups initially
 	if dequeued_container: dequeued_container.hide()
 	if cpp_popup: cpp_popup.hide()
 	if tutorial_overlay: tutorial_overlay.hide()
@@ -633,7 +605,6 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	
 	_update_labels()
 	_update_front_rear_visibility()
-	print(" Initialization complete — ready to simulate!\n")
 
 # ADD THIS NEW FUNCTION RIGHT HERE (after _initialize_with_elements but before start_tutorial)
 func _add_code_line(op: String, index: int, value: int) -> void:
@@ -906,15 +877,12 @@ func enable_all_buttons() -> void:
 	if peek_btn: peek_btn.disabled = false
 
 func end_tutorial() -> void:
-	print("Tutorial finished!")
 	tutorial_in_progress = false
 	tutorial_overlay.hide()
 	clear_highlights()
 	pointer_sprite.hide()
 	current_popup = null
 	
-	
-	# Close any open popups
 	if dequeued_container and dequeued_container.visible:
 		dequeued_container.hide()
 		if front2_icon: front2_icon.hide()
@@ -924,26 +892,20 @@ func end_tutorial() -> void:
 	if timeline_popup and timeline_popup.visible:
 		timeline_popup.hide()
 	
-	# Clear all simulation data
 	_clear_simulation_data()
 	
-	# Clear visual blocks
 	for child in queue_container.get_children():
 		child.queue_free()
-	
 	for child in dequeued_container.get_children():
 		if child != dequeued_close_btn:
 			child.queue_free()
+	for lbl in index_labels:
+		if is_instance_valid(lbl): lbl.queue_free()
+	index_labels.clear()
 
 	_update_labels()
 	_update_front_rear_visibility()
-
 	_show_config_modal()
-	
-
-	#enable_all_buttons()
-	
-	print("Tutorial completed - simulation reset to start fresh!")
 
 func _on_enqueue_pressed() -> void:
 	# Check if in tutorial
@@ -961,21 +923,17 @@ func _on_enqueue_pressed() -> void:
 	_perform_regular_enqueue()
 
 func _perform_tutorial_enqueue() -> void:
-	"""Special enqueue for tutorial that always works"""
 	btn_sound.play()
-	
-	# Make sure we have waiting elements
 	if waiting_elements.is_empty():
 		waiting_elements = [10, 20, 30, 40, 50]
-	
-	# Make sure queue isn't full
 	if queue.size() >= MAX_QUEUE_SIZE:
 		queue.clear()
-		# Clear visual blocks
 		for child in queue_container.get_children():
 			child.queue_free()
+		for lbl in index_labels:
+			if is_instance_valid(lbl): lbl.queue_free()
+		index_labels.clear()
 	
-	# Perform enqueue
 	var new_val: int = waiting_elements.pop_front()
 	queue.append(new_val)
 	enqueue_counter += 1
@@ -984,31 +942,34 @@ func _perform_tutorial_enqueue() -> void:
 
 	var new_block: Control = BLOCK_SCENE.instantiate() as Control
 	if new_block.has_method("set"): new_block.set("value", new_val)
-	
 	queue_container.add_child(new_block)
 	
-	# Animation
+	var index_label = _create_index_label(queue.size() - 1)
+	queue_container.add_child(index_label)
+	index_labels.append(index_label)
+	
 	var target_x = START_POSITION.x + (queue.size() - 1) * (new_block.size.x + BLOCK_SPACING)
 	var final_pos = Vector2(target_x, START_POSITION.y)
+	var label_final_pos = final_pos + Vector2(new_block.size.x / 2 - 15, INDEX_LABEL_OFFSET)
 	
 	new_block.position = final_pos + Vector2(200, 0) 
 	new_block.modulate.a = 0
+	index_label.position = label_final_pos + Vector2(200, 0)
+	index_label.modulate.a = 0
 	
 	var tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(new_block, "position", final_pos, 0.5)
 	tween.tween_property(new_block, "modulate:a", 1.0, 0.4)
+	tween.tween_property(index_label, "position", label_final_pos, 0.5)
+	tween.tween_property(index_label, "modulate:a", 1.0, 0.4)
 
 	_update_labels()
 	_update_front_rear_visibility()
-	
-	# Advance tutorial
 	tutorial_sequence_index += 1
 	show_tutorial_step()
 
 func _perform_regular_enqueue() -> void:
-	# Regular enqueue logic
 	if queue.size() >= MAX_QUEUE_SIZE:
-		print("❌ Queue full!")
 		if queue.is_empty() and waiting_elements.is_empty():
 			Queue_full.visible = true
 		return
@@ -1022,80 +983,84 @@ func _perform_regular_enqueue() -> void:
 
 	var new_block: Control = BLOCK_SCENE.instantiate() as Control
 	if new_block.has_method("set"): new_block.set("value", new_val)
-	
 	queue_container.add_child(new_block)
 	
-	# Animation
+	var index_label = _create_index_label(queue.size() - 1)
+	queue_container.add_child(index_label)
+	index_labels.append(index_label)
+	
 	var target_x = START_POSITION.x + (queue.size() - 1) * (new_block.size.x + BLOCK_SPACING)
 	var final_pos = Vector2(target_x, START_POSITION.y)
+	var label_final_pos = final_pos + Vector2(new_block.size.x / 2 - 15, INDEX_LABEL_OFFSET)
 	
 	new_block.position = final_pos + Vector2(200, 0) 
 	new_block.modulate.a = 0
+	index_label.position = label_final_pos + Vector2(200, 0)
+	index_label.modulate.a = 0
 	
 	var tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(new_block, "position", final_pos, 0.5)
 	tween.tween_property(new_block, "modulate:a", 1.0, 0.4)
+	tween.tween_property(index_label, "position", label_final_pos, 0.5)
+	tween.tween_property(index_label, "modulate:a", 1.0, 0.4)
 
 	_update_labels()
 	_update_front_rear_visibility()
 
 func _on_dequeue_pressed() -> void:
-
-	if is_dequeuing_active:
-		return
-
+	if is_dequeuing_active: return
 
 	if tutorial_in_progress and tutorial_sequence_index < tutorial_sequence.size():
 		var current_step = tutorial_sequence[tutorial_sequence_index]
 		if current_step["node"] == dequeue_btn and current_step["action"] == "press":
 			pass
 		else:
-			print("Tutorial: Please press the highlighted button first")
 			return
 
-	if queue.is_empty():
-		return
-
+	if queue.is_empty(): return
 	is_dequeuing_active = true
-
 	btn_sound.play()
+	
 	var removed_val: int = queue.pop_front()
 	dequeue_counter += 1
 	dequeued_elements.append(removed_val)
 	timeline_log.append("Dequeued %d" % removed_val)
 	_add_code_line("DEQUEUE", 0, removed_val)
 
-	var front_block = queue_container.get_child(0)
+	var front_block = null
+	for child in queue_container.get_children():
+		if not child is Label and not child.is_queued_for_deletion():
+			front_block = child
+			break
+			
+	var front_label = null
+	if index_labels.size() > 0:
+		front_label = index_labels.pop_front()
 
 	var exit_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
-	exit_tween.tween_property(front_block, "position", front_block.position + Vector2(-200, 0), 0.4)
-	exit_tween.tween_property(front_block, "modulate:a", 0.0, 0.3)
+	if front_block:
+		exit_tween.tween_property(front_block, "position", front_block.position + Vector2(-200, 0), 0.4)
+		exit_tween.tween_property(front_block, "modulate:a", 0.0, 0.3)
+	if front_label:
+		exit_tween.tween_property(front_label, "position", front_label.position + Vector2(-200, 0), 0.4)
+		exit_tween.tween_property(front_label, "modulate:a", 0.0, 0.3)
 	
 	await exit_tween.finished
 
 	if is_instance_valid(front_block):
 		front_block.queue_free()
+	if is_instance_valid(front_label):
+		front_label.queue_free()
 
 	_animate_queue_shift()
-	
 	_update_labels()
 	_update_front_rear_visibility()
 
-	if queue.is_empty() and waiting_elements.is_empty():
-		_show_complete_popup()
-	
-	if tutorial_in_progress and tutorial_sequence_index < tutorial_sequence.size():
-		var current_step = tutorial_sequence[tutorial_sequence_index]
-		if current_step["node"] == dequeue_btn and current_step["action"] == "press":
-			tutorial_sequence_index += 1
-			show_tutorial_step()
-			
 	is_dequeuing_active = false
 
 	if queue.is_empty() and waiting_elements.is_empty():
 		_show_complete_popup()
 	
-	# Check if we need to advance tutorial
 	if tutorial_in_progress and tutorial_sequence_index < tutorial_sequence.size():
 		var current_step = tutorial_sequence[tutorial_sequence_index]
 		if current_step["node"] == dequeue_btn and current_step["action"] == "press":
@@ -1105,15 +1070,21 @@ func _on_dequeue_pressed() -> void:
 func _animate_queue_shift() -> void:
 	var x = START_POSITION.x
 	var shift_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	
-	for child: Control in queue_container.get_children():
-		if child.is_queued_for_deletion(): continue
+	var i = 0
+	for child in queue_container.get_children():
+		if child is Label or child.is_queued_for_deletion(): continue
 		
 		shift_tween.tween_property(child, "position", Vector2(x, START_POSITION.y), 0.4)
 		child.original_position = Vector2(x, START_POSITION.y)
+		
+		if i < index_labels.size():
+			var lbl = index_labels[i]
+			lbl.text = str(i)
+			var label_target = Vector2(x + (child.size.x / 2) - 15, START_POSITION.y + INDEX_LABEL_OFFSET)
+			shift_tween.tween_property(lbl, "position", label_target, 0.4)
+		
 		x += child.size.x + BLOCK_SPACING
-
-
+		i += 1
 
 func _on_waiting_pressed() -> void:
 	# Check if in tutorial
@@ -1607,24 +1578,17 @@ func _update_labels() -> void:
 	enqueue_label.text = "Enqueue Counter: %d" % enqueue_counter
 	dequeue_label.text = "Dequeue Counter: %d" % dequeue_counter
 	
-	# Disable enqueue button when queue is full OR no waiting elements
 	var queue_is_full = queue.size() >= MAX_QUEUE_SIZE
 	enqueue_btn.disabled = waiting_elements.is_empty() or queue_is_full
-	
 	dequeue_btn.disabled = queue.is_empty()
 	
-	# Visual feedback
 	if queue_is_full:
 		enqueue_btn.modulate = Color(0.7, 0.3, 0.3, 0.9)
-		
-		# Show Queue_full panel with auto-hide
 		if Queue_full and not Queue_full.visible:
 			Queue_full.visible = true
 			anim_sprite.play("default")
-			
 			var timer = get_tree().create_timer(2.0)
 			timer.timeout.connect(_hide_queue_full_panel)
-			
 	elif waiting_elements.is_empty():
 		enqueue_btn.modulate = Color(0.5, 0.5, 0.5, 0.7)
 	else:
@@ -1637,10 +1601,10 @@ func _update_labels() -> void:
 		
 	if peek_btn:
 		peek_btn.disabled = queue.is_empty()
-		if queue.is_empty():
-			peek_btn.modulate = Color(0.5, 0.5, 0.5, 0.7)
-		else:
-			peek_btn.modulate = Color.WHITE
+		if queue.is_empty(): peek_btn.modulate = Color(0.5, 0.5, 0.5, 0.7)
+		else: peek_btn.modulate = Color.WHITE
+		
+	_update_indicators()
 
 func _hide_queue_full_panel() -> void:
 	if Queue_full and Queue_full.visible:
@@ -1670,10 +1634,19 @@ func update_language_button_states() -> void:
 
 func _resnap_blocks() -> void:
 	var x = START_POSITION.x
-	for child: Control in queue_container.get_children():
+	var i = 0
+	for child in queue_container.get_children():
+		if child is Label or child.is_queued_for_deletion(): continue
 		child.position = Vector2(x, START_POSITION.y)
 		child.original_position = child.position
+		
+		if i < index_labels.size():
+			var lbl = index_labels[i]
+			lbl.text = str(i)
+			lbl.position = Vector2(x + (child.size.x / 2) - 15, START_POSITION.y + INDEX_LABEL_OFFSET)
+		
 		x += child.size.x + BLOCK_SPACING
+		i += 1
 
 func _shift_blocks_left() -> void:
 	_resnap_blocks()
@@ -1703,11 +1676,7 @@ func _on_simulate_new_pressed() -> void:
 	
 
 func _on_yes_pressed() -> void:
-	"""User confirmed they want to simulate new - reset everything"""
-	if tutorial_in_progress:
-		print("Tutorial: Please complete the tutorial first")
-		return
-	
+	if tutorial_in_progress: return
 	btn_sound.play()
 	sim_confirmation.hide()
 	sim_success.show()
@@ -1717,22 +1686,17 @@ func _on_yes_pressed() -> void:
 	sim_success.hide()
 	
 	_clear_simulation_data()
-
-	# Clear visual elements
-	for child in queue_container.get_children():
-		child.queue_free()
-
+	for child in queue_container.get_children(): child.queue_free()
 	for child in dequeued_container.get_children():
-		if child != dequeued_close_btn:
-			child.queue_free()
+		if child != dequeued_close_btn: child.queue_free()
+	for lbl in index_labels:
+		if is_instance_valid(lbl): lbl.queue_free()
+	index_labels.clear()
 	
-	if Queue_full and Queue_full.visible:
-		Queue_full.hide()
+	if Queue_full and Queue_full.visible: Queue_full.hide()
 	reset_cpp_tutorial_state()
 	_update_labels()
 	_update_front_rear_visibility()
-	
-	# Show the initial choice modal again
 	_show_config_modal()
 
 func _on_no_pressed() -> void:
@@ -2091,49 +2055,34 @@ func highlight_cpp_lines(start_line: int, end_line: int) -> void:
 	
 	cpp_text.text = new_text
 
-
 func _clear_simulation_data() -> void:
-	"""Clear all simulation data before starting tutorial"""
-	print("Clearing simulation data for tutorial...")
-	
-	# Clear arrays
 	queue.clear()
 	waiting_elements.clear()
 	dequeued_elements.clear()
 	timeline_log.clear()
 	code_lines.clear()
-	
-	# Reset counters
 	enqueue_counter = 0
 	dequeue_counter = 0
 	
-	# Clear visual blocks
 	for child in queue_container.get_children():
 		child.queue_free()
-	
 	for child in dequeued_container.get_children():
-		if child != dequeued_close_btn:
-			child.queue_free()
+		if child != dequeued_close_btn: child.queue_free()
+	for lbl in index_labels:
+		if is_instance_valid(lbl): lbl.queue_free()
+	index_labels.clear()
 	
-	# Reset UI
 	_update_labels()
 	_update_front_rear_visibility()
 	
-	# Close any open popups
 	if dequeued_container and dequeued_container.visible:
 		dequeued_container.hide()
 		if front2_icon: front2_icon.hide()
 		if rear2_icon: rear2_icon.hide()
-	if waiting_popup and waiting_popup.visible:
-		waiting_popup.hide()
-	if timeline_popup and timeline_popup.visible:
-		timeline_popup.hide()
-	if complete_popup and complete_popup.visible:
-		complete_popup.hide()
-	if cpp_popup and cpp_popup.visible:
-		cpp_popup.hide()
-	
-	# Reset tutorial-specific state
+	if waiting_popup and waiting_popup.visible: waiting_popup.hide()
+	if timeline_popup and timeline_popup.visible: timeline_popup.hide()
+	if complete_popup and complete_popup.visible: complete_popup.hide()
+	if cpp_popup and cpp_popup.visible: cpp_popup.hide()
 	current_popup = null
 
 func _setup_for_enqueue_tutorial() -> void:
@@ -2149,42 +2098,38 @@ func _setup_for_enqueue_tutorial() -> void:
 	_update_labels()
 
 func _setup_for_dequeue_tutorial() -> void:
-	"""Prepare tutorial state for dequeue step"""
-	# Ensure queue has elements for dequeue
 	if queue.is_empty():
-		# Add some elements to the queue
 		queue = [10, 20, 30]
-		
-		# Create visual blocks for these elements
-		for child in queue_container.get_children():
-			child.queue_free()
+		for child in queue_container.get_children(): child.queue_free()
+		for lbl in index_labels:
+			if is_instance_valid(lbl): lbl.queue_free()
+		index_labels.clear()
 		
 		for i in range(queue.size()):
 			var new_block: Control = BLOCK_SCENE.instantiate() as Control
-			if new_block.has_method("set"): 
-				new_block.set("value", queue[i])
+			if new_block.has_method("set"): new_block.set("value", queue[i])
 			queue_container.add_child(new_block)
-		
+			var index_label = _create_index_label(i)
+			queue_container.add_child(index_label)
+			index_labels.append(index_label)
 		_resnap_blocks()
-	
 	_update_labels()
 
 func _setup_for_peek_tutorial() -> void:
-	"""Prepare tutorial state for peek step"""
-	# Ensure queue has at least one element so peek works
 	if queue.is_empty():
-		queue = [10] # Add a dummy element
-		
-		# Create visual block
-		for child in queue_container.get_children():
-			child.queue_free()
+		queue = [10]
+		for child in queue_container.get_children(): child.queue_free()
+		for lbl in index_labels:
+			if is_instance_valid(lbl): lbl.queue_free()
+		index_labels.clear()
 			
 		var new_block: Control = BLOCK_SCENE.instantiate() as Control
-		if new_block.has_method("set"): 
-			new_block.set("value", queue[0])
+		if new_block.has_method("set"): new_block.set("value", queue[0])
 		queue_container.add_child(new_block)
+		var index_label = _create_index_label(0)
+		queue_container.add_child(index_label)
+		index_labels.append(index_label)
 		_resnap_blocks()
-	
 	_update_labels()
 
 func reset_cpp_tutorial_state() -> void:
@@ -2444,3 +2389,29 @@ func _on_peek_pressed() -> void:
 		if current_step["node"] == peek_btn and current_step["action"] == "press":
 			tutorial_sequence_index += 1
 			show_tutorial_step()
+
+func _create_index_label(index: int) -> Label:
+	var index_label = Label.new()
+	index_label.text = str(index)
+	var index_font = load("res://assets/font/Planes_ValMore.ttf")
+	if index_font:
+		index_label.add_theme_font_override("font", index_font)
+	index_label.add_theme_font_size_override("font_size", 32)
+	index_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	index_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	index_label.add_theme_constant_override("outline_size", 4)
+	index_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	return index_label
+
+func _update_indicators() -> void:
+	if is_full_indicator:
+		if queue.size() >= MAX_QUEUE_SIZE:
+			is_full_indicator.modulate = Color(0, 1, 0, 1) # Green
+		else:
+			is_full_indicator.modulate = Color(0.3, 0.3, 0.3, 1) # Dark gray
+			
+	if is_empty_indicator:
+		if queue.is_empty():
+			is_empty_indicator.modulate = Color(1, 0.5, 0.8, 1) # Pink
+		else:
+			is_empty_indicator.modulate = Color(0.3, 0.3, 0.3, 1) # Dark gray
