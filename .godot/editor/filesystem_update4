@@ -1,14 +1,4 @@
-res://scene/Array.tscn
-res://scene/BG.gdshader
-res://scene/ArrayA.tscn
-res://scene/BNYSA.tscn
-res://scene/IPSA.tscn
-res://scene/ISA.tscn
-res://scene/LLA.tscn
-res://scene/LSA.tscn
-res://scene/Queue.tscn
-res://scene/QSA.tscn
-res://scene/SLA.tscn
-res://scene/SSA.tscn
 res://scene/Stack.tscn
-res://scene/TreeBFSa.tscn
+res://scene/BG.gdshader
+res://script/stack_sim.gd
+res://scene/Queue.tscn

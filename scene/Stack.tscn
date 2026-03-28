@@ -879,7 +879,7 @@ anchor_bottom = 0.5
 offset_left = -204.0
 offset_top = -216.0
 offset_right = 160.0
-offset_bottom = -13.0
+offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.2, 1.2)
@@ -1115,6 +1115,19 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_5tuhn")
 theme_override_styles/hover = SubResource("StyleBoxTexture_c6i3y")
 text = "POP"
 
+[node name="PeekButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_08k7p")
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxTexture_r0du0")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_5tuhn")
+theme_override_styles/hover = SubResource("StyleBoxTexture_c6i3y")
+text = "PEEK"
+
 [node name="DequeuedElements" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -1211,10 +1224,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -100.5
-offset_top = -214.0
-offset_right = 99.5
-offset_bottom = -14.0
+offset_left = -99.5
+offset_top = -153.0
+offset_right = 100.5
+offset_bottom = 89.0
 grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
@@ -1233,6 +1246,7 @@ theme_override_constants/separation = 8
 alignment = 1
 
 [node name="WaitingPopup" type="PopupPanel" parent="."]
+oversampling_override = 1.0
 size = Vector2i(350, 200)
 theme_override_styles/panel = SubResource("StyleBoxTexture_wkp8b")
 
@@ -1307,6 +1321,7 @@ vertical_alignment = 1
 autowrap_mode = 3
 
 [node name="SimulationCompletePopup" type="PopupPanel" parent="."]
+oversampling_override = 1.0
 size = Vector2i(500, 300)
 theme_override_styles/panel = SubResource("StyleBoxTexture_hri7i")
 
