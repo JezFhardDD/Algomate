@@ -119,6 +119,9 @@ const API_KEYS = {
 var tutorial_in_progress = false
 var current_popup = null  # Track which popup is open during tutorial
 
+var initial_waiting_elements: Array[int] = []
+var initial_max_queue_size: int = 5
+
 # Settings
 var MAX_QUEUE_SIZE: int = 5
 var BLOCK_SPACING: float = 30.0
@@ -622,6 +625,8 @@ func _on_elements_back_pressed() -> void:
 
 
 func _initialize_with_elements(elements: Array[int]) -> void:
+	initial_waiting_elements = elements.duplicate()
+	initial_max_queue_size = MAX_QUEUE_SIZE
 	# Reset cache for new simulation
 	reset_cache_for_scene()
 	
@@ -1170,14 +1175,7 @@ func _on_show_cpp_pressed() -> void:
 func _show_cpp_popup() -> void:
 	cpp_tutorialcode_index = 0
 	if cpp_popup and cpp_text:
-		var source_arr: Array = []
-		if dequeued_elements.size() > 0: source_arr = dequeued_elements.duplicate()
-		elif queue.size() > 0: source_arr = queue.duplicate()
-		elif waiting_elements.size() > 0: source_arr = waiting_elements.duplicate()
-		else: source_arr = [10, 20, 30]
-			
-		var code = _generate_code_for_language(current_code_language)
-		cpp_text.text = code
+		cpp_text.text = _generate_code_for_language(current_code_language)
 		cpp_text.custom_minimum_size = Vector2(700, 420)
 		
 		var lang_names = {"cpp": "C++ Code", "python": "Python Code", "java": "Java Code", "c": "C Code"}
@@ -1202,110 +1200,162 @@ func _add_code_line(op: String, index: int, value: int) -> void:
 	code_lines.append("%s|%d|%d" % [op, index, value])
 
 func _generate_code_for_language(lang: String) -> String:
+	var elements_to_use = initial_waiting_elements if initial_waiting_elements.size() > 0 else waiting_elements
+	
 	match lang:
-		"python": return _gen_python_code()
-		"java": return _gen_java_code()
-		"c": return _gen_c_code()
-		_: return _gen_cpp_code()
+		"python": return _gen_python_code(elements_to_use)
+		"java": return _gen_java_code(elements_to_use)
+		"c": return _gen_c_code(elements_to_use)
+		"cpp": return _gen_cpp_code(elements_to_use)
+		_: return _gen_cpp_code(elements_to_use)
 
-func _gen_cpp_code() -> String:
+func _gen_cpp_code(elements_array: Array) -> String:
 	var code = "/* Stack Simulation - Operations Log */\n"
-	code += "#include <iostream>\n#include <stack>\n#include <vector>\nusing namespace std;\n\n"
+	code += "#include <iostream>\n"
+	code += "#include <stack>\n"
+	code += "#include <vector>\n"
+	code += "using namespace std;\n\n"
+	
 	code += "void printStack(stack<int> s) {\n"
 	code += "    cout << \"[\";\n"
 	code += "    vector<int> temp;\n"
+	code += "    // Extract all elements from stack to vector (reverse order)\n"
 	code += "    while(!s.empty()) {\n"
 	code += "        temp.push_back(s.top());\n"
 	code += "        s.pop();\n"
 	code += "    }\n"
+	code += "    // Print from bottom to top\n"
 	code += "    for(int i = temp.size() - 1; i >= 0; i--) {\n"
 	code += "        cout << temp[i];\n"
 	code += "        if(i > 0) cout << \", \";\n"
 	code += "    }\n"
 	code += "    cout << \"]\" << endl;\n"
 	code += "}\n\n"
+	
 	code += "int main() {\n"
 	code += "    stack<int> s;\n"
+	code += "    cout << \"=== STACK SIMULATION ===\" << endl;\n\n"
 	
-	if waiting_elements.size() > 0:
-		code += "    int elements[] = {%s};\n" % _array_to_string(waiting_elements)
+	if elements_array.size() > 0:
+		var elements_str = _array_to_string(elements_array)
+		code += "    // Initial elements to push onto the stack\n"
+		code += "    int elements[] = {%s};\n" % elements_str
 		code += "    int n = sizeof(elements)/sizeof(elements[0]);\n\n"
-	else:
-		code += "    // No elements in waiting list\n\n"
-	
-	code += "    cout << \"Initial stack: \";\n"
-	code += "    printStack(s);\n\n"
-	
-	if waiting_elements.size() > 0:
-		code += "    // Push operations\n"
+		
+		code += "    cout << \"Initial stack: \";\n"
+		code += "    printStack(s);\n\n"
+		
+		code += "    // PUSH operations - add elements to stack\n"
+		code += "    cout << \"--- PUSH OPERATIONS ---\" << endl;\n"
 		code += "    for(int i = 0; i < n; i++) {\n"
+		code += "        cout << \"\\nPushing \" << elements[i] << \" to stack...\" << endl;\n"
 		code += "        s.push(elements[i]);\n"
-		code += "        cout << \"After push \" << elements[i] << \": \";\n"
+		code += "        cout << \"Stack after push: \";\n"
 		code += "        printStack(s);\n"
 		code += "    }\n\n"
 		
-		code += "    // Peek operation\n"
+		code += "    // PEEK operation - view top element\n"
+		code += "    cout << \"--- PEEK OPERATION ---\" << endl;\n"
 		code += "    if(!s.empty()) {\n"
-		code += "        cout << \"Top element (peek): \" << s.top() << endl;\n"
+		code += "        cout << \"\\nTop element (peek): \" << s.top() << endl;\n"
+		code += "        cout << \"Stack remains: \";\n"
+		code += "        printStack(s);\n"
 		code += "    }\n\n"
+		
+		code += "    // POP operations - remove all elements from stack\n"
+		code += "    cout << \"--- POP OPERATIONS ---\" << endl;\n"
+		code += "    int pop_count = 0;\n"
+		code += "    while(!s.empty()) {\n"
+		code += "        cout << \"\\nPopping: \" << s.top() << endl;\n"
+		code += "        s.pop();\n"
+		code += "        pop_count++;\n"
+		code += "        if(!s.empty()) {\n"
+		code += "            cout << \"Stack after pop: \";\n"
+		code += "            printStack(s);\n"
+		code += "        } else {\n"
+		code += "            cout << \"Stack is now empty.\" << endl;\n"
+		code += "        }\n"
+		code += "    }\n\n"
+		
+		code += "    // Summary\n"
+		code += "    cout << \"\\n=== SIMULATION SUMMARY ===\" << endl;\n"
+		code += "    cout << \"Total pushes: \" << n << endl;\n"
+		code += "    cout << \"Total pops: \" << pop_count << endl;\n"
+		code += "    cout << \"Total peeks: 1\" << endl;\n"
+		
+	else:
+		code += "    // No elements to push - stack remains empty\n"
+		code += "    cout << \"No elements to push. Stack remains empty.\" << endl;\n"
 	
-	code += "    // Pop operations\n"
-	code += "    while(!s.empty()) {\n"
-	code += "        cout << \"Popping: \" << s.top() << endl;\n"
-	code += "        s.pop();\n"
-	code += "        cout << \"After pop: \";\n"
-	code += "        printStack(s);\n"
-	code += "    }\n\n"
-	
-	code += "    cout << \"Simulation finished.\" << endl;\n"
+	code += "    cout << \"\\n=== SIMULATION FINISHED ===\" << endl;\n"
 	code += "    return 0;\n"
 	code += "}\n"
-	code += "/* Complexity: Push/Pop/Peek O(1) | Space O(n) */"
+	code += "/* Complexity: Push/Pop/Peek O(1) | Space O(n) */\n"
+	
 	return code
 
-func _gen_python_code() -> String:
+func _gen_python_code(elements_array: Array) -> String:
 	var code = "# Stack Simulation - Operations Log\n\n"
 	code += "def print_stack(s):\n"
 	code += "    print('[', end='')\n"
-	code += "    temp = s.copy()\n"
-	code += "    for i in range(len(temp)-1, -1, -1):\n"
-	code += "        print(temp[i], end='')\n"
-	code += "        if i > 0:\n"
+	code += "    # Print from bottom to top\n"
+	code += "    for i in range(len(s)):\n"
+	code += "        print(s[i], end='')\n"
+	code += "        if i < len(s) - 1:\n"
 	code += "            print(', ', end='')\n"
 	code += "    print(']')\n\n"
-	code += "s = []\n"
+	code += "def main():\n"
+	code += "    s = []\n"
+	code += "    print('=== STACK SIMULATION ===')\n\n"
 	
-	if waiting_elements.size() > 0:
-		code += "elements = [%s]\n" % _array_to_string(waiting_elements)
-	else:
-		code += "elements = []  # No waiting elements\n"
-	
-	code += "print('Initial stack: ', end='')\n"
-	code += "print_stack(s)\n\n"
-	
-	if waiting_elements.size() > 0:
-		code += "# Push operations\n"
-		code += "for val in elements:\n"
-		code += "    s.append(val)\n"
-		code += "    print(f'After push {val}: ', end='')\n"
+	if elements_array.size() > 0:
+		code += "    elements = [%s]\n" % _array_to_string(elements_array)
+		code += "    print(f'Initial stack: ', end='')\n"
 		code += "    print_stack(s)\n\n"
 		
-		code += "# Peek operation\n"
-		code += "if s:\n"
-		code += "    print(f'Top element (peek): {s[-1]}')\n\n"
+		code += "    # PUSH operations\n"
+		code += "    print('--- PUSH OPERATIONS ---')\n"
+		code += "    for val in elements:\n"
+		code += "        print(f'\\nPushing {val} to stack...')\n"
+		code += "        s.append(val)\n"
+		code += "        print(f'Stack after push: ', end='')\n"
+		code += "        print_stack(s)\n\n"
+		
+		code += "    # PEEK operation\n"
+		code += "    print('--- PEEK OPERATION ---')\n"
+		code += "    if s:\n"
+		code += "        print(f'\\nTop element (peek): {s[-1]}')\n"
+		code += "        print(f'Stack remains: ', end='')\n"
+		code += "        print_stack(s)\n\n"
+		
+		code += "    # POP operations\n"
+		code += "    print('--- POP OPERATIONS ---')\n"
+		code += "    pop_count = 0\n"
+		code += "    while s:\n"
+		code += "        print(f'\\nPopping: {s[-1]}')\n"
+		code += "        s.pop()\n"
+		code += "        pop_count += 1\n"
+		code += "        if s:\n"
+		code += "            print(f'Stack after pop: ', end='')\n"
+		code += "            print_stack(s)\n"
+		code += "        else:\n"
+		code += "            print('Stack is now empty.')\n\n"
+		
+		code += "    # Summary\n"
+		code += "    print('\\n=== SIMULATION SUMMARY ===')\n"
+		code += "    print(f'Total pushes: {len(elements)}')\n"
+		code += "    print(f'Total pops: {pop_count}')\n"
+		code += "    print('Total peeks: 1')\n"
+	else:
+		code += "    print('No elements to push. Stack remains empty.')\n"
 	
-	code += "# Pop operations\n"
-	code += "while s:\n"
-	code += "    print(f'Popping: {s[-1]}')\n"
-	code += "    s.pop()\n"
-	code += "    print('After pop: ', end='')\n"
-	code += "    print_stack(s)\n\n"
-	
-	code += "print('Simulation finished.')\n"
+	code += "    print('\\n=== SIMULATION FINISHED ===')\n\n"
+	code += "if __name__ == '__main__':\n"
+	code += "    main()\n"
 	code += "''' Complexity: Push/Pop/Peek O(1) | Space O(n) '''"
 	return code
 
-func _gen_java_code() -> String:
+func _gen_java_code(elements_array: Array) -> String:
 	var code = "/* Stack Simulation - Operations Log */\n"
 	code += "import java.util.*;\n\n"
 	code += "public class StackSim {\n"
@@ -1313,100 +1363,149 @@ func _gen_java_code() -> String:
 	code += "        System.out.print(\"[\");\n"
 	code += "        Stack<Integer> temp = new Stack<>();\n"
 	code += "        temp.addAll(s);\n"
-	code += "        while(!temp.isEmpty()) {\n"
-	code += "            System.out.print(temp.pop());\n"
-	code += "            if(!temp.isEmpty()) System.out.print(\", \");\n"
+	code += "        // Print from bottom to top\n"
+	code += "        for(int i = 0; i < temp.size(); i++) {\n"
+	code += "            System.out.print(temp.get(i));\n"
+	code += "            if(i < temp.size() - 1) System.out.print(\", \");\n"
 	code += "        }\n"
 	code += "        System.out.println(\"]\");\n"
 	code += "    }\n\n"
 	code += "    public static void main(String[] args) {\n"
 	code += "        Stack<Integer> s = new Stack<>();\n"
+	code += "        System.out.println(\"=== STACK SIMULATION ===\");\n\n"
 	
-	if waiting_elements.size() > 0:
-		code += "        int[] elements = {%s};\n" % _array_to_string(waiting_elements)
-	else:
-		code += "        int[] elements = {}; // No waiting elements\n"
-	
-	code += "        \n"
-	code += "        System.out.print(\"Initial stack: \");\n"
-	code += "        printStack(s);\n\n"
-	
-	if waiting_elements.size() > 0:
-		code += "        // Push operations\n"
+	if elements_array.size() > 0:
+		code += "        int[] elements = {%s};\n" % _array_to_string(elements_array)
+		code += "        System.out.print(\"Initial stack: \");\n"
+		code += "        printStack(s);\n\n"
+		
+		code += "        // PUSH operations\n"
+		code += "        System.out.println(\"--- PUSH OPERATIONS ---\");\n"
 		code += "        for(int val : elements) {\n"
+		code += "            System.out.println(\"\\nPushing \" + val + \" to stack...\");\n"
 		code += "            s.push(val);\n"
-		code += "            System.out.print(\"After push \" + val + \": \");\n"
+		code += "            System.out.print(\"Stack after push: \");\n"
 		code += "            printStack(s);\n"
 		code += "        }\n\n"
 		
-		code += "        // Peek operation\n"
+		code += "        // PEEK operation\n"
+		code += "        System.out.println(\"--- PEEK OPERATION ---\");\n"
 		code += "        if(!s.isEmpty()) {\n"
-		code += "            System.out.println(\"Top element (peek): \" + s.peek());\n"
+		code += "            System.out.println(\"\\nTop element (peek): \" + s.peek());\n"
+		code += "            System.out.print(\"Stack remains: \");\n"
+		code += "            printStack(s);\n"
 		code += "        }\n\n"
+		
+		code += "        // POP operations\n"
+		code += "        System.out.println(\"--- POP OPERATIONS ---\");\n"
+		code += "        int popCount = 0;\n"
+		code += "        while(!s.isEmpty()) {\n"
+		code += "            System.out.println(\"\\nPopping: \" + s.peek());\n"
+		code += "            s.pop();\n"
+		code += "            popCount++;\n"
+		code += "            if(!s.isEmpty()) {\n"
+		code += "                System.out.print(\"Stack after pop: \");\n"
+		code += "                printStack(s);\n"
+		code += "            } else {\n"
+		code += "                System.out.println(\"Stack is now empty.\");\n"
+		code += "            }\n"
+		code += "        }\n\n"
+		
+		code += "        // Summary\n"
+		code += "        System.out.println(\"\\n=== SIMULATION SUMMARY ===\");\n"
+		code += "        System.out.println(\"Total pushes: \" + elements.length);\n"
+		code += "        System.out.println(\"Total pops: \" + popCount);\n"
+		code += "        System.out.println(\"Total peeks: 1\");\n"
+	else:
+		code += "        System.out.println(\"No elements to push. Stack remains empty.\");\n"
 	
-	code += "        // Pop operations\n"
-	code += "        while(!s.isEmpty()) {\n"
-	code += "            System.out.println(\"Popping: \" + s.peek());\n"
-	code += "            s.pop();\n"
-	code += "            System.out.print(\"After pop: \");\n"
-	code += "            printStack(s);\n"
-	code += "        }\n"
-	code += "        System.out.println(\"Simulation finished.\");\n"
+	code += "        System.out.println(\"\\n=== SIMULATION FINISHED ===\");\n"
 	code += "    }\n"
 	code += "}\n"
 	code += "/* Complexity: Push/Pop/Peek O(1) | Space O(n) */"
 	return code
 
-func _gen_c_code() -> String:
+func _gen_c_code(elements_array: Array) -> String:
 	var code = "/* Stack Simulation - Operations Log */\n"
-	code += "#include <stdio.h>\n\n"
+	code += "#include <stdio.h>\n"
+	code += "#include <stdlib.h>\n\n"
 	code += "#define MAX 100\n\n"
-	code += "int stack[MAX];\n"
-	code += "int top = -1;\n\n"
-	code += "void push(int val) { stack[++top] = val; }\n"
-	code += "int pop() { return stack[top--]; }\n"
-	code += "int peek() { return stack[top]; }\n"
-	code += "int isEmpty() { return top == -1; }\n\n"
-	code += "void printStack() {\n"
+	code += "typedef struct {\n"
+	code += "    int items[MAX];\n"
+	code += "    int top;\n"
+	code += "} Stack;\n\n"
+	code += "void initStack(Stack *s) { s->top = -1; }\n"
+	code += "int isEmpty(Stack *s) { return s->top == -1; }\n"
+	code += "int isFull(Stack *s) { return s->top == MAX - 1; }\n"
+	code += "void push(Stack *s, int val) {\n"
+	code += "    if(isFull(s)) return;\n"
+	code += "    s->items[++s->top] = val;\n"
+	code += "}\n"
+	code += "int pop(Stack *s) {\n"
+	code += "    if(isEmpty(s)) return -1;\n"
+	code += "    return s->items[s->top--];\n"
+	code += "}\n"
+	code += "int peek(Stack *s) { return isEmpty(s) ? -1 : s->items[s->top]; }\n\n"
+	code += "void printStack(Stack *s) {\n"
 	code += "    printf(\"[\");\n"
-	code += "    for(int i = top; i >= 0; i--) {\n"
-	code += "        printf(\"%d\", stack[i]);\n"
-	code += "        if(i > 0) printf(\", \");\n"
+	code += "    for(int i = 0; i <= s->top; i++) {\n"
+	code += "        printf(\"%d\", s->items[i]);\n"
+	code += "        if(i < s->top) printf(\", \");\n"
 	code += "    }\n"
 	code += "    printf(\"]\\n\");\n"
 	code += "}\n\n"
 	code += "int main() {\n"
+	code += "    Stack s;\n"
+	code += "    initStack(&s);\n"
+	code += "    printf(\"=== STACK SIMULATION ===\\n\\n\");\n"
 	
-	if waiting_elements.size() > 0:
-		code += "    int elements[] = {%s};\n" % _array_to_string(waiting_elements)
+	if elements_array.size() > 0:
+		code += "    int elements[] = {%s};\n" % _array_to_string(elements_array)
 		code += "    int n = sizeof(elements)/sizeof(elements[0]);\n\n"
-	else:
-		code += "    // No elements to push\n\n"
-	
-	code += "    printf(\"Initial stack: \");\n"
-	code += "    printStack();\n\n"
-	
-	if waiting_elements.size() > 0:
-		code += "    // Push operations\n"
+		code += "    printf(\"Initial stack: \");\n"
+		code += "    printStack(&s);\n\n"
+		
+		code += "    // PUSH operations\n"
+		code += "    printf(\"--- PUSH OPERATIONS ---\\n\");\n"
 		code += "    for(int i = 0; i < n; i++) {\n"
-		code += "        push(elements[i]);\n"
-		code += "        printf(\"After push %d: \", elements[i]);\n"
-		code += "        printStack();\n"
+		code += "        printf(\"\\nPushing %d to stack...\\n\", elements[i]);\n"
+		code += "        push(&s, elements[i]);\n"
+		code += "        printf(\"Stack after push: \");\n"
+		code += "        printStack(&s);\n"
 		code += "    }\n\n"
 		
-		code += "    // Peek operation\n"
-		code += "    if(!isEmpty()) {\n"
-		code += "        printf(\"Top element (peek): %d\\n\", peek());\n"
+		code += "    // PEEK operation\n"
+		code += "    printf(\"--- PEEK OPERATION ---\\n\");\n"
+		code += "    if(!isEmpty(&s)) {\n"
+		code += "        printf(\"\\nTop element (peek): %d\\n\", peek(&s));\n"
+		code += "        printf(\"Stack remains: \");\n"
+		code += "        printStack(&s);\n"
 		code += "    }\n\n"
+		
+		code += "    // POP operations\n"
+		code += "    printf(\"--- POP OPERATIONS ---\\n\");\n"
+		code += "    int pop_count = 0;\n"
+		code += "    while(!isEmpty(&s)) {\n"
+		code += "        printf(\"\\nPopping: %d\\n\", peek(&s));\n"
+		code += "        pop(&s);\n"
+		code += "        pop_count++;\n"
+		code += "        if(!isEmpty(&s)) {\n"
+		code += "            printf(\"Stack after pop: \");\n"
+		code += "            printStack(&s);\n"
+		code += "        } else {\n"
+		code += "            printf(\"Stack is now empty.\\n\");\n"
+		code += "        }\n"
+		code += "    }\n\n"
+		
+		code += "    // Summary\n"
+		code += "    printf(\"\\n=== SIMULATION SUMMARY ===\\n\");\n"
+		code += "    printf(\"Total pushes: %d\\n\", n);\n"
+		code += "    printf(\"Total pops: %d\\n\", pop_count);\n"
+		code += "    printf(\"Total peeks: 1\\n\");\n"
+	else:
+		code += "    printf(\"No elements to push. Stack remains empty.\\n\");\n"
 	
-	code += "    // Pop operations\n"
-	code += "    while(!isEmpty()) {\n"
-	code += "        printf(\"Popping: %d\\n\", peek());\n"
-	code += "        pop();\n"
-	code += "        printf(\"After pop: \");\n"
-	code += "        printStack();\n"
-	code += "    }\n\n"
-	code += "    printf(\"Simulation finished.\\n\");\n"
+	code += "    printf(\"\\n=== SIMULATION FINISHED ===\\n\");\n"
 	code += "    return 0;\n"
 	code += "}\n"
 	code += "/* Complexity: Push/Pop/Peek O(1) | Space O(n) */"
@@ -1509,19 +1608,6 @@ func _on_c_lang_button_pressed() -> void:
 
 func refresh_code_display() -> void:
 	if cpp_popup and cpp_popup.visible and cpp_text:
-		var source_arr: Array = []
-		if dequeued_elements.size() > 0: 
-			source_arr = dequeued_elements.duplicate()
-		elif queue.size() > 0: 
-			source_arr = queue.duplicate()
-		elif waiting_elements.size() > 0: 
-			source_arr = waiting_elements.duplicate()
-		else: 
-			source_arr = []  # Empty array
-		
-		# Update waiting_elements for code generation
-		waiting_elements = source_arr.duplicate()
-		
 		cpp_text.text = _generate_code_for_language(current_code_language)
 		update_language_button_states()
 		cpp_tutorialcode_index = 0
@@ -1708,11 +1794,6 @@ func _create_index_label(index: int) -> Label:
 	
 func clear_cpp_highlight() -> void:
 	if not cpp_text: return
-	var source_arr: Array = []
-	if dequeued_elements.size() > 0: source_arr = dequeued_elements.duplicate()
-	elif queue.size() > 0: source_arr = queue.duplicate()
-	elif waiting_elements.size() > 0: source_arr = waiting_elements.duplicate()
-	else: source_arr = [10, 20, 30]
 	cpp_text.text = _generate_code_for_language(current_code_language)
 
 func _clear_simulation_data() -> void:
@@ -1723,7 +1804,10 @@ func _clear_simulation_data() -> void:
 	code_lines.clear()
 	enqueue_counter = 0
 	dequeue_counter = 0
-	peek_counter = 0  # NEW: Reset peek counter
+	peek_counter = 0
+	
+	# Keep initial configuration for code generation
+	# Don't clear initial_waiting_elements
 	
 	for child in queue_container.get_children(): child.queue_free()
 	for child in dequeued_container.get_children():
