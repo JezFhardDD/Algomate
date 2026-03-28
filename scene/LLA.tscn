@@ -17,26 +17,7 @@ offset_top = -8.0
 offset_right = 28.0
 offset_bottom = -8.0
 
-[node name="HSeparator2" parent="CppPopup/VBoxContainer/TutorialPanel" index="0"]
-layout_mode = 0
-
-[node name="Simulate_new_confirmation" parent="." index="26"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -200.0
-offset_top = -125.0
-offset_right = 200.0
-offset_bottom = 125.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="isFull" parent="." index="28"]
-visible = false
-
-[node name="isEmpty" parent="." index="29"]
+[node name="ReplaceButton" parent="VBoxContainer" index="5"]
 visible = false
 
 [node name="ArrowLayer" type="Control" parent="." index="36"]

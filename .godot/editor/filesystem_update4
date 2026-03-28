@@ -3,3 +3,8 @@ res://scene/BG.gdshader
 res://script/stack_sim.gd
 res://scene/Queue.tscn
 res://script/queue_sim.gd
+res://scene/TreeBFSa.tscn
+res://scene/ArrayA.tscn
+res://scene/LLA.tscn
+res://scene/QueueA.tscn
+res://scene/StackA.tscn

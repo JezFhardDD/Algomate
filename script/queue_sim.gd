@@ -274,10 +274,9 @@ func _ready() -> void:
 
 	_connect_configuration_buttons()
 	_setup_compiler()
-	_show_config_modal()
-
-	call_deferred("show_introduction")
 	q_mark_sprite.play("default")
+	call_deferred("show_introduction")
+	_show_config_modal
 
 	if cpp_lang_btn and not cpp_lang_btn.is_connected("pressed", _on_cpp_lang_button_pressed):
 		cpp_lang_btn.pressed.connect(_on_cpp_lang_button_pressed)
@@ -532,17 +531,17 @@ func start_tutorial() -> void:
 	]
 
 	tutorial_texts = [
-		"ENQUEUE BUTTON\n\nAdds a new element to the REAR of the queue.\nElements are added from the waiting list (FIFO).",
-		"DEQUEUE BUTTON\n\nRemoves the element at the FRONT of the queue.\nFollows First-In-First-Out (FIFO) order.",
-		"PEEK BUTTON\n\nViews the front element without removing it.\nThe element will briefly flash to show its value.",
-		"DEQUEUED ELEMENTS\n\nShows all elements that have already been dequeued from the queue.",
-		"WAITING ELEMENTS\n\nShows the list of elements waiting to be enqueued into the queue.",
-		"TIMELINE\n\nShows a history of all enqueue, dequeue, and peek operations performed.",
-		"SIMULATE NEW\n\nRestarts the simulation from scratch with a brand new queue.",
-		"ENQUEUE COUNTER\n\nTracks the total number of enqueue operations performed so far.",
-		"DEQUEUE COUNTER\n\nTracks the total number of dequeue operations performed so far.",
-		"FULL INDICATOR\n\nTurns GREEN when the queue has reached its maximum capacity.\nTurns DARK when there is still space available.",
-		"EMPTY INDICATOR\n\nTurns PINK when the queue has no elements.\nTurns DARK when the queue contains data."
+		"ENQUEUE BUTTON\nAdds a new element to the REAR of the queue.\nElements are added from the waiting list (FIFO).",
+		"DEQUEUE BUTTON\nRemoves the element at the FRONT of the queue.\nFollows First-In-First-Out (FIFO) order.",
+		"PEEK BUTTON\nViews the front element without removing it.\nThe element will briefly flash to show its value.",
+		"DEQUEUED ELEMENTS\nShows all elements that have already been dequeued from the queue.",
+		"WAITING ELEMENTS\nShows the list of elements waiting to be enqueued into the queue.",
+		"TIMELINE\nShows a history of all enqueue, dequeue, and peek operations performed.",
+		"SIMULATE NEW\nRestarts the simulation from scratch with a brand new queue.",
+		"ENQUEUE COUNTER\nTracks the total number of enqueue operations performed so far.",
+		"DEQUEUE COUNTER\nTracks the total number of dequeue operations performed so far.",
+		"FULL INDICATOR\nTurns GREEN when the queue has reached its maximum capacity.\nTurns DARK when there is still space available.",
+		"EMPTY INDICATOR\nTurns PINK when the queue has no elements.\nTurns DARK when the queue contains data."
 	]
 
 	tutorial_step = 0
@@ -1402,6 +1401,7 @@ func _on_block_dropped(dropped_block: Control) -> void:
 
 func show_introduction() -> void:
 	if not intro_popup: return
+	tutorial_overlay.show() 
 	intro_step = 0
 	intro_label.text = intro_texts[intro_step]
 	if intro_next_btn and not intro_next_btn.is_connected("pressed", _on_intro_next_pressed):
@@ -1431,13 +1431,15 @@ func _on_intro_next_pressed() -> void:
 		intro_label.text = intro_texts[intro_step]
 		_update_intro_buttons()
 	else:
-		if intro_popup: intro_popup.hide()
-		_set_main_ui_enabled(true)
+		intro_popup.hide()
+		tutorial_overlay.hide()    # ← add this
+		_show_config_modal()       # ← show config AFTER intro finishes
 
 func _on_intro_skip_pressed() -> void:
 	btn_sound.play()
-	if intro_popup: intro_popup.hide()
-	_set_main_ui_enabled(true)
+	intro_popup.hide()
+	tutorial_overlay.hide()        # ← add this
+	_show_config_modal()           # ← show config AFTER intro finishes
 
 func _on_intro_prev_pressed() -> void:
 	btn_sound.play()

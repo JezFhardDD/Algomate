@@ -67,6 +67,9 @@ text = "UNDO"
 [node name="DeleteButton" parent="VBoxContainer" index="4"]
 text = "REDO"
 
+[node name="ReplaceButton" parent="VBoxContainer" index="5"]
+visible = false
+
 [node name="SortButton" parent="VBoxContainer" index="6"]
 visible = false
 
@@ -190,6 +193,6 @@ horizontal_alignment = 1
 visible = true
 offset_left = -166.5
 offset_top = -309.0
-offset_right = 275.63397
+offset_right = 425.68524
 offset_bottom = -209.0
 theme_override_font_sizes/font_size = 40

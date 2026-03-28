@@ -41,7 +41,10 @@ text = "Bottom"
 [node name="AnimatedSprite2D" parent="VBoxContainer/HBoxContainer" index="0"]
 position = Vector2(8, 17)
 
-[node name="QueueContainer" parent="." index="7"]
+[node name="ReplaceButton" parent="VBoxContainer" index="5"]
+visible = false
+
+[node name="QueueContainer" parent="." index="8"]
 anchors_preset = -1
 anchor_left = 0.44058976
 anchor_top = 0.012383901
@@ -55,28 +58,8 @@ grow_horizontal = 2
 grow_vertical = 2
 metadata/_edit_use_anchors_ = true
 
-[node name="CppCodeButton" parent="." index="13"]
+[node name="CppCodeButton" parent="." index="14"]
 visible = false
-
-[node name="MarginContainer" parent="." index="29"]
-offset_left = 289.5
-offset_top = -178.0
-offset_right = 539.5
-offset_bottom = -108.0
-
-[node name="TextureRect" parent="MarginContainer/HBoxContainer2" index="0"]
-custom_minimum_size = Vector2(20, 0)
-
-[node name="TargetLabel" parent="." index="31"]
-anchors_preset = 5
-anchor_top = 0.0
-anchor_bottom = 0.0
-offset_left = 283.5
-offset_top = 307.0
-offset_right = 536.5
-offset_bottom = 364.0
-grow_vertical = 1
-horizontal_alignment = 1
 
 [node name="CommandProgressLabel" parent="." index="32"]
 offset_left = 281.5
@@ -113,3 +96,23 @@ offset_top = 533.0
 offset_right = 454.0
 offset_bottom = 598.0
 theme_override_font_sizes/font_size = 20
+
+[node name="TargetLabel" parent="." index="37"]
+anchors_preset = 5
+anchor_top = 0.0
+anchor_bottom = 0.0
+offset_left = 283.5
+offset_top = 307.0
+offset_right = 536.5
+offset_bottom = 364.0
+grow_vertical = 1
+horizontal_alignment = 1
+
+[node name="MarginContainer" parent="." index="38"]
+offset_left = 289.5
+offset_top = -178.0
+offset_right = 539.5
+offset_bottom = -108.0
+
+[node name="TextureRect" parent="MarginContainer/HBoxContainer2" index="0"]
+custom_minimum_size = Vector2(20, 0)
