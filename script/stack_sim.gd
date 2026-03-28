@@ -365,25 +365,42 @@ func _setup_compiler() -> void:
 
 func _on_compile_button_pressed() -> void:
 	btn_sound.play()
-	
+
+	print("=== DEBUG: Elements for code generation ===")
+	print("initial_waiting_elements: ", initial_waiting_elements)
+	print("waiting_elements: ", waiting_elements)
+	print("queue (current stack): ", queue)
 	var code = _generate_code_for_language(current_code_language)
+	print("=== COMPILATION REQUEST ===")
+	print("Language: ", current_code_language)
+	print("Code length: ", code.length())
+	print("Code preview:\n", code.substr(0, 500))
+	print("=== GENERATED CODE ===")
+	print(code)
+	print("=== END GENERATED CODE ===")
 	
 	if compiler_output_popup and compiler_output_popup.has_cached_result(current_code_language):
 		var cached = compiler_output_popup.get_cached_result(current_code_language)
+		print("Using cached result for ", current_code_language)
+		print("Cached output length: ", cached.output.length())
+		print("Cached output preview:\n", cached.output.substr(0, 500))
+		
 		var fake_response = {
 			"output": cached.output,
 			"error": cached.error,
 			"memory": cached.memory,
-			"cpu": cached.cpu
+			"cpuTime": cached.cpu  # Make sure to use cpuTime, not cpu
 		}
 		compiler_output_popup.show_output(current_code_language, fake_response, self, false)
 		show_feedback("Using cached result!", Color.YELLOW, Vector2(200, 200))
 	else:
+		print("No cache - making new API request")
 		_compile_code(code)
 
 
 func _compile_code(code: String) -> void:
 	show_feedback("Compiling...", Color.YELLOW, Vector2(200, 200))
+	print("Starting compilation request...")
 	
 	var keys = API_KEYS[current_code_language]
 	
@@ -409,11 +426,13 @@ func _compile_code(code: String) -> void:
 	
 	print("=== Stack Compile Request ===")
 	print("Language: ", current_code_language, " → API: ", api_language)
-	print("Script preview: ", code.substr(0, 50) + "...")
+	print("Script length: ", code.length())
+	print("Script preview: ", code.substr(0, 100) + "...")
 	
 	var error = http_request.request(url, headers, HTTPClient.METHOD_POST, body)
 	if error != OK:
-		show_feedback("Network error!", Color.RED, Vector2(200, 200))
+		show_feedback("Network error! " + str(error), Color.RED, Vector2(200, 200))
+		print("HTTP Request error: ", error)
 
 
 func _get_version_index(lang: String) -> String:
@@ -424,22 +443,37 @@ func _get_version_index(lang: String) -> String:
 		"python": return "4"
 		_: return "0"
 
-
 func _on_compile_completed(result, response_code, headers, body, http_request, language: String) -> void:
 	http_request.queue_free()
 	
+	print("=== COMPILATION RESPONSE ===")
+	print("Response code: ", response_code)
+	
 	if response_code != 200:
-		show_feedback("API Error: " + str(response_code), Color.RED, Vector2(200, 200))
+		var error_text = "API Error: " + str(response_code)
+		if body:
+			error_text += "\n" + body.get_string_from_utf8()
+		print(error_text)
+		show_feedback(error_text, Color.RED, Vector2(200, 200))
 		return
 	
 	var json = JSON.new()
 	var parse_result = json.parse(body.get_string_from_utf8())
 	
 	if parse_result != OK:
+		print("Parse error: ", parse_result)
 		show_feedback("Parse error!", Color.RED, Vector2(200, 200))
 		return
 	
 	var response = json.data
+	print("Response keys: ", response.keys())
+	
+	# Log output preview
+	if response.has("output"):
+		print("Output length: ", response.output.length())
+		print("Output preview:\n", response.output.substr(0, 500))
+	if response.has("error") and response.error != "":
+		print("Error: ", response.error)
 	
 	if compiler_output_popup:
 		compiler_output_popup.show_output(language, response, self, false)
@@ -1201,6 +1235,11 @@ func _add_code_line(op: String, index: int, value: int) -> void:
 
 func _generate_code_for_language(lang: String) -> String:
 	var elements_to_use = initial_waiting_elements if initial_waiting_elements.size() > 0 else waiting_elements
+	print("=== CODE GENERATION DEBUG ===")
+	print("Language: ", lang)
+	print("Elements to use: ", elements_to_use)
+	print("initial_waiting_elements size: ", initial_waiting_elements.size())
+	print("waiting_elements size: ", waiting_elements.size())
 	
 	match lang:
 		"python": return _gen_python_code(elements_to_use)

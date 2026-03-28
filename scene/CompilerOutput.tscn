@@ -135,6 +135,7 @@ animations = [{
 [node name="CompilerOutput" type="PopupPanel"]
 oversampling_override = 1.0
 size = Vector2i(800, 650)
+visible = true
 script = ExtResource("1_p6f33")
 
 [node name="Panel" type="Panel" parent="."]
@@ -325,16 +326,14 @@ layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="OutputText" type="RichTextLabel" parent="Panel/VBoxContainer/ContentContainer/OutputContainer/ScrollContainer"]
-custom_minimum_size = Vector2(0, 200)
+[node name="OutputText" type="CodeEdit" parent="Panel/VBoxContainer/ContentContainer/OutputContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_colors/default_color = Color(0, 1, 0, 1)
-theme_override_fonts/normal_font = ExtResource("7_evkte")
-theme_override_font_sizes/normal_font_size = 40
-bbcode_enabled = true
-scroll_active = false
+mouse_filter = 1
+editable = false
+wrap_mode = 1
+scroll_past_end_of_file = true
 
 [node name="ErrorContainer" type="VBoxContainer" parent="Panel/VBoxContainer/ContentContainer"]
 visible = false
