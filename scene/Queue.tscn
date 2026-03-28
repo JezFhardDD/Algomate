@@ -1061,7 +1061,7 @@ theme_override_font_sizes/font_size = 26
 theme_override_styles/normal = SubResource("StyleBoxTexture_trn2v")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_bg4s2")
 theme_override_styles/hover = SubResource("StyleBoxTexture_sc1dx")
-text = "Peak"
+text = "Peek"
 
 [node name="DequeuedElements" type="Button" parent="VBoxContainer"]
 layout_mode = 2

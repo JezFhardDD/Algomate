@@ -2,3 +2,4 @@ res://scene/Stack.tscn
 res://scene/BG.gdshader
 res://script/stack_sim.gd
 res://scene/Queue.tscn
+res://script/queue_sim.gd
