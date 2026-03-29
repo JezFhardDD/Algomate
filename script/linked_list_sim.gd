@@ -15,6 +15,11 @@ extends Control
 # --- CUSTOM MENU BUTTONS (Created in Editor) ---
 @onready var insert_menu: MenuButton = $VBoxContainer/InsertMenu
 @onready var delete_menu: MenuButton = $VBoxContainer/DeleteMenu
+@onready var update_menu: MenuButton = $VBoxContainer/UpdateAtPos  # NEW: Update button
+
+# --- INDICATORS ---
+@onready var is_full_indicator: TextureRect = $isFull  # NEW: isFull indicator
+@onready var is_empty_indicator: TextureRect = $isEmpty  # NEW: isEmpty indicator
 
 # --- LABELS & CONTAINERS ---
 @onready var status_label: Label = $HBoxContainer/Label
@@ -35,7 +40,7 @@ extends Control
 @onready var show_cpp_btn: Button = get_node_or_null("SimulationCompletePopup/VBoxContainer/ShowCppButton") as Button
 @onready var process_label: Label = get_node_or_null("SimulationCompletePopup/VBoxContainer/ProcessLabel")
 
-# --- C++ POPUP NODES ---
+# --- CODE POPUP NODES ---
 @onready var cpp_popup: PopupPanel = get_node_or_null("CppPopup") as PopupPanel
 @onready var cpp_scroll: ScrollContainer = get_node_or_null("CppPopup/VBoxContainer/CodeScroll")
 @onready var cpp_label: RichTextLabel = get_node_or_null("CppPopup/VBoxContainer/CodeScroll/CodeLabel")
@@ -57,7 +62,7 @@ const RESULT_POPUP_SCENE := preload("res://scene/ResultPopup.tscn")
 
 # --- bg texture and font ---
 const DIALOG_BG_TEX = preload("res://assets/CONTAINER.png")
-const CUSTOM_FONT = preload("res://assets/font/Planes_ValMore.ttf") # <-- Change this to your actual font file name!
+const CUSTOM_FONT = preload("res://assets/font/Planes_ValMore.ttf")
 
 # --- POINTERS ---
 @onready var ptr_left: Node = $TextureRect/front   
@@ -106,6 +111,10 @@ const CUSTOM_FONT = preload("res://assets/font/Planes_ValMore.ttf") # <-- Change
 @onready var java_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/Java_btn
 @onready var c_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/C_btn
 
+# --- INDEX LABELS ---
+var index_labels: Array[Label] = []  # NEW: Store index label nodes
+var INDEX_LABEL_OFFSET: float = 120.0  # NEW: Vertical offset for index labels
+
 # ==============================================
 #   STATE VARIABLES
 # ==============================================
@@ -131,9 +140,11 @@ var swap_counter: int = 0
 var sorting_complete: bool = false
 var is_sorting: bool = false
 var is_auto_playing: bool = false
+var simulation_ended: bool = false  # NEW: Track simulation ended state
 
 var code_lines: Array[String] = []
 var current_code_language: String = "cpp"
+var max_array_size: int = 6  # NEW: Max size for linked list
 
 # Result Popup Variables
 var result_popup: PopupPanel
@@ -153,7 +164,7 @@ var BLOCK_SPACING: float = 40.0
 var START_POSITION: Vector2 = Vector2(50, 100)
 var ANIM_SPEED: float = 1.5 
 
-# --- INPUT DIALOG ELEMENTS (Hard-Coded) ---
+# --- INPUT DIALOG ELEMENTS ---
 var target_input_dialog: ConfirmationDialog
 var target_spinbox: SpinBox
 var pos_input_dialog: ConfirmationDialog
@@ -170,8 +181,8 @@ var intro_step: int = 0
 var intro_texts = [
 	"Welcome to Linked List Simulation!\nA Linked List is a linear data structure where elements are not stored in contiguous memory locations. Instead, elements are linked using pointers.",
 	"The Pointers:\n\n• HEAD: Points to the first node.\n• TAIL: Points to the last node.\n• NEXT: Arrows linking one node to the next.",
-	"Complexity:\n\nTime: [color=yellow]O(N)[/color] for Search, [color=green]O(1)[/color] for Insertion/Deletion at known pointers.\nSpace: [color=yellow]O(N)[/color] for storing N nodes.",
-	"Operations available:\n\n• INSERT: Add at Beginning, End, or a specific Position.\n• DELETE: Remove from Beginning, End, or a specific Position.\n• SEARCH: Traverse the list to find a value."
+	"Complexity:\n\nTime: O(N) for Search, O(1) for Insertion/Deletion at known pointers.\nSpace: O(N) for storing N nodes.",
+	"Operations available:\n\n• INSERT: Add at Beginning, End, or a specific Position.\n• DELETE: Remove from Beginning, End, or a specific Position.\n• UPDATE: Update value at a specific Position.\n• SEARCH: Traverse the list to find a value."
 ]
 
 var element_inputs: Array[LineEdit] = []
@@ -179,28 +190,28 @@ var cpp_tutorial_step: int = 0
 
 var tutorial_data_map = {
 	"cpp": [
-		{ "lines": [0], "text": "1. Complexity: [color=yellow]Time O(N)[/color], [color=yellow]Space O(N)[/color]" },
+		{ "lines": [0], "text": "1. Complexity: Time O(N), Space O(N)" },
 		{ "lines": [4, 5, 6, 7], "text": "2. Structure:\nA Node contains data and a pointer to the next node." },
 		{ "lines": [91, 92, 93], "text": "3. Traversal Loop:\nStart at the head. Loop continues as long as current is not NULL." },
 		{ "lines": [94, 95, 96, 97], "text": "4. Checking Value:\nIf current node's data matches target 'value', print result." },
 		{ "lines": [98, 99], "text": "5. Moving Forward:\nIf not a match, move current pointer to the NEXT node." }
 	],
 	"python": [
-		{ "lines": [0], "text": "1. Complexity: [color=yellow]Time O(N)[/color], [color=yellow]Space O(N)[/color]" },
+		{ "lines": [0], "text": "1. Complexity: Time O(N), Space O(N)" },
 		{ "lines": [1, 2, 3, 4], "text": "2. Structure:\nA Node contains data and a reference to the next node." },
 		{ "lines": [60, 61, 62], "text": "3. Traversal Loop:\nStart at the head. Loop continues as long as current is not None." },
 		{ "lines": [63, 64, 65], "text": "4. Checking Value:\nIf current node's data matches target 'value', print found." },
 		{ "lines": [66, 67], "text": "5. Moving Forward:\nIf not a match, move current pointer to the NEXT node." }
 	],
 	"java": [
-		{ "lines": [0], "text": "1. Complexity: [color=yellow]Time O(N)[/color], [color=yellow]Space O(N)[/color]" },
+		{ "lines": [0], "text": "1. Complexity: Time O(N), Space O(N)" },
 		{ "lines": [1, 2, 3, 4], "text": "2. Structure:\nA Node contains data and a reference to the next node." },
 		{ "lines": [85, 86, 87], "text": "3. Traversal Loop:\nStart at the head. Loop continues as long as current is not null." },
 		{ "lines": [88, 89, 90, 91], "text": "4. Checking Value:\nIf current node's data matches target 'value', print result." },
 		{ "lines": [92, 93], "text": "5. Moving Forward:\nIf not a match, move current pointer to the NEXT node." }
 	],
 	"c": [
-		{ "lines": [0], "text": "1. Complexity: [color=yellow]Time O(N)[/color], [color=yellow]Space O(N)[/color]" },
+		{ "lines": [0], "text": "1. Complexity: Time O(N), Space O(N)" },
 		{ "lines": [4, 5, 6, 7], "text": "2. Structure:\nA Node contains data and a pointer to the next node." },
 		{ "lines": [87, 88, 89], "text": "3. Traversal Loop:\nStart at the head. Loop continues as long as current is not NULL." },
 		{ "lines": [90, 91, 92, 93], "text": "4. Checking Value:\nIf current node's data matches target 'value', print result." },
@@ -270,12 +281,19 @@ func _ready() -> void:
 	_connect_configuration_buttons()
 	_setup_compiler()
 	
+	# Setup update menu button
+	_setup_update_menu()
+	
 	_show_config_modal() 
 	call_deferred("show_introduction")
 	
 	if q_mark_sprite: q_mark_sprite.play("default")
 	if code_anim: code_anim.play("default")
 	_connect_language_buttons()
+	
+	# Hide indicators initially
+	if is_full_indicator: is_full_indicator.modulate = Color(0.3, 0.3, 0.3, 1)
+	if is_empty_indicator: is_empty_indicator.modulate = Color(0.3, 0.3, 0.3, 1)
 
 func _enter_tree():
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
@@ -287,7 +305,33 @@ func _enter_tree():
 
 func _exit_tree():
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_PORTRAIT)
-	 
+
+# ==============================================
+#   UPDATE MENU SETUP
+# ==============================================
+func _setup_update_menu():
+	if update_menu:
+		update_menu.custom_minimum_size = Vector2(250, 60)
+		update_menu.add_theme_font_override("font", CUSTOM_FONT)
+		update_menu.add_theme_font_size_override("font_size", 18)
+		
+		var update_popup = update_menu.get_popup()
+		update_popup.clear()
+		update_popup.add_item("Update at Position", 0)
+		
+		update_popup.add_theme_constant_override("item_start_padding", 30)
+		update_popup.add_theme_constant_override("item_end_padding", 50)
+		update_popup.add_theme_constant_override("v_separation", 24)
+		
+		var custom_bg_style = _get_texture_stylebox(DIALOG_BG_TEX)
+		var hover_style = StyleBoxFlat.new()
+		hover_style.bg_color = Color(1, 1, 1, 0.1)
+		
+		update_popup.add_theme_stylebox_override("panel", custom_bg_style)
+		update_popup.add_theme_stylebox_override("hover", hover_style)
+		update_popup.add_theme_font_override("font", CUSTOM_FONT)
+		update_popup.add_theme_font_size_override("font_size", 16)
+		update_popup.id_pressed.connect(_on_update_selected)
 
 # ==============================================
 #   COMPILER SETUP FUNCTIONS
@@ -373,17 +417,13 @@ func reset_cache_for_scene() -> void:
 # ==============================================
 #   DIALOG CREATION & MENU SETUP
 # ==============================================
-# ==============================================
-#   DIALOG CREATION & MENU SETUP
-# ==============================================
 func _setup_menu_buttons():
 	var custom_bg_style = _get_texture_stylebox(DIALOG_BG_TEX)
 	var hover_style = StyleBoxFlat.new()
 	hover_style.bg_color = Color(1, 1, 1, 0.1) 
 	
 	if insert_menu:
-		# --- 2. FORCE THE MAIN BUTTON SIZE ---
-		insert_menu.custom_minimum_size = Vector2(250, 60) # Adjust Width, Height here!
+		insert_menu.custom_minimum_size = Vector2(250, 60)
 		insert_menu.add_theme_font_override("font", CUSTOM_FONT)
 		insert_menu.add_theme_font_size_override("font_size", 18)
 		
@@ -393,10 +433,9 @@ func _setup_menu_buttons():
 		in_popup.add_item("Insert at End", 1)
 		in_popup.add_item("Insert at Position", 2)
 		
-		# --- 3. WIDEN THE DROPDOWN LIST & MAKE ITEMS TALLER ---
-		in_popup.add_theme_constant_override("item_start_padding", 30) # Pushes text right
-		in_popup.add_theme_constant_override("item_end_padding", 50)   # Adds empty space on the right (makes it wider)
-		in_popup.add_theme_constant_override("v_separation", 24)       # Height between items
+		in_popup.add_theme_constant_override("item_start_padding", 30)
+		in_popup.add_theme_constant_override("item_end_padding", 50)
+		in_popup.add_theme_constant_override("v_separation", 24)
 		
 		in_popup.add_theme_stylebox_override("panel", custom_bg_style)
 		in_popup.add_theme_stylebox_override("hover", hover_style)
@@ -405,9 +444,7 @@ func _setup_menu_buttons():
 		in_popup.id_pressed.connect(_on_insert_selected)
 		
 	if delete_menu:
-		# --- 2. FORCE THE MAIN BUTTON SIZE ---
-		delete_menu.custom_minimum_size = Vector2(250, 60) # Adjust Width, Height here!
-		
+		delete_menu.custom_minimum_size = Vector2(250, 60)
 		delete_menu.add_theme_font_override("font", CUSTOM_FONT)
 		delete_menu.add_theme_font_size_override("font_size", 18)
 		
@@ -417,7 +454,6 @@ func _setup_menu_buttons():
 		del_popup.add_item("Delete at End", 1)
 		del_popup.add_item("Delete at Position", 2)
 		
-		# --- 3. WIDEN THE DROPDOWN LIST & MAKE ITEMS TALLER ---
 		del_popup.add_theme_constant_override("item_start_padding", 30)
 		del_popup.add_theme_constant_override("item_end_padding", 50)
 		del_popup.add_theme_constant_override("v_separation", 24)
@@ -431,10 +467,9 @@ func _setup_menu_buttons():
 func _create_input_dialogs():
 	var custom_bg_style = _get_texture_stylebox(DIALOG_BG_TEX)
 	
-	# --- 1. Basic Target Value Dialog ---
 	target_input_dialog = ConfirmationDialog.new()
-	target_input_dialog.borderless = true # Removes the gray native background
-	target_input_dialog.min_size = Vector2i(350, 160) # Adjusts Width and Height
+	target_input_dialog.borderless = true
+	target_input_dialog.min_size = Vector2i(350, 160)
 	target_input_dialog.add_theme_stylebox_override("panel", custom_bg_style)
 	
 	var vbox = VBoxContainer.new()
@@ -452,17 +487,16 @@ func _create_input_dialogs():
 	target_spinbox.min_value = 0
 	target_spinbox.max_value = 999
 	target_spinbox.alignment = HORIZONTAL_ALIGNMENT_CENTER
-	target_spinbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL # Stretches to fill width
+	target_spinbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	target_spinbox.custom_minimum_size = Vector2(200, 50)
 	target_spinbox.get_line_edit().add_theme_font_override("font", CUSTOM_FONT)
 	target_spinbox.get_line_edit().add_theme_font_size_override("font_size", 18)
 	vbox.add_child(target_spinbox)
 	add_child(target_input_dialog)
 	
-	# --- 2. Position & Value Dialog ---
 	pos_input_dialog = ConfirmationDialog.new()
-	pos_input_dialog.borderless = true # Removes the gray native background
-	pos_input_dialog.min_size = Vector2i(350, 260) # Adjusts Width and Height
+	pos_input_dialog.borderless = true
+	pos_input_dialog.min_size = Vector2i(350, 260)
 	pos_input_dialog.add_theme_stylebox_override("panel", custom_bg_style)
 	
 	var pvbox = VBoxContainer.new()
@@ -481,13 +515,13 @@ func _create_input_dialogs():
 	pos_spinbox.max_value = 999 
 	pos_spinbox.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	pos_spinbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	target_spinbox.custom_minimum_size = Vector2(200, 50)
+	pos_spinbox.custom_minimum_size = Vector2(200, 50)
 	pos_spinbox.get_line_edit().add_theme_font_override("font", CUSTOM_FONT)
 	pos_spinbox.get_line_edit().add_theme_font_size_override("font_size", 16)
 	pvbox.add_child(pos_spinbox)
 	
 	val_label = Label.new()
-	val_label.text = "Enter Value to Insert:"
+	val_label.text = "Enter Value to Insert/Update:"
 	val_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	val_label.add_theme_font_override("font", CUSTOM_FONT)
 	val_label.add_theme_font_size_override("font_size", 18)
@@ -498,7 +532,7 @@ func _create_input_dialogs():
 	val_spinbox.max_value = 999
 	val_spinbox.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	val_spinbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	target_spinbox.custom_minimum_size = Vector2(200, 50)
+	val_spinbox.custom_minimum_size = Vector2(200, 50)
 	val_spinbox.get_line_edit().add_theme_font_override("font", CUSTOM_FONT)
 	val_spinbox.get_line_edit().add_theme_font_size_override("font_size", 16)
 	pvbox.add_child(val_spinbox)
@@ -537,11 +571,12 @@ func _disconnect_target_signals():
 #   LINKED LIST OPERATIONS
 # ==============================================
 func _on_insert_selected(id: int):
+	if simulation_ended: return
 	btn_sound.play()
 	if is_sorting: return
 	
-	if main_array.size() >= 6:
-		status_label.text = "Max size of 6 reached! Cannot insert more."
+	if main_array.size() >= max_array_size:
+		status_label.text = "Max size of %d reached! Cannot insert more." % max_array_size
 		if Queue_full:
 			Queue_full.show()
 			if anim_sprite: anim_sprite.play("default")
@@ -566,6 +601,7 @@ func _on_insert_selected(id: int):
 		pos_input_dialog.popup_centered()
 
 func _on_delete_selected(id: int):
+	if simulation_ended: return
 	btn_sound.play()
 	if is_sorting: return
 	
@@ -582,18 +618,35 @@ func _on_delete_selected(id: int):
 		pos_spinbox.max_value = main_array.size() - 1
 		pos_input_dialog.popup_centered()
 
+func _on_update_selected(id: int):
+	if simulation_ended: return
+	btn_sound.play()
+	if is_sorting: return
+	
+	if main_array.is_empty():
+		status_label.text = "List is empty! Nothing to update."
+		return
+	
+	current_op_type = 2
+	val_label.show()
+	val_spinbox.show()
+	pos_spinbox.max_value = main_array.size() - 1
+	pos_input_dialog.popup_centered()
+
 func _on_pos_dialog_confirmed():
 	var pos = int(pos_spinbox.value)
 	if current_op_type == 0:
 		_insert_at(pos, int(val_spinbox.value))
-	else:
+	elif current_op_type == 1:
 		_delete_at(pos)
+	elif current_op_type == 2:
+		_update_at(pos, int(val_spinbox.value))
 
 func _insert_beginning(): _insert_at(0, int(target_spinbox.value))
 func _insert_end(): _insert_at(main_array.size(), int(target_spinbox.value))
 
 func _insert_at(index: int, val: int):
-	if main_array.size() >= 6: return 
+	if main_array.size() >= max_array_size: return 
 	if index < 0 or index > main_array.size(): return
 	
 	_add_code_line("INSERT", index, val)
@@ -606,9 +659,22 @@ func _insert_at(index: int, val: int):
 	array_container.add_child(new_block)
 	block_nodes.insert(index, new_block)
 	
-	timeline_log.append("Inserted %d at index %d" % [val, index])
+	# Create index label for new block
+	var index_font = load("res://assets/font/Planes_ValMore.ttf")
+	var index_label = Label.new()
+	index_label.text = str(index)
+	index_label.add_theme_font_override("font", index_font)
+	index_label.add_theme_font_size_override("font_size", 32)
+	index_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	index_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	index_label.add_theme_constant_override("outline_size", 4)
+	array_container.add_child(index_label)
+	index_labels.insert(index, index_label)
+	
+	timeline_log.append("Inserted %d at position %d" % [val, index])
 	status_label.text = "Inserted %d into Linked List." % val
 	_resnap_blocks()
+	_update_indicators()
 
 func _delete_at(index: int):
 	if index < 0 or index >= main_array.size(): return
@@ -618,22 +684,50 @@ func _delete_at(index: int):
 	
 	var val = main_array.pop_at(index)
 	var block = block_nodes.pop_at(index)
+	var label = index_labels.pop_at(index)
 	
 	block.reparent(dequeued_container)
+	label.reparent(dequeued_container)
 	var tw = create_tween()
 	tw.tween_property(block, "modulate:a", 0.0, ANIM_SPEED)
+	tw.parallel().tween_property(label, "modulate:a", 0.0, ANIM_SPEED)
 	tw.tween_callback(block.queue_free)
+	tw.tween_callback(label.queue_free)
 	
-	timeline_log.append("Deleted %d from index %d" % [val, index])
+	timeline_log.append("Deleted %d from position %d" % [val, index])
 	status_label.text = "Deleted %d from Linked List." % val
 	_resnap_blocks()
+	_update_indicators()
+
+func _update_at(index: int, new_val: int):
+	if index < 0 or index >= main_array.size(): return
+	if simulation_ended: return
+	
+	var old_val = main_array[index]
+	main_array[index] = new_val
+	
+	# Update block visual
+	if index < block_nodes.size():
+		block_nodes[index].value = new_val
+		# Flash animation for update
+		var flash_tween = create_tween().set_parallel()
+		flash_tween.tween_property(block_nodes[index], "modulate", Color.YELLOW, 0.1)
+		flash_tween.tween_property(block_nodes[index], "modulate", Color.WHITE, 0.2).set_delay(0.1)
+	
+	_add_code_line("UPDATE", index, new_val)
+	action_history.append({"type": "update", "index": index, "old_value": old_val, "new_value": new_val})
+	
+	timeline_log.append("Updated position %d: %d → %d" % [index, old_val, new_val])
+	status_label.text = "Updated position %d to %d" % [index, new_val]
+	_update_indicators()
 
 # ==============================================
-#   VISUAL UPDATES (POINTERS & LINKS)
+#   VISUAL UPDATES (POINTERS, LINKS & INDEX LABELS)
 # ==============================================
 func _resnap_blocks() -> void:
 	is_sorting = true
 	var x = START_POSITION.x
+	var index_font = load("res://assets/font/Planes_ValMore.ttf")
 	
 	for i in range(block_nodes.size()):
 		var node = block_nodes[i]
@@ -642,6 +736,13 @@ func _resnap_blocks() -> void:
 		tw.tween_property(node, "position", target_pos, ANIM_SPEED)
 		if node.modulate.a < 1.0:
 			tw.parallel().tween_property(node, "modulate:a", 1.0, ANIM_SPEED)
+		
+		# Update index label
+		if i < index_labels.size():
+			var label = index_labels[i]
+			label.text = str(i)
+			var label_target_pos = Vector2(x + (node.size.x / 2) - 15, START_POSITION.y + INDEX_LABEL_OFFSET)
+			tw.parallel().tween_property(label, "position", label_target_pos, ANIM_SPEED)
 		
 		x += (node.size.x * node.scale.x) + BLOCK_SPACING
 	
@@ -682,12 +783,29 @@ func _draw_pointers_and_links():
 		visual_links.append(line)
 
 # ==============================================
+#   INDICATOR FUNCTIONS
+# ==============================================
+func _update_indicators():
+	if is_full_indicator:
+		if main_array.size() >= max_array_size:
+			is_full_indicator.modulate = Color(0, 1, 0, 1)  # Bright green when full
+		else:
+			is_full_indicator.modulate = Color(0.3, 0.3, 0.3, 1)  # Dark when not full
+	
+	if is_empty_indicator:
+		if main_array.size() == 0:
+			is_empty_indicator.modulate = Color(1, 0.5, 0.8, 1)  # Pink when empty
+		else:
+			is_empty_indicator.modulate = Color(0.3, 0.3, 0.3, 1)  # Dark when not empty
+
+# ==============================================
 #   INITIALIZATION
 # ==============================================
 func _initialize_with_elements(elements: Array[int]) -> void:
 	reset_cache_for_scene()
 	code_lines.clear()
 	audio_player.play()
+	simulation_ended = false
 	
 	main_array = elements.duplicate()
 	initial_elements = elements.duplicate() 
@@ -695,22 +813,38 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	
 	_add_code_line("INITIAL", 0, 0)
 	block_nodes.clear()
+	index_labels.clear()
 	timeline_log.clear()
 	
 	for child in array_container.get_children(): child.queue_free()
 	
 	var current_x = START_POSITION.x
-	for val in main_array:
+	var index_font = load("res://assets/font/Planes_ValMore.ttf")
+	
+	for i in range(main_array.size()):
 		var new_block = BLOCK_SCENE.instantiate()
-		new_block.value = val
+		new_block.value = main_array[i]
 		new_block.position = Vector2(current_x, START_POSITION.y)
 		array_container.add_child(new_block)
 		block_nodes.append(new_block)
+		
+		# Create index label below block
+		var index_label = Label.new()
+		index_label.text = str(i)
+		index_label.position = Vector2(current_x + (new_block.size.x / 2) - 15, START_POSITION.y + INDEX_LABEL_OFFSET)
+		index_label.add_theme_font_override("font", index_font)
+		index_label.add_theme_font_size_override("font_size", 32)
+		index_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		index_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+		index_label.add_theme_constant_override("outline_size", 4)
+		array_container.add_child(index_label)
+		index_labels.append(index_label)
+		
 		current_x += (new_block.size.x * new_block.scale.x) + BLOCK_SPACING
 		
 	_draw_pointers_and_links()
 	search_target = 0
-	status_label.text = "Linked List Ready. Use Insert, Delete, or Search."
+	status_label.text = "Linked List Ready. Use Insert, Delete, Update, or Search."
 	
 	current_idx = 0
 	search_found = false
@@ -727,6 +861,21 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	if timeline_close_btn: _ensure_connected(timeline_close_btn, "pressed", _on_timeline_close_pressed)
 	
 	_update_ui_labels()
+	_update_indicators()
+	
+	# Enable all buttons
+	_set_main_ui_enabled(true)
+
+func _set_main_ui_enabled(enabled: bool) -> void:
+	if insert_menu: insert_menu.disabled = not enabled
+	if delete_menu: delete_menu.disabled = not enabled
+	if update_menu: update_menu.disabled = not enabled
+	if sort_btn: sort_btn.disabled = not enabled
+	if auto_btn: auto_btn.disabled = not enabled
+	if auto_search_btn: auto_search_btn.disabled = not enabled
+	if timeline_btn: timeline_btn.disabled = not enabled
+	if simulate_new_btn: simulate_new_btn.disabled = not enabled
+	if help_btn: help_btn.disabled = not enabled
 
 func _ensure_connected(node: Node, signal_name: String, method: Callable):
 	if node and not node.is_connected(signal_name, method):
@@ -736,6 +885,7 @@ func _ensure_connected(node: Node, signal_name: String, method: Callable):
 #   SEARCH TRAVERSAL LOGIC
 # ==============================================
 func _on_search_pressed() -> void:
+	if simulation_ended: return
 	btn_sound.play()
 	target_input_dialog.title = "Search Linked List"
 	_disconnect_target_signals()
@@ -743,6 +893,7 @@ func _on_search_pressed() -> void:
 	target_input_dialog.popup_centered()
 
 func _on_search_confirmed():
+	if simulation_ended: return
 	btn_sound.play()
 	search_target = int(target_spinbox.value)
 	status_label.text = "Searching list for: %d" % search_target
@@ -768,7 +919,7 @@ func _on_search_confirmed():
 		block.modulate = Color(1, 1, 1, 1)
 
 func _on_auto_search_pressed() -> void:
-	if sorting_complete or main_array.is_empty(): return
+	if sorting_complete or main_array.is_empty() or simulation_ended: return
 	btn_sound.play()
 	is_auto_playing = !is_auto_playing
 	if auto_search_btn: auto_search_btn.text = "Pause" if is_auto_playing else "Auto Search"
@@ -776,12 +927,12 @@ func _on_auto_search_pressed() -> void:
 	if is_auto_playing: _run_auto_sort()
 
 func _on_step_pressed() -> void:
-	if is_sorting or sorting_complete: return
+	if is_sorting or sorting_complete or simulation_ended: return
 	btn_sound.play()
 	_perform_sort_step()
 
 func _run_auto_sort() -> void:
-	while is_auto_playing and not sorting_complete:
+	while is_auto_playing and not sorting_complete and not simulation_ended:
 		if is_sorting: await get_tree().process_frame 
 		else:
 			await _perform_sort_step()
@@ -806,6 +957,10 @@ func _perform_sort_step():
 	if block_nodes[current_idx].has_method("set_highlight"):
 		block_nodes[current_idx].set_highlight(true)
 	
+	# Also highlight index label
+	if current_idx < index_labels.size():
+		index_labels[current_idx].add_theme_color_override("font_color", Color(1, 1, 0, 1))
+	
 	comparison_counter += 1
 	var val = main_array[current_idx]
 	status_label.text = "Traversing node %d: %d == %d?" % [current_idx, val, search_target]
@@ -826,6 +981,9 @@ func _perform_sort_step():
 		status_label.text = "Not a match. Moving to NEXT pointer."
 		if block_nodes[current_idx].has_method("set_highlight"):
 			block_nodes[current_idx].set_highlight(false)
+		# Reset index label color
+		if current_idx < index_labels.size():
+			index_labels[current_idx].add_theme_color_override("font_color", Color(1, 1, 1, 1))
 		current_idx += 1
 	
 	_update_ui_labels()
@@ -834,15 +992,29 @@ func _perform_sort_step():
 func _finish_simulation():
 	sorting_complete = true
 	is_auto_playing = false
+	simulation_ended = true
 	
 	if auto_btn: auto_btn.disabled = true
 	if auto_search_btn: 
 		auto_search_btn.text = "Auto Search"
 		auto_search_btn.disabled = true
 	
+	# Disable all operation buttons
+	if insert_menu: insert_menu.disabled = true
+	if delete_menu: delete_menu.disabled = true
+	if update_menu: update_menu.disabled = true
+	if sort_btn: sort_btn.disabled = true
+	
 	_draw_pointers_and_links() 
 	timeline_log.append("--- TRAVERSAL COMPLETE ---")
 	_show_complete_popup()
+	
+	# Show code button
+	if cpp_code_button:
+		cpp_code_button.show()
+		if code_anim: code_anim.play("default")
+	
+	_update_indicators()
 
 func _compute_grade() -> Dictionary:
 	var passed = search_found
@@ -868,7 +1040,6 @@ func _show_complete_popup() -> void:
 		var txt = "Traversal Finished!\n\nTarget: %d\nResult: %s\nNodes Checked: %d" % [search_target, result_text, comparison_counter]
 		if process_label: process_label.text = txt
 		complete_popup.popup_centered()
-		cpp_code_button.show()
 
 func _on_timeline_pressed() -> void:
 	btn_sound.play()
@@ -896,7 +1067,6 @@ func _generate_code_for_language(lang: String) -> String:
 
 func _gen_cpp_code() -> String:
 	var base_code = """/* Linked List Simulation - Operations Log */
-// Complexity: Time O(N) for search, O(1) for insert/delete at ends
 #include <iostream>
 using namespace std;
 
@@ -1002,6 +1172,19 @@ public:
 		printList();
 	}
 	
+	void updateAtIndex(int index, int newVal) {
+		if (head == nullptr) return;
+		Node* temp = head;
+		for (int i = 0; i < index && temp != nullptr; i++) {
+			temp = temp->next;
+		}
+		if (temp == nullptr) return;
+		int oldVal = temp->data;
+		temp->data = newVal;
+		cout << "After update at index " << index << " from " << oldVal << " to " << newVal << ": ";
+		printList();
+	}
+	
 	void linearSearch(int target) {
 		Node* current = head;
 		int index = 0;
@@ -1026,115 +1209,169 @@ int main() {
 
 func _gen_python_code() -> String:
 	var base_code = """# Linked List Simulation - Operations Log
-# Complexity: Time O(N) for search, O(1) for insert/delete at ends
 
 class Node:
-	def __init__(self, data):
-		self.data = data
-		self.next = None
+    def __init__(self, data):
+        self.data = data
+        self.next = None
 
 class LinkedList:
-	def __init__(self):
-		self.head = None
-	
-	def print_list(self):
-		temp = self.head
-		print('[', end='')
-		while temp:
-			print(temp.data, end='')
-			if temp.next:
-				print(', ', end='')
-			temp = temp.next
-		print(']')
-	
-	def insert_beginning(self, val):
-		new_node = Node(val)
-		new_node.next = self.head
-		self.head = new_node
-		print(f'After insert {val} at beginning: ', end='')
-		self.print_list()
-	
-	def insert_end(self, val):
-		new_node = Node(val)
-		if not self.head:
-			self.head = new_node
-		else:
-			temp = self.head
-			while temp.next:
-				temp = temp.next
-			temp.next = new_node
-		print(f'After insert {val} at end: ', end='')
-		self.print_list()
-	
-	def insert_at_index(self, index, val):
-		if index == 0:
-			self.insert_beginning(val)
-			return
-		new_node = Node(val)
-		temp = self.head
-		for _ in range(index - 1):
-			if not temp:
-				return
-			temp = temp.next
-		if not temp:
-			return
-		new_node.next = temp.next
-		temp.next = new_node
-		print(f'After insert {val} at index {index}: ', end='')
-		self.print_list()
-	
-	def delete_beginning(self):
-		if not self.head:
-			return
-		self.head = self.head.next
-		print('After delete at beginning: ', end='')
-		self.print_list()
-	
-	def delete_end(self):
-		if not self.head:
-			return
-		if not self.head.next:
-			self.head = None
-		else:
-			temp = self.head
-			while temp.next.next:
-				temp = temp.next
-			temp.next = None
-		print('After delete at end: ', end='')
-		self.print_list()
-	
-	def delete_at_index(self, index):
-		if index == 0:
-			self.delete_beginning()
-			return
-		temp = self.head
-		for _ in range(index - 1):
-			if not temp:
-				return
-			temp = temp.next
-		if not temp or not temp.next:
-			return
-		temp.next = temp.next.next
-		print(f'After delete at index {index}: ', end='')
-		self.print_list()
-	
-	def linear_search(self, target):
-		current = self.head
-		index = 0
-		while current:
-			print(f'Checking node {index}: {current.data}')
-			if current.data == target:
-				print(f'Found target at index {index}!')
-				return True
-			current = current.next
-			index += 1
-		print('Target not found')
-		return False
+    def __init__(self):
+        self.head = None
+    
+    def print_list(self):
+        temp = self.head
+        print('[', end='')
+        while temp:
+            print(temp.data, end='')
+            if temp.next:
+                print(', ', end='')
+            temp = temp.next
+        print(']')
+    
+    def insert_beginning(self, val):
+        new_node = Node(val)
+        new_node.next = self.head
+        self.head = new_node
+        print(f'After insert {val} at beginning: ', end='')
+        self.print_list()
+    
+    def insert_end(self, val):
+        new_node = Node(val)
+        if not self.head:
+            self.head = new_node
+        else:
+            temp = self.head
+            while temp.next:
+                temp = temp.next
+            temp.next = new_node
+        print(f'After insert {val} at end: ', end='')
+        self.print_list()
+    
+    def insert_at_index(self, index, val):
+        if index == 0:
+            self.insert_beginning(val)
+            return
+        new_node = Node(val)
+        temp = self.head
+        for _ in range(index - 1):
+            if not temp:
+                return
+            temp = temp.next
+        if not temp:
+            return
+        new_node.next = temp.next
+        temp.next = new_node
+        print(f'After insert {val} at index {index}: ', end='')
+        self.print_list()
+    
+    def delete_beginning(self):
+        if not self.head:
+            return
+        self.head = self.head.next
+        print('After delete at beginning: ', end='')
+        self.print_list()
+    
+    def delete_end(self):
+        if not self.head:
+            return
+        if not self.head.next:
+            self.head = None
+        else:
+            temp = self.head
+            while temp.next.next:
+                temp = temp.next
+            temp.next = None
+        print('After delete at end: ', end='')
+        self.print_list()
+    
+    def delete_at_index(self, index):
+        if index == 0:
+            self.delete_beginning()
+            return
+        temp = self.head
+        for _ in range(index - 1):
+            if not temp:
+                return
+            temp = temp.next
+        if not temp or not temp.next:
+            return
+        temp.next = temp.next.next
+        print(f'After delete at index {index}: ', end='')
+        self.print_list()
+    
+    def update_at_index(self, index, new_val):
+        if not self.head:
+            return
+        temp = self.head
+        for _ in range(index):
+            if not temp:
+                return
+            temp = temp.next
+        if not temp:
+            return
+        old_val = temp.data
+        temp.data = new_val
+        print(f'After update at index {index} from {old_val} to {new_val}: ', end='')
+        self.print_list()
+    
+    def linear_search(self, target):
+        current = self.head
+        index = 0
+        while current:
+            print(f'Checking node {index}: {current.data}')
+            if current.data == target:
+                print(f'Found target at index {index}!')
+                return True
+            current = current.next
+            index += 1
+        print('Target not found')
+        return False
 
 if __name__ == '__main__':
-	llist = LinkedList()"""
+    llist = LinkedList()"""
 	
-	var action_code = _build_action_code("python")
+	var action_code = ""
+	action_code += "    # Initial elements\n"
+	for val in initial_elements:
+		action_code += "    llist.insert_end(%d)\n" % val
+	if initial_elements.size() > 0:
+		action_code += "    print('Initial list: ', end='')\n"
+		action_code += "    llist.print_list()\n\n"
+	
+	var step = 1
+	for action in action_history:
+		if action["type"] == "insert":
+			if action["index"] == 0:
+				action_code += "    # Step %d: Insert at beginning\n" % step
+				action_code += "    llist.insert_beginning(%d)\n" % action["value"]
+			elif action["index"] == initial_elements.size():
+				action_code += "    # Step %d: Insert at end\n" % step
+				action_code += "    llist.insert_end(%d)\n" % action["value"]
+			else:
+				action_code += "    # Step %d: Insert at index %d\n" % [step, action["index"]]
+				action_code += "    llist.insert_at_index(%d, %d)\n" % [action["index"], action["value"]]
+			step += 1
+		elif action["type"] == "delete":
+			if action["index"] == 0:
+				action_code += "    # Step %d: Delete at beginning\n" % step
+				action_code += "    llist.delete_beginning()\n"
+			elif action["index"] == initial_elements.size() - 1:
+				action_code += "    # Step %d: Delete at end\n" % step
+				action_code += "    llist.delete_end()\n"
+			else:
+				action_code += "    # Step %d: Delete at index %d\n" % [step, action["index"]]
+				action_code += "    llist.delete_at_index(%d)\n" % action["index"]
+			step += 1
+		elif action["type"] == "update":
+			action_code += "    # Step %d: Update at index %d to %d\n" % [step, action["index"], action["new_value"]]
+			action_code += "    llist.update_at_index(%d, %d)\n" % [action["index"], action["new_value"]]
+			step += 1
+		elif action["type"] == "search":
+			action_code += "    # Step %d: Search for %d\n" % [step, action["value"]]
+			action_code += "    llist.linear_search(%d)\n" % action["value"]
+			step += 1
+	
 	return base_code + "\n" + action_code
 
 func _gen_java_code() -> String:
@@ -1232,6 +1469,19 @@ class LinkedList {
 		if (temp == null || temp.next == null) return;
 		temp.next = temp.next.next;
 		System.out.print("After delete at index " + index + ": ");
+		printList();
+	}
+	
+	void updateAtIndex(int index, int newVal) {
+		if (head == null) return;
+		Node temp = head;
+		for (int i = 0; i < index && temp != null; i++) {
+			temp = temp.next;
+		}
+		if (temp == null) return;
+		int oldVal = temp.data;
+		temp.data = newVal;
+		System.out.print("After update at index " + index + " from " + oldVal + " to " + newVal + ": ");
 		printList();
 	}
 	
@@ -1368,6 +1618,20 @@ struct Node* deleteAtIndex(struct Node* head, int index) {
 	return head;
 }
 
+struct Node* updateAtIndex(struct Node* head, int index, int newVal) {
+	if (head == NULL) return head;
+	struct Node* temp = head;
+	for (int i = 0; i < index && temp != NULL; i++) {
+		temp = temp->next;
+	}
+	if (temp == NULL) return head;
+	int oldVal = temp->data;
+	temp->data = newVal;
+	printf("After update at index %d from %d to %d: ", index, oldVal, newVal);
+	printList(head);
+	return head;
+}
+
 void linearSearch(struct Node* head, int target) {
 	struct Node* current = head;
 	int index = 0;
@@ -1415,6 +1679,9 @@ func _build_action_code(lang: String) -> String:
 					else:
 						code += "    // Step %d: Delete at index %d\n    list.deleteAtIndex(%d);\n" % [step, action["index"], action["index"]]
 					step += 1
+				elif action["type"] == "update":
+					code += "    // Step %d: Update at index %d to %d\n    list.updateAtIndex(%d, %d);\n" % [step, action["index"], action["new_value"], action["index"], action["new_value"]]
+					step += 1
 				elif action["type"] == "search":
 					code += "    // Step %d: Search for %d\n    list.linearSearch(%d);\n" % [step, action["value"], action["value"]]
 					step += 1
@@ -1431,22 +1698,33 @@ func _build_action_code(lang: String) -> String:
 			for action in action_history:
 				if action["type"] == "insert":
 					if action["index"] == 0:
-						code += "    # Step %d: Insert at beginning\n    llist.insert_beginning(%d)\n" % [step, action["value"]]
+						code += "    # Step %d: Insert at beginning\n" % step
+						code += "    llist.insert_beginning(%d)\n" % action["value"]
 					elif action["index"] == initial_elements.size():
-						code += "    # Step %d: Insert at end\n    llist.insert_end(%d)\n" % [step, action["value"]]
+						code += "    # Step %d: Insert at end\n" % step
+						code += "    llist.insert_end(%d)\n" % action["value"]
 					else:
-						code += "    # Step %d: Insert at index %d\n    llist.insert_at_index(%d, %d)\n" % [step, action["index"], action["index"], action["value"]]
+						code += "    # Step %d: Insert at index %d\n" % [step, action["index"]]
+						code += "    llist.insert_at_index(%d, %d)\n" % [action["index"], action["value"]]
 					step += 1
 				elif action["type"] == "delete":
 					if action["index"] == 0:
-						code += "    # Step %d: Delete at beginning\n    llist.delete_beginning()\n" % step
+						code += "    # Step %d: Delete at beginning\n" % step
+						code += "    llist.delete_beginning()\n"
 					elif action["index"] == initial_elements.size() - 1:
-						code += "    # Step %d: Delete at end\n    llist.delete_end()\n" % step
+						code += "    # Step %d: Delete at end\n" % step
+						code += "    llist.delete_end()\n"
 					else:
-						code += "    # Step %d: Delete at index %d\n    llist.delete_at_index(%d)\n" % [step, action["index"], action["index"]]
+						code += "    # Step %d: Delete at index %d\n" % [step, action["index"]]
+						code += "    llist.delete_at_index(%d)\n" % action["index"]
+					step += 1
+				elif action["type"] == "update":
+					code += "    # Step %d: Update at index %d to %d\n" % [step, action["index"], action["new_value"]]
+					code += "    llist.update_at_index(%d, %d)\n" % [action["index"], action["new_value"]]
 					step += 1
 				elif action["type"] == "search":
-					code += "    # Step %d: Search for %d\n    llist.linear_search(%d)\n" % [step, action["value"], action["value"]]
+					code += "    # Step %d: Search for %d\n" % [step, action["value"]]
+					code += "    llist.linear_search(%d)\n" % action["value"]
 					step += 1
 		
 		"java", "c":
@@ -1491,6 +1769,11 @@ func _build_action_code(lang: String) -> String:
 						code += "        // Step %d: Delete at index %d\n" % [step, action["index"]]
 						if lang == "c": code += "        head = deleteAtIndex(head, %d);\n" % action["index"]
 						else: code += "        list.deleteAtIndex(%d);\n" % action["index"]
+					step += 1
+				elif action["type"] == "update":
+					code += "        // Step %d: Update at index %d to %d\n" % [step, action["index"], action["new_value"]]
+					if lang == "c": code += "        head = updateAtIndex(head, %d, %d);\n" % [action["index"], action["new_value"]]
+					else: code += "        list.updateAtIndex(%d, %d);\n" % [action["index"], action["new_value"]]
 					step += 1
 				elif action["type"] == "search":
 					code += "        // Step %d: Search for %d\n" % [step, action["value"]]
@@ -1591,9 +1874,6 @@ func _show_result_popup(result: String, grade: Dictionary) -> void:
 		result_title.modulate = Color.RED
 		
 	if translate_code_btn: translate_code_btn.show()
-	if cpp_code_button:
-		cpp_code_button.show()
-		if code_anim: code_anim.play("default")
 	
 	score_summary.text = "Nodes Checked: %d" % grade.get("bad_moves", 0)
 	accuracy_label.text = "Target: %d" % search_target
@@ -1630,16 +1910,6 @@ func _show_config_modal() -> void:
 	config_modal.show()
 	_set_main_ui_enabled(false)
 
-func _set_main_ui_enabled(enabled: bool) -> void:
-	if insert_menu: insert_menu.disabled = not enabled
-	if delete_menu: delete_menu.disabled = not enabled
-	if sort_btn: sort_btn.disabled = not enabled
-	if auto_btn: auto_btn.disabled = not enabled
-	if auto_search_btn: auto_search_btn.disabled = not enabled
-	if timeline_btn: timeline_btn.disabled = not enabled
-	if simulate_new_btn: simulate_new_btn.disabled = not enabled
-	if help_btn: help_btn.disabled = not enabled
-
 func _on_config_yes_pressed() -> void: 
 	btn_sound.play()
 	config_modal.hide()
@@ -1651,13 +1921,14 @@ func _show_config_size_modal() -> void:
 func _on_size_next_pressed() -> void:
 	btn_sound.play()
 	var size = int(size_input.value)
-	if size > 6 or size < 1: 
+	if size > max_array_size or size < 1: 
 		if Queue_full:
 			Queue_full.show()
 			if anim_sprite: anim_sprite.play("default")
 			await get_tree().create_timer(2.0).timeout
 			Queue_full.hide()
 		return
+	max_array_size = size
 	config_size_modal.hide()
 	_show_config_elements_modal()
 
@@ -1672,7 +1943,7 @@ func _show_config_elements_modal() -> void:
 	grid.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	elements_container.add_child(grid)
 	
-	var count = int(size_input.value)
+	var count = max_array_size
 	for i in range(count):
 		var le = LineEdit.new()
 		le.placeholder_text = str(randi_range(1, 99))
@@ -1707,7 +1978,7 @@ func _on_elements_done_pressed() -> void:
 func _on_config_no_pressed() -> void:
 	btn_sound.play()
 	config_modal.hide()
-	var count = randi_range(1, 6)
+	var count = randi_range(1, max_array_size)
 	var arr: Array[int] = []
 	for i in count: arr.append(randi_range(1, 99))
 	_set_main_ui_enabled(true)
@@ -1768,11 +2039,13 @@ func start_tutorial() -> void:
 	tutorial_sequence = [
 		{ "node": insert_menu, "title": "INSERT OPTIONS", "text": "Add new nodes to the Beginning, End, or a Specific Position." },
 		{ "node": delete_menu, "title": "DELETE OPTIONS", "text": "Remove nodes from the Beginning, End, or a Specific Position." },
-		{ "node": sort_btn, "title": "SEARCH LIST", "text": "Opens a popup to set the Target value you want to search for in the Linked List." },
-		{ "node": auto_search_btn, "title": "AUTO SEARCH", "text": "Starts/Pauses automatic searching step-by-step." },
+		{ "node": update_menu, "title": "UPDATE OPTIONS", "text": "Update value at a specific position. Automatically traverses to that position." },
+		{ "node": sort_btn, "title": "FIND ELEMENT", "text": "Opens a popup to set the Target value you want to search for in the Linked List." },
 		{ "node": auto_btn, "title": "SEARCH STEP", "text": "Executes one comparison step manually." },
 		{ "node": timeline_btn, "title": "TIMELINE", "text": "View a history of all operations and comparisons." },
-		{ "node": simulate_new_btn, "title": "SIMULATE NEW", "text": "Resets the simulation entirely to enter new numbers." }
+		{ "node": simulate_new_btn, "title": "SIMULATE NEW", "text": "Resets the simulation entirely to enter new numbers." },
+		{ "node": is_full_indicator, "title": "FULL INDICATOR", "text": "Turns GREEN when list reaches maximum capacity (6 nodes)." },
+		{ "node": is_empty_indicator, "title": "EMPTY INDICATOR", "text": "Turns PINK when list is empty, DARK when nodes exist." }
 	]
 	show_tutorial_step()
 
@@ -1886,13 +2159,10 @@ func _get_modern_button_style(is_hover: bool = false) -> StyleBoxFlat:
 func _get_texture_stylebox(tex: Texture2D) -> StyleBoxTexture:
 	var style = StyleBoxTexture.new()
 	style.texture = tex
-	
-	# Adjust these values based on the border thickness of your CONTAINER.png
 	style.texture_margin_left = 16
 	style.texture_margin_right = 16
 	style.texture_margin_top = 16
 	style.texture_margin_bottom = 16
-	
 	style.content_margin_left = 20
 	style.content_margin_right = 20
 	style.content_margin_top = 20
