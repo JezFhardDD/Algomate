@@ -121,6 +121,7 @@ var waiting_elements: Array[int] = []
 var dequeued_elements: Array[int] = []
 var enqueue_counter: int = 0
 var dequeue_counter: int = 0
+var peek_counter: int = 0
 var timeline_log: Array[String] = []
 
 # Code generation variables
@@ -754,22 +755,25 @@ func _animate_queue_shift() -> void:
 
 func _on_peek_pressed() -> void:
 	if tutorial_in_progress: return
-
+	
 	if queue.is_empty():
 		show_feedback("Cannot peek! Queue is empty.", Color.ORANGE, get_global_mouse_position())
 		return
-
+	
 	btn_sound.play()
 	var front_val: int = queue[0]
+	peek_counter += 1  # Increment peek counter
 	timeline_log.append("Peeked at front element: %d" % front_val)
-
+	_add_code_line("PEEK", 0, front_val)  # Add peek to code lines
+	
+	# Flash animation for the front block
 	if queue_container.get_child_count() > 0:
 		var front_block = queue_container.get_child(0)
-		if is_instance_valid(front_block):
+		if is_instance_valid(front_block) and not front_block is Label:
 			var tween = create_tween()
 			tween.tween_property(front_block, "modulate", Color(1.5, 1.5, 0.5, 1.0), 0.2)
 			tween.tween_property(front_block, "modulate", Color.WHITE, 0.2)
-
+	
 	show_feedback("Front: %d" % front_val, Color.CYAN, get_global_mouse_position())
 
 # ==============================================
@@ -925,8 +929,8 @@ func _update_indicators() -> void:
 
 func _show_complete_popup() -> void:
 	if complete_popup:
-		var total_processes = enqueue_counter + dequeue_counter
-		var process_text = "Total Processes: %d\n→ Enqueue: %d\n→ Dequeue: %d" % [total_processes, enqueue_counter, dequeue_counter]
+		var total_processes = enqueue_counter + dequeue_counter + peek_counter
+		var process_text = "Total Processes: %d\n→ Enqueue: %d\n→ Dequeue: %d\n→ Peek: %d" % [total_processes, enqueue_counter, dequeue_counter, peek_counter]
 		if process_label: process_label.text = process_text
 		complete_popup.popup_centered()
 		if cpp_code_button:
@@ -984,97 +988,220 @@ func generate_code_in_language(lang: String, source_arr: Array) -> String:
 		_: return generate_cpp_code(arr_str, n)
 
 func generate_cpp_code(arr_str: String, _n: int) -> String:
+	# Build the operations sequence from code_lines
+	var ops_code = ""
+	for line in code_lines:
+		var parts = line.split("|")
+		if parts.size() >= 3:
+			var op = parts[0]
+			var index = int(parts[1])
+			var value = int(parts[2])
+			match op:
+				"ENQUEUE":
+					ops_code += "    cout << \"Enqueued " + str(value) + " to queue...\" << endl;\n"
+					ops_code += "    q.push(" + str(value) + ");\n"
+					ops_code += "    cout << \"Queue after enqueue: \";\n"
+					ops_code += "    printQueue(q);\n"
+					ops_code += "    cout << endl;\n\n"
+				"DEQUEUE":
+					ops_code += "    cout << \"Dequeuing front element...\" << endl;\n"
+					ops_code += "    cout << \"Dequeued: \" << q.front() << endl;\n"
+					ops_code += "    q.pop();\n"
+					ops_code += "    if(!q.empty()) {\n"
+					ops_code += "        cout << \"Queue after dequeue: \";\n"
+					ops_code += "        printQueue(q);\n"
+					ops_code += "        cout << endl;\n"
+					ops_code += "    } else {\n"
+					ops_code += "        cout << \"Queue is now empty.\" << endl;\n"
+					ops_code += "    }\n\n"
+				"PEEK":
+					ops_code += "    cout << \"Peeking at front element...\" << endl;\n"
+					ops_code += "    if(!q.empty()) {\n"
+					ops_code += "        cout << \"Front element: \" << q.front() << endl;\n"
+					ops_code += "        cout << \"Queue remains: \";\n"
+					ops_code += "        printQueue(q);\n"
+					ops_code += "        cout << endl;\n"
+					ops_code += "    }\n\n"
+				"INITIAL":
+					ops_code += "    cout << \"Initial queue: \";\n"
+					ops_code += "    printQueue(q);\n"
+					ops_code += "    cout << endl;\n\n"
+	
 	return """#include <iostream>
 #include <queue>
 using namespace std;
 
-int main() {
-	int arr[] = { %s };
-	int n = sizeof(arr) / sizeof(arr[0]);
-	queue<int> q;
-
-	for (int i = 0; i < n; ++i) {
-		q.push(arr[i]);
-		cout << "Enqueued " << arr[i] << " | Queue: ";
-		queue<int> temp = q;
-		while (!temp.empty()) {
-			cout << temp.front() << " ";
-			temp.pop();
-		}
-		cout << endl;
-	}
-
-	cout << "\\nInitial queue front: " << q.front() << endl;
-	cout << "Dequeuing..." << endl;
-
-	while (!q.empty()) {
-		int dequeued = q.front();
-		q.pop();
-		cout << "Dequeued " << dequeued << " | Queue: ";
-		queue<int> temp = q;
-		while (!temp.empty()) {
-			cout << temp.front() << " ";
-			temp.pop();
-		}
-		cout << endl;
-	}
-
-	cout << "Simulation finished." << endl;
-	return 0;
+void printQueue(queue<int> q) {
+    cout << "[";
+    while(!q.empty()) {
+        cout << q.front();
+        q.pop();
+        if(!q.empty()) cout << ", ";
+    }
+    cout << "]";
 }
-/* Complexity: Time: %s | Space: %s */""" % [arr_str, get_time_complexity(), get_space_complexity()]
+
+int main() {
+    queue<int> q;
+    cout << "=== QUEUE SIMULATION ===" << endl;
+    
+    // Operation sequence from simulation
+    {OPS}
+    
+    cout << "\\n=== SIMULATION FINISHED ===" << endl;
+    return 0;
+}
+/* Complexity: Enqueue: O(1), Dequeue: O(1), Peek: O(1) | Space: O(n) */""".replace("{OPS}", ops_code)
 
 func generate_python_code(arr_str: String, _n: int) -> String:
+	# Build the operations sequence from code_lines
+	var ops_code = ""
+	for line in code_lines:
+		var parts = line.split("|")
+		if parts.size() >= 3:
+			var op = parts[0]
+			var index = int(parts[1])
+			var value = int(parts[2])
+			match op:
+				"ENQUEUE":
+					ops_code += "    print(f\"Enqueued " + str(value) + " to queue...\")\n"
+					ops_code += "    q.append(" + str(value) + ")\n"
+					ops_code += "    print(f\"Queue after enqueue: {list(q)}\")\n"
+					ops_code += "    print()\n\n"
+				"DEQUEUE":
+					ops_code += "    print(\"Dequeuing front element...\")\n"
+					ops_code += "    if q:\n"
+					ops_code += "        print(f\"Dequeued: {q[0]}\")\n"
+					ops_code += "        q.popleft()\n"
+					ops_code += "        if q:\n"
+					ops_code += "            print(f\"Queue after dequeue: {list(q)}\")\n"
+					ops_code += "        else:\n"
+					ops_code += "            print(\"Queue is now empty.\")\n"
+					ops_code += "    print()\n\n"
+				"PEEK":
+					ops_code += "    print(\"Peeking at front element...\")\n"
+					ops_code += "    if q:\n"
+					ops_code += "        print(f\"Front element: {q[0]}\")\n"
+					ops_code += "        print(f\"Queue remains: {list(q)}\")\n"
+					ops_code += "    print()\n\n"
+				"INITIAL":
+					ops_code += "    print(f\"Initial queue: {list(q)}\")\n"
+					ops_code += "    print()\n\n"
+	
 	return """from collections import deque
 
 def main():
-	arr = [%s]
-	q = deque()
-	
-	for value in arr:
-		q.append(value)
-		print(f"Enqueued {value} | Queue: {list(q)}")
-	
-	print(f"\\nInitial queue front: {q[0]}")
-	print("Dequeuing...")
-	
-	while len(q) > 0:
-		dequeued = q.popleft()
-		print(f"Dequeued {dequeued} | Queue: {list(q)}")
-	
-	print("Simulation finished.")
+    q = deque()
+    print("=== QUEUE SIMULATION ===")
+    print()
+    
+    # Operation sequence from simulation
+{OPS}
+    
+    print("\\n=== SIMULATION FINISHED ===")
 
 if __name__ == "__main__":
-	main()
-''' Complexity: Time: %s | Space: %s '''""" % [arr_str, get_time_complexity(), get_space_complexity()]
+    main()
+''' Complexity: Enqueue: O(1), Dequeue: O(1), Peek: O(1) | Space: O(n) '''""".replace("{OPS}", ops_code)
 
 func generate_java_code(arr_str: String, _n: int) -> String:
+	# Build the operations sequence from code_lines
+	var ops_code = ""
+	for line in code_lines:
+		var parts = line.split("|")
+		if parts.size() >= 3:
+			var op = parts[0]
+			var index = int(parts[1])
+			var value = int(parts[2])
+			match op:
+				"ENQUEUE":
+					ops_code += "        System.out.println(\"Enqueued " + str(value) + " to queue...\");\n"
+					ops_code += "        q.add(" + str(value) + ");\n"
+					ops_code += "        System.out.println(\"Queue after enqueue: \" + q);\n"
+					ops_code += "        System.out.println();\n\n"
+				"DEQUEUE":
+					ops_code += "        System.out.println(\"Dequeuing front element...\");\n"
+					ops_code += "        if(!q.isEmpty()) {\n"
+					ops_code += "            System.out.println(\"Dequeued: \" + q.peek());\n"
+					ops_code += "            q.poll();\n"
+					ops_code += "            if(!q.isEmpty()) {\n"
+					ops_code += "                System.out.println(\"Queue after dequeue: \" + q);\n"
+					ops_code += "            } else {\n"
+					ops_code += "                System.out.println(\"Queue is now empty.\");\n"
+					ops_code += "            }\n"
+					ops_code += "        }\n"
+					ops_code += "        System.out.println();\n\n"
+				"PEEK":
+					ops_code += "        System.out.println(\"Peeking at front element...\");\n"
+					ops_code += "        if(!q.isEmpty()) {\n"
+					ops_code += "            System.out.println(\"Front element: \" + q.peek());\n"
+					ops_code += "            System.out.println(\"Queue remains: \" + q);\n"
+					ops_code += "        }\n"
+					ops_code += "        System.out.println();\n\n"
+				"INITIAL":
+					ops_code += "        System.out.println(\"Initial queue: \" + q);\n"
+					ops_code += "        System.out.println();\n\n"
+	
 	return """import java.util.LinkedList;
 import java.util.Queue;
 
 public class QueueSim {
-	public static void main(String[] args) {
-		int[] arr = {%s};
-		Queue<Integer> q = new LinkedList<>();
-		
-		for (int value : arr) {
-			q.add(value);
-			System.out.println("Enqueued " + value + " | Queue: " + q);
-		}
-		
-		System.out.println("\\nInitial queue front: " + q.peek());
-		System.out.println("Dequeuing...");
-		
-		while (!q.isEmpty()) {
-			int dequeued = q.poll();
-			System.out.println("Dequeued " + dequeued + " | Queue: " + q);
-		}
-		System.out.println("Simulation finished.");
-	}
+    public static void main(String[] args) {
+        Queue<Integer> q = new LinkedList<>();
+        System.out.println("=== QUEUE SIMULATION ===");
+        
+        // Operation sequence from simulation
+        {OPS}
+        
+        System.out.println("\\n=== SIMULATION FINISHED ===");
+    }
 }
-/* Complexity: Time: %s | Space: %s */""" % [arr_str, get_time_complexity(), get_space_complexity()]
+/* Complexity: Enqueue: O(1), Dequeue: O(1), Peek: O(1) | Space: O(n) */""".replace("{OPS}", ops_code)
 
 func generate_c_code(arr_str: String, _n: int) -> String:
+	# Build the operations sequence from code_lines
+	var ops_code = ""
+	for line in code_lines:
+		var parts = line.split("|")
+		if parts.size() >= 3:
+			var op = parts[0]
+			var index = int(parts[1])
+			var value = int(parts[2])
+			match op:
+				"ENQUEUE":
+					ops_code += "    printf(\"Enqueued " + str(value) + " to queue...\\n\");\n"
+					ops_code += "    enqueue(&q, " + str(value) + ");\n"
+					ops_code += "    printf(\"Queue after enqueue: \");\n"
+					ops_code += "    printQueue(&q);\n"
+					ops_code += "    printf(\"\\n\\n\");\n\n"
+				"DEQUEUE":
+					ops_code += "    printf(\"Dequeuing front element...\\n\");\n"
+					ops_code += "    if(!isEmpty(&q)) {\n"
+					ops_code += "        printf(\"Dequeued: %d\\n\", peek(&q));\n"
+					ops_code += "        dequeue(&q);\n"
+					ops_code += "        if(!isEmpty(&q)) {\n"
+					ops_code += "            printf(\"Queue after dequeue: \");\n"
+					ops_code += "            printQueue(&q);\n"
+					ops_code += "            printf(\"\\n\");\n"
+					ops_code += "        } else {\n"
+					ops_code += "            printf(\"Queue is now empty.\\n\");\n"
+					ops_code += "        }\n"
+					ops_code += "    }\n"
+					ops_code += "    printf(\"\\n\");\n\n"
+				"PEEK":
+					ops_code += "    printf(\"Peeking at front element...\\n\");\n"
+					ops_code += "    if(!isEmpty(&q)) {\n"
+					ops_code += "        printf(\"Front element: %d\\n\", peek(&q));\n"
+					ops_code += "        printf(\"Queue remains: \");\n"
+					ops_code += "        printQueue(&q);\n"
+					ops_code += "        printf(\"\\n\");\n"
+					ops_code += "    }\n"
+					ops_code += "    printf(\"\\n\");\n\n"
+				"INITIAL":
+					ops_code += "    printf(\"Initial queue: \");\n"
+					ops_code += "    printQueue(&q);\n"
+					ops_code += "    printf(\"\\n\\n\");\n\n"
+	
 	var code = """#include <stdio.h>
 #define MAX_SIZE 100
 
@@ -1087,6 +1214,7 @@ typedef struct {
 void initQueue(Queue *q) { q->front = -1; q->rear = -1; }
 int isFull(Queue *q) { return q->rear == MAX_SIZE - 1; }
 int isEmpty(Queue *q) { return q->front == -1 || q->front > q->rear; }
+int peek(Queue *q) { return isEmpty(q) ? -1 : q->items[q->front]; }
 
 void enqueue(Queue *q, int value) {
 	if (isFull(q)) { printf("Queue full!\\n"); return; }
@@ -1101,45 +1229,37 @@ int dequeue(Queue *q) {
 
 void printQueue(Queue *q) {
 	if (isEmpty(q)) return;
-	for (int i = q->front; i <= q->rear; i++) printf("%d ", q->items[i]);
+	printf("[");
+	for (int i = q->front; i <= q->rear; i++) {
+		printf("%d", q->items[i]);
+		if(i < q->rear) printf(", ");
+	}
+	printf("]");
 }
 
 int main() {
-	int arr[] = {{ARR}};
-	int n = sizeof(arr) / sizeof(arr[0]);
 	Queue q;
 	initQueue(&q);
+	printf("=== QUEUE SIMULATION ===\\n\\n");
 	
-	for (int i = 0; i < n; i++) {
-		enqueue(&q, arr[i]);
-		printf("Enqueued %d | Queue: ", arr[i]);
-		printQueue(&q);
-		printf("\\n");
-	}
+	// Operation sequence from simulation
+	{OPS}
 	
-	printf("\\nInitial queue front: %d\\n", q.items[q.front]);
-	printf("Dequeuing...\\n");
-	
-	while (!isEmpty(&q)) {
-		int d = dequeue(&q);
-		printf("Dequeued %d | Queue: ", d);
-		printQueue(&q);
-		printf("\\n");
-	}
-	
-	printf("Simulation finished.\\n");
+	printf("\\n=== SIMULATION FINISHED ===\\n");
 	return 0;
 }
-/* Complexity: Time: {TIME} | Space: {SPACE} */"""
-	return code.replace("{ARR}", arr_str).replace("{TIME}", get_time_complexity()).replace("{SPACE}", get_space_complexity())
+/* Complexity: Enqueue: O(1), Dequeue: O(1), Peek: O(1) | Space: O(n) */"""
+	
+	return code.replace("{OPS}", ops_code)
 
 func get_time_complexity() -> String:
 	var ops = []
 	if enqueue_counter > 0: ops.append("Enqueue: O(1)")
 	if dequeue_counter > 0: ops.append("Dequeue: O(1)")
+	if peek_counter > 0: ops.append("Peek: O(1)")  # Add this line
 	if not queue.is_empty(): ops.append("Front access: O(1)")
 	if timeline_log.size() > 0: ops.append("Traversal: O(n)")
-	if ops.is_empty(): return "Enqueue/Dequeue: O(1)"
+	if ops.is_empty(): return "Enqueue/Dequeue/Peek: O(1)"
 	return ", ".join(ops)
 
 func get_space_complexity() -> String:
@@ -1345,6 +1465,7 @@ func _clear_simulation_data() -> void:
 	code_lines.clear()
 	enqueue_counter = 0
 	dequeue_counter = 0
+	peek_counter = 0
 	for child in queue_container.get_children(): child.queue_free()
 	for child in dequeued_container.get_children():
 		if child != dequeued_close_btn: child.queue_free()

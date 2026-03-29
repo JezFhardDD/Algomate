@@ -60,7 +60,7 @@ func _ready():
 	
 	# Make scrollbars FAT for mobile touch (only call this once)
 	_setup_mobile_friendly_scrolling()
-	
+	_setup_mobile_font_sizes()
 	# Connect tab buttons
 	if output_tab:
 		output_tab.pressed.connect(_on_output_tab_pressed)
@@ -115,6 +115,65 @@ func _setup_mobile_friendly_scrolling():
 		
 		print("Configured error ScrollContainer for touch scrolling")
 
+func _setup_mobile_font_sizes():
+	"""Configure all text sizes for better mobile readability"""
+	
+	# Base font sizes (adjust these values to your preference)
+	var code_font_size = 28      # For the output code/terminal text
+	var label_font_size = 26     # For labels and stats
+	var title_font_size = 40     # For titles
+	
+	# Get screen dimensions to adjust if needed
+	var screen_size = DisplayServer.screen_get_size()
+	if screen_size.x < 600:  # Smaller phone
+		code_font_size = 24
+		label_font_size = 22
+		title_font_size = 36
+	elif screen_size.x > 1000:  # Tablet
+		code_font_size = 32
+		label_font_size = 30
+		title_font_size = 44
+	
+	# Set CodeEdit (output text) font
+	output_text.add_theme_font_size_override("font_size", code_font_size)
+	output_text.add_theme_constant_override("line_spacing", 8)
+	
+	# Set RichTextLabel (error text) font
+	error_text.add_theme_font_size_override("normal_font_size", code_font_size)
+	
+	# Set stats labels
+	if memory_value:
+		memory_value.add_theme_font_size_override("font_size", label_font_size)
+	if cpu_value:
+		cpu_value.add_theme_font_size_override("font_size", label_font_size)
+	if status_value:
+		status_value.add_theme_font_size_override("font_size", label_font_size)
+	
+	# Set the static labels in stats grid
+	var stats_grid = $Panel/VBoxContainer/ContentContainer/StatsContainer/StatsGrid
+	for child in stats_grid.get_children():
+		if child is Label:
+			child.add_theme_font_size_override("font_size", label_font_size)
+	
+	# Set title bar fonts
+	var title_label = $Panel/VBoxContainer/TitleBar/Title
+	if title_label:
+		title_label.add_theme_font_size_override("font_size", title_font_size)
+	
+	var language_label_node = $Panel/VBoxContainer/TitleBar/LanguageLabel
+	if language_label_node:
+		language_label_node.add_theme_font_size_override("font_size", title_font_size)
+	
+	# Set tab button fonts
+	var tab_bar = $Panel/VBoxContainer/TabBar
+	for tab in tab_bar.get_children():
+		if tab is Button:
+			var tab_label = tab.get_node("Label")
+			if tab_label:
+				tab_label.add_theme_font_size_override("font_size", label_font_size)
+	
+	print("Mobile fonts configured - Code: ", code_font_size, " Labels: ", label_font_size)
+	
 # Alternative: Require long-press for selection, swipe for scrolling
 func _setup_touch_friendly_scrolling():
 	# For CodeEdit
