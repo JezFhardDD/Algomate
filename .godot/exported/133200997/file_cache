@@ -51,7 +51,7 @@ res://scenes/main_menu.tscn::d9deee1609219c5b4042d99cdb59f3ff::1774540164::res:/
 res://scenes/navigation.tscn::b10c5e0a4738e49efc4c3c016eee09e8::1774424806::res://.godot/exported/133200997/export-5e93a6dffb2e69c87b2aab6e7f6d35d0-navigation.scn
 res://scenes/overall_assessment.tscn::7a727a51695f19c81f392ed1a9434cae::1774424806::res://.godot/exported/133200997/export-c6d64236a75c6d49ccaa5a1be2bb23aa-overall_assessment.scn
 res://scenes/profile_setup.tscn::ff52c5b7379187b628b1e3dd72c74860::1774424806::res://.godot/exported/133200997/export-726ac2faf726b0a1d9d6a781b2d12e69-profile_setup.scn
-res://scenes/progress_page.tscn::f81ab38cb6b762664e1b04bbabe5eafb::1774777292::res://.godot/exported/133200997/export-5c380d11166edaede8236a41644b5b5f-progress_page.scn
+res://scenes/progress_page.tscn::f81ab38cb6b762664e1b04bbabe5eafb::1774777866::res://.godot/exported/133200997/export-5c380d11166edaede8236a41644b5b5f-progress_page.scn
 res://scenes/quit_confirmation.tscn::e1649aa4520153cefc7efa553e94b8c7::1774424806::res://.godot/exported/133200997/export-d1bb979e2faeb2ac2b3d285281a1615d-quit_confirmation.scn
 res://scenes/selection.tscn::cf5c4b4fdc6d761fcedfa2dea30a9ffa::1774424806::res://.godot/exported/133200997/export-f37fc5f6f6f591e0bb19484e9de05e09-selection.scn
 res://scenes/settings.tscn::a43d6413941cb227adc5f02f35ac1d12::1774540111::res://.godot/exported/133200997/export-7416c78d345eded4b396246a6c8adbe0-settings.scn

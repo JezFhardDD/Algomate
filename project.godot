@@ -29,7 +29,7 @@ GlobalLoading="*res://scripts/GlobalLoading.gd"
 window/size/viewport_width=648
 window/size/viewport_height=1152
 window/size/mode=3
-window/stretch/mode="canvas_items"
+window/stretch/mode="viewport"
 window/stretch/aspect="keep_width"
 window/handheld/orientation=1
 
