@@ -1,7 +1,5 @@
-res://scene/CompilerOutput.tscn
-res://scene/BG.gdshader
-res://script/compiler_output.gd
-res://scene/Queue.tscn
-res://script/queue_sim.gd
-res://scene/Linked.tscn
 res://script/linked_list_sim.gd
+res://scene/ISA.tscn
+res://scene/BG.gdshader
+res://Bubblemain.gd
+res://scene/BBSA.tscn

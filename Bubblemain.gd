@@ -153,7 +153,7 @@ const TIKTAK_SFX := preload("res://assets/sfx/tiktak.mp3")
 var tiktak_sound: AudioStreamPlayer
 
 # --- TOPIC IDENTIFICATION ---
-const CURRENT_TOPIC = "bubble_sort"  # For database tracking
+const CURRENT_TOPIC = "bubble_sort"
 
 # --- BUBBLE SORT VARIABLES ---
 var main_array: Array[int] = []
@@ -179,6 +179,7 @@ var ANIM_SPEED: float = 1.0
 
 # Add tween tracking for cleanup
 var current_tween: Tween = null
+var highlight_tween: Tween = null
 
 # Tutorial Vars
 var tutorial_sequence = []
@@ -190,7 +191,7 @@ var intro_step: int = 0
 var intro_texts = [
 	"Welcome to Bubble Sort Assessment!\n\nBubble Sort repeatedly steps through the list, compares adjacent elements, and swaps them if they're in the wrong order.",
 	"The Algorithm:\n\n1. Compare adjacent elements\n2. If left > right, SWAP them\n3. Move to next pair\n4. After each pass, the largest element 'bubbles' to the end",
-	"Instructions:\n\n• Drag adjacent blocks to swap\n• Green feedback = correct swap (left > right)\n• Red feedback = incorrect swap (left <= right)",
+	"Instructions:\n\n• The PULSING block is the CURRENT element being compared\n• Drag the PULSING block to the RIGHT to swap with its neighbor\n• Green feedback = correct swap (left > right)\n• Red feedback = incorrect swap (left <= right or dragging wrong block)",
 	"Scoring:\n\n✓ Correct swap = Good move\n✗ Wrong swap = Bad move\n\nAccuracy = Good moves / Total moves\n\nUndo/Redo available on Easy & Medium!",
 	"Difficulty Levels:\n\nEasy: Undo/Redo allowed, no timer\nMedium: Undo/Redo allowed, 90 seconds\nHard: No Undo/Redo, 60 seconds"
 ]
@@ -243,7 +244,7 @@ var c_tutorial_data = [
 
 enum SimMode { LECTURE, ASSESSMENT }
 var sim_mode: SimMode = SimMode.ASSESSMENT
-var difficulty: int = 2  # Default, will be overridden by Global
+var difficulty: int = 2
 
 var time_remaining: float = 0.0
 var timer_running: bool = false
@@ -285,7 +286,7 @@ func _ready() -> void:
 	# Get difficulty from Global
 	difficulty = Global.current_difficulty
 	if difficulty == 0:
-		difficulty = 2  # fallback to medium if not set
+		difficulty = 2
 	
 	# Setup audio
 	tiktak_sound = AudioStreamPlayer.new()
@@ -430,9 +431,6 @@ func _ready() -> void:
 	# Setup timeline popup
 	_setup_timeline_popup_for_mobile()
 	
-	# Update sorted visuals
-	_update_sorted_visuals()
-	
 	# Setup compiler
 	_setup_compiler()
 
@@ -449,9 +447,9 @@ func _get_array_size() -> int:
 
 func _get_time_limit() -> float:
 	match difficulty:
-		1: return 0.0  # No timer for Easy
-		2: return 90.0  # Medium
-		3: return 60.0  # Hard
+		1: return 0.0
+		2: return 90.0
+		3: return 60.0
 	return 90.0
 
 func _get_required_threshold() -> float:
@@ -550,7 +548,7 @@ func _compile_code(code: String) -> void:
 	var api_language = current_code_language
 	match current_code_language:
 		"python":
-			api_language = "python3"  # JDoodle expects "python3" not "python"
+			api_language = "python3"
 	
 	var body = JSON.new().stringify({
 		"clientId": keys["clientId"],
@@ -560,20 +558,16 @@ func _compile_code(code: String) -> void:
 		"versionIndex": _get_version_index(current_code_language)
 	})
 	
-	print("=== Simulation Compile Request ===")
-	print("Language: ", current_code_language, " → API: ", api_language)
-	print("Script preview: ", code.substr(0, 50) + "...")
-	
 	var error = http_request.request(url, headers, HTTPClient.METHOD_POST, body)
 	if error != OK:
 		show_feedback("Network error!", Color.RED, Vector2(200, 200))
 
 func _get_version_index(lang: String) -> String:
 	match lang:
-		"cpp": return "5"     # C++17
-		"c": return "4"       # C17
-		"java": return "4"    # Java 17
-		"python": return "4"  # Python 3
+		"cpp": return "5"
+		"c": return "4"
+		"java": return "4"
+		"python": return "4"
 		_: return "0"
 
 func _on_compile_completed(result, response_code, headers, body, http_request, language: String) -> void:
@@ -593,7 +587,6 @@ func _on_compile_completed(result, response_code, headers, body, http_request, l
 	
 	var response = json.data
 	
-	# Show the output popup (false = from simulation, so landscape sizing)
 	if compiler_output_popup:
 		compiler_output_popup.show_output(language, response, self, false)
 
@@ -626,6 +619,9 @@ func _start_assessment_mode() -> void:
 	if current_tween:
 		current_tween.kill()
 		current_tween = null
+	if highlight_tween:
+		highlight_tween.kill()
+		highlight_tween = null
 	
 	# Stop timer
 	timer_running = false
@@ -712,6 +708,9 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	if current_tween:
 		current_tween.kill()
 		current_tween = null
+	if highlight_tween:
+		highlight_tween.kill()
+		highlight_tween = null
 	
 	sort_i = 0
 	sort_j = 0
@@ -749,7 +748,7 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	# Update UI
 	_update_ui_labels()
 	if cpp_code_button: cpp_code_button.hide()
-	_update_sorted_visuals()
+	_update_current_highlight()
 
 # ==============================================
 #   PROCESS & TIMER
@@ -793,117 +792,218 @@ func _on_time_up() -> void:
 	_end_assessment("timeout")
 
 # ==============================================
+#   HIGHLIGHT & SORTED VISUALS
+# ==============================================
+func _update_current_highlight() -> void:
+	# Safety check
+	if block_nodes.is_empty() or sorting_complete:
+		return
+	
+	# Kill any existing highlight tween
+	if highlight_tween:
+		highlight_tween.kill()
+		highlight_tween = null
+	
+	# Reset all highlights first
+	for i in range(block_nodes.size()):
+		if not is_instance_valid(block_nodes[i]):
+			continue
+		if block_nodes[i].has_method("set_highlight"):
+			block_nodes[i].set_highlight(false)
+		block_nodes[i].scale = Vector2(1.0, 1.0)
+	
+	# Calculate current comparison index (sort_j)
+	# sort_j points to the left element being compared
+	var current_idx = sort_j
+	
+	# If we've completed all passes, show sorted visuals only
+	if sort_i >= main_array.size() - 1:
+		# Mark all as sorted
+		for i in range(block_nodes.size()):
+			if not is_instance_valid(block_nodes[i]):
+				continue
+			if block_nodes[i].has_method("set_sorted_visual"):
+				block_nodes[i].set_sorted_visual(true)
+		return
+	
+	# Mark sorted elements at the end (bubbled up)
+	var sorted_count = sort_i
+	for i in range(block_nodes.size()):
+		if not is_instance_valid(block_nodes[i]):
+			continue
+		if i >= main_array.size() - sorted_count:
+			if block_nodes[i].has_method("set_sorted_visual"):
+				block_nodes[i].set_sorted_visual(true)
+		else:
+			if block_nodes[i].has_method("set_sorted_visual"):
+				block_nodes[i].set_sorted_visual(false)
+	
+	# Highlight the current comparison element (sort_j)
+	if current_idx < block_nodes.size() and is_instance_valid(block_nodes[current_idx]):
+		if block_nodes[current_idx].has_method("set_highlight"):
+			block_nodes[current_idx].set_highlight(true)
+			
+			# Create pulsing animation for the highlighted block
+			highlight_tween = create_tween().set_loops()
+			highlight_tween.tween_property(block_nodes[current_idx], "scale", Vector2(1.15, 1.15), 0.6)
+			highlight_tween.tween_property(block_nodes[current_idx], "scale", Vector2(1.0, 1.0), 0.6)
+		
+		# Update status label
+		if status_label:
+			status_label.text = "Comparing element %d with neighbor to the right" % main_array[current_idx]
+
+func _update_sorted_visuals() -> void:
+	_update_current_highlight()
+
+# ==============================================
 #   BLOCK DRAG & DROP (SWAP LOGIC)
 # ==============================================
 func _on_block_dropped(dropped_block: Control) -> void:
-	if is_sorting or sorting_complete:
+	if is_sorting or sorting_complete or has_completed_assessment:
 		show_feedback(
-			"Cannot drag blocks!!",
+			"Cannot drag blocks!",
 			Color.ORANGE,
 			Vector2(dropped_block.global_position.x, START_POSITION.y - 20)
 		)
 		_resnap_blocks()
 		return
 	
-	var old_index: int = block_nodes.find(dropped_block)
-	if old_index == -1:
+	var dropped_index: int = block_nodes.find(dropped_block)
+	if dropped_index == -1:
 		print("Error: Dropped block not found in block_nodes")
 		return
 	
-	# Calculate drop position to determine insert index
-	var center_x: float = dropped_block.position.x + dropped_block.size.x * 0.5
-	var insert_index: int = 0
+	# VALIDATION: Only the highlighted block (sort_j) can be moved
+	var highlighted_index = sort_j
 	
-	_save_undo_state()  # Save state BEFORE making changes
-	redo_stack.clear()
+	# Check if the dropped block is the highlighted one
+	if dropped_index != highlighted_index:
+		# Bad move - trying to move non-highlighted block
+		mistake_counter += 1
+		timeline_log.append(
+			"[color=red]✗ Bad move: Attempted to move block at index %d instead of highlighted block at index %d[/color]" 
+			% [dropped_index, highlighted_index]
+		)
+		show_feedback(
+			"Bad move! Only the pulsing block can be moved!",
+			Color.RED,
+			Vector2(dropped_block.global_position.x, START_POSITION.y - 20)
+		)
+		_resnap_blocks()
+		_update_ui_labels()
+		_update_timeline_display()
+		return
+	
+	# Calculate drop position to determine where it was dropped
+	var center_x: float = dropped_block.position.x + dropped_block.size.x * 0.5
+	var target_index: int = 0
 	
 	# Find where block was dropped
-	for c in block_nodes:
+	for i in range(block_nodes.size()):
+		var c = block_nodes[i]
 		if c == dropped_block:
 			continue
 		var c_center: float = c.position.x + c.size.x * 0.5
 		if center_x > c_center:
-			insert_index += 1
+			target_index += 1
 	
-	# If dropped in same position, just snap back
-	if old_index == insert_index:
+	# VALIDATION: Can only swap with the block to the RIGHT (index + 1)
+	var expected_target = highlighted_index + 1
+	
+	if target_index != expected_target:
+		# Bad move - not swapping with adjacent right neighbor
+		mistake_counter += 1
+		timeline_log.append(
+			"[color=red]✗ Bad move: Can only swap highlighted block with its RIGHT neighbor! Attempted to move to index %d[/color]" 
+			% target_index
+		)
+		show_feedback(
+			"Bad move! Drag the pulsing block to the RIGHT to swap with its neighbor!",
+			Color.RED,
+			Vector2(dropped_block.global_position.x, START_POSITION.y - 20)
+		)
 		_resnap_blocks()
+		_update_ui_labels()
+		_update_timeline_display()
 		return
 	
-	# Validate Bubble Sort move (adjacent swap only)
-	var is_adjacent = abs(old_index - insert_index) == 1
-	var is_valid: bool = _is_valid_bubble_move(old_index, insert_index)
+	# Check if swap is actually needed (left > right)
+	var left_val = main_array[highlighted_index]
+	var right_val = main_array[expected_target]
+	var need_swap = left_val > right_val
 	
-	# Store values for feedback
-	var val1 = main_array[old_index]
-	var val2 = main_array[insert_index]
+	_save_undo_state()
+	redo_stack.clear()
+	
+	var is_valid = need_swap
 	
 	# Perform swap in array
-	var val: int = main_array.pop_at(old_index)
-	main_array.insert(insert_index, val)
+	var temp = main_array[highlighted_index]
+	main_array[highlighted_index] = main_array[expected_target]
+	main_array[expected_target] = temp
 	
 	# Update block nodes
-	block_nodes.remove_at(old_index)
-	block_nodes.insert(insert_index, dropped_block)
+	var temp_block = block_nodes[highlighted_index]
+	block_nodes[highlighted_index] = block_nodes[expected_target]
+	block_nodes[expected_target] = temp_block
 	
 	# Record move
 	var move_data = {
-		"old_index": old_index,
-		"new_index": insert_index,
-		"val1": val1,
-		"val2": val2,
+		"old_index": highlighted_index,
+		"new_index": expected_target,
+		"left_val": left_val,
+		"right_val": right_val,
 		"was_valid": is_valid
 	}
 	move_history.append(move_data)
 	move_redo_stack.clear()
 	
-	# Handle valid/invalid moves
 	if is_valid:
 		correct_moves += 1
+		swap_counter += 1
+		comparison_counter += 1
 		timeline_log.append(
-			"[color=green]✓ Good swap: index[%d] (%d) with index[%d] (%d) - Left > Right[/color]" 
-			% [old_index, val1, insert_index, val2]
+			"[color=green]✓ Good swap: %d > %d - Swapped at indices [%d] and [%d][/color]" 
+			% [left_val, right_val, highlighted_index, expected_target]
 		)
 		show_feedback(
-			"Good move! %d > %d - Swapping fixes inversion" % [max(val1, val2), min(val1, val2)],
+			"Good move! %d > %d - Swapping fixes inversion" % [left_val, right_val],
 			Color.GREEN,
 			Vector2(dropped_block.global_position.x, START_POSITION.y - 20)
 		)
 		
 		# Advance bubble sort pointers
 		sort_j += 1
-		comparison_counter += 1
 		
+		# Check if we've completed a pass
 		if sort_j >= main_array.size() - sort_i - 1:
 			sort_j = 0
 			sort_i += 1
+			
+			timeline_log.append("[color=cyan]--- Pass %d complete, largest element bubbled to end ---[/color]" % sort_i)
 	else:
 		mistake_counter += 1
+		comparison_counter += 1
+		timeline_log.append(
+			"[color=red]✗ Bad move: %d <= %d - No swap needed at indices [%d] and [%d][/color]" 
+			% [left_val, right_val, highlighted_index, expected_target]
+		)
+		show_feedback(
+			"Bad move! %d <= %d - Elements already in correct order!" % [left_val, right_val],
+			Color.RED,
+			Vector2(dropped_block.global_position.x, START_POSITION.y - 20)
+		)
 		
-		# Detailed reason for bad move
-		if not is_adjacent:
-			timeline_log.append(
-				"[color=red]✗ Bad move: index[%d] (%d) with index[%d] (%d) - Not adjacent! Bubble Sort only swaps adjacent elements[/color]" 
-				% [old_index, val1, insert_index, val2]
-			)
-			show_feedback(
-				"Bad move! Can only swap adjacent blocks",
-				Color.RED,
-				Vector2(dropped_block.global_position.x, START_POSITION.y - 20)
-			)
-		else:
-			timeline_log.append(
-				"[color=red]✗ Bad move: index[%d] (%d) with index[%d] (%d) - Wrong order! %d <= %d, no swap needed[/color]" 
-				% [old_index, val1, insert_index, val2, min(val1, val2), max(val1, val2)]
-			)
-			show_feedback(
-				"Bad move! %d <= %d - Elements already in correct order" % [min(val1, val2), max(val1, val2)],
-				Color.RED,
-				Vector2(dropped_block.global_position.x, START_POSITION.y - 20)
-			)
+		# Still advance pointer even on bad move
+		sort_j += 1
+		
+		# Check if we've completed a pass
+		if sort_j >= main_array.size() - sort_i - 1:
+			sort_j = 0
+			sort_i += 1
 	
 	# Update visuals
-	_update_sorted_visuals()
+	_update_current_highlight()
 	
 	# Check if sorted
 	if _check_if_sorted() and not has_completed_assessment:
@@ -916,17 +1016,6 @@ func _on_block_dropped(dropped_block: Control) -> void:
 	_update_ui_labels()
 	_update_undo_redo_buttons()
 
-func _is_valid_bubble_move(old_index: int, new_index: int) -> bool:
-	# In Bubble Sort, only adjacent swaps are allowed
-	if abs(old_index - new_index) != 1:
-		return false
-	
-	var left: int = old_index if old_index < new_index else new_index
-	var right: int = left + 1
-	
-	# Valid if left > right (needs swapping to fix inversion)
-	return main_array[left] > main_array[right]
-
 func _resnap_blocks() -> void:
 	var x = START_POSITION.x
 	for i in range(block_nodes.size()):
@@ -937,28 +1026,6 @@ func _resnap_blocks() -> void:
 		var tween = create_tween()
 		tween.tween_property(child, "position", target_pos, 0.2)
 		x += child.size.x + BLOCK_SPACING
-
-func _update_sorted_visuals() -> void:
-	# Update visual indicators for sorted elements
-	if block_nodes.is_empty():
-		return
-	
-	# Elements at the end (after sort_i passes) are sorted
-	var sorted_count = sort_i
-	
-	for i in range(block_nodes.size()):
-		if not is_instance_valid(block_nodes[i]):
-			continue
-			
-		if block_nodes[i].has_method("set_sorted_visual"):
-			# Elements at the end (from n-sort_i to n-1) are sorted
-			if i >= main_array.size() - sorted_count:
-				block_nodes[i].set_sorted_visual(true)
-			else:
-				block_nodes[i].set_sorted_visual(false)
-		
-		if block_nodes[i].has_method("set_highlight"):
-			block_nodes[i].set_highlight(false)
 
 func _check_if_sorted() -> bool:
 	for i in range(main_array.size() - 1):
@@ -986,6 +1053,7 @@ func _save_undo_state() -> void:
 		"mistakes": mistake_counter,
 		"correct_moves": correct_moves,
 		"comparisons": comparison_counter,
+		"swaps": swap_counter,
 		"timeline": timeline_log.duplicate()
 	}
 	undo_stack.append(state)
@@ -1007,6 +1075,7 @@ func _on_undo_pressed() -> void:
 		"mistakes": mistake_counter,
 		"correct_moves": correct_moves,
 		"comparisons": comparison_counter,
+		"swaps": swap_counter,
 		"timeline": timeline_log.duplicate()
 	})
 	
@@ -1021,14 +1090,17 @@ func _on_undo_pressed() -> void:
 		
 		if last_move["was_valid"]:
 			correct_moves -= 1
+			swap_counter -= 1
 		else:
 			mistake_counter -= 1
+		
+		comparison_counter -= 1
 	
 	timeline_log.append("[color=gray]↩ Undo[/color]")
 	_update_timeline_display()
 	_update_undo_redo_buttons()
 	_update_ui_labels()
-	_update_sorted_visuals()
+	_update_current_highlight()
 
 func _on_redo_pressed() -> void:
 	if not _can_redo():
@@ -1047,6 +1119,7 @@ func _on_redo_pressed() -> void:
 		"mistakes": mistake_counter,
 		"correct_moves": correct_moves,
 		"comparisons": comparison_counter,
+		"swaps": swap_counter,
 		"timeline": timeline_log.duplicate()
 	})
 	
@@ -1061,22 +1134,26 @@ func _on_redo_pressed() -> void:
 		
 		if move["was_valid"]:
 			correct_moves += 1
+			swap_counter += 1
 		else:
 			mistake_counter += 1
+		
+		comparison_counter += 1
 	
 	timeline_log.append("[color=gray]↪ Redo[/color]")
 	_update_timeline_display()
 	_update_undo_redo_buttons()
 	_update_ui_labels()
-	_update_sorted_visuals()
+	_update_current_highlight()
 
 func _restore_state(state: Dictionary) -> void:
 	main_array = state["array"].duplicate()
 	sort_i = state["sort_i"]
 	sort_j = state["sort_j"]
 	mistake_counter = state["mistakes"]
-	correct_moves = state.get("correct_moves", 0)  # Handle older saves
+	correct_moves = state.get("correct_moves", 0)
 	comparison_counter = state["comparisons"]
+	swap_counter = state.get("swaps", 0)
 	timeline_log = state.get("timeline", timeline_log).duplicate()
 	
 	_rebuild_blocks_from_array()
@@ -1107,7 +1184,7 @@ func _can_undo() -> bool:
 	if sorting_complete or has_completed_assessment:
 		return false
 	
-	if difficulty == 3:  # Hard mode - no undo/redo
+	if difficulty == 3:
 		return false
 	
 	return not undo_stack.is_empty()
@@ -1116,7 +1193,7 @@ func _can_redo() -> bool:
 	if sorting_complete or has_completed_assessment:
 		return false
 	
-	if difficulty == 3:  # Hard mode - no undo/redo
+	if difficulty == 3:
 		return false
 	
 	return not redo_stack.is_empty()
@@ -1128,7 +1205,6 @@ func _update_undo_redo_buttons() -> void:
 	undo_btn.disabled = not _can_undo()
 	redo_btn.disabled = not _can_redo()
 	
-	# Visual feedback
 	if undo_btn.disabled:
 		undo_btn.modulate = Color(0.5, 0.5, 0.5, 0.5)
 	else:
@@ -1183,7 +1259,7 @@ func _update_timeline_display() -> void:
 	if timeline_log.is_empty():
 		timeline_label.text = "[center]No actions yet[/center]"
 	else:
-		timeline_label.text = "[b]TIMELINE:[/b]\n\n" + "\n".join(timeline_log)
+		timeline_label.text = "\n".join(timeline_log)
 
 # ==============================================
 #   ASSESSMENT END & GRADING
@@ -1199,6 +1275,9 @@ func _end_assessment(reason: String) -> void:
 	if current_tween:
 		current_tween.kill()
 		current_tween = null
+	if highlight_tween:
+		highlight_tween.kill()
+		highlight_tween = null
 	
 	# Stop timer and sounds
 	timer_running = false
@@ -1229,7 +1308,6 @@ func _end_assessment(reason: String) -> void:
 		var grade = _compute_grade()
 		var result = "PASS" if grade["passed"] else "FAIL"
 		
-		# If passed, complete level and get coins from database
 		if grade["passed"]:
 			coins_earned = DB.complete_level(CURRENT_TOPIC, difficulty)
 			grade["coins"] = coins_earned
@@ -1251,7 +1329,7 @@ func _compute_grade() -> Dictionary:
 		"correct_moves": correct_moves,
 		"mistake_counter": mistake_counter,
 		"time_used": time_used,
-		"coins": 0,  # Will be overwritten if passed
+		"coins": 0,
 		"required": threshold
 	}
 
@@ -1259,16 +1337,13 @@ func _show_result_popup(result: String, grade: Dictionary = {}) -> void:
 	if not result_popup:
 		return
 	
-	# Hide other popups
 	if complete_popup and complete_popup.visible:
 		complete_popup.hide()
 	
-	# Configure result popup based on outcome
 	if result == "PASS":
 		result_title.text = "PASSED!"
 		result_title.modulate = Color(0, 1, 0)
 		
-		# Show code buttons on pass
 		if translate_code_btn:
 			translate_code_btn.show()
 		if cpp_code_button:
@@ -1280,7 +1355,6 @@ func _show_result_popup(result: String, grade: Dictionary = {}) -> void:
 		result_title.text = "FAILED!"
 		result_title.modulate = Color(1, 0, 0)
 		
-		# Hide code buttons on fail
 		if translate_code_btn:
 			translate_code_btn.hide()
 		if cpp_code_button:
@@ -1288,7 +1362,6 @@ func _show_result_popup(result: String, grade: Dictionary = {}) -> void:
 		if try_again_btn_root:
 			try_again_btn_root.visible = true
 	
-	# Populate data
 	if completion_type == "timeout":
 		score_summary.text = "Time's Up! Assessment Failed."
 		accuracy_label.text = "Accuracy: 0%"
@@ -1304,10 +1377,8 @@ func _show_result_popup(result: String, grade: Dictionary = {}) -> void:
 		time_used_label.text = "Time Used: %02d:%02d" % [minutes, seconds]
 		coins_label.text = "+%d" % grade.get("coins", 0)
 	
-	# Show popup
 	result_popup.popup_centered()
 	
-	# Play coin animation if coins earned
 	if grade.get("coins", 0) > 0 and coins_anim:
 		coins_anim.play("default")
 
@@ -1361,7 +1432,6 @@ func show_introduction() -> void:
 	intro_popup.show()
 	intro_popup.mouse_filter = Control.MOUSE_FILTER_STOP
 	
-	# Pause timer during intro
 	timer_running = false
 	
 	intro_step = 0
@@ -1387,7 +1457,6 @@ func _on_intro_next_pressed() -> void:
 	else:
 		intro_popup.hide()
 		tutorial_overlay.hide()
-		# Resume timer
 		if difficulty != 1:
 			timer_running = true
 			clock.play()
@@ -1402,7 +1471,6 @@ func _on_intro_skip_pressed() -> void:
 	btn_sound.play()
 	intro_popup.hide()
 	tutorial_overlay.hide()
-	# Resume timer
 	if difficulty != 1:
 		timer_running = true
 		clock.play()
@@ -1422,7 +1490,6 @@ func _start_tutorial() -> void:
 	tutorial_in_progress = true
 	tutorial_sequence_index = 0
 	
-	# Pause timer during tutorial
 	timer_running = false
 	
 	tutorial_overlay.show()
@@ -1475,11 +1542,9 @@ func _show_tutorial_step() -> void:
 		pointer_sprite.global_position = Vector2(pos_x, pos_y)
 		pointer_sprite.z_index = 100
 		
-		# Kill old tween
 		if pointer_sprite.has_meta("tween"):
 			pointer_sprite.get_meta("tween").kill()
 		
-		# Create bouncing animation
 		var tween = create_tween().set_loops()
 		pointer_sprite.set_meta("tween", tween)
 		pointer_sprite.offset = Vector2.ZERO
@@ -1502,7 +1567,6 @@ func _end_tutorial() -> void:
 		if pointer_sprite.has_meta("tween"):
 			pointer_sprite.get_meta("tween").kill()
 	
-	# Resume timer
 	if difficulty != 1:
 		timer_running = true
 
@@ -1513,7 +1577,6 @@ func _show_cpp_popup() -> void:
 	var arr_str = ", ".join(initial_array.map(func(x): return str(x)))
 	var code = _get_code_for_language(current_code_language, arr_str)
 	
-	# Set tutorial data based on language
 	match current_code_language:
 		"cpp": current_tutorial_data = cpp_tutorial_data
 		"python": current_tutorial_data = python_tutorial_data
@@ -1525,7 +1588,6 @@ func _show_cpp_popup() -> void:
 	
 	cpp_tutorial_step = 0
 	
-	# Connect next button
 	if cpp_next_btn:
 		if cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
 			cpp_next_btn.disconnect("pressed", _on_cpp_next_pressed)
@@ -1560,7 +1622,6 @@ func _update_cpp_tutorial() -> void:
 		var base_code = _get_code_for_language(current_code_language, arr_str)
 		var lines = base_code.split("\n")
 		
-		# Highlight current step lines
 		for line_idx in data["lines"]:
 			if line_idx >= 0 and line_idx < lines.size():
 				lines[line_idx] = "[bgcolor=#444400][color=yellow]" + lines[line_idx] + "[/color][/bgcolor]"
@@ -1568,7 +1629,6 @@ func _update_cpp_tutorial() -> void:
 		cpp_text.bbcode_enabled = true
 		cpp_text.text = "\n".join(lines)
 		
-		# Scroll to highlighted line
 		if data["lines"].size() > 0:
 			var target_line = data["lines"][0]
 			await get_tree().process_frame 
@@ -1823,12 +1883,12 @@ def bubble_sort(arr):
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
 
 def print_array(arr):
-	print("[", end="")
+    print("[", end="")
     for i in range(len(arr)):
-		print(arr[i], end="")
+        print(arr[i], end="")
         if i < len(arr) - 1:
-			print(", ", end="")
-	print("]")
+            print(", ", end="")
+    print("]")
 
 arr = [%s]
 print("Initial array: ", end="")
@@ -1854,23 +1914,23 @@ public class Main {
     }
     
     static void printArray(int arr[]) {
-		System.out.print("[");
+        System.out.print("[");
         for (int i = 0; i < arr.length; i++) {
             System.out.print(arr[i]);
-			if (i < arr.length - 1) System.out.print(", ");
+            if (i < arr.length - 1) System.out.print(", ");
         }
-		System.out.println("]");
+        System.out.println("]");
     }
     
     public static void main(String args[]) {
         int arr[] = {%s};
         
-		System.out.print("Initial array: ");
+        System.out.print("Initial array: ");
         printArray(arr);
         
         bubbleSort(arr);
         
-		System.out.print("Sorted array: ");
+        System.out.print("Sorted array: ");
         printArray(arr);
     }
 }""" % arr
@@ -1891,24 +1951,24 @@ void bubbleSort(int arr[], int n) {
 }
 
 void printArray(int arr[], int n) {
-	printf("[");
+    printf("[");
     for (int i = 0; i < n; i++) {
-		printf("%d", arr[i]);
-		if (i < n - 1) printf(", ");
+        printf("%d", arr[i]);
+        if (i < n - 1) printf(", ");
     }
-	printf("]\\n");
+    printf("]\\n");
 }
 
 int main() {
     int arr[] = {%s};
     int n = sizeof(arr) / sizeof(arr[0]);
     
-	printf("Initial array: ");
+    printf("Initial array: ");
     printArray(arr, n);
     
     bubbleSort(arr, n);
     
-	printf("Sorted array: ");
+    printf("Sorted array: ");
     printArray(arr, n);
     
     return 0;
