@@ -4,3 +4,5 @@ res://Bubblemain.gd
 res://script/linked_list_sim.gd
 res://scene/ISA.tscn
 res://script/lsa.gd
+res://scenes/progress_page.tscn
+res://scripts/progress_page.gd

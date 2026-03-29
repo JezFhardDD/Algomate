@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://n74hr1lti5wc"]
+[gd_scene load_steps=38 format=3 uid="uid://n74hr1lti5wc"]
 
 [ext_resource type="Script" uid="uid://bskopphl4nod1" path="res://scripts/progress_page.gd" id="1_823gq"]
 [ext_resource type="Shader" uid="uid://dm5tlgdpgj58y" path="res://scripts/lectures_bg.gdshader" id="1_fvj5j"]
@@ -9,6 +9,12 @@
 [ext_resource type="LabelSettings" uid="uid://bg8ldg6sc3s0e" path="res://new_label_settings.tres" id="5_a726w"]
 [ext_resource type="PackedScene" uid="uid://b2hkw0gkjb1ja" path="res://scenes/overall_assessment.tscn" id="7_a726w"]
 [ext_resource type="Texture2D" uid="uid://binxvpneifapc" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/BACK_BUTTON_GREEN.png" id="9_a8fdb"]
+[ext_resource type="FontFile" uid="uid://bvq3t3k08atlq" path="res://assets/font/Minecraftchmc-dBlX.ttf" id="9_votil"]
+[ext_resource type="Texture2D" uid="uid://dvilfo7cosnfo" path="res://assets/question_mark.png" id="11_snn5b"]
+[ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="11_xukm5"]
+[ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="12_q4d6n"]
+[ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="13_votil"]
+[ext_resource type="Texture2D" uid="uid://dcxstyoycht1w" path="res://assets/BUTTON_HOVERED.png" id="14_snn5b"]
 [ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="planes_font_ref"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6c2v0"]
@@ -34,6 +40,110 @@ font_color = Color(0, 0, 0, 1)
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_823gq"]
 texture = ExtResource("3_nfqvn")
 
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_f5loa"]
+texture = ExtResource("12_q4d6n")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_08k7p"]
+atlas = ExtResource("11_snn5b")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8cuns"]
+atlas = ExtResource("11_snn5b")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gjnlk"]
+atlas = ExtResource("11_snn5b")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kxuod"]
+atlas = ExtResource("11_snn5b")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1dr5g"]
+atlas = ExtResource("11_snn5b")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wosyn"]
+atlas = ExtResource("11_snn5b")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uiejy"]
+atlas = ExtResource("11_snn5b")
+region = Rect2(192, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dq3mc"]
+atlas = ExtResource("11_snn5b")
+region = Rect2(224, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hmh3n"]
+atlas = ExtResource("11_snn5b")
+region = Rect2(256, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tgqhd"]
+atlas = ExtResource("11_snn5b")
+region = Rect2(288, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_puvaq"]
+atlas = ExtResource("11_snn5b")
+region = Rect2(320, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lcaa3"]
+atlas = ExtResource("11_snn5b")
+region = Rect2(352, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dxeg5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_08k7p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8cuns")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gjnlk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kxuod")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1dr5g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wosyn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uiejy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dq3mc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hmh3n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tgqhd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_puvaq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lcaa3")
+}],
+"loop": true,
+"name": &"default",
+"speed": 12.0
+}]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2w6ts"]
+texture = ExtResource("12_q4d6n")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qsoc1"]
+texture = ExtResource("13_votil")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wrkln"]
+texture = ExtResource("14_snn5b")
+
 [node name="Control" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -53,15 +163,33 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.47843137, 0.6627451, 0.22352941, 1)
 
-[node name="progressreport" type="Panel" parent="."]
+[node name="MainScroll" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 102.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="MainScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MainVBox" type="VBoxContainer" parent="MainScroll/MarginContainer"]
+layout_mode = 2
+
+[node name="progressreport" type="Panel" parent="MainScroll/MarginContainer/MainVBox"]
 self_modulate = Color(0.29635113, 0.7307657, 0, 1)
-layout_mode = 0
-offset_top = 107.0
-offset_right = 646.0
-offset_bottom = 1151.0
+custom_minimum_size = Vector2(650, 800)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxTexture_a8fdb")
 
-[node name="TextureRect" type="TextureRect" parent="progressreport"]
+[node name="TextureRect" type="TextureRect" parent="MainScroll/MarginContainer/MainVBox/progressreport"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.10719814
@@ -74,7 +202,7 @@ script = ExtResource("5_a8fdb")
 float_height = 4.0
 float_rotation = 3.0
 
-[node name="PROGRESS_REPORT" type="Label" parent="progressreport/TextureRect"]
+[node name="PROGRESS_REPORT" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/TextureRect"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.28423646
@@ -88,7 +216,7 @@ label_settings = SubResource("LabelSettings_ujoo3")
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="DATA_STRUCTURES" type="Label" parent="progressreport"]
+[node name="DATA_STRUCTURES" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.07894738
@@ -97,12 +225,12 @@ anchor_right = 0.2910217
 anchor_bottom = 0.17334393
 offset_right = -1.5258789e-05
 text = "Data
-Structure"
+Structures"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="EASY" type="Panel" parent="progressreport"]
+[node name="EASY" type="Panel" parent="MainScroll/MarginContainer/MainVBox/progressreport"]
 layout_mode = 0
 offset_left = 31.0
 offset_top = 183.0
@@ -110,7 +238,7 @@ offset_right = 210.0
 offset_bottom = 362.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_823gq")
 
-[node name="Easy" type="VBoxContainer" parent="progressreport/EASY"]
+[node name="Easy" type="VBoxContainer" parent="MainScroll/MarginContainer/MainVBox/progressreport/EASY"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -126,24 +254,24 @@ grow_vertical = 2
 size_flags_horizontal = 6
 size_flags_vertical = 0
 
-[node name="easybadge" type="Label" parent="progressreport/EASY/Easy"]
+[node name="easybadge" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/EASY/Easy"]
 layout_mode = 2
 text = "EASY
 BADGE"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
-[node name="badge_count" type="Label" parent="progressreport/EASY/Easy"]
+[node name="badge_count" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/EASY/Easy"]
 layout_mode = 2
 text = "0/8"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
-[node name="ProgressBar" type="ProgressBar" parent="progressreport/EASY/Easy"]
+[node name="ProgressBar" type="ProgressBar" parent="MainScroll/MarginContainer/MainVBox/progressreport/EASY/Easy"]
 layout_mode = 2
 max_value = 8.0
 
-[node name="MEDIUM" type="Panel" parent="progressreport"]
+[node name="MEDIUM" type="Panel" parent="MainScroll/MarginContainer/MainVBox/progressreport"]
 layout_mode = 0
 offset_left = 31.0
 offset_top = 375.0
@@ -151,7 +279,7 @@ offset_right = 209.0
 offset_bottom = 553.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_823gq")
 
-[node name="Medium" type="VBoxContainer" parent="progressreport/MEDIUM"]
+[node name="Medium" type="VBoxContainer" parent="MainScroll/MarginContainer/MainVBox/progressreport/MEDIUM"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -167,24 +295,24 @@ grow_vertical = 2
 size_flags_horizontal = 6
 size_flags_vertical = 0
 
-[node name="mediumbadge" type="Label" parent="progressreport/MEDIUM/Medium"]
+[node name="mediumbadge" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/MEDIUM/Medium"]
 layout_mode = 2
 text = "MEDIUM
 BADGE"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
-[node name="badge_count" type="Label" parent="progressreport/MEDIUM/Medium"]
+[node name="badge_count" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/MEDIUM/Medium"]
 layout_mode = 2
 text = "0/8"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
-[node name="ProgressBar" type="ProgressBar" parent="progressreport/MEDIUM/Medium"]
+[node name="ProgressBar" type="ProgressBar" parent="MainScroll/MarginContainer/MainVBox/progressreport/MEDIUM/Medium"]
 layout_mode = 2
 max_value = 8.0
 
-[node name="HARD" type="Panel" parent="progressreport"]
+[node name="HARD" type="Panel" parent="MainScroll/MarginContainer/MainVBox/progressreport"]
 layout_mode = 0
 offset_left = 31.0
 offset_top = 568.0
@@ -192,7 +320,7 @@ offset_right = 209.0
 offset_bottom = 746.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_823gq")
 
-[node name="Hard" type="VBoxContainer" parent="progressreport/HARD"]
+[node name="Hard" type="VBoxContainer" parent="MainScroll/MarginContainer/MainVBox/progressreport/HARD"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -208,24 +336,24 @@ grow_vertical = 2
 size_flags_horizontal = 6
 size_flags_vertical = 0
 
-[node name="hardbadge" type="Label" parent="progressreport/HARD/Hard"]
+[node name="hardbadge" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/HARD/Hard"]
 layout_mode = 2
 text = "HARD
 BADGE"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
-[node name="badge_count" type="Label" parent="progressreport/HARD/Hard"]
+[node name="badge_count" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/HARD/Hard"]
 layout_mode = 2
 text = "0/8"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
-[node name="ProgressBar" type="ProgressBar" parent="progressreport/HARD/Hard"]
+[node name="ProgressBar" type="ProgressBar" parent="MainScroll/MarginContainer/MainVBox/progressreport/HARD/Hard"]
 layout_mode = 2
 max_value = 8.0
 
-[node name="SORTING_ALGORITHMS" type="Label" parent="progressreport"]
+[node name="SORTING_ALGORITHMS" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.3746131
@@ -242,7 +370,7 @@ label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="EASY2" type="Panel" parent="progressreport"]
+[node name="EASY2" type="Panel" parent="MainScroll/MarginContainer/MainVBox/progressreport"]
 layout_mode = 0
 offset_left = 231.0
 offset_top = 183.0
@@ -250,7 +378,7 @@ offset_right = 410.0
 offset_bottom = 362.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_823gq")
 
-[node name="Easy" type="VBoxContainer" parent="progressreport/EASY2"]
+[node name="Easy" type="VBoxContainer" parent="MainScroll/MarginContainer/MainVBox/progressreport/EASY2"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -266,24 +394,24 @@ grow_vertical = 2
 size_flags_horizontal = 6
 size_flags_vertical = 0
 
-[node name="easybadge" type="Label" parent="progressreport/EASY2/Easy"]
+[node name="easybadge" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/EASY2/Easy"]
 layout_mode = 2
 text = "EASY
 BADGE"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
-[node name="badge_count" type="Label" parent="progressreport/EASY2/Easy"]
+[node name="badge_count" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/EASY2/Easy"]
 layout_mode = 2
 text = "0/7"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
-[node name="ProgressBar" type="ProgressBar" parent="progressreport/EASY2/Easy"]
+[node name="ProgressBar" type="ProgressBar" parent="MainScroll/MarginContainer/MainVBox/progressreport/EASY2/Easy"]
 layout_mode = 2
 max_value = 7.0
 
-[node name="MEDIUM2" type="Panel" parent="progressreport"]
+[node name="MEDIUM2" type="Panel" parent="MainScroll/MarginContainer/MainVBox/progressreport"]
 layout_mode = 0
 offset_left = 231.0
 offset_top = 375.0
@@ -291,7 +419,7 @@ offset_right = 409.0
 offset_bottom = 553.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_823gq")
 
-[node name="Medium" type="VBoxContainer" parent="progressreport/MEDIUM2"]
+[node name="Medium" type="VBoxContainer" parent="MainScroll/MarginContainer/MainVBox/progressreport/MEDIUM2"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -307,24 +435,24 @@ grow_vertical = 2
 size_flags_horizontal = 6
 size_flags_vertical = 0
 
-[node name="mediumbadge" type="Label" parent="progressreport/MEDIUM2/Medium"]
+[node name="mediumbadge" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/MEDIUM2/Medium"]
 layout_mode = 2
 text = "MEDIUM
 BADGE"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
-[node name="badge_count" type="Label" parent="progressreport/MEDIUM2/Medium"]
+[node name="badge_count" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/MEDIUM2/Medium"]
 layout_mode = 2
 text = "0/7"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
-[node name="ProgressBar" type="ProgressBar" parent="progressreport/MEDIUM2/Medium"]
+[node name="ProgressBar" type="ProgressBar" parent="MainScroll/MarginContainer/MainVBox/progressreport/MEDIUM2/Medium"]
 layout_mode = 2
 max_value = 7.0
 
-[node name="HARD2" type="Panel" parent="progressreport"]
+[node name="HARD2" type="Panel" parent="MainScroll/MarginContainer/MainVBox/progressreport"]
 layout_mode = 0
 offset_left = 231.0
 offset_top = 568.0
@@ -332,7 +460,7 @@ offset_right = 409.0
 offset_bottom = 746.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_823gq")
 
-[node name="Hard" type="VBoxContainer" parent="progressreport/HARD2"]
+[node name="Hard" type="VBoxContainer" parent="MainScroll/MarginContainer/MainVBox/progressreport/HARD2"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -348,24 +476,24 @@ grow_vertical = 2
 size_flags_horizontal = 6
 size_flags_vertical = 0
 
-[node name="hardbadge" type="Label" parent="progressreport/HARD2/Hard"]
+[node name="hardbadge" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/HARD2/Hard"]
 layout_mode = 2
 text = "HARD
 BADGE"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
-[node name="badge_count" type="Label" parent="progressreport/HARD2/Hard"]
+[node name="badge_count" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/HARD2/Hard"]
 layout_mode = 2
 text = "0/7"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
-[node name="ProgressBar" type="ProgressBar" parent="progressreport/HARD2/Hard"]
+[node name="ProgressBar" type="ProgressBar" parent="MainScroll/MarginContainer/MainVBox/progressreport/HARD2/Hard"]
 layout_mode = 2
 max_value = 7.0
 
-[node name="GRAPH_TREE" type="Label" parent="progressreport"]
+[node name="GRAPH_TREE" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.6733747
@@ -376,12 +504,13 @@ offset_left = 10.815792
 offset_top = 7.612007
 offset_right = 10.815781
 offset_bottom = 7.612015
-text = "Search"
+text = "Searching
+Algorithms"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 metadata/_edit_use_anchors_ = true
 
-[node name="EASY3" type="Panel" parent="progressreport"]
+[node name="EASY3" type="Panel" parent="MainScroll/MarginContainer/MainVBox/progressreport"]
 layout_mode = 0
 offset_left = 432.0
 offset_top = 183.0
@@ -389,7 +518,7 @@ offset_right = 611.0
 offset_bottom = 362.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_823gq")
 
-[node name="Easy" type="VBoxContainer" parent="progressreport/EASY3"]
+[node name="Easy" type="VBoxContainer" parent="MainScroll/MarginContainer/MainVBox/progressreport/EASY3"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -405,24 +534,24 @@ grow_vertical = 2
 size_flags_horizontal = 6
 size_flags_vertical = 0
 
-[node name="easybadge" type="Label" parent="progressreport/EASY3/Easy"]
+[node name="easybadge" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/EASY3/Easy"]
 layout_mode = 2
 text = "EASY
 BADGE"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
-[node name="badge_count" type="Label" parent="progressreport/EASY3/Easy"]
+[node name="badge_count" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/EASY3/Easy"]
 layout_mode = 2
 text = "0/3"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
-[node name="ProgressBar" type="ProgressBar" parent="progressreport/EASY3/Easy"]
+[node name="ProgressBar" type="ProgressBar" parent="MainScroll/MarginContainer/MainVBox/progressreport/EASY3/Easy"]
 layout_mode = 2
 max_value = 3.0
 
-[node name="MEDIUM3" type="Panel" parent="progressreport"]
+[node name="MEDIUM3" type="Panel" parent="MainScroll/MarginContainer/MainVBox/progressreport"]
 layout_mode = 0
 offset_left = 432.0
 offset_top = 375.0
@@ -430,7 +559,7 @@ offset_right = 610.0
 offset_bottom = 553.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_823gq")
 
-[node name="Medium" type="VBoxContainer" parent="progressreport/MEDIUM3"]
+[node name="Medium" type="VBoxContainer" parent="MainScroll/MarginContainer/MainVBox/progressreport/MEDIUM3"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -446,24 +575,24 @@ grow_vertical = 2
 size_flags_horizontal = 6
 size_flags_vertical = 0
 
-[node name="mediumbadge" type="Label" parent="progressreport/MEDIUM3/Medium"]
+[node name="mediumbadge" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/MEDIUM3/Medium"]
 layout_mode = 2
 text = "MEDIUM
 BADGE"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
-[node name="badge_count" type="Label" parent="progressreport/MEDIUM3/Medium"]
+[node name="badge_count" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/MEDIUM3/Medium"]
 layout_mode = 2
 text = "0/3"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
-[node name="ProgressBar" type="ProgressBar" parent="progressreport/MEDIUM3/Medium"]
+[node name="ProgressBar" type="ProgressBar" parent="MainScroll/MarginContainer/MainVBox/progressreport/MEDIUM3/Medium"]
 layout_mode = 2
 max_value = 3.0
 
-[node name="HARD3" type="Panel" parent="progressreport"]
+[node name="HARD3" type="Panel" parent="MainScroll/MarginContainer/MainVBox/progressreport"]
 layout_mode = 0
 offset_left = 432.0
 offset_top = 568.0
@@ -471,7 +600,7 @@ offset_right = 610.0
 offset_bottom = 746.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_823gq")
 
-[node name="Hard" type="VBoxContainer" parent="progressreport/HARD3"]
+[node name="Hard" type="VBoxContainer" parent="MainScroll/MarginContainer/MainVBox/progressreport/HARD3"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -487,45 +616,161 @@ grow_vertical = 2
 size_flags_horizontal = 6
 size_flags_vertical = 0
 
-[node name="hardbadge" type="Label" parent="progressreport/HARD3/Hard"]
+[node name="hardbadge" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/HARD3/Hard"]
 layout_mode = 2
 text = "HARD
 BADGE"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
-[node name="badge_count" type="Label" parent="progressreport/HARD3/Hard"]
+[node name="badge_count" type="Label" parent="MainScroll/MarginContainer/MainVBox/progressreport/HARD3/Hard"]
 layout_mode = 2
 text = "0/3"
 label_settings = ExtResource("5_a726w")
 horizontal_alignment = 1
 
-[node name="ProgressBar" type="ProgressBar" parent="progressreport/HARD3/Hard"]
+[node name="ProgressBar" type="ProgressBar" parent="MainScroll/MarginContainer/MainVBox/progressreport/HARD3/Hard"]
 layout_mode = 2
 max_value = 3.0
 
-[node name="navigation" parent="progressreport" instance=ExtResource("2_4h6h3")]
-layout_mode = 1
-offset_top = -107.0
-offset_bottom = -3.0
+[node name="overall" parent="MainScroll/MarginContainer/MainVBox" instance=ExtResource("7_a726w")]
+custom_minimum_size = Vector2(500, 100)
+layout_mode = 2
+size_flags_horizontal = 4
 
-[node name="overall" parent="." instance=ExtResource("7_a726w")]
+[node name="Label" type="Label" parent="MainScroll/MarginContainer/MainVBox"]
+layout_mode = 2
+text = "
+"
+
+[node name="PuzzleSection" type="VBoxContainer" parent="MainScroll/MarginContainer/MainVBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+
+[node name="PuzzleHeader" type="HBoxContainer" parent="MainScroll/MarginContainer/MainVBox/PuzzleSection"]
+layout_mode = 2
+
+[node name="PuzzleLabel" type="Label" parent="MainScroll/MarginContainer/MainVBox/PuzzleSection/PuzzleHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("planes_font_ref")
+theme_override_font_sizes/font_size = 40
+text = "COMPLETION PUZZLE"
+
+[node name="PuzzleHelpButton" type="Button" parent="MainScroll/MarginContainer/MainVBox/PuzzleSection/PuzzleHeader"]
+custom_minimum_size = Vector2(100, 50)
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("9_votil")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxTexture_f5loa")
+
+[node name="Q_mark_anim_sprites" type="AnimatedSprite2D" parent="MainScroll/MarginContainer/MainVBox/PuzzleSection/PuzzleHeader/PuzzleHelpButton"]
+position = Vector2(49, 18)
+scale = Vector2(1.64062, 1.34375)
+sprite_frames = SubResource("SpriteFrames_dxeg5")
+autoplay = "default"
+
+[node name="PuzzleCenter" type="CenterContainer" parent="MainScroll/MarginContainer/MainVBox/PuzzleSection"]
+custom_minimum_size = Vector2(100, 800)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PuzzleImage" type="TextureRect" parent="MainScroll/MarginContainer/MainVBox/PuzzleSection/PuzzleCenter"]
+custom_minimum_size = Vector2(600, 800)
+layout_mode = 2
+
+[node name="PuzzleHelpPopup" type="PopupPanel" parent="."]
+oversampling_override = 1.0
+size = Vector2i(630, 500)
+
+[node name="TextureRect" type="TextureRect" parent="PuzzleHelpPopup"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 626.0
+offset_bottom = 496.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("11_xukm5")
+metadata/_edit_use_anchors_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PuzzleHelpPopup/TextureRect"]
+layout_direction = 2
 layout_mode = 1
-offset_top = 912.0
-offset_bottom = 912.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -286.5
+offset_top = -218.5
+offset_right = 286.5
+offset_bottom = 218.5
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="HelpTitle" type="Label" parent="PuzzleHelpPopup/TextureRect/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_shadow_color = Color(0.74509805, 0.74509805, 0.74509805, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("planes_font_ref")
+theme_override_font_sizes/font_size = 40
+text = "PUZZLE REWARD SYSTEM"
+
+[node name="HelpText" type="Label" parent="PuzzleHelpPopup/TextureRect/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("planes_font_ref")
+theme_override_font_sizes/font_size = 20
+text = "Complete levels to reveal puzzle pieces!
+Each piece unlocks after reaching certain level milestones:
+• 5 levels → Piece 8
+• 11 levels → Piece 7
+• 16 levels → Piece 6
+• 22 levels → Piece 5
+• 27 levels → Piece 4
+• 33 levels → Piece 3
+• 38 levels → Piece 2
+• 45 levels → Complete Puzzle!
+Keep learning to collect all pieces!"
+
+[node name="CloseHelpButton" type="Button" parent="PuzzleHelpPopup/TextureRect/VBoxContainer"]
+custom_minimum_size = Vector2(150, 75)
+layout_direction = 1
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0, 0, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("planes_font_ref")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxTexture_2w6ts")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_qsoc1")
+theme_override_styles/hover = SubResource("StyleBoxTexture_wrkln")
+text = "CLOSE"
+
+[node name="navigation" parent="." instance=ExtResource("2_4h6h3")]
+layout_mode = 1
 
 [node name="back_button" type="TextureButton" parent="."]
 z_index = 10
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.032407407
-anchor_top = 0.111111104
-anchor_right = 0.11364198
-anchor_bottom = 0.202717
-offset_right = -28.639996
-offset_bottom = -57.416016
-scale = Vector2(2.1933331, 2.1933331)
+offset_top = 103.0
+offset_right = 56.0
+offset_bottom = 171.0
 texture_normal = ExtResource("9_a8fdb")
-metadata/_edit_use_anchors_ = true
+stretch_mode = 0
 
 [connection signal="pressed" from="back_button" to="." method="_on_back_button_pressed"]

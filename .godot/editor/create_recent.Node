@@ -1,5 +1,12 @@
-CodeEdit
 Label
+Button
+VBoxContainer
 TextureRect
+PopupPanel
+CenterContainer
+HBoxContainer
+MarginContainer
+ScrollContainer
+CodeEdit
 Control
 TextureButton
