@@ -1,1 +1,3 @@
-res://Bubblemain.gd
+res://scenes/navigation.tscn
+res://scene/BG.gdshader
+res://scenes/loading_screen.tscn

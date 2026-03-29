@@ -735,6 +735,236 @@ scale = Vector2(1.8371067, 1.8371067)
 texture = ExtResource("3_qygbf")
 stretch_mode = 6
 
+[node name="Block70" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 1013.0
+offset_top = 711.0
+offset_right = 1097.0
+offset_bottom = 795.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block71" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 1134.0
+offset_top = 851.0
+offset_right = 1218.0
+offset_bottom = 935.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block72" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 570.99994
+offset_top = 707.0
+offset_right = 655.0
+offset_bottom = 791.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block91" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 986.00006
+offset_top = 849.00006
+offset_right = 1070.0
+offset_bottom = 933.00006
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block73" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 715.0
+offset_top = 713.0
+offset_right = 799.0
+offset_bottom = 797.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block74" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 863.0
+offset_top = 713.9999
+offset_right = 947.0
+offset_bottom = 797.9999
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block75" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 688.99994
+offset_top = 853.0
+offset_right = 772.99994
+offset_bottom = 937.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block76" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 836.0
+offset_top = 853.0
+offset_right = 920.0
+offset_bottom = 937.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block92" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 561.0
+offset_top = 709.0
+offset_right = 645.0
+offset_bottom = 793.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block77" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 1164.9999
+offset_top = 707.0
+offset_right = 1248.9999
+offset_bottom = 791.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block78" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 1309.0
+offset_top = 713.0
+offset_right = 1393.0
+offset_bottom = 797.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block79" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 1282.9999
+offset_top = 853.0
+offset_right = 1366.9999
+offset_bottom = 937.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block80" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 992.0
+offset_top = 983.0
+offset_right = 1076.0
+offset_bottom = 1067.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block81" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 965.99994
+offset_top = 1123.0
+offset_right = 1050.0
+offset_bottom = 1207.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block82" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 1113.0
+offset_top = 1123.0
+offset_right = 1197.0
+offset_bottom = 1207.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block83" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 549.99994
+offset_top = 979.0
+offset_right = 634.0
+offset_bottom = 1063.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block84" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 694.0
+offset_top = 985.0
+offset_right = 778.0
+offset_bottom = 1069.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block85" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 842.0
+offset_top = 985.9999
+offset_right = 926.0
+offset_bottom = 1069.9999
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block86" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 668.0
+offset_top = 1125.0
+offset_right = 752.0
+offset_bottom = 1209.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block87" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 815.0
+offset_top = 1125.0
+offset_right = 899.0
+offset_bottom = 1209.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block88" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 1143.9999
+offset_top = 979.0
+offset_right = 1227.9999
+offset_bottom = 1063.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block89" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 1288.0
+offset_top = 985.0
+offset_right = 1372.0
+offset_bottom = 1069.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block90" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 1261.9999
+offset_top = 1125.0
+offset_right = 1345.9999
+offset_bottom = 1209.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
 [node name="Block44" type="TextureRect" parent="Blocks"]
 layout_mode = 0
 offset_left = 689.0
