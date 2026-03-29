@@ -1269,6 +1269,7 @@ theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_ei8tx")
 text = "Close"
 
 [node name="SimulationCompletePopup" type="PopupPanel" parent="."]
+oversampling_override = 1.0
 size = Vector2i(500, 300)
 theme_override_styles/panel = SubResource("StyleBoxTexture_hri7i")
 
@@ -1276,8 +1277,8 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_hri7i")
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = 25.0
-offset_right = 469.0
+offset_left = -225.0
+offset_right = 219.0
 offset_bottom = 300.0
 grow_horizontal = 2
 alignment = 1
