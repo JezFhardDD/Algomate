@@ -235,6 +235,9 @@ var c_tutorial_data = [
 # ==============================================
 #   READY
 # ==============================================
+# ==============================================
+#   READY
+# ==============================================
 func _ready() -> void:
 	var back_overlay = preload("res://scenes/back_button_overlay.tscn").instantiate()
 	add_child(back_overlay)
@@ -291,6 +294,9 @@ func _ready() -> void:
 	_setup_compiler()
 	
 	_show_config_modal() 
+	
+	# ---> APPLIES YOUR PIXEL ART THEME GLOBALLY <---
+	_apply_global_styles()
 	
 	call_deferred("show_introduction")
 	
@@ -461,44 +467,170 @@ func _run_auto_sort() -> void:
 			await get_tree().create_timer(ANIM_SPEED).timeout
 
 # --- POPUP CREATION ---
+# --- POPUP CREATION ---
 func _create_target_input_dialog():
+	var my_font = load("res://assets/font/Planes_ValMore.ttf") 
+	
 	target_input_dialog = ConfirmationDialog.new()
 	target_input_dialog.title = "Find Element"
-	target_input_dialog.min_size = Vector2(300, 150)
+	if my_font: target_input_dialog.add_theme_font_override("title_font", my_font)
+	target_input_dialog.add_theme_font_size_override("title_font_size", 24)
+	target_input_dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
+	target_input_dialog.min_size = Vector2(450, 220) 
+	
+	var texture_style = StyleBoxTexture.new()
+	texture_style.texture = load("res://assets/containers/CONTAINER.png") 
+	texture_style.content_margin_bottom = 25 
+	target_input_dialog.add_theme_stylebox_override("panel", texture_style)
+	
+	# --- HIDE & DISABLE THE 'X' BUTTON ---
+	var empty_icon = PlaceholderTexture2D.new()
+	empty_icon.size = Vector2(0, 0)
+	target_input_dialog.add_theme_icon_override("close", empty_icon)
+	target_input_dialog.add_theme_icon_override("close_pressed", empty_icon)
+	target_input_dialog.add_theme_icon_override("close_hover", empty_icon)
+	
+	target_input_dialog.close_requested.connect(func(): pass) 
+
+	var ok_btn = target_input_dialog.get_ok_button()
+	var cancel_btn = target_input_dialog.get_cancel_button()
+	ok_btn.text = "Search"
+	
+	var btn_texture = StyleBoxTexture.new()
+	btn_texture.texture = load("res://assets/BUTTON.png")
+	btn_texture.texture_margin_left = 6
+	btn_texture.texture_margin_right = 6
+	btn_texture.texture_margin_top = 6
+	btn_texture.texture_margin_bottom = 6
+	# ---> FORCE BUTTON SIZE WITH INTERNAL PADDING <---
+	btn_texture.content_margin_left = 35
+	btn_texture.content_margin_right = 35
+	btn_texture.content_margin_top = 15
+	btn_texture.content_margin_bottom = 15
+	
+	var btn_hover = btn_texture.duplicate()
+	btn_hover.modulate_color = Color(0.8, 0.8, 0.8, 1.0) 
+	var btn_pressed = btn_texture.duplicate()
+	btn_pressed.modulate_color = Color(0.6, 0.6, 0.6, 1.0)
+
+	for btn in [ok_btn, cancel_btn]:
+		if my_font: btn.add_theme_font_override("font", my_font)
+		btn.add_theme_font_size_override("font_size", 26) # Bigger text
+		btn.add_theme_stylebox_override("normal", btn_texture)
+		btn.add_theme_stylebox_override("hover", btn_hover)
+		btn.add_theme_stylebox_override("pressed", btn_pressed)
+		btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+
+	var margin_container = MarginContainer.new()
+	margin_container.add_theme_constant_override("margin_top", 20)
+	margin_container.add_theme_constant_override("margin_left", 25)
+	margin_container.add_theme_constant_override("margin_right", 25)
+	margin_container.add_theme_constant_override("margin_bottom", 10)
+	target_input_dialog.add_child(margin_container)
+
 	var vbox = VBoxContainer.new()
-	target_input_dialog.add_child(vbox)
+	vbox.add_theme_constant_override("separation", 15)
+	margin_container.add_child(vbox)
+
 	var lbl = Label.new()
-	lbl.text = "Enter value to search:"
+	lbl.text = "Enter value (0-999):"
+	if my_font: lbl.add_theme_font_override("font", my_font)
+	lbl.add_theme_font_size_override("font_size", 24)
+	lbl.add_theme_color_override("font_color", Color.WHITE)
 	vbox.add_child(lbl)
+
 	target_spinbox = SpinBox.new()
 	target_spinbox.min_value = 0
-	target_spinbox.max_value = 100
-	target_spinbox.value = 0
-	target_spinbox.custom_minimum_size = Vector2(0, 40)
+	target_spinbox.max_value = 999
+	target_spinbox.custom_minimum_size = Vector2(0, 60)
 	vbox.add_child(target_spinbox)
+
+	var line_edit = target_spinbox.get_line_edit()
+	line_edit.max_length = 3
+	line_edit.select_all_on_focus = true
+	if my_font: line_edit.add_theme_font_override("font", my_font)
+	line_edit.add_theme_font_size_override("font_size", 26)
+
+	line_edit.text_changed.connect(func(new_text: String):
+		var regex = RegEx.new()
+		regex.compile("[^0-9]") 
+		var filtered = regex.sub(new_text, "", true)
+		if new_text != filtered:
+			line_edit.text = filtered
+			line_edit.caret_column = filtered.length()
+	)
+	line_edit.text_submitted.connect(func(_text): 
+		_on_target_confirmed()
+		target_input_dialog.hide()
+	)
 	add_child(target_input_dialog)
 	target_input_dialog.confirmed.connect(_on_target_confirmed)
 
-# --- GREEN SORTING POPUP ---
+# --- SORTING POPUP (TEXTURE BOX + BIG TEXTURE BUTTON) ---
 func _create_sort_info_popup():
+	var my_font = load("res://assets/font/Planes_ValMore.ttf") 
+	
 	sort_info_popup = AcceptDialog.new()
 	sort_info_popup.title = "Sorting Required"
 	sort_info_popup.dialog_text = "Binary Search requires a sorted array.\n\nClick OK to perform Bubble Sort..."
-	sort_info_popup.min_size = Vector2(350, 150)
+	sort_info_popup.min_size = Vector2(460, 240) 
+	sort_info_popup.exclusive = true 
+	if my_font: sort_info_popup.add_theme_font_override("title_font", my_font)
+	sort_info_popup.add_theme_font_size_override("title_font_size", 24)
 	
-	var style = StyleBoxFlat.new()
-	style.bg_color = Color(0.0, 0.5, 0.2, 1.0)
-	style.border_width_left = 2
-	style.border_width_top = 2
-	style.border_width_right = 2
-	style.border_width_bottom = 2
-	style.border_color = Color(0.0, 0.3, 0.1)
-	style.corner_radius_top_left = 8
-	style.corner_radius_top_right = 8
-	style.corner_radius_bottom_right = 8
-	style.corner_radius_bottom_left = 8
+	# --- TEXTURE BACKGROUND ---
+	var texture_style = StyleBoxTexture.new()
+	texture_style.texture = load("res://assets/containers/CONTAINER.png")
+	texture_style.texture_margin_left = 12
+	texture_style.texture_margin_right = 12
+	texture_style.texture_margin_top = 12
+	texture_style.texture_margin_bottom = 12
+	texture_style.content_margin_bottom = 30 
+	sort_info_popup.add_theme_stylebox_override("panel", texture_style)
 	
-	sort_info_popup.add_theme_stylebox_override("panel", style)
+	# --- HIDE & DISABLE THE 'X' BUTTON ---
+	var empty_icon = PlaceholderTexture2D.new()
+	empty_icon.size = Vector2(0, 0)
+	sort_info_popup.add_theme_icon_override("close", empty_icon)
+	sort_info_popup.add_theme_icon_override("close_pressed", empty_icon)
+	sort_info_popup.add_theme_icon_override("close_hover", empty_icon)
+	
+	var label = sort_info_popup.get_label()
+	if my_font: label.add_theme_font_override("font", my_font)
+	label.add_theme_font_size_override("font_size", 24)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.add_theme_color_override("font_color", Color.WHITE)
+	
+	# --- BIGGER TEXTURE BUTTON ---
+	var ok_btn = sort_info_popup.get_ok_button()
+	if my_font: ok_btn.add_theme_font_override("font", my_font)
+	ok_btn.add_theme_font_size_override("font_size", 30) # Massive font
+	
+	var btn_texture = StyleBoxTexture.new()
+	btn_texture.texture = load("res://assets/BUTTON.png")
+	
+	# 9-slice margins to keep borders crisp
+	btn_texture.texture_margin_left = 6
+	btn_texture.texture_margin_right = 6
+	btn_texture.texture_margin_top = 6
+	btn_texture.texture_margin_bottom = 6
+	
+	# ---> FORCE BUTTON SIZE WITH INTERNAL PADDING <---
+	btn_texture.content_margin_left = 60
+	btn_texture.content_margin_right = 60
+	btn_texture.content_margin_top = 15
+	btn_texture.content_margin_bottom = 15
+	
+	var btn_hover = btn_texture.duplicate()
+	btn_hover.modulate_color = Color(0.8, 0.8, 0.8, 1.0) 
+	var btn_pressed = btn_texture.duplicate()
+	btn_pressed.modulate_color = Color(0.6, 0.6, 0.6, 1.0) 
+	
+	ok_btn.add_theme_stylebox_override("normal", btn_texture)
+	ok_btn.add_theme_stylebox_override("hover", btn_hover)
+	ok_btn.add_theme_stylebox_override("pressed", btn_pressed)
+	ok_btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	
 	add_child(sort_info_popup)
 	sort_info_popup.confirmed.connect(_on_sort_confirmed)
 
@@ -1410,3 +1542,50 @@ func _set_language(lang: String) -> void:
 		btn_sound.play()
 	current_code_language = lang
 	_show_cpp_popup()
+
+# ==============================================
+#  CUSTOM THEME STYLING FOR ALL UI ELEMENTS
+# ==============================================
+
+func _apply_global_styles() -> void:
+	var my_font = load("res://assets/font/Planes_ValMore.ttf") 
+
+func _style_panel(panel_node: Node) -> void:
+	if not panel_node: return
+	
+	var texture_style = StyleBoxTexture.new()
+	texture_style.texture = load("res://assets/containers/CONTAINER.png")
+	# 9-slice margins to keep container borders from stretching
+	texture_style.texture_margin_left = 12
+	texture_style.texture_margin_right = 12
+	texture_style.texture_margin_top = 12
+	texture_style.texture_margin_bottom = 12
+	
+	if panel_node.has_method("add_theme_stylebox_override"):
+		panel_node.add_theme_stylebox_override("panel", texture_style)
+
+func _style_button(btn: Button, font: Font) -> void:
+	if not btn: return
+	
+	var btn_tex = StyleBoxTexture.new()
+	btn_tex.texture = load("res://assets/BUTTON.png")
+	btn_tex.texture_margin_left = 6
+	btn_tex.texture_margin_right = 6
+	btn_tex.texture_margin_top = 6
+	btn_tex.texture_margin_bottom = 6
+	
+	var btn_hover = btn_tex.duplicate()
+	btn_hover.modulate_color = Color(0.8, 0.8, 0.8, 1.0) 
+	
+	var btn_pressed = btn_tex.duplicate()
+	btn_pressed.modulate_color = Color(0.6, 0.6, 0.6, 1.0)
+	
+	btn.add_theme_stylebox_override("normal", btn_tex)
+	btn.add_theme_stylebox_override("hover", btn_hover)
+	btn.add_theme_stylebox_override("pressed", btn_pressed)
+	
+	var empty_style = StyleBoxEmpty.new()
+	btn.add_theme_stylebox_override("focus", empty_style)
+	
+	if font:
+		btn.add_theme_font_override("font", font)

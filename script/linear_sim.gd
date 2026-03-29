@@ -443,9 +443,8 @@ func _run_auto_sort() -> void:
 			await get_tree().create_timer(ANIM_SPEED).timeout
 
 # --- POPUP CREATION ---
+# --- POPUP CREATION ---
 func _create_target_input_dialog():
-	# --- 0. LOAD YOUR CUSTOM FONT ---
-	# Replace "res://path/to/your_font.ttf" with your actual font path
 	var my_font = load("res://assets/font/Planes_ValMore.ttf") 
 	
 	target_input_dialog = ConfirmationDialog.new()
@@ -455,21 +454,46 @@ func _create_target_input_dialog():
 	target_input_dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
 	target_input_dialog.min_size = Vector2(450, 220) 
 	
+	# --- DIALOG BACKGROUND ---
+	var texture_style = StyleBoxTexture.new()
+	texture_style.texture = load("res://assets/containers/CONTAINER.png") 
+	texture_style.content_margin_bottom = 25 # Pushes the buttons up
+	target_input_dialog.add_theme_stylebox_override("panel", texture_style)
+	
 	target_input_dialog.close_requested.connect(func(): pass) 
 
-	# 1. Buttons: Custom Font, Size, and Text
+	# --- BUTTONS ---
 	var ok_btn = target_input_dialog.get_ok_button()
 	var cancel_btn = target_input_dialog.get_cancel_button()
 	
 	ok_btn.text = "Search"
 	
-	# Apply Font and Font Size to Buttons
+	var btn_texture = StyleBoxTexture.new()
+	btn_texture.texture = load("res://assets/BUTTON.png")
+	btn_texture.texture_margin_left = 6
+	btn_texture.texture_margin_right = 6
+	btn_texture.texture_margin_top = 6
+	btn_texture.texture_margin_bottom = 6
+	
+	var btn_hover = btn_texture.duplicate()
+	btn_hover.modulate_color = Color(0.8, 0.8, 0.8, 1.0) 
+	
+	var btn_pressed = btn_texture.duplicate()
+	btn_pressed.modulate_color = Color(0.6, 0.6, 0.6, 1.0)
+
 	for btn in [ok_btn, cancel_btn]:
-		btn.custom_minimum_size = Vector2(140, 80)
+		btn.custom_minimum_size = Vector2(140, 60)
 		btn.add_theme_font_override("font", my_font)
 		btn.add_theme_font_size_override("font_size", 22)
 
+		btn.add_theme_stylebox_override("normal", btn_texture)
+		btn.add_theme_stylebox_override("hover", btn_hover)
+		btn.add_theme_stylebox_override("pressed", btn_pressed)
+		
+		var empty_style = StyleBoxEmpty.new()
+		btn.add_theme_stylebox_override("focus", empty_style)
 
+	# --- CONTAINERS ---
 	var margin_container = MarginContainer.new()
 	margin_container.add_theme_constant_override("margin_top", 20)
 	margin_container.add_theme_constant_override("margin_left", 25)
@@ -481,14 +505,12 @@ func _create_target_input_dialog():
 	vbox.add_theme_constant_override("separation", 15)
 	margin_container.add_child(vbox)
 
-	# 3. Label: Custom Font
 	var lbl = Label.new()
 	lbl.text = "Enter value (0-999):"
 	lbl.add_theme_font_override("font", my_font)
 	lbl.add_theme_font_size_override("font_size", 24)
 	vbox.add_child(lbl)
 
-	# 4. SpinBox: Custom Font for the input field
 	target_spinbox = SpinBox.new()
 	target_spinbox.min_value = 0
 	target_spinbox.max_value = 999
@@ -498,12 +520,10 @@ func _create_target_input_dialog():
 	var line_edit = target_spinbox.get_line_edit()
 	line_edit.max_length = 3
 	line_edit.select_all_on_focus = true
-	
-	# Apply Font to the text inside the SpinBox
+
 	line_edit.add_theme_font_override("font", my_font)
 	line_edit.add_theme_font_size_override("font_size", 26)
-	
-	# Real-time number filtering (no letters allowed)
+
 	line_edit.text_changed.connect(func(new_text: String):
 		var regex = RegEx.new()
 		regex.compile("[^0-9]") 
@@ -1356,3 +1376,50 @@ func _on_no_pressed():
 
 func _on_help_button_pressed():
 	start_tutorial()
+
+# ==============================================
+#  CUSTOM THEME STYLING FOR ALL UI ELEMENTS
+# ==============================================
+
+func _apply_global_styles() -> void:
+	var my_font = load("res://assets/font/Planes_ValMore.ttf") 
+
+func _style_panel(panel_node: Node) -> void:
+	if not panel_node: return
+	
+	var texture_style = StyleBoxTexture.new()
+	texture_style.texture = load("res://assets/containers/CONTAINER.png")
+	# 9-slice margins to keep container borders from stretching
+	texture_style.texture_margin_left = 12
+	texture_style.texture_margin_right = 12
+	texture_style.texture_margin_top = 12
+	texture_style.texture_margin_bottom = 12
+	
+	if panel_node.has_method("add_theme_stylebox_override"):
+		panel_node.add_theme_stylebox_override("panel", texture_style)
+
+func _style_button(btn: Button, font: Font) -> void:
+	if not btn: return
+	
+	var btn_tex = StyleBoxTexture.new()
+	btn_tex.texture = load("res://assets/BUTTON.png")
+	btn_tex.texture_margin_left = 6
+	btn_tex.texture_margin_right = 6
+	btn_tex.texture_margin_top = 6
+	btn_tex.texture_margin_bottom = 6
+	
+	var btn_hover = btn_tex.duplicate()
+	btn_hover.modulate_color = Color(0.8, 0.8, 0.8, 1.0) 
+	
+	var btn_pressed = btn_tex.duplicate()
+	btn_pressed.modulate_color = Color(0.6, 0.6, 0.6, 1.0)
+	
+	btn.add_theme_stylebox_override("normal", btn_tex)
+	btn.add_theme_stylebox_override("hover", btn_hover)
+	btn.add_theme_stylebox_override("pressed", btn_pressed)
+	
+	var empty_style = StyleBoxEmpty.new()
+	btn.add_theme_stylebox_override("focus", empty_style)
+	
+	if font:
+		btn.add_theme_font_override("font", font)

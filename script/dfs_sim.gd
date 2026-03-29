@@ -188,7 +188,7 @@ var intro_texts = [
 	"Welcome to DFS Tree Search!\nDepth-First Search (DFS) explores as deep as possible along each branch before backtracking.",
 	"INSTRUCTIONS:\n\n1. SETUP: Enter the Tree Size.\n2. INPUT: Type initial numbers or leave blank.\n3. EDIT: Click on any node to change it later.",
 	"The Algorithm:\n\n1. Start at the Root.\n2. Check if it matches the Target.\n3. Push children to a Stack (Right then Left).\n4. Pop (LIFO) and repeat.",
-	"Complexity Analysis:\n\n• Time: [color=yellow]O(V + E)[/color] - Explores all Vertices and Edges.\n• Space: [color=green]O(V)[/color] - Stack stores up to V nodes.",
+	"Complexity Analysis:\n\n• Time: O(V + E) - Explores all Vertices and Edges.\n• Space: O(V) - Stack stores up to V nodes.",
 	"Visual Elements:\n\n• The STACK stores nodes waiting to be checked.\n• Orange nodes are being processed.\n• Green node means TARGET FOUND."
 ]
 
@@ -199,43 +199,46 @@ var current_tutorial_data: Array = []
 
 # 1. C++ DATA
 var cpp_tutorial_data = [
-	{ "lines": [0, 1, 2, 3], "text": "1. Imports & Setup:\nIncludes standard Stack library." },
-	{ "lines": [5, 6, 7, 8, 9], "text": "2. Complexity Analysis:\n[color=yellow]Time: O(V + E)[/color] and [color=green]Space: O(V)[/color]." },
-	{ "lines": [10, 11, 12], "text": "3. Initialization:\nCreate a Stack and push the root index (0)." },
-	{ "lines": [14, 15, 16], "text": "4. The Loop:\nWhile stack isn't empty, pop the top element." },
-	{ "lines": [18, 19], "text": "5. Check Target:\nIf current node matches target, return TRUE." },
-	{ "lines": [21, 22, 23], "text": "6. Push Children:\nPush Right then Left child so Left is processed next (LIFO)." }
+	{ "lines": [1, 2], "text": "1. Imports & Setup:\nIncludes standard Stack library." },
+	{ "lines": [55], "text": "2. Complexity Analysis:\n[color=yellow]Time: O(V + E)[/color] and [color=green]Space: O(V)[/color]." },
+	{ "lines": [24, 25, 26, 27], "text": "3. Initialization:\nCreate a Stack and push the root index (0)." },
+	{ "lines": [29, 30, 31], "text": "4. The Loop:\nWhile stack isn't empty, pop the top element." },
+	{ "lines": [34, 35, 36, 37], "text": "5. Check Target:\nIf current node matches target, return TRUE." },
+	{ "lines": [40, 41, 43, 44, 47, 48], "text": "6. Push Children:\nPush Right then Left child so Left is processed next (LIFO)." }
 ]
 
 # 2. PYTHON DATA
 var python_tutorial_data = [
-	{ "lines": [0], "text": "1. Function:\nDefine DFS taking tree list and target." },
-	{ "lines": [1], "text": "2. Complexity:\n[color=yellow]Time: O(V + E)[/color] | [color=green]Space: O(V)[/color]." },
-	{ "lines": [2], "text": "3. Initialization:\nStart stack with root index 0." },
-	{ "lines": [4, 5], "text": "4. Processing:\nPop the last element (LIFO) from stack." },
-	{ "lines": [6, 7, 8, 9], "text": "5. Target Check:\nSkip invalid nodes, return True if found." },
-	{ "lines": [11, 12, 13], "text": "6. Push Children:\nAppend Right then Left so Left is popped first." }
+	{ "lines": [13], "text": "1. Function:\nDefine DFS logic." },
+	{ "lines": [37], "text": "2. Complexity:\n[color=yellow]Time: O(V + E)[/color] | [color=green]Space: O(V)[/color]." },
+	{ "lines": [14, 15, 16], "text": "3. Initialization:\nStart stack with root index 0." },
+	{ "lines": [18, 19], "text": "4. Processing:\nPop the last element (LIFO) from stack." },
+	{ "lines": [22, 23, 24], "text": "5. Target Check:\nReturn True if target is found." },
+	{ "lines": [27, 28, 30, 31, 33, 34], "text": "6. Push Children:\nAppend Right then Left so Left is popped first." }
 ]
 
 # 3. JAVA DATA
 var java_tutorial_data = [
-	{ "lines": [0], "text": "1. Imports:\nImport java.util.Stack." },
-	{ "lines": [3, 4, 5, 6], "text": "2. Complexity:\n[color=yellow]Time: O(V + E)[/color] | [color=green]Space: O(V)[/color]." },
-	{ "lines": [7, 8, 9], "text": "3. Initialization:\nCreate Stack and push root." },
-	{ "lines": [11, 12], "text": "4. Dequeue:\nPop the top element." },
-	{ "lines": [14, 15], "text": "5. Target Check:\nReturn true if target is found." },
-	{ "lines": [17, 18], "text": "6. Push Children:\nPush Right then Left child indices." }
+	{ "lines": [1], "text": "1. Imports:\nImport java.util.Stack." },
+	{ "lines": [52], "text": "2. Complexity:\n[color=yellow]Time: O(V + E)[/color] | [color=green]Space: O(V)[/color]." },
+	{ "lines": [23, 24, 25, 26], "text": "3. Initialization:\nCreate Stack and push root." },
+	{ "lines": [28, 29], "text": "4. Dequeue:\nPop the top element." },
+	{ "lines": [32, 33, 34], "text": "5. Target Check:\nReturn true if target is found." },
+	{ "lines": [38, 39, 41, 42, 45, 46], "text": "6. Push Children:\nPush Right then Left child indices." }
 ]
 
 # 4. C DATA
 var c_tutorial_data = [
-	{ "lines": [2], "text": "1. Complexity:\n[color=yellow]Time: O(V + E)[/color] | [color=green]Space: O(V)[/color]." },
-	{ "lines": [3, 4, 5, 6], "text": "2. Stack Setup:\nArray-based stack implementation." },
-	{ "lines": [8, 9], "text": "3. Initialization:\nPush root index (0) to start." },
-	{ "lines": [10, 11, 12, 13], "text": "4. Pop & Check:\nPop top node and check if it matches target." },
-	{ "lines": [15, 16], "text": "5. Push Children:\nPush right child, then left child." }
+	{ "lines": [61], "text": "1. Complexity:\n[color=yellow]Time: O(V + E)[/color] | [color=green]Space: O(V)[/color]." },
+	{ "lines": [6, 7, 9, 10, 11], "text": "2. Stack Setup:\nArray-based stack implementation." },
+	{ "lines": [32, 33, 34], "text": "3. Initialization:\nPush root index (0) to start." },
+	{ "lines": [36, 37, 40, 41], "text": "4. Pop & Check:\nPop top node and check if it matches target." },
+	{ "lines": [46, 47, 49, 50, 53, 54], "text": "5. Push Children:\nPush right child, then left child." }
 ]
 
+# ==============================================
+#   READY
+# ==============================================
 # ==============================================
 #   READY
 # ==============================================
@@ -301,6 +304,8 @@ func _ready() -> void:
 		size_input.min_value = 5
 		size_input.max_value = 7
 		size_input.value = 5 
+
+	_apply_global_styles()
 	
 	call_deferred("show_introduction")
 	
@@ -443,17 +448,52 @@ func _create_target_input_dialog():
 	target_input_dialog.title = "Find Element"
 	target_input_dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
 	target_input_dialog.min_size = Vector2(450, 220) 
+	target_input_dialog.exclusive = true # Prevents clicking outside
 	if my_font: target_input_dialog.add_theme_font_override("title_font", my_font)
 	target_input_dialog.add_theme_font_size_override("title_font_size", 24)
+	
+	# --- DIALOG BACKGROUND ---
+	var texture_style = StyleBoxTexture.new()
+	texture_style.texture = load("res://assets/containers/CONTAINER.png") 
+	texture_style.content_margin_bottom = 25 
+	target_input_dialog.add_theme_stylebox_override("panel", texture_style)
+	
+	# --- HIDE 'X' BUTTON ---
+	var empty_icon = PlaceholderTexture2D.new()
+	empty_icon.size = Vector2(0, 0)
+	target_input_dialog.add_theme_icon_override("close", empty_icon)
+	target_input_dialog.add_theme_icon_override("close_pressed", empty_icon)
+	target_input_dialog.add_theme_icon_override("close_hover", empty_icon)
 	
 	var ok_btn = target_input_dialog.get_ok_button()
 	var cancel_btn = target_input_dialog.get_cancel_button()
 	ok_btn.text = "Search"
+	
+	# --- BUTTON STYLING ---
+	var btn_texture = StyleBoxTexture.new()
+	btn_texture.texture = load("res://assets/BUTTON.png")
+	btn_texture.texture_margin_left = 6
+	btn_texture.texture_margin_right = 6
+	btn_texture.texture_margin_top = 6
+	btn_texture.texture_margin_bottom = 6
+	btn_texture.content_margin_left = 35
+	btn_texture.content_margin_right = 35
+	btn_texture.content_margin_top = 15
+	btn_texture.content_margin_bottom = 15
+	
+	var btn_hover = btn_texture.duplicate()
+	btn_hover.modulate_color = Color(0.8, 0.8, 0.8, 1.0) 
+	var btn_pressed = btn_texture.duplicate()
+	btn_pressed.modulate_color = Color(0.6, 0.6, 0.6, 1.0)
+
 	for btn in [ok_btn, cancel_btn]:
-		btn.custom_minimum_size = Vector2(140, 50)
 		if my_font: btn.add_theme_font_override("font", my_font)
 		btn.add_theme_font_size_override("font_size", 22)
 		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		btn.add_theme_stylebox_override("normal", btn_texture)
+		btn.add_theme_stylebox_override("hover", btn_hover)
+		btn.add_theme_stylebox_override("pressed", btn_pressed)
+		btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 
 	var margin_container = MarginContainer.new()
 	margin_container.add_theme_constant_override("margin_top", 20)
@@ -471,6 +511,7 @@ func _create_target_input_dialog():
 	lbl.text = "Enter value to search:"
 	if my_font: lbl.add_theme_font_override("font", my_font)
 	lbl.add_theme_font_size_override("font_size", 26)
+	lbl.add_theme_color_override("font_color", Color.WHITE)
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(lbl)
 
@@ -487,12 +528,10 @@ func _create_target_input_dialog():
 	
 	line_edit.max_length = 3
 	line_edit.text_changed.connect(_on_dialog_input_changed.bind(line_edit))
-	
 	line_edit.text_submitted.connect(func(_text): 
 		_on_target_confirmed()
 		target_input_dialog.hide()
 	)
-
 	add_child(target_input_dialog)
 	target_input_dialog.confirmed.connect(_on_target_confirmed)
 
@@ -500,32 +539,64 @@ func _on_dialog_input_changed(new_text: String, line_edit: LineEdit) -> void:
 	if not new_text.is_empty() and not new_text.is_valid_int():
 		var filtered_text = ""
 		for char in new_text:
-
 			if char >= "0" and char <= "9":
 				filtered_text += char
-		
 		line_edit.text = filtered_text
 		line_edit.caret_column = filtered_text.length()
 
 func _create_node_input_dialog():
 	var my_font = load("res://assets/font/Planes_ValMore.ttf") 
-	
 
 	node_input_dialog = ConfirmationDialog.new()
 	node_input_dialog.title = "Edit Node"
 	node_input_dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
 	node_input_dialog.min_size = Vector2(450, 220) 
+	node_input_dialog.exclusive = true
 	if my_font: node_input_dialog.add_theme_font_override("title_font", my_font)
 	node_input_dialog.add_theme_font_size_override("title_font_size", 24)
+	
+	# --- DIALOG BACKGROUND ---
+	var texture_style = StyleBoxTexture.new()
+	texture_style.texture = load("res://assets/containers/CONTAINER.png") 
+	texture_style.content_margin_bottom = 25 
+	node_input_dialog.add_theme_stylebox_override("panel", texture_style)
+	
+	# --- HIDE 'X' BUTTON ---
+	var empty_icon = PlaceholderTexture2D.new()
+	empty_icon.size = Vector2(0, 0)
+	node_input_dialog.add_theme_icon_override("close", empty_icon)
+	node_input_dialog.add_theme_icon_override("close_pressed", empty_icon)
+	node_input_dialog.add_theme_icon_override("close_hover", empty_icon)
 	
 	var ok_btn = node_input_dialog.get_ok_button()
 	var cancel_btn = node_input_dialog.get_cancel_button()
 	ok_btn.text = "Update"
+	
+	# --- BUTTON STYLING ---
+	var btn_texture = StyleBoxTexture.new()
+	btn_texture.texture = load("res://assets/BUTTON.png")
+	btn_texture.texture_margin_left = 6
+	btn_texture.texture_margin_right = 6
+	btn_texture.texture_margin_top = 6
+	btn_texture.texture_margin_bottom = 6
+	btn_texture.content_margin_left = 35
+	btn_texture.content_margin_right = 35
+	btn_texture.content_margin_top = 15
+	btn_texture.content_margin_bottom = 15
+	
+	var btn_hover = btn_texture.duplicate()
+	btn_hover.modulate_color = Color(0.8, 0.8, 0.8, 1.0) 
+	var btn_pressed = btn_texture.duplicate()
+	btn_pressed.modulate_color = Color(0.6, 0.6, 0.6, 1.0)
+
 	for btn in [ok_btn, cancel_btn]:
-		btn.custom_minimum_size = Vector2(140, 50)
 		if my_font: btn.add_theme_font_override("font", my_font)
 		btn.add_theme_font_size_override("font_size", 22)
 		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		btn.add_theme_stylebox_override("normal", btn_texture)
+		btn.add_theme_stylebox_override("hover", btn_hover)
+		btn.add_theme_stylebox_override("pressed", btn_pressed)
+		btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 
 	var margin_container = MarginContainer.new()
 	margin_container.add_theme_constant_override("margin_top", 20)
@@ -543,6 +614,7 @@ func _create_node_input_dialog():
 	lbl.text = "Set new value :"
 	if my_font: lbl.add_theme_font_override("font", my_font)
 	lbl.add_theme_font_size_override("font_size", 26)
+	lbl.add_theme_color_override("font_color", Color.WHITE)
 	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(lbl)
 
@@ -1584,3 +1656,49 @@ func _on_yes_pressed():
 	_show_config_modal()
 func _on_no_pressed(): sim_confirmation.hide()
 func _on_help_button_pressed(): start_tutorial()
+
+# ==============================================
+#  CUSTOM THEME STYLING FOR ALL UI ELEMENTS
+# ==============================================
+
+func _apply_global_styles() -> void:
+	var my_font = load("res://assets/font/Planes_ValMore.ttf")
+
+func _style_panel(panel_node: Node) -> void:
+	if not panel_node: return
+	
+	var texture_style = StyleBoxTexture.new()
+	texture_style.texture = load("res://assets/containers/CONTAINER.png")
+	texture_style.texture_margin_left = 12
+	texture_style.texture_margin_right = 12
+	texture_style.texture_margin_top = 12
+	texture_style.texture_margin_bottom = 12
+	
+	if panel_node.has_method("add_theme_stylebox_override"):
+		panel_node.add_theme_stylebox_override("panel", texture_style)
+
+func _style_button(btn: Button, font: Font) -> void:
+	if not btn: return
+	
+	var btn_tex = StyleBoxTexture.new()
+	btn_tex.texture = load("res://assets/BUTTON.png")
+	btn_tex.texture_margin_left = 6
+	btn_tex.texture_margin_right = 6
+	btn_tex.texture_margin_top = 6
+	btn_tex.texture_margin_bottom = 6
+	
+	var btn_hover = btn_tex.duplicate()
+	btn_hover.modulate_color = Color(0.8, 0.8, 0.8, 1.0) 
+	
+	var btn_pressed = btn_tex.duplicate()
+	btn_pressed.modulate_color = Color(0.6, 0.6, 0.6, 1.0)
+	
+	btn.add_theme_stylebox_override("normal", btn_tex)
+	btn.add_theme_stylebox_override("hover", btn_hover)
+	btn.add_theme_stylebox_override("pressed", btn_pressed)
+	
+	var empty_style = StyleBoxEmpty.new()
+	btn.add_theme_stylebox_override("focus", empty_style)
+	
+	if font:
+		btn.add_theme_font_override("font", font)
