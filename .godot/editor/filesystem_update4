@@ -1,5 +1,6 @@
-res://script/linked_list_sim.gd
-res://scene/ISA.tscn
+res://scene/BBSA.tscn
 res://scene/BG.gdshader
 res://Bubblemain.gd
-res://scene/BBSA.tscn
+res://script/linked_list_sim.gd
+res://scene/ISA.tscn
+res://script/lsa.gd
