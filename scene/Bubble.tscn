@@ -1260,6 +1260,7 @@ theme_override_styles/hover = SubResource("StyleBoxTexture_2h030")
 text = "Okay"
 
 [node name="TimelinePopup" type="PopupPanel" parent="."]
+oversampling_override = 1.0
 size = Vector2i(850, 500)
 theme_override_styles/panel = SubResource("StyleBoxTexture_20pc6")
 
@@ -1268,8 +1269,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = 4.0
-offset_right = 850.0
-offset_bottom = 491.0
+offset_bottom = -9.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -1305,6 +1305,7 @@ theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_ei8tx")
 text = "Close"
 
 [node name="SimulationCompletePopup" type="PopupPanel" parent="."]
+oversampling_override = 1.0
 size = Vector2i(500, 300)
 theme_override_styles/panel = SubResource("StyleBoxTexture_hri7i")
 
@@ -1312,8 +1313,8 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_hri7i")
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = 25.0
-offset_right = 469.0
+offset_left = -225.0
+offset_right = 219.0
 offset_bottom = 300.0
 grow_horizontal = 2
 alignment = 1

@@ -134,7 +134,7 @@ const API_KEYS = {
 var main_array: Array[int] = []
 var block_nodes: Array[Control] = []
 var timeline_log: Array[String] = []
-
+var initial_array: Array[int] = []
 var sort_i: int = 0
 var sort_j: int = 0
 var comparison_counter: int = 0
@@ -144,7 +144,7 @@ var is_sorting: bool = false
 var is_auto_playing: bool = false
 
 var BLOCK_WIDTH: float = 64.0
-var BLOCK_SPACING: float = 15.0
+var BLOCK_SPACING: float = 50.0
 var START_POSITION: Vector2 = Vector2(50, 80)
 var ANIM_SPEED: float = 1.0 # Standard Speed
 
@@ -168,6 +168,11 @@ var translate_code_btn: Button
 var tutorial_sequence = []
 var tutorial_sequence_index = 0
 var tutorial_in_progress = false
+
+var index_labels: Array[Label] = []
+var INDEX_LABEL_OFFSET: float = 100.0
+
+var current_tween: Tween = null
 
 # Intro Text (ADDED COMPLEXITY)
 var intro_step: int = 0
@@ -262,11 +267,52 @@ func _ready() -> void:
 	
 	if cpp_code_button: cpp_code_button.hide()
 	
-	# Rename Buttons
-	if sort_btn: sort_btn.text = "Next Step"
-	if auto_btn: auto_btn.text = "Auto Sort"
+	# Rename Buttons and Connect Main Buttons
+	if sort_btn: 
+		sort_btn.text = "Next Step"
+		if not sort_btn.is_connected("pressed", _on_step_pressed):
+			sort_btn.pressed.connect(_on_step_pressed)
+		
+	if auto_btn: 
+		auto_btn.text = "Auto Sort"
+		if not auto_btn.is_connected("pressed", _on_auto_pressed):
+			auto_btn.pressed.connect(_on_auto_pressed)
 	
+	if timeline_btn:
+		if not timeline_btn.is_connected("pressed", _on_timeline_pressed):
+			timeline_btn.pressed.connect(_on_timeline_pressed)
+	
+	if simulate_new_btn:
+		if not simulate_new_btn.is_connected("pressed", _on_simulate_new_pressed):
+			simulate_new_btn.pressed.connect(_on_simulate_new_pressed)
+	
+	# Connect Configuration Buttons
 	_connect_configuration_buttons()
+	
+	# Connect Simulation Complete Popup Close Button
+	if complete_ok_btn:
+		if not complete_ok_btn.is_connected("pressed", _on_complete_ok_pressed):
+			complete_ok_btn.pressed.connect(_on_complete_ok_pressed)
+	
+	# Connect Timeline Popup Close Button
+	if timeline_close_btn:
+		if not timeline_close_btn.is_connected("pressed", _on_timeline_close_pressed):
+			timeline_close_btn.pressed.connect(_on_timeline_close_pressed)
+	
+	# Connect Show C++ Button
+	if show_cpp_btn:
+		if not show_cpp_btn.is_connected("pressed", _on_show_cpp_pressed):
+			show_cpp_btn.pressed.connect(_on_show_cpp_pressed)
+	
+	# Connect C++ Code Button
+	if cpp_code_button:
+		if not cpp_code_button.is_connected("pressed", _show_cpp_popup):
+			cpp_code_button.pressed.connect(_show_cpp_popup)
+	
+	# Connect C++ Popup Close Button
+	if cpp_close_btn:
+		if not cpp_close_btn.is_connected("pressed", _on_cpp_close_pressed):
+			cpp_close_btn.pressed.connect(_on_cpp_close_pressed)
 	
 	# Setup compiler
 	_setup_compiler()
@@ -279,18 +325,37 @@ func _ready() -> void:
 	
 	_connect_language_buttons()
 	
-	# --- CONNECT MISSING SIGNALS ---
+	# Connect Tutorial Buttons
 	if tutorial_next:
 		if not tutorial_next.is_connected("pressed", _on_next_button_pressed):
 			tutorial_next.pressed.connect(_on_next_button_pressed)
-			
+	
+	# Connect Simulate New Confirmation Buttons
 	if sim_yes_btn:
 		if not sim_yes_btn.is_connected("pressed", _on_yes_pressed):
 			sim_yes_btn.pressed.connect(_on_yes_pressed)
-			
+	
 	if sim_no_btn:
 		if not sim_no_btn.is_connected("pressed", _on_no_pressed):
 			sim_no_btn.pressed.connect(_on_no_pressed)
+	
+	# Connect Help Button
+	if help_btn:
+		if not help_btn.is_connected("pressed", _on_help_button_pressed):
+			help_btn.pressed.connect(_on_help_button_pressed)
+	
+	# Connect Intro Popup Buttons
+	if intro_prev_btn:
+		if not intro_prev_btn.is_connected("pressed", _on_intro_prev_pressed):
+			intro_prev_btn.pressed.connect(_on_intro_prev_pressed)
+	
+	if intro_next_btn:
+		if not intro_next_btn.is_connected("pressed", _on_intro_next_pressed):
+			intro_next_btn.pressed.connect(_on_intro_next_pressed)
+	
+	if intro_skip_btn:
+		if not intro_skip_btn.is_connected("pressed", _on_intro_skip_pressed):
+			intro_skip_btn.pressed.connect(_on_intro_skip_pressed)
 
 func _enter_tree():
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
@@ -446,8 +511,14 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	audio_player.play()
 	
 	main_array = elements.duplicate()
+	initial_array = elements.duplicate()
 	block_nodes.clear()
-	timeline_log.clear()
+	index_labels.clear()  # Clear index labels
+	
+	# Kill any existing animations
+	if current_tween:
+		current_tween.kill()
+		current_tween = null
 	
 	sort_i = 0
 	sort_j = 0
@@ -456,45 +527,90 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	sorting_complete = false
 	is_auto_playing = false
 	
-	# Log initial array
-	_add_code_line("INITIAL", 0, 0)
-	
+	# Clear existing blocks
 	for child in array_container.get_children():
 		child.queue_free()
 	
+	await get_tree().process_frame
+	
 	var current_x = START_POSITION.x
-	for val in main_array:
+	var block_width = 64.0
+	
+	for i in range(main_array.size()):
+		var val = main_array[i]
+		
+		# Create block
 		var new_block = BLOCK_SCENE.instantiate()
 		new_block.value = val
 		new_block.position = Vector2(current_x, START_POSITION.y)
 		
-		if new_block.has_signal("block_dropped"):
+		new_block.draggable = true
+		if not new_block.is_connected("block_dropped", _on_block_dropped):
 			new_block.connect("block_dropped", _on_block_dropped)
 		
+		# Fade in animation
 		new_block.modulate.a = 0.0
 		var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 		tween.tween_property(new_block, "modulate:a", 1.0, 0.5)
 		
 		array_container.add_child(new_block)
 		block_nodes.append(new_block)
-		current_x += new_block.size.x + BLOCK_SPACING
-	
-	_ensure_connected(sort_btn, "pressed", _on_step_pressed)
-	_ensure_connected(auto_btn, "pressed", _on_auto_pressed)
-	_ensure_connected(timeline_btn, "pressed", _on_timeline_pressed)
-	_ensure_connected(simulate_new_btn, "pressed", _on_simulate_new_pressed)
-	_ensure_connected(complete_ok_btn, "pressed", _on_complete_ok_pressed)
-	_ensure_connected(show_cpp_btn, "pressed", _on_show_cpp_pressed)
-	_ensure_connected(cpp_code_button, "pressed", _on_cpp_code_button_pressed)
-	_ensure_connected(cpp_close_btn, "pressed", _on_cpp_close_pressed)
-	
-	if timeline_close_btn:
-		if not timeline_close_btn.is_connected("pressed", _on_timeline_close_pressed):
-			timeline_close_btn.pressed.connect(_on_timeline_close_pressed)
+		
+		# Create index label below block
+		var index_label = Label.new()
+		index_label.text = str(i)
+		index_label.position = Vector2(current_x + 25, START_POSITION.y + INDEX_LABEL_OFFSET)
+		index_label.add_theme_font_override("font", load("res://assets/font/Planes_ValMore.ttf"))
+		index_label.add_theme_font_size_override("font_size", 28)
+		index_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		index_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+		index_label.add_theme_constant_override("outline_size", 4)
+		array_container.add_child(index_label)
+		index_labels.append(index_label)
+		
+		current_x += block_width + BLOCK_SPACING
 
+	# Update UI
 	_update_ui_labels()
 	if cpp_code_button: cpp_code_button.hide()
+	_update_sorted_visuals()
 
+func _update_index_labels():
+	var block_width = 64.0
+	for i in range(index_labels.size()):
+		var target_x = START_POSITION.x + i * (block_width + BLOCK_SPACING)
+		index_labels[i].position = Vector2(target_x + 25, START_POSITION.y + INDEX_LABEL_OFFSET)
+		index_labels[i].text = str(i)
+
+func _update_sorted_visuals() -> void:
+	# Update visual indicators for sorted elements
+	if block_nodes.is_empty():
+		return
+	
+	# Elements at the end (after sort_i passes) are sorted
+	var sorted_count = sort_i
+	
+	for i in range(block_nodes.size()):
+		if not is_instance_valid(block_nodes[i]):
+			continue
+			
+		if block_nodes[i].has_method("set_sorted_visual"):
+			# Elements at the end (from n-sort_i to n-1) are sorted
+			if i >= main_array.size() - sorted_count:
+				block_nodes[i].set_sorted_visual(true)
+			else:
+				block_nodes[i].set_sorted_visual(false)
+		
+		if block_nodes[i].has_method("set_highlight"):
+			block_nodes[i].set_highlight(false)
+		
+		# Dim index labels for sorted elements
+		if i < index_labels.size():
+			if i >= main_array.size() - sorted_count:
+				index_labels[i].add_theme_color_override("font_color", Color(0.7, 0.7, 0.7, 1))
+			else:
+				index_labels[i].add_theme_color_override("font_color", Color(1, 1, 1, 1))
+				
 func _ensure_connected(node: Node, signal_name: String, method: Callable):
 	if node and not node.is_connected(signal_name, method):
 		node.connect(signal_name, method)
@@ -528,11 +644,16 @@ func _on_block_dropped(dropped_block: Control) -> void:
 
 func _resnap_blocks() -> void:
 	var x = START_POSITION.x
+	var block_width = 64.0
+	
 	for i in range(block_nodes.size()):
 		var child = block_nodes[i]
 		var target_pos = Vector2(x, START_POSITION.y)
 		create_tween().tween_property(child, "position", target_pos, 0.2)
-		x += child.size.x + BLOCK_SPACING
+		x += block_width + BLOCK_SPACING  # Use block_width + BLOCK_SPACING
+	
+	# Update index labels after blocks reposition
+	_update_index_labels()
 
 # ==============================================
 #   BUBBLE SORT LOGIC
@@ -551,8 +672,10 @@ func _on_auto_pressed() -> void:
 	auto_btn.text = "Pause" if is_auto_playing else "Auto Sort"
 	sort_btn.disabled = is_auto_playing # Disable step button during auto
 	
-	if is_auto_playing: _run_auto_sort()
-	else: sort_btn.disabled = false
+	if is_auto_playing: 
+		_run_auto_sort()
+	else: 
+		sort_btn.disabled = false
 
 func _run_auto_sort() -> void:
 	while is_auto_playing and not sorting_complete:
@@ -578,6 +701,9 @@ func _perform_sort_step():
 		sort_j = 0
 		sort_i += 1
 		
+		# Update sorted visuals after pass completes
+		_update_sorted_visuals()
+		
 		if sort_i >= n - 1:
 			if block_nodes.size() > 0 and block_nodes[0].has_method("set_sorted_visual"):
 				block_nodes[0].set_sorted_visual()
@@ -587,10 +713,17 @@ func _perform_sort_step():
 
 	_update_pointers(sort_j, sort_j + 1)
 	
+	# Highlight the blocks and their index labels
 	if block_nodes[sort_j].has_method("set_highlight"):
 		block_nodes[sort_j].set_highlight(true)
 	if block_nodes[sort_j + 1].has_method("set_highlight"):
 		block_nodes[sort_j + 1].set_highlight(true)
+	
+	# Highlight index labels for the blocks being compared
+	if sort_j < index_labels.size():
+		index_labels[sort_j].add_theme_color_override("font_color", Color(1, 1, 0, 1))
+	if sort_j + 1 < index_labels.size():
+		index_labels[sort_j + 1].add_theme_color_override("font_color", Color(1, 1, 0, 1))
 	
 	comparison_counter += 1
 	var val_a = main_array[sort_j]
@@ -618,17 +751,26 @@ func _perform_sort_step():
 		block_nodes[sort_j + 1] = node_a
 		
 		await _animate_swap(node_a, node_b)
+		
+		# Update index labels after swap
+		_update_index_labels()
 	else:
 		status_label.text = "No Swap. %d <= %d" % [val_a, val_b]
 		timeline_log.append(" -> In correct order.")
 		_add_code_line("COMPARE", sort_j, val_a)
-		# Added visual delay for no-swap so it isn't instant
 		await get_tree().create_timer(ANIM_SPEED * 0.5).timeout
 	
+	# Reset highlight colors
 	if block_nodes[sort_j].has_method("set_highlight"):
 		block_nodes[sort_j].set_highlight(false)
 	if block_nodes[sort_j + 1].has_method("set_highlight"):
 		block_nodes[sort_j + 1].set_highlight(false)
+	
+	# Reset index label colors
+	if sort_j < index_labels.size():
+		index_labels[sort_j].add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	if sort_j + 1 < index_labels.size():
+		index_labels[sort_j + 1].add_theme_color_override("font_color", Color(1, 1, 1, 1))
 		
 	sort_j += 1
 	
@@ -653,12 +795,12 @@ func _update_pointers(left_idx: int, right_idx: int):
 	if left_idx < block_nodes.size():
 		var node = block_nodes[left_idx]
 		if ptr_left:
-			ptr_left.global_position = node.global_position + Vector2(16, node.size.y + 10)
+			ptr_left.global_position = node.global_position + Vector2(16, node.size.y -120)
 	
 	if right_idx < block_nodes.size():
 		var node_next = block_nodes[right_idx]
 		if ptr_right:
-			ptr_right.global_position = node_next.global_position + Vector2(16, node_next.size.y + 10)
+			ptr_right.global_position = node_next.global_position + Vector2(16, node_next.size.y -120)
 
 func _finish_simulation():
 	sorting_complete = true

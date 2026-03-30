@@ -167,7 +167,7 @@ var is_sorting: bool = false
 var is_auto_playing: bool = false
 
 var BLOCK_WIDTH: float = 64.0 
-var BLOCK_SPACING: float = 15.0
+var BLOCK_SPACING: float = 50.0
 var START_POSITION: Vector2 = Vector2(50, 80)
 var ANIM_SPEED: float = 1.2 # Standard speed for Shell Sort
 
@@ -175,6 +175,10 @@ var ANIM_SPEED: float = 1.2 # Standard speed for Shell Sort
 var tutorial_sequence = []
 var tutorial_sequence_index = 0
 var tutorial_in_progress = false
+
+var index_labels: Array[Label] = []
+var INDEX_LABEL_OFFSET: float = 100.0
+var current_tween: Tween = null
 
 # Intro Text (UPDATED WITH COMPLEXITY)
 var intro_step: int = 0
@@ -434,6 +438,7 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	
 	main_array = elements.duplicate()
 	block_nodes.clear()
+	index_labels.clear()  # Clear index labels
 	timeline_log.clear()
 	
 	# Initialize Shell Sort Vars
@@ -455,7 +460,11 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 		child.queue_free()
 	
 	var current_x = START_POSITION.x
-	for val in main_array:
+	var block_width = 64.0
+	
+	for i in range(main_array.size()):
+		var val = main_array[i]
+		
 		var new_block = BLOCK_SCENE.instantiate()
 		new_block.value = val
 		new_block.position = Vector2(current_x, START_POSITION.y)
@@ -469,7 +478,20 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 		
 		array_container.add_child(new_block)
 		block_nodes.append(new_block)
-		current_x += new_block.size.x + BLOCK_SPACING
+		
+		# Create index label below block
+		var index_label = Label.new()
+		index_label.text = str(i)
+		index_label.position = Vector2(current_x + 25, START_POSITION.y + INDEX_LABEL_OFFSET)
+		index_label.add_theme_font_override("font", load("res://assets/font/Planes_ValMore.ttf"))
+		index_label.add_theme_font_size_override("font_size", 28)
+		index_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		index_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+		index_label.add_theme_constant_override("outline_size", 4)
+		array_container.add_child(index_label)
+		index_labels.append(index_label)
+		
+		current_x += block_width + BLOCK_SPACING
 	
 	_ensure_connected(sort_btn, "pressed", _on_step_pressed)
 	_ensure_connected(auto_btn, "pressed", _on_auto_pressed)
@@ -487,6 +509,13 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	_update_ui_labels()
 	if cpp_code_button: cpp_code_button.hide()
 
+func _update_index_labels():
+	var block_width = 64.0
+	for i in range(index_labels.size()):
+		var target_x = START_POSITION.x + i * (block_width + BLOCK_SPACING)
+		index_labels[i].position = Vector2(target_x + 25, START_POSITION.y + INDEX_LABEL_OFFSET)
+		index_labels[i].text = str(i)
+		
 func _ensure_connected(node: Node, signal_name: String, method: Callable):
 	if node and not node.is_connected(signal_name, method):
 		node.connect(signal_name, method)
@@ -519,16 +548,24 @@ func _on_block_dropped(dropped_block: Control) -> void:
 		block_nodes.insert(insert_index, dropped_block)
 		timeline_log.append("User moved %d from index %d to %d" % [val, old_index, insert_index])
 		_add_code_line("MOVE", insert_index, val)
+		
+		# Update index labels after drag and drop
+		_update_index_labels()
 	
 	_resnap_blocks()
 
 func _resnap_blocks() -> void:
 	var x = START_POSITION.x
+	var block_width = 64.0
+	
 	for i in range(block_nodes.size()):
 		var node = block_nodes[i]
 		var target_pos = Vector2(x, START_POSITION.y)
 		create_tween().tween_property(node, "position", target_pos, ANIM_SPEED)
-		x += node.size.x + BLOCK_SPACING
+		x += block_width + BLOCK_SPACING
+	
+	# Update index labels after blocks reposition
+	_update_index_labels()
 
 # ==============================================
 #  SHELL SORT LOGIC (ITERATIVE)
@@ -589,9 +626,17 @@ func _perform_sort_step():
 		# Show pointers
 		_update_pointers(idx_a, idx_b)
 		
-		# Highlight
-		if block_nodes[idx_a].has_method("set_highlight"): block_nodes[idx_a].set_highlight(true)
-		if block_nodes[idx_b].has_method("set_highlight"): block_nodes[idx_b].set_highlight(true)
+		# Highlight blocks
+		if block_nodes[idx_a].has_method("set_highlight"): 
+			block_nodes[idx_a].set_highlight(true)
+		if block_nodes[idx_b].has_method("set_highlight"): 
+			block_nodes[idx_b].set_highlight(true)
+		
+		# Highlight index labels
+		if idx_a < index_labels.size():
+			index_labels[idx_a].add_theme_color_override("font_color", Color(1, 1, 0, 1))
+		if idx_b < index_labels.size():
+			index_labels[idx_b].add_theme_color_override("font_color", Color(1, 1, 0, 1))
 		
 		comparison_counter += 1
 		var val_a = main_array[idx_a]
@@ -628,9 +673,17 @@ func _perform_sort_step():
 			status_label.text = "Correct order. Moving to next item."
 			shell_j = -1 # Break inner loop signal
 		
-		# Unhighlight
-		if block_nodes[idx_a].has_method("set_highlight"): block_nodes[idx_a].set_highlight(false)
-		if block_nodes[idx_b].has_method("set_highlight"): block_nodes[idx_b].set_highlight(false)
+		# Unhighlight blocks
+		if block_nodes[idx_a].has_method("set_highlight"): 
+			block_nodes[idx_a].set_highlight(false)
+		if block_nodes[idx_b].has_method("set_highlight"): 
+			block_nodes[idx_b].set_highlight(false)
+		
+		# Reset index label colors
+		if idx_a < index_labels.size():
+			index_labels[idx_a].add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		if idx_b < index_labels.size():
+			index_labels[idx_b].add_theme_color_override("font_color", Color(1, 1, 1, 1))
 		
 	else:
 		# Inner loop finished or broke
@@ -649,6 +702,9 @@ func _animate_swap(node_a: Control, node_b: Control):
 	await tween.finished
 	node_a.position = pos_b
 	node_b.position = pos_a
+	
+	# Update index labels after swap
+	_update_index_labels()
 
 func _update_pointers(left_idx: int, right_idx: int):
 	if block_nodes.is_empty(): return
@@ -658,12 +714,14 @@ func _update_pointers(left_idx: int, right_idx: int):
 	if left_idx < block_nodes.size() and left_idx >= 0:
 		var node = block_nodes[left_idx]
 		if ptr_left:
-			ptr_left.global_position = node.global_position + Vector2(16, node.size.y + 10) 
+			# Adjusted pointer position: higher above the block
+			ptr_left.global_position = node.global_position + Vector2(16, node.size.y - 120)
 	
 	if right_idx < block_nodes.size() and right_idx >= 0:
 		var node = block_nodes[right_idx]
 		if ptr_right:
-			ptr_right.global_position = node.global_position + Vector2(16, node.size.y + 10)
+			# Adjusted pointer position: higher above the block
+			ptr_right.global_position = node.global_position + Vector2(16, node.size.y - 120)
 
 func _finish_simulation():
 	sorting_complete = true
@@ -672,6 +730,10 @@ func _finish_simulation():
 	auto_btn.text = "Auto Sort"
 	auto_btn.disabled = true
 	sort_btn.disabled = true
+	
+	# Reset index label colors
+	for label in index_labels:
+		label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
 	
 	if ptr_left: ptr_left.hide()
 	if ptr_right: ptr_right.hide()

@@ -8,3 +8,15 @@ res://script/linear_sim.gd
 res://script/dfs_sim.gd
 res://scene/Bfs.tscn
 res://script/bfs_sim.gd
+res://scene/Bubble.tscn
+res://script/bubble_lec.gd
+res://scene/Insertion.tscn
+res://script/insertion_sim.gd
+res://scene/Merge.tscn
+res://script/merge_sim.gd
+res://scene/QuickSort.tscn
+res://script/quick_sort_sim.gd
+res://scene/Selection.tscn
+res://script/selection_sim.gd
+res://scene/ShellSort.tscn
+res://script/shell_sort_sim.gd
