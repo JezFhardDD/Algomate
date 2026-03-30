@@ -1135,33 +1135,33 @@ func _gen_c_code() -> String:
 	return """#include <stdio.h>
 
 void printArray(int arr[], int n) {
-    printf("[");
+	printf("[");
     for(int i = 0; i < n; i++) {
-        printf("%%d", arr[i]);
-        if(i < n-1) printf(", ");
+		printf("%%d", arr[i]);
+		if(i < n-1) printf(", ");
     }
-    printf("]\\n");
+	printf("]\\n");
 }
 
 int binarySearch(int arr[], int low, int high, int target) {
     while(low <= high) {
         int mid = low + (high - low) / 2;
-        printf("Checking mid %%d: %%d\\n", mid, arr[mid]);
+		printf("Checking mid %%d: %%d\\n", mid, arr[mid]);
         
         if(arr[mid] == target) {
-            printf("Found target at index %%d!\\n", mid);
+			printf("Found target at index %%d!\\n", mid);
             return mid;
         }
         
         if(arr[mid] < target) {
-            printf("%%d < %%d, moving right\\n", arr[mid], target);
+			printf("%%d < %%d, moving right\\n", arr[mid], target);
             low = mid + 1;
         } else {
-            printf("%%d > %%d, moving left\\n", arr[mid], target);
+			printf("%%d > %%d, moving left\\n", arr[mid], target);
             high = mid - 1;
         }
     }
-    printf("Target not found\\n");
+	printf("Target not found\\n");
     return -1;
 }
 
@@ -1170,9 +1170,9 @@ int main() {
     int n = sizeof(arr)/sizeof(arr[0]);
     int target = %d;
     
-    printf("Initial array: ");
+	printf("Initial array: ");
     printArray(arr, n);
-    printf("Searching for: %%d\\n\\n", target);
+	printf("Searching for: %%d\\n\\n", target);
     
     binarySearch(arr, 0, n-1, target);
     return 0;

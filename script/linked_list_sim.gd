@@ -1329,7 +1329,7 @@ class LinkedList:
         return False
 
 if __name__ == '__main__':
-    llist = LinkedList()"""
+	llist = LinkedList()"""
 	
 	var action_code = ""
 	action_code += "    # Initial elements\n"

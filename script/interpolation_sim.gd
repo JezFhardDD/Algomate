@@ -1520,20 +1520,20 @@ int main() {
     int target = %d;
     
     // Print the array
-    cout << "Initial array: [";
+	cout << "Initial array: [";
     for (int i = 0; i < n; i++) {
         cout << arr[i];
-        if (i < n - 1) cout << ", ";
+		if (i < n - 1) cout << ", ";
     }
-    cout << "]" << endl;
-    cout << "Searching for: " << target << endl << endl;
+	cout << "]" << endl;
+	cout << "Searching for: " << target << endl << endl;
     
     int result = interpolationSearch(arr, n, target);
     
     if (result != -1)
-        cout << "Found at index " << result << endl;
+		cout << "Found at index " << result << endl;
     else
-        cout << "Not found" << endl;
+		cout << "Not found" << endl;
         
     return 0;
 }""" % [arr, target_value if target_value != -1 else 0]
@@ -1562,16 +1562,16 @@ def main():
     target = %d
     
     # Print the array
-    print("Initial array:", arr)
-    print("Searching for:", target)
+	print("Initial array:", arr)
+	print("Searching for:", target)
     print()
     
     result = interpolation_search(arr, target)
     
     if result != -1:
-        print(f"Found at index {result}")
+		print(f"Found at index {result}")
     else:
-        print("Not found")
+		print("Not found")
 
 if __name__ == "__main__":
 	main()""" % [arr, target_value if target_value != -1 else 0]
@@ -1606,21 +1606,21 @@ public class InterpolationSearch {
         int target = %d;
         
         // Print the array
-        System.out.print("Initial array: [");
+		System.out.print("Initial array: [");
         for (int i = 0; i < arr.length; i++) {
             System.out.print(arr[i]);
-            if (i < arr.length - 1) System.out.print(", ");
+			if (i < arr.length - 1) System.out.print(", ");
         }
-        System.out.println("]");
-        System.out.println("Searching for: " + target);
+		System.out.println("]");
+		System.out.println("Searching for: " + target);
         System.out.println();
         
         int result = interpolationSearch(arr, target);
         
         if (result != -1)
-            System.out.println("Found at index " + result);
+			System.out.println("Found at index " + result);
         else
-            System.out.println("Not found");
+			System.out.println("Not found");
     }
 }""" % [arr, target_value if target_value != -1 else 0]
 
@@ -1662,20 +1662,20 @@ int main() {
     int target = %d;
     
     // Print the array
-    printf("Initial array: [");
+	printf("Initial array: [");
     for (int i = 0; i < n; i++) {
-        printf("%d", arr[i]);
-        if (i < n - 1) printf(", ");
+		printf("%d", arr[i]);
+		if (i < n - 1) printf(", ");
     }
-    printf("]\\n");
-    printf("Searching for: %d\\n\\n", target);
+	printf("]\\n");
+	printf("Searching for: %d\\n\\n", target);
     
     int result = interpolationSearch(arr, n, target);
     
     if (result != -1)
-        printf("Found at index %d\\n", result);
+		printf("Found at index %d\\n", result);
     else
-        printf("Not found\\n");
+		printf("Not found\\n");
         
     return 0;
 }""" % [arr, target_value if target_value != -1 else 0]

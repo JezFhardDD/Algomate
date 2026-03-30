@@ -1,0 +1,92 @@
+[gd_scene load_steps=10 format=3 uid="uid://bya6tfmre20j2"]
+
+[ext_resource type="PackedScene" uid="uid://c4itbl0mcpa48" path="res://scene/Bfs.tscn" id="1_bi6xy"]
+[ext_resource type="Script" uid="uid://dky07lo06ui16" path="res://script/bst.gd" id="2_menmm"]
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="3_g7w0o"]
+[ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="4_52h3t"]
+[ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="5_2j38f"]
+[ext_resource type="Texture2D" uid="uid://dcxstyoycht1w" path="res://assets/BUTTON_HOVERED.png" id="6_rhgkt"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r0du0"]
+texture = ExtResource("4_52h3t")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5tuhn"]
+texture = ExtResource("5_2j38f")
+modulate_color = Color(0.713726, 0.388235, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c6i3y"]
+texture = ExtResource("6_rhgkt")
+modulate_color = Color(0.54902, 1, 1, 1)
+
+[node name="Main" instance=ExtResource("1_bi6xy")]
+script = ExtResource("2_menmm")
+
+[node name="VBoxContainer" parent="." index="6"]
+offset_top = 47.0
+offset_right = 257.0
+offset_bottom = 569.0
+
+[node name="InsertButton" type="Button" parent="VBoxContainer" index="0"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_g7w0o")
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxTexture_r0du0")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_5tuhn")
+theme_override_styles/hover = SubResource("StyleBoxTexture_c6i3y")
+text = "Insert Node"
+
+[node name="DeleteButton" type="Button" parent="VBoxContainer" index="1"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_g7w0o")
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxTexture_r0du0")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_5tuhn")
+theme_override_styles/hover = SubResource("StyleBoxTexture_c6i3y")
+text = "Delete Node"
+
+[node name="SortButton" parent="VBoxContainer" index="2"]
+text = "Search Node"
+
+[node name="WaitingElements" parent="VBoxContainer" index="3"]
+text = "Traverse"
+
+[node name="EndSimulationButton" type="Button" parent="VBoxContainer" index="6"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_g7w0o")
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxTexture_r0du0")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_5tuhn")
+theme_override_styles/hover = SubResource("StyleBoxTexture_c6i3y")
+text = "End Simulation"
+
+[node name="HBoxContainer2" parent="." index="8"]
+visible = false
+
+[node name="Label" parent="TimelinePopup/MainVBox/ScrollContainer/VBoxContainer" index="0"]
+visible = false
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TimelinePopup/MainVBox/ScrollContainer/VBoxContainer" index="1"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_fonts/normal_font = ExtResource("3_g7w0o")
+theme_override_font_sizes/normal_font_size = 20
+text = "assa"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CppPopup" parent="." index="13"]
+oversampling_override = 1.0

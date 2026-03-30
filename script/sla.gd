@@ -1072,10 +1072,18 @@ func _update_cpp_tutorial() -> void:
 			cpp_text.scroll_to_line(target_line)
 
 func get_cpp_selection_code(arr: String) -> String:
-	return """/* Time Complexity: O(n^2)
-   Space Complexity: O(1) */
+	return """/* Selection Sort - Time Complexity: O(n^2), Space Complexity: O(1) */
 #include <iostream>
 using namespace std;
+
+void printArray(int arr[], int n) {
+	cout << "[";
+	for (int i = 0; i < n; i++) {
+		cout << arr[i];
+		if (i < n - 1) cout << ", ";
+	}
+	cout << "]" << endl;
+}
 
 void selectionSort(int arr[], int n) {
 	for (int i = 0; i < n - 1; i++) {
@@ -1089,47 +1097,30 @@ void selectionSort(int arr[], int n) {
 			int temp = arr[i];
 			arr[i] = arr[min_idx];
 			arr[min_idx] = temp;
+			cout << "After swapping minimum " << arr[i] << " into position " << i << ": ";
+			printArray(arr, n);
 		}
 	}
-}
-
-void printArray(int arr[], int n) {
-	cout << "[";
-	for (int i = 0; i < n; i++) {
-		cout << arr[i];
-		if (i < n - 1) cout << ", ";
-	}
-	cout << "]" << endl;
 }
 
 int main() {
 	int arr[] = { %s };
 	int n = sizeof(arr) / sizeof(arr[0]);
 	
-	cout << "Initial array (unsorted): ";
+	cout << "Initial array: ";
 	printArray(arr, n);
+	cout << endl;
 	
 	selectionSort(arr, n);
 	
-	cout << "Sorted array: ";
+	cout << endl << "Sorted array: ";
 	printArray(arr, n);
 	
 	return 0;
 }""" % arr
 
 func get_python_selection_code(arr: String) -> String:
-	return """# Time Complexity: O(n^2)
-# Space Complexity: O(1)
-
-def selection_sort(arr):
-	n = len(arr)
-	for i in range(n):
-		min_idx = i
-		for j in range(i + 1, n):
-			if arr[j] < arr[min_idx]:
-				min_idx = j
-		if min_idx != i:
-			arr[i], arr[min_idx] = arr[min_idx], arr[i]
+	return """# Selection Sort - Time Complexity: O(n^2), Space Complexity: O(1)
 
 def print_array(arr):
 	print("[", end="")
@@ -1139,33 +1130,32 @@ def print_array(arr):
 			print(", ", end="")
 	print("]")
 
+def selection_sort(arr):
+	n = len(arr)
+	for i in range(n - 1):
+		min_idx = i
+		for j in range(i + 1, n):
+			if arr[j] < arr[min_idx]:
+				min_idx = j
+		if min_idx != i:
+			arr[i], arr[min_idx] = arr[min_idx], arr[i]
+			print(f"After swapping minimum {arr[i]} into position {i}: ", end="")
+			print_array(arr)
+
 arr = [%s]
-print("Initial array (unsorted): ", end="")
+print("Initial array: ", end="")
 print_array(arr)
+print()
 
 selection_sort(arr)
 
+print()
 print("Sorted array: ", end="")
 print_array(arr)""" % arr
 
 func get_java_selection_code(arr: String) -> String:
-	return """/* Time Complexity: O(n^2) */
+	return """/* Selection Sort - Time Complexity: O(n^2) */
 public class Main {
-	static void sort(int arr[]) {
-		int n = arr.length;
-		for (int i = 0; i < n - 1; i++) {
-			int min_idx = i;
-			for (int j = i + 1; j < n; j++)
-				if (arr[j] < arr[min_idx])
-					min_idx = j;
-			if (min_idx != i) {
-				int temp = arr[i];
-				arr[i] = arr[min_idx];
-				arr[min_idx] = temp;
-			}
-		}
-	}
-	
 	static void printArray(int arr[]) {
 		System.out.print("[");
 		for (int i = 0; i < arr.length; i++) {
@@ -1175,37 +1165,43 @@ public class Main {
 		System.out.println("]");
 	}
 	
+	static void selectionSort(int arr[]) {
+		int n = arr.length;
+		for (int i = 0; i < n - 1; i++) {
+			int min_idx = i;
+			for (int j = i + 1; j < n; j++) {
+				if (arr[j] < arr[min_idx]) {
+					min_idx = j;
+				}
+			}
+			if (min_idx != i) {
+				int temp = arr[i];
+				arr[i] = arr[min_idx];
+				arr[min_idx] = temp;
+				System.out.print("After swapping minimum " + arr[i] + " into position " + i + ": ");
+				printArray(arr);
+			}
+		}
+	}
+	
 	public static void main(String args[]) {
 		int arr[] = {%s};
-		Main ob = new Main();
 		
-		System.out.print("Initial array (unsorted): ");
-		ob.printArray(arr);
+		System.out.print("Initial array: ");
+		printArray(arr);
+		System.out.println();
 		
-		ob.sort(arr);
+		selectionSort(arr);
 		
+		System.out.println();
 		System.out.print("Sorted array: ");
-		ob.printArray(arr);
+		printArray(arr);
 	}
 }""" % arr
 
 func get_c_selection_code(arr: String) -> String:
-	return """/* Time Complexity: O(n^2) */
+	return """/* Selection Sort - Time Complexity: O(n^2) */
 #include <stdio.h>
-
-void selectionSort(int arr[], int n) {
-	for (int i = 0; i < n - 1; i++) {
-		int min_idx = i;
-		for (int j = i + 1; j < n; j++)
-			if (arr[j] < arr[min_idx])
-				min_idx = j;
-		if (min_idx != i) {
-			int temp = arr[i];
-			arr[i] = arr[min_idx];
-			arr[min_idx] = temp;
-		}
-	}
-}
 
 void printArray(int arr[], int n) {
 	printf("[");
@@ -1216,16 +1212,35 @@ void printArray(int arr[], int n) {
 	printf("]\\n");
 }
 
+void selectionSort(int arr[], int n) {
+	for (int i = 0; i < n - 1; i++) {
+		int min_idx = i;
+		for (int j = i + 1; j < n; j++) {
+			if (arr[j] < arr[min_idx]) {
+				min_idx = j;
+			}
+		}
+		if (min_idx != i) {
+			int temp = arr[i];
+			arr[i] = arr[min_idx];
+			arr[min_idx] = temp;
+			printf("After swapping minimum %%d into position %%d: ", arr[i], i);
+			printArray(arr, n);
+		}
+	}
+}
+
 int main() {
 	int arr[] = {%s};
 	int n = sizeof(arr) / sizeof(arr[0]);
 	
-	printf("Initial array (unsorted): ");
+	printf("Initial array: ");
 	printArray(arr, n);
+	printf("\\n");
 	
 	selectionSort(arr, n);
 	
-	printf("Sorted array: ");
+	printf("\\nSorted array: ");
 	printArray(arr, n);
 	
 	return 0;

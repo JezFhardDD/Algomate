@@ -1324,22 +1324,9 @@ func _update_cpp_tutorial() -> void:
 			cpp_text.scroll_to_line(target_line)
 
 func get_cpp_shell_code(arr: String) -> String:
-	return """/* Time Complexity: O(n log n) to O(n²) depending on gap sequence */
+	return """/* Shell Sort - Time Complexity: O(n log n) to O(n²) depending on gap sequence */
 #include <iostream>
 using namespace std;
-
-void shellSort(int arr[], int n) {
-	for (int gap = n/2; gap > 0; gap /= 2) {
-		for (int i = gap; i < n; i++) {
-			int temp = arr[i];
-			int j;
-			for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
-				arr[j] = arr[j - gap];
-			}
-			arr[j] = temp;
-		}
-	}
-}
 
 void printArray(int arr[], int n) {
 	cout << "[";
@@ -1350,35 +1337,44 @@ void printArray(int arr[], int n) {
 	cout << "]" << endl;
 }
 
+void shellSort(int arr[], int n) {
+	for (int gap = n/2; gap > 0; gap /= 2) {
+		cout << "\\n--- Gap = " << gap << " ---" << endl;
+		for (int i = gap; i < n; i++) {
+			int temp = arr[i];
+			int j;
+			for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
+				arr[j] = arr[j - gap];
+				cout << "After shifting arr[" << j << "] = arr[" << j - gap << "]: ";
+				printArray(arr, n);
+			}
+			if (j != i) {
+				arr[j] = temp;
+				cout << "After inserting " << temp << " at index " << j << ": ";
+				printArray(arr, n);
+			}
+		}
+	}
+}
+
 int main() {
 	int arr[] = { %s };
 	int n = sizeof(arr) / sizeof(arr[0]);
 	
-	cout << "Initial array (unsorted): ";
+	cout << "Initial array: ";
 	printArray(arr, n);
+	cout << endl;
 	
 	shellSort(arr, n);
 	
-	cout << "Sorted array: ";
+	cout << endl << "Sorted array: ";
 	printArray(arr, n);
 	
 	return 0;
 }""" % arr
 
 func get_python_shell_code(arr: String) -> String:
-	return """# Time Complexity: O(n log n) to O(n²) depending on gap sequence
-def shell_sort(arr):
-	n = len(arr)
-	gap = n // 2
-	while gap > 0:
-		for i in range(gap, n):
-			temp = arr[i]
-			j = i
-			while j >= gap and arr[j - gap] > temp:
-				arr[j] = arr[j - gap]
-				j -= gap
-			arr[j] = temp
-		gap //= 2
+	return """# Shell Sort - Time Complexity: O(n log n) to O(n²) depending on gap sequence
 
 def print_array(arr):
 	print("[", end="")
@@ -1388,32 +1384,39 @@ def print_array(arr):
 			print(", ", end="")
 	print("]")
 
+def shell_sort(arr):
+	n = len(arr)
+	gap = n // 2
+	while gap > 0:
+		print(f"\\n--- Gap = {gap} ---")
+		for i in range(gap, n):
+			temp = arr[i]
+			j = i
+			while j >= gap and arr[j - gap] > temp:
+				arr[j] = arr[j - gap]
+				print(f"After shifting arr[{j}] = arr[{j - gap}]: ", end="")
+				print_array(arr)
+				j -= gap
+			if j != i:
+				arr[j] = temp
+				print(f"After inserting {temp} at index {j}: ", end="")
+				print_array(arr)
+		gap //= 2
+
 arr = [%s]
-print("Initial array (unsorted): ", end="")
+print("Initial array: ", end="")
 print_array(arr)
+print()
 
 shell_sort(arr)
 
+print()
 print("Sorted array: ", end="")
 print_array(arr)""" % arr
 
 func get_java_shell_code(arr: String) -> String:
-	return """/* Time Complexity: O(n log n) to O(n²) depending on gap sequence */
+	return """/* Shell Sort - Time Complexity: O(n log n) to O(n²) depending on gap sequence */
 public class Main {
-	static void sort(int arr[]) {
-		int n = arr.length;
-		for (int gap = n/2; gap > 0; gap /= 2) {
-			for (int i = gap; i < n; i++) {
-				int temp = arr[i];
-				int j;
-				for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
-					arr[j] = arr[j - gap];
-				}
-				arr[j] = temp;
-			}
-		}
-	}
-	
 	static void printArray(int arr[]) {
 		System.out.print("[");
 		for (int i = 0; i < arr.length; i++) {
@@ -1423,35 +1426,45 @@ public class Main {
 		System.out.println("]");
 	}
 	
+	static void shellSort(int arr[]) {
+		int n = arr.length;
+		for (int gap = n/2; gap > 0; gap /= 2) {
+			System.out.println("\\n--- Gap = " + gap + " ---");
+			for (int i = gap; i < n; i++) {
+				int temp = arr[i];
+				int j;
+				for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
+					arr[j] = arr[j - gap];
+					System.out.print("After shifting arr[" + j + "] = arr[" + (j - gap) + "]: ");
+					printArray(arr);
+				}
+				if (j != i) {
+					arr[j] = temp;
+					System.out.print("After inserting " + temp + " at index " + j + ": ");
+					printArray(arr);
+				}
+			}
+		}
+	}
+	
 	public static void main(String args[]) {
 		int arr[] = {%s};
 		
-		System.out.print("Initial array (unsorted): ");
+		System.out.print("Initial array: ");
 		printArray(arr);
+		System.out.println();
 		
-		sort(arr);
+		shellSort(arr);
 		
+		System.out.println();
 		System.out.print("Sorted array: ");
 		printArray(arr);
 	}
 }""" % arr
 
 func get_c_shell_code(arr: String) -> String:
-	return """/* Time Complexity: O(n log n) to O(n²) depending on gap sequence */
+	return """/* Shell Sort - Time Complexity: O(n log n) to O(n²) depending on gap sequence */
 #include <stdio.h>
-
-void shellSort(int arr[], int n) {
-	for (int gap = n/2; gap > 0; gap /= 2) {
-		for (int i = gap; i < n; i++) {
-			int temp = arr[i];
-			int j;
-			for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
-				arr[j] = arr[j - gap];
-			}
-			arr[j] = temp;
-		}
-	}
-}
 
 void printArray(int arr[], int n) {
 	printf("[");
@@ -1462,16 +1475,37 @@ void printArray(int arr[], int n) {
 	printf("]\\n");
 }
 
+void shellSort(int arr[], int n) {
+	for (int gap = n/2; gap > 0; gap /= 2) {
+		printf("\\n--- Gap = %%d ---\\n", gap);
+		for (int i = gap; i < n; i++) {
+			int temp = arr[i];
+			int j;
+			for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
+				arr[j] = arr[j - gap];
+				printf("After shifting arr[%%d] = arr[%%d]: ", j, j - gap);
+				printArray(arr, n);
+			}
+			if (j != i) {
+				arr[j] = temp;
+				printf("After inserting %%d at index %%d: ", temp, j);
+				printArray(arr, n);
+			}
+		}
+	}
+}
+
 int main() {
 	int arr[] = {%s};
 	int n = sizeof(arr) / sizeof(arr[0]);
 	
-	printf("Initial array (unsorted): ");
+	printf("Initial array: ");
 	printArray(arr, n);
+	printf("\\n");
 	
 	shellSort(arr, n);
 	
-	printf("Sorted array: ");
+	printf("\\nSorted array: ");
 	printArray(arr, n);
 	
 	return 0;

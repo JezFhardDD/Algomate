@@ -252,6 +252,7 @@ func _get_simulation_path() -> String:
 		"interpolation_search": "res://scene/Interpolation.tscn",
 		"depth_first_search":   "res://scene/Dfs.tscn",
 		"breadth_first_search": "res://scene/Bfs.tscn",
+		"bst":   "res://scene/BST.tscn",  # ← add thi
 	}
 	return sim_map.get(lesson_id, "")
 

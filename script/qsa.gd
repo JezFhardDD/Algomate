@@ -2191,28 +2191,6 @@ func get_cpp_quick_code(arr: String) -> String:
 #include <iostream>
 using namespace std;
 
-int partition(int arr[], int low, int high) {
-	int pivot = arr[high];  // Choose last element as pivot
-	int i = low - 1;        // Index of smaller element
-	
-	for (int j = low; j < high; j++) {
-		if (arr[j] < pivot) {
-			i++;
-			swap(arr[i], arr[j]);
-		}
-	}
-	swap(arr[i + 1], arr[high]);
-	return i + 1;
-}
-
-void quickSort(int arr[], int low, int high) {
-	if (low < high) {
-		int pi = partition(arr, low, high);
-		quickSort(arr, low, pi - 1);
-		quickSort(arr, pi + 1, high);
-	}
-}
-
 void printArray(int arr[], int n) {
 	cout << "[";
 	for (int i = 0; i < n; i++) {
@@ -2222,108 +2200,6 @@ void printArray(int arr[], int n) {
 	cout << "]" << endl;
 }
 
-int main() {
-	int arr[] = { %s };
-	int n = sizeof(arr) / sizeof(arr[0]);
-	
-	cout << "Initial array (unsorted): ";
-	printArray(arr, n);
-	
-	quickSort(arr, 0, n - 1);
-	
-	cout << "Sorted array: ";
-	printArray(arr, n);
-	
-	return 0;
-}""" % arr
-
-func get_python_quick_code(arr: String) -> String:
-	return """# Quick Sort - Time Complexity: O(n log n) average
-def quick_sort(arr):
-	if len(arr) <= 1:
-		return arr
-	pivot = arr[-1]  # Choose last element as pivot
-	left = [x for x in arr[:-1] if x <= pivot]
-	right = [x for x in arr[:-1] if x > pivot]
-	return quick_sort(left) + [pivot] + quick_sort(right)
-
-def print_array(arr):
-	print("[", end="")
-	for i in range(len(arr)):
-		print(arr[i], end="")
-		if i < len(arr) - 1:
-			print(", ", end="")
-	print("]")
-
-arr = [%s]
-print("Initial array (unsorted): ", end="")
-print_array(arr)
-
-sorted_arr = quick_sort(arr)
-
-print("Sorted array: ", end="")
-print_array(sorted_arr)""" % arr
-
-func get_java_quick_code(arr: String) -> String:
-	return """/* Quick Sort - Time Complexity: O(n log n) */
-public class Main {
-	static int partition(int arr[], int low, int high) {
-		int pivot = arr[high];
-		int i = low - 1;
-		for (int j = low; j < high; j++) {
-			if (arr[j] < pivot) {
-				i++;
-				int temp = arr[i];
-				arr[i] = arr[j];
-				arr[j] = temp;
-			}
-		}
-		int temp = arr[i + 1];
-		arr[i + 1] = arr[high];
-		arr[high] = temp;
-		return i + 1;
-	}
-	
-	static void sort(int arr[], int low, int high) {
-		if (low < high) {
-			int pi = partition(arr, low, high);
-			sort(arr, low, pi - 1);
-			sort(arr, pi + 1, high);
-		}
-	}
-	
-	static void printArray(int arr[]) {
-		System.out.print("[");
-		for (int i = 0; i < arr.length; i++) {
-			System.out.print(arr[i]);
-			if (i < arr.length - 1) System.out.print(", ");
-		}
-		System.out.println("]");
-	}
-	
-	public static void main(String args[]) {
-		int arr[] = {%s};
-		
-		System.out.print("Initial array (unsorted): ");
-		printArray(arr);
-		
-		sort(arr, 0, arr.length - 1);
-		
-		System.out.print("Sorted array: ");
-		printArray(arr);
-	}
-}""" % arr
-
-func get_c_quick_code(arr: String) -> String:
-	return """/* Quick Sort - Time Complexity: O(n log n) */
-#include <stdio.h>
-
-void swap(int* a, int* b) {
-	int t = *a;
-	*a = *b;
-	*b = t;
-}
-
 int partition(int arr[], int low, int high) {
 	int pivot = arr[high];
 	int i = low - 1;
@@ -2331,10 +2207,19 @@ int partition(int arr[], int low, int high) {
 	for (int j = low; j < high; j++) {
 		if (arr[j] < pivot) {
 			i++;
-			swap(&arr[i], &arr[j]);
+			int temp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = temp;
 		}
 	}
-	swap(&arr[i + 1], &arr[high]);
+	
+	int temp = arr[i + 1];
+	arr[i + 1] = arr[high];
+	arr[high] = temp;
+	
+	cout << "After partitioning with pivot " << pivot << ": ";
+	printArray(arr, high - low + 1);
+	
 	return i + 1;
 }
 
@@ -2345,6 +2230,128 @@ void quickSort(int arr[], int low, int high) {
 		quickSort(arr, pi + 1, high);
 	}
 }
+
+int main() {
+	int arr[] = { %s };
+	int n = sizeof(arr) / sizeof(arr[0]);
+	
+	cout << "Initial array: ";
+	printArray(arr, n);
+	cout << endl;
+	
+	quickSort(arr, 0, n - 1);
+	
+	cout << endl << "Sorted array: ";
+	printArray(arr, n);
+	
+	return 0;
+}""" % arr
+
+func get_python_quick_code(arr: String) -> String:
+	return """# Quick Sort - Time Complexity: O(n log n) average, O(n²) worst
+
+def print_array(arr):
+	print("[", end="")
+	for i in range(len(arr)):
+		print(arr[i], end="")
+		if i < len(arr) - 1:
+			print(", ", end="")
+	print("]")
+
+def partition(arr, low, high):
+	pivot = arr[high]
+	i = low - 1
+	
+	for j in range(low, high):
+		if arr[j] < pivot:
+			i += 1
+			arr[i], arr[j] = arr[j], arr[i]
+	
+	arr[i + 1], arr[high] = arr[high], arr[i + 1]
+	
+	print(f"After partitioning with pivot {pivot}: ", end="")
+	print_array(arr[low:high + 1])
+	
+	return i + 1
+
+def quick_sort(arr, low, high):
+	if low < high:
+		pi = partition(arr, low, high)
+		quick_sort(arr, low, pi - 1)
+		quick_sort(arr, pi + 1, high)
+
+arr = [%s]
+print("Initial array: ", end="")
+print_array(arr)
+print()
+
+quick_sort(arr, 0, len(arr) - 1)
+
+print()
+print("Sorted array: ", end="")
+print_array(arr)""" % arr
+
+func get_java_quick_code(arr: String) -> String:
+	return """/* Quick Sort - Time Complexity: O(n log n) average, O(n²) worst */
+public class Main {
+	static void printArray(int arr[]) {
+		System.out.print("[");
+		for (int i = 0; i < arr.length; i++) {
+			System.out.print(arr[i]);
+			if (i < arr.length - 1) System.out.print(", ");
+		}
+		System.out.println("]");
+	}
+	
+	static int partition(int arr[], int low, int high) {
+		int pivot = arr[high];
+		int i = low - 1;
+		
+		for (int j = low; j < high; j++) {
+			if (arr[j] < pivot) {
+				i++;
+				int temp = arr[i];
+				arr[i] = arr[j];
+				arr[j] = temp;
+			}
+		}
+		
+		int temp = arr[i + 1];
+		arr[i + 1] = arr[high];
+		arr[high] = temp;
+		
+		System.out.print("After partitioning with pivot " + pivot + ": ");
+		printArray(arr);
+		
+		return i + 1;
+	}
+	
+	static void quickSort(int arr[], int low, int high) {
+		if (low < high) {
+			int pi = partition(arr, low, high);
+			quickSort(arr, low, pi - 1);
+			quickSort(arr, pi + 1, high);
+		}
+	}
+	
+	public static void main(String args[]) {
+		int arr[] = {%s};
+		
+		System.out.print("Initial array: ");
+		printArray(arr);
+		System.out.println();
+		
+		quickSort(arr, 0, arr.length - 1);
+		
+		System.out.println();
+		System.out.print("Sorted array: ");
+		printArray(arr);
+	}
+}""" % arr
+
+func get_c_quick_code(arr: String) -> String:
+	return """/* Quick Sort - Time Complexity: O(n log n) average, O(n²) worst */
+#include <stdio.h>
 
 void printArray(int arr[], int n) {
 	printf("[");
@@ -2355,16 +2362,48 @@ void printArray(int arr[], int n) {
 	printf("]\\n");
 }
 
+int partition(int arr[], int low, int high) {
+	int pivot = arr[high];
+	int i = low - 1;
+	
+	for (int j = low; j < high; j++) {
+		if (arr[j] < pivot) {
+			i++;
+			int temp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = temp;
+		}
+	}
+	
+	int temp = arr[i + 1];
+	arr[i + 1] = arr[high];
+	arr[high] = temp;
+	
+	printf("After partitioning with pivot %%d: ", pivot);
+	printArray(arr + low, high - low + 1);
+	
+	return i + 1;
+}
+
+void quickSort(int arr[], int low, int high) {
+	if (low < high) {
+		int pi = partition(arr, low, high);
+		quickSort(arr, low, pi - 1);
+		quickSort(arr, pi + 1, high);
+	}
+}
+
 int main() {
 	int arr[] = {%s};
 	int n = sizeof(arr) / sizeof(arr[0]);
 	
-	printf("Initial array (unsorted): ");
+	printf("Initial array: ");
 	printArray(arr, n);
+	printf("\\n");
 	
 	quickSort(arr, 0, n - 1);
 	
-	printf("Sorted array: ");
+	printf("\\nSorted array: ");
 	printArray(arr, n);
 	
 	return 0;

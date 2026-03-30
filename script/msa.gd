@@ -1354,167 +1354,167 @@ func get_cpp_merge_code(arr: String) -> String:
 using namespace std;
 
 void printArray(int arr[], int n) {
-    cout << "[";
-    for (int i = 0; i < n; i++) {
-        cout << arr[i];
-        if (i < n - 1) cout << ", ";
-    }
-    cout << "]" << endl;
+	cout << "[";
+	for (int i = 0; i < n; i++) {
+		cout << arr[i];
+		if (i < n - 1) cout << ", ";
+	}
+	cout << "]" << endl;
 }
 
 void merge(int arr[], int left, int mid, int right) {
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
-    
-    int L[n1], R[n2];
-    
-    for (int i = 0; i < n1; i++)
-        L[i] = arr[left + i];
-    for (int j = 0; j < n2; j++)
-        R[j] = arr[mid + 1 + j];
-    
-    int i = 0, j = 0, k = left;
-    
-    while (i < n1 && j < n2) {
-        if (L[i] <= R[j]) {
-            arr[k] = L[i];
-            i++;
-        } else {
-            arr[k] = R[j];
-            j++;
-        }
-        k++;
-        cout << "After comparing " << (i > 0 ? L[i-1] : L[0]) << " and " << (j > 0 ? R[j-1] : R[0]) << ": ";
-        printArray(arr, right - left + 1);
-    }
-    
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-        cout << "After copying from left: ";
-        printArray(arr, right - left + 1);
-    }
-    
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-        cout << "After copying from right: ";
-        printArray(arr, right - left + 1);
-    }
-    
-    cout << "Merge of [" << left << "-" << right << "] complete: ";
-    printArray(arr, right - left + 1);
+	int n1 = mid - left + 1;
+	int n2 = right - mid;
+	
+	int L[n1], R[n2];
+	
+	for (int i = 0; i < n1; i++)
+		L[i] = arr[left + i];
+	for (int j = 0; j < n2; j++)
+		R[j] = arr[mid + 1 + j];
+	
+	int i = 0, j = 0, k = left;
+	
+	while (i < n1 && j < n2) {
+		if (L[i] <= R[j]) {
+			arr[k] = L[i];
+			i++;
+		} else {
+			arr[k] = R[j];
+			j++;
+		}
+		k++;
+		cout << "After comparing " << (i > 0 ? L[i-1] : L[0]) << " and " << (j > 0 ? R[j-1] : R[0]) << ": ";
+		printArray(arr, right - left + 1);
+	}
+	
+	while (i < n1) {
+		arr[k] = L[i];
+		i++;
+		k++;
+		cout << "After copying from left: ";
+		printArray(arr, right - left + 1);
+	}
+	
+	while (j < n2) {
+		arr[k] = R[j];
+		j++;
+		k++;
+		cout << "After copying from right: ";
+		printArray(arr, right - left + 1);
+	}
+	
+	cout << "Merge of [" << left << "-" << right << "] complete: ";
+	printArray(arr, right - left + 1);
 }
 
 void mergeSort(int arr[], int n) {
-    for (int width = 1; width < n; width *= 2) {
-        cout << "\\n=== Merging width = " << width << " ===" << endl;
-        for (int i = 0; i < n; i += 2 * width) {
-            int left = i;
-            int mid = min(i + width - 1, n - 1);
-            int right = min(i + 2 * width - 1, n - 1);
-            
-            if (mid < right) {
-                cout << "\\nMerging [" << left << "-" << mid << "] and [" << mid+1 << "-" << right << "]:" << endl;
-                merge(arr, left, mid, right);
-            }
-        }
-        cout << "After width " << width << ": ";
-        printArray(arr, n);
-    }
+	for (int width = 1; width < n; width *= 2) {
+		cout << "\\n=== Merging width = " << width << " ===" << endl;
+		for (int i = 0; i < n; i += 2 * width) {
+			int left = i;
+			int mid = min(i + width - 1, n - 1);
+			int right = min(i + 2 * width - 1, n - 1);
+			
+			if (mid < right) {
+				cout << "\\nMerging [" << left << "-" << mid << "] and [" << mid+1 << "-" << right << "]:" << endl;
+				merge(arr, left, mid, right);
+			}
+		}
+		cout << "After width " << width << ": ";
+		printArray(arr, n);
+	}
 }
 
 int main() {
-    int arr[] = { %s };
-    int n = sizeof(arr) / sizeof(arr[0]);
-    
-    cout << "Initial array (unsorted): ";
-    printArray(arr, n);
-    cout << endl;
-    
-    mergeSort(arr, n);
-    
-    cout << endl << "Sorted array: ";
-    printArray(arr, n);
-    
-    return 0;
+	int arr[] = { %s };
+	int n = sizeof(arr) / sizeof(arr[0]);
+	
+	cout << "Initial array (unsorted): ";
+	printArray(arr, n);
+	cout << endl;
+	
+	mergeSort(arr, n);
+	
+	cout << endl << "Sorted array: ";
+	printArray(arr, n);
+	
+	return 0;
 }""" % arr
 
 func get_python_merge_code(arr: String) -> String:
 	return """# Merge Sort - Time Complexity: O(n log n)
 
 def print_array(arr, sub_arr=False):
-    if sub_arr:
-        print("[", end="")
-        for i in range(len(arr)):
-            print(arr[i], end="")
-            if i < len(arr) - 1:
-                print(", ", end="")
-        print("]")
-    else:
-        print("[", end="")
-        for i in range(len(arr)):
-            print(arr[i], end="")
-            if i < len(arr) - 1:
-                print(", ", end="")
-        print("]")
+	if sub_arr:
+		print("[", end="")
+		for i in range(len(arr)):
+			print(arr[i], end="")
+			if i < len(arr) - 1:
+				print(", ", end="")
+		print("]")
+	else:
+		print("[", end="")
+		for i in range(len(arr)):
+			print(arr[i], end="")
+			if i < len(arr) - 1:
+				print(", ", end="")
+		print("]")
 
 def merge(arr, left, mid, right):
-    n1 = mid - left + 1
-    n2 = right - mid
-    
-    L = arr[left:mid + 1]
-    R = arr[mid + 1:right + 1]
-    
-    i = j = 0
-    k = left
-    
-    while i < n1 and j < n2:
-        if L[i] <= R[j]:
-            arr[k] = L[i]
-            i += 1
-        else:
-            arr[k] = R[j]
-            j += 1
-        k += 1
-        print(f"  After comparing {L[i-1 if i > 0 else 0]} and {R[j-1 if j > 0 else 0]}: ", end="")
-        print_array(arr[left:right+1], True)
-    
-    while i < n1:
-        arr[k] = L[i]
-        i += 1
-        k += 1
-        print("  After copying from left: ", end="")
-        print_array(arr[left:right+1], True)
-    
-    while j < n2:
-        arr[k] = R[j]
-        j += 1
-        k += 1
-        print("  After copying from right: ", end="")
-        print_array(arr[left:right+1], True)
-    
-    print(f"  Merge of [{left}-{right}] complete: ", end="")
-    print_array(arr[left:right+1], True)
+	n1 = mid - left + 1
+	n2 = right - mid
+	
+	L = arr[left:mid + 1]
+	R = arr[mid + 1:right + 1]
+	
+	i = j = 0
+	k = left
+	
+	while i < n1 and j < n2:
+		if L[i] <= R[j]:
+			arr[k] = L[i]
+			i += 1
+		else:
+			arr[k] = R[j]
+			j += 1
+		k += 1
+		print(f"  After comparing {L[i-1 if i > 0 else 0]} and {R[j-1 if j > 0 else 0]}: ", end="")
+		print_array(arr[left:right+1], True)
+	
+	while i < n1:
+		arr[k] = L[i]
+		i += 1
+		k += 1
+		print("  After copying from left: ", end="")
+		print_array(arr[left:right+1], True)
+	
+	while j < n2:
+		arr[k] = R[j]
+		j += 1
+		k += 1
+		print("  After copying from right: ", end="")
+		print_array(arr[left:right+1], True)
+	
+	print(f"  Merge of [{left}-{right}] complete: ", end="")
+	print_array(arr[left:right+1], True)
 
 def merge_sort(arr):
-    n = len(arr)
-    width = 1
-    while width < n:
-        print(f"\\n=== Merging width = {width} ===")
-        for i in range(0, n, 2 * width):
-            left = i
-            mid = min(i + width - 1, n - 1)
-            right = min(i + 2 * width - 1, n - 1)
-            
-            if mid < right:
-                print(f"\\nMerging [{left}-{mid}] and [{mid+1}-{right}]:")
-                merge(arr, left, mid, right)
-        print(f"After width {width}: ", end="")
-        print_array(arr)
-        width *= 2
+	n = len(arr)
+	width = 1
+	while width < n:
+		print(f"\\n=== Merging width = {width} ===")
+		for i in range(0, n, 2 * width):
+			left = i
+			mid = min(i + width - 1, n - 1)
+			right = min(i + 2 * width - 1, n - 1)
+			
+			if mid < right:
+				print(f"\\nMerging [{left}-{mid}] and [{mid+1}-{right}]:")
+				merge(arr, left, mid, right)
+		print(f"After width {width}: ", end="")
+		print_array(arr)
+		width *= 2
 
 arr = [%s]
 print("Initial array (unsorted): ", end="")
@@ -1532,103 +1532,103 @@ func get_java_merge_code(arr: String) -> String:
 import java.util.*;
 
 public class Main {
-    static void printArray(int[] arr) {
-        System.out.print("[");
-        for (int i = 0; i < arr.length; i++) {
-            System.out.print(arr[i]);
-            if (i < arr.length - 1) System.out.print(", ");
-        }
-        System.out.println("]");
-    }
-    
-    static void printSubArray(int[] arr, int left, int right) {
-        System.out.print("[");
-        for (int i = left; i <= right; i++) {
-            System.out.print(arr[i]);
-            if (i < right) System.out.print(", ");
-        }
-        System.out.println("]");
-    }
-    
-    static void merge(int[] arr, int left, int mid, int right) {
-        int n1 = mid - left + 1;
-        int n2 = right - mid;
-        
-        int[] L = new int[n1];
-        int[] R = new int[n2];
-        
-        for (int i = 0; i < n1; i++)
-            L[i] = arr[left + i];
-        for (int j = 0; j < n2; j++)
-            R[j] = arr[mid + 1 + j];
-        
-        int i = 0, j = 0, k = left;
-        
-        while (i < n1 && j < n2) {
-            if (L[i] <= R[j]) {
-                arr[k] = L[i];
-                i++;
-            } else {
-                arr[k] = R[j];
-                j++;
-            }
-            k++;
-            System.out.print("  After comparing: ");
-            printSubArray(arr, left, right);
-        }
-        
-        while (i < n1) {
-            arr[k] = L[i];
-            i++;
-            k++;
-            System.out.print("  After copying from left: ");
-            printSubArray(arr, left, right);
-        }
-        
-        while (j < n2) {
-            arr[k] = R[j];
-            j++;
-            k++;
-            System.out.print("  After copying from right: ");
-            printSubArray(arr, left, right);
-        }
-        
-        System.out.print("  Merge of [" + left + "-" + right + "] complete: ");
-        printSubArray(arr, left, right);
-    }
-    
-    static void sort(int[] arr) {
-        int n = arr.length;
-        for (int width = 1; width < n; width *= 2) {
-            System.out.println("\\n=== Merging width = " + width + " ===");
-            for (int i = 0; i < n; i += 2 * width) {
-                int left = i;
-                int mid = Math.min(i + width - 1, n - 1);
-                int right = Math.min(i + 2 * width - 1, n - 1);
-                
-                if (mid < right) {
-                    System.out.println("\\nMerging [" + left + "-" + mid + "] and [" + (mid+1) + "-" + right + "]:");
-                    merge(arr, left, mid, right);
-                }
-            }
-            System.out.print("After width " + width + ": ");
-            printArray(arr);
-        }
-    }
-    
-    public static void main(String[] args) {
-        int[] arr = {%s};
-        
-        System.out.print("Initial array (unsorted): ");
-        printArray(arr);
-        System.out.println();
-        
-        sort(arr);
-        
-        System.out.println();
-        System.out.print("Sorted array: ");
-        printArray(arr);
-    }
+	static void printArray(int[] arr) {
+		System.out.print("[");
+		for (int i = 0; i < arr.length; i++) {
+			System.out.print(arr[i]);
+			if (i < arr.length - 1) System.out.print(", ");
+		}
+		System.out.println("]");
+	}
+	
+	static void printSubArray(int[] arr, int left, int right) {
+		System.out.print("[");
+		for (int i = left; i <= right; i++) {
+			System.out.print(arr[i]);
+			if (i < right) System.out.print(", ");
+		}
+		System.out.println("]");
+	}
+	
+	static void merge(int[] arr, int left, int mid, int right) {
+		int n1 = mid - left + 1;
+		int n2 = right - mid;
+		
+		int[] L = new int[n1];
+		int[] R = new int[n2];
+		
+		for (int i = 0; i < n1; i++)
+			L[i] = arr[left + i];
+		for (int j = 0; j < n2; j++)
+			R[j] = arr[mid + 1 + j];
+		
+		int i = 0, j = 0, k = left;
+		
+		while (i < n1 && j < n2) {
+			if (L[i] <= R[j]) {
+				arr[k] = L[i];
+				i++;
+			} else {
+				arr[k] = R[j];
+				j++;
+			}
+			k++;
+			System.out.print("  After comparing: ");
+			printSubArray(arr, left, right);
+		}
+		
+		while (i < n1) {
+			arr[k] = L[i];
+			i++;
+			k++;
+			System.out.print("  After copying from left: ");
+			printSubArray(arr, left, right);
+		}
+		
+		while (j < n2) {
+			arr[k] = R[j];
+			j++;
+			k++;
+			System.out.print("  After copying from right: ");
+			printSubArray(arr, left, right);
+		}
+		
+		System.out.print("  Merge of [" + left + "-" + right + "] complete: ");
+		printSubArray(arr, left, right);
+	}
+	
+	static void sort(int[] arr) {
+		int n = arr.length;
+		for (int width = 1; width < n; width *= 2) {
+			System.out.println("\\n=== Merging width = " + width + " ===");
+			for (int i = 0; i < n; i += 2 * width) {
+				int left = i;
+				int mid = Math.min(i + width - 1, n - 1);
+				int right = Math.min(i + 2 * width - 1, n - 1);
+				
+				if (mid < right) {
+					System.out.println("\\nMerging [" + left + "-" + mid + "] and [" + (mid+1) + "-" + right + "]:");
+					merge(arr, left, mid, right);
+				}
+			}
+			System.out.print("After width " + width + ": ");
+			printArray(arr);
+		}
+	}
+	
+	public static void main(String[] args) {
+		int[] arr = {%s};
+		
+		System.out.print("Initial array (unsorted): ");
+		printArray(arr);
+		System.out.println();
+		
+		sort(arr);
+		
+		System.out.println();
+		System.out.print("Sorted array: ");
+		printArray(arr);
+	}
 }""" % arr
 
 func get_c_merge_code(arr: String) -> String:
@@ -1637,101 +1637,101 @@ func get_c_merge_code(arr: String) -> String:
 #include <stdlib.h>
 
 void printArray(int arr[], int n) {
-    printf("[");
-    for (int i = 0; i < n; i++) {
-        printf("%%d", arr[i]);
-        if (i < n - 1) printf(", ");
-    }
-    printf("]\\n");
+	printf("[");
+	for (int i = 0; i < n; i++) {
+		printf("%%d", arr[i]);
+		if (i < n - 1) printf(", ");
+	}
+	printf("]\\n");
 }
 
 void printSubArray(int arr[], int left, int right) {
-    printf("[");
-    for (int i = left; i <= right; i++) {
-        printf("%%d", arr[i]);
-        if (i < right) printf(", ");
-    }
-    printf("]\\n");
+	printf("[");
+	for (int i = left; i <= right; i++) {
+		printf("%%d", arr[i]);
+		if (i < right) printf(", ");
+	}
+	printf("]\\n");
 }
 
 void merge(int arr[], int left, int mid, int right) {
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
-    
-    int L[n1], R[n2];
-    
-    for (int i = 0; i < n1; i++)
-        L[i] = arr[left + i];
-    for (int j = 0; j < n2; j++)
-        R[j] = arr[mid + 1 + j];
-    
-    int i = 0, j = 0, k = left;
-    
-    while (i < n1 && j < n2) {
-        if (L[i] <= R[j]) {
-            arr[k] = L[i];
-            i++;
-        } else {
-            arr[k] = R[j];
-            j++;
-        }
-        k++;
-        printf("  After comparing: ");
-        printSubArray(arr, left, right);
-    }
-    
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-        printf("  After copying from left: ");
-        printSubArray(arr, left, right);
-    }
-    
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-        printf("  After copying from right: ");
-        printSubArray(arr, left, right);
-    }
-    
-    printf("  Merge of [%%d-%%d] complete: ", left, right);
-    printSubArray(arr, left, right);
+	int n1 = mid - left + 1;
+	int n2 = right - mid;
+	
+	int L[n1], R[n2];
+	
+	for (int i = 0; i < n1; i++)
+		L[i] = arr[left + i];
+	for (int j = 0; j < n2; j++)
+		R[j] = arr[mid + 1 + j];
+	
+	int i = 0, j = 0, k = left;
+	
+	while (i < n1 && j < n2) {
+		if (L[i] <= R[j]) {
+			arr[k] = L[i];
+			i++;
+		} else {
+			arr[k] = R[j];
+			j++;
+		}
+		k++;
+		printf("  After comparing: ");
+		printSubArray(arr, left, right);
+	}
+	
+	while (i < n1) {
+		arr[k] = L[i];
+		i++;
+		k++;
+		printf("  After copying from left: ");
+		printSubArray(arr, left, right);
+	}
+	
+	while (j < n2) {
+		arr[k] = R[j];
+		j++;
+		k++;
+		printf("  After copying from right: ");
+		printSubArray(arr, left, right);
+	}
+	
+	printf("  Merge of [%%d-%%d] complete: ", left, right);
+	printSubArray(arr, left, right);
 }
 
 void mergeSort(int arr[], int n) {
-    for (int width = 1; width < n; width *= 2) {
-        printf("\\n=== Merging width = %%d ===\\n", width);
-        for (int i = 0; i < n; i += 2 * width) {
-            int left = i;
-            int mid = (i + width - 1 < n - 1) ? i + width - 1 : n - 1;
-            int right = (i + 2 * width - 1 < n - 1) ? i + 2 * width - 1 : n - 1;
-            
-            if (mid < right) {
-                printf("\\nMerging [%%d-%%d] and [%%d-%%d]:\\n", left, mid, mid + 1, right);
-                merge(arr, left, mid, right);
-            }
-        }
-        printf("After width %%d: ", width);
-        printArray(arr, n);
-    }
+	for (int width = 1; width < n; width *= 2) {
+		printf("\\n=== Merging width = %%d ===\\n", width);
+		for (int i = 0; i < n; i += 2 * width) {
+			int left = i;
+			int mid = (i + width - 1 < n - 1) ? i + width - 1 : n - 1;
+			int right = (i + 2 * width - 1 < n - 1) ? i + 2 * width - 1 : n - 1;
+			
+			if (mid < right) {
+				printf("\\nMerging [%%d-%%d] and [%%d-%%d]:\\n", left, mid, mid + 1, right);
+				merge(arr, left, mid, right);
+			}
+		}
+		printf("After width %%d: ", width);
+		printArray(arr, n);
+	}
 }
 
 int main() {
-    int arr[] = {%s};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    
-    printf("Initial array (unsorted): ");
-    printArray(arr, n);
-    printf("\\n");
-    
-    mergeSort(arr, n);
-    
-    printf("\\nSorted array: ");
-    printArray(arr, n);
-    
-    return 0;
+	int arr[] = {%s};
+	int n = sizeof(arr) / sizeof(arr[0]);
+	
+	printf("Initial array (unsorted): ");
+	printArray(arr, n);
+	printf("\\n");
+	
+	mergeSort(arr, n);
+	
+	printf("\\nSorted array: ");
+	printArray(arr, n);
+	
+	return 0;
 }""" % arr
 
 func _on_cpp_close_pressed(): 
