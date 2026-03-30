@@ -5,3 +5,6 @@ res://scene/Binary.tscn
 res://script/binary_sim.gd
 res://scene/Linear.tscn
 res://script/linear_sim.gd
+res://script/dfs_sim.gd
+res://scene/Bfs.tscn
+res://script/bfs_sim.gd

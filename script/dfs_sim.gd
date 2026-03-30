@@ -139,6 +139,10 @@ var tree_nodes: Array = [] # Stores Node Instances (or null)
 var timeline_log: Array[String] = []
 var node_positions: Array = []
 
+var index_labels: Array[Label] = []
+var INDEX_LABEL_OFFSET_X: float = 100.0  # Offset to the right of the node
+var INDEX_LABEL_OFFSET_Y: float = 25.0  # Vertical offset to center with node
+
 # DFS State
 var dfs_stack: Array[int] = [] # Stack of INDICES
 var visited: Array[int] = []
@@ -663,6 +667,10 @@ func _on_node_value_confirmed():
 				node.set_value(0)
 				node.modulate = Color(0.5, 0.5, 0.5, 0.5)
 		
+		# Reset index label colors
+		for i in range(index_labels.size()):
+			index_labels[i].add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		
 		if current_editing_index == 0 and val != 0:
 			if node.has_method("mark_processing"):
 				node.mark_processing()
@@ -673,6 +681,10 @@ func _reset_search_for_new_target(new_val: int):
 	target_value = new_val
 	status_label.text = "Target: %d" % target_value
 	compare_label.text = "Stack: [Root]"
+	
+	# Reset index label colors
+	for i in range(index_labels.size()):
+		index_labels[i].add_theme_color_override("font_color", Color(1, 1, 1, 1))
 	
 	dfs_stack.clear()
 	dfs_stack.append(0)
@@ -749,6 +761,12 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	tree_nodes.resize(7)
 	tree_nodes.fill(null)
 	
+	# Clear index labels
+	for label in index_labels:
+		if is_instance_valid(label):
+			label.queue_free()
+	index_labels.clear()
+	
 	timeline_log.clear()
 	code_lines.clear()
 	
@@ -795,8 +813,32 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 					node.modulate = Color(0.5, 0.5, 0.5, 0.5) 
 			
 			tree_nodes[i] = node
+			
+			# Create index label to the RIGHT of the node
+			var index_label = Label.new()
+			index_label.text = str(i)
+			index_label.position = node.position + Vector2(INDEX_LABEL_OFFSET_X, INDEX_LABEL_OFFSET_Y)
+			index_label.add_theme_font_override("font", load("res://assets/font/Planes_ValMore.ttf"))
+			index_label.add_theme_font_size_override("font_size", 24)
+			index_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+			index_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+			index_label.add_theme_constant_override("outline_size", 4)
+			array_container.add_child(index_label)
+			index_labels.append(index_label)
 		else:
 			tree_nodes[i] = null
+			# Add empty placeholder for index label (will be hidden)
+			var index_label = Label.new()
+			index_label.text = str(i)
+			index_label.modulate.a = 0.5
+			index_label.position = node_positions[i] + Vector2(INDEX_LABEL_OFFSET_X, INDEX_LABEL_OFFSET_Y)
+			index_label.add_theme_font_override("font", load("res://assets/font/Planes_ValMore.ttf"))
+			index_label.add_theme_font_size_override("font_size", 24)
+			index_label.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5, 1))
+			index_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+			index_label.add_theme_constant_override("outline_size", 4)
+			array_container.add_child(index_label)
+			index_labels.append(index_label)
 			
 	queue_redraw()
 	
@@ -820,6 +862,12 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 
 	if cpp_code_button: cpp_code_button.hide()
 
+func _update_index_labels():
+	for i in range(index_labels.size()):
+		if i < node_positions.size():
+			index_labels[i].position = node_positions[i] + Vector2(INDEX_LABEL_OFFSET_X, INDEX_LABEL_OFFSET_Y)
+			index_labels[i].text = str(i)
+			
 # --- HANDLE NODE CLICKS ---
 func _handle_node_click(index: int):
 	if is_sorting or sorting_complete:
@@ -833,6 +881,13 @@ func _handle_node_click(index: int):
 		if parent_val == 0:
 			status_label.text = "⚠ Parent is empty! Fill parent node first."
 			return
+	
+	# Highlight the index label temporarily
+	for i in range(index_labels.size()):
+		if i == index:
+			index_labels[i].add_theme_color_override("font_color", Color(1, 1, 0, 1))
+		else:
+			index_labels[i].add_theme_color_override("font_color", Color(1, 1, 1, 1))
 	
 	current_editing_index = index
 	node_spinbox.value = main_array[index]
@@ -889,6 +944,13 @@ func _perform_dfs_step():
 	# --- DFS LOGIC: POP BACK (Stack) ---
 	var curr_idx = dfs_stack.pop_back()
 	
+	# Highlight the index label of current node
+	for i in range(index_labels.size()):
+		if i == curr_idx:
+			index_labels[i].add_theme_color_override("font_color", Color(1, 1, 0, 1))
+		else:
+			index_labels[i].add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	
 	if tree_nodes[curr_idx] == null or main_array[curr_idx] == 0:
 		is_sorting = false
 		_perform_dfs_step() 
@@ -909,6 +971,9 @@ func _perform_dfs_step():
 	
 	if val == target_value:
 		if node.has_method("mark_found"): node.mark_found()
+		# Make index label green for found node
+		if curr_idx < index_labels.size():
+			index_labels[curr_idx].add_theme_color_override("font_color", Color(0, 1, 0, 1))
 		status_label.text = "TARGET FOUND!"
 		timeline_log.append("-> FOUND MATCH!")
 		_add_code_line("FOUND", curr_idx, val)
@@ -921,9 +986,6 @@ func _perform_dfs_step():
 		var added = ""
 		
 		# --- DFS LOGIC: PUSH RIGHT THEN LEFT ---
-		# We push Right first, then Left.
-		# Because Stack is LIFO, Left will be on top and popped next.
-		
 		if right < 7 and tree_nodes[right] != null and main_array[right] != 0:
 			dfs_stack.append(right)
 			_add_code_line("PUSH", right, main_array[right])

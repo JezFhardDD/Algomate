@@ -1410,6 +1410,7 @@ theme_override_styles/normal = SubResource("StyleBoxTexture_xrxkg")
 position = Vector2(52, 24)
 scale = Vector2(1.625, 1.625)
 sprite_frames = SubResource("SpriteFrames_6xsba")
+autoplay = "default"
 frame_progress = 0.472316
 
 [node name="HelpButton" type="Button" parent="."]

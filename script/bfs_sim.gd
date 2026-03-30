@@ -139,6 +139,10 @@ var tree_nodes: Array = [] # Stores Node Instances (or null)
 var timeline_log: Array[String] = []
 var node_positions: Array = []
 
+var index_labels: Array[Label] = []
+var INDEX_LABEL_OFFSET_X: float = 100.0  # Offset to the right of the node
+var INDEX_LABEL_OFFSET_Y: float = 25.0   # Vertical offset to center with node
+
 # BFS State
 var bfs_queue: Array[int] = [] # Queue of INDICES
 var visited: Array[int] = []
@@ -437,22 +441,169 @@ func reset_cache_for_scene() -> void:
 
 # --- CREATE DIALOGS ---
 func _create_target_input_dialog():
+	var my_font = load("res://assets/font/Planes_ValMore.ttf") 
+	
 	target_input_dialog = ConfirmationDialog.new()
 	target_input_dialog.title = "Find Element"
-	target_input_dialog.min_size = Vector2(300, 150)
-	var vbox = VBoxContainer.new()
-	target_input_dialog.add_child(vbox)
-	var lbl = Label.new()
-	lbl.text = "Enter value to search:"
-	vbox.add_child(lbl)
+	target_input_dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
+	target_input_dialog.min_size = Vector2(500, 280)
+	target_input_dialog.exclusive = true
+	
+	# Style the title font
+	if my_font:
+		target_input_dialog.add_theme_font_override("title_font", my_font)
+	target_input_dialog.add_theme_font_size_override("title_font_size", 28)
+	
+	# --- DIALOG BACKGROUND (CONTAINER TEXTURE) ---
+	var panel_style = StyleBoxTexture.new()
+	panel_style.texture = load("res://assets/containers/CONTAINER.png")
+	panel_style.texture_margin_left = 25
+	panel_style.texture_margin_top = 25
+	panel_style.texture_margin_right = 25
+	panel_style.texture_margin_bottom = 25
+	panel_style.content_margin_bottom = 35
+	target_input_dialog.add_theme_stylebox_override("panel", panel_style)
+	
+	# --- HIDE THE DEFAULT 'X' BUTTON ---
+	var empty_icon = PlaceholderTexture2D.new()
+	empty_icon.size = Vector2(0, 0)
+	target_input_dialog.add_theme_icon_override("close", empty_icon)
+	target_input_dialog.add_theme_icon_override("close_pressed", empty_icon)
+	target_input_dialog.add_theme_icon_override("close_hover", empty_icon)
+	
+	# --- GET DEFAULT BUTTONS ---
+	var ok_btn = target_input_dialog.get_ok_button()
+	var cancel_btn = target_input_dialog.get_cancel_button()
+	ok_btn.text = "SEARCH"
+	cancel_btn.text = "CANCEL"
+	
+	# --- BUTTON STYLING ---
+	var btn_texture = StyleBoxTexture.new()
+	btn_texture.texture = load("res://assets/BUTTON.png")
+	btn_texture.texture_margin_left = 12
+	btn_texture.texture_margin_right = 12
+	btn_texture.texture_margin_top = 12
+	btn_texture.texture_margin_bottom = 12
+	btn_texture.content_margin_left = 30
+	btn_texture.content_margin_right = 30
+	btn_texture.content_margin_top = 12
+	btn_texture.content_margin_bottom = 12
+	
+	var btn_hover = btn_texture.duplicate()
+	btn_hover.modulate_color = Color(0.85, 0.85, 0.85, 1.0)
+	var btn_pressed = btn_texture.duplicate()
+	btn_pressed.modulate_color = Color(0.65, 0.65, 0.65, 1.0)
+	
+	for btn in [ok_btn, cancel_btn]:
+		if my_font:
+			btn.add_theme_font_override("font", my_font)
+		btn.add_theme_font_size_override("font_size", 24)
+		btn.custom_minimum_size = Vector2(130, 55)
+		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		btn.add_theme_stylebox_override("normal", btn_texture)
+		btn.add_theme_stylebox_override("hover", btn_hover)
+		btn.add_theme_stylebox_override("pressed", btn_pressed)
+		btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	
+	# --- MAIN CONTAINER ---
+	var margin_container = MarginContainer.new()
+	margin_container.add_theme_constant_override("margin_top", 30)
+	margin_container.add_theme_constant_override("margin_left", 35)
+	margin_container.add_theme_constant_override("margin_right", 35)
+	margin_container.add_theme_constant_override("margin_bottom", 25)
+	target_input_dialog.add_child(margin_container)
+	
+	var main_vbox = VBoxContainer.new()
+	main_vbox.add_theme_constant_override("separation", 20)
+	main_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	margin_container.add_child(main_vbox)
+	
+	# --- TITLE LABEL (Custom styled) ---
+	var title_label = Label.new()
+	title_label.text = "Enter Target Value"
+	if my_font:
+		title_label.add_theme_font_override("font", my_font)
+	title_label.add_theme_font_size_override("font_size", 28)
+	title_label.add_theme_color_override("font_color", Color(1, 1, 0, 1))
+	title_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	title_label.add_theme_constant_override("outline_size", 5)
+	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	main_vbox.add_child(title_label)
+	
+	# --- CREATE SPINBOX ---
 	target_spinbox = SpinBox.new()
 	target_spinbox.min_value = 0
-	target_spinbox.max_value = 100
+	target_spinbox.max_value = 999
 	target_spinbox.value = 0
-	target_spinbox.custom_minimum_size = Vector2(0, 40)
-	vbox.add_child(target_spinbox)
+	
+	# --- SPINBOX CONTAINER ---
+	var spinbox_center = CenterContainer.new()
+	spinbox_center.custom_minimum_size = Vector2(0, 90)
+	main_vbox.add_child(spinbox_center)
+	
+	# --- SPINBOX STYLING ---
+	spinbox_center.add_child(target_spinbox)
+	target_spinbox.custom_minimum_size = Vector2(280, 70)
+	target_spinbox.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	target_spinbox.add_theme_constant_override("buttons_vertical_separation", 18)
+	target_spinbox.add_theme_constant_override("buttons_width", 50)
+	
+	# Style spinbox background
+	var spinbox_style = StyleBoxTexture.new()
+	spinbox_style.texture = load("res://assets/containers/CONTAINER.png")
+	spinbox_style.texture_margin_left = 12
+	spinbox_style.texture_margin_top = 12
+	spinbox_style.texture_margin_right = 12
+	spinbox_style.texture_margin_bottom = 12
+	target_spinbox.add_theme_stylebox_override("normal", spinbox_style)
+	
+	# Style the up/down buttons
+	var up_btn_style = StyleBoxTexture.new()
+	up_btn_style.texture = load("res://assets/BUTTON.png")
+	up_btn_style.texture_margin_left = 8
+	up_btn_style.texture_margin_top = 8
+	up_btn_style.texture_margin_right = 8
+	up_btn_style.texture_margin_bottom = 8
+	target_spinbox.add_theme_stylebox_override("up", up_btn_style)
+	target_spinbox.add_theme_stylebox_override("down", up_btn_style)
+	
+	var line_edit = target_spinbox.get_line_edit()
+	if line_edit:
+		if my_font:
+			line_edit.add_theme_font_override("font", my_font)
+		line_edit.add_theme_font_size_override("font_size", 32)
+		# Make text WHITE so it's visible on dark background
+		line_edit.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		line_edit.add_theme_color_override("font_placeholder_color", Color(0.7, 0.7, 0.7, 1))
+		line_edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		line_edit.custom_minimum_size = Vector2(0, 65)
+		# Set background color for the line edit to be slightly transparent
+		var line_edit_style = StyleBoxFlat.new()
+		line_edit_style.bg_color = Color(0, 0, 0, 0.5)
+		line_edit_style.corner_radius_top_left = 8
+		line_edit_style.corner_radius_top_right = 8
+		line_edit_style.corner_radius_bottom_right = 8
+		line_edit_style.corner_radius_bottom_left = 8
+		line_edit.add_theme_stylebox_override("normal", line_edit_style)
+		line_edit.add_theme_stylebox_override("focus", line_edit_style)
+	
+	# --- BUTTON CONTAINER ---
+	var button_hbox = HBoxContainer.new()
+	button_hbox.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	button_hbox.add_theme_constant_override("separation", 40)
+	main_vbox.add_child(button_hbox)
+	
+	# Re-add the buttons to our custom container
+	ok_btn.get_parent().remove_child(ok_btn)
+	cancel_btn.get_parent().remove_child(cancel_btn)
+	button_hbox.add_child(ok_btn)
+	button_hbox.add_child(cancel_btn)
+	
 	add_child(target_input_dialog)
 	target_input_dialog.confirmed.connect(_on_target_confirmed)
+	
+	# Connect cancel button to hide dialog
+	cancel_btn.pressed.connect(func(): target_input_dialog.hide())
 
 func _create_node_input_dialog():
 	node_input_dialog = ConfirmationDialog.new()
@@ -496,6 +647,10 @@ func _on_node_value_confirmed():
 				node.set_value(0)
 				node.modulate = Color(0.5, 0.5, 0.5, 0.5)
 		
+		# Reset index label colors
+		for i in range(index_labels.size()):
+			index_labels[i].add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		
 		if current_editing_index == 0 and val != 0:
 			if node.has_method("mark_processing"):
 				node.mark_processing()
@@ -507,6 +662,10 @@ func _reset_search_for_new_target(new_val: int):
 	target_value = new_val
 	status_label.text = "Target: %d" % target_value
 	compare_label.text = "Queue: [Root]"
+	
+	# Reset index label colors
+	for i in range(index_labels.size()):
+		index_labels[i].add_theme_color_override("font_color", Color(1, 1, 1, 1))
 	
 	bfs_queue.clear()
 	bfs_queue.append(0)
@@ -583,6 +742,12 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	tree_nodes.resize(7)
 	tree_nodes.fill(null)
 	
+	# Clear index labels
+	for label in index_labels:
+		if is_instance_valid(label):
+			label.queue_free()
+	index_labels.clear()
+	
 	timeline_log.clear()
 	code_lines.clear()
 	
@@ -629,8 +794,32 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 					node.modulate = Color(0.5, 0.5, 0.5, 0.5) 
 			
 			tree_nodes[i] = node
+			
+			# Create index label to the RIGHT of the node
+			var index_label = Label.new()
+			index_label.text = str(i)
+			index_label.position = node.position + Vector2(INDEX_LABEL_OFFSET_X, INDEX_LABEL_OFFSET_Y)
+			index_label.add_theme_font_override("font", load("res://assets/font/Planes_ValMore.ttf"))
+			index_label.add_theme_font_size_override("font_size", 24)
+			index_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+			index_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+			index_label.add_theme_constant_override("outline_size", 4)
+			array_container.add_child(index_label)
+			index_labels.append(index_label)
 		else:
 			tree_nodes[i] = null
+			# Add placeholder for index label (will be dimmed)
+			var index_label = Label.new()
+			index_label.text = str(i)
+			index_label.modulate.a = 0.5
+			index_label.position = node_positions[i] + Vector2(INDEX_LABEL_OFFSET_X, INDEX_LABEL_OFFSET_Y)
+			index_label.add_theme_font_override("font", load("res://assets/font/Planes_ValMore.ttf"))
+			index_label.add_theme_font_size_override("font_size", 24)
+			index_label.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5, 1))
+			index_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+			index_label.add_theme_constant_override("outline_size", 4)
+			array_container.add_child(index_label)
+			index_labels.append(index_label)
 			
 	queue_redraw()
 	
@@ -654,6 +843,12 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 
 	if cpp_code_button: cpp_code_button.hide()
 
+func _update_index_labels():
+	for i in range(index_labels.size()):
+		if i < node_positions.size():
+			index_labels[i].position = node_positions[i] + Vector2(INDEX_LABEL_OFFSET_X, INDEX_LABEL_OFFSET_Y)
+			index_labels[i].text = str(i)
+			
 # --- HANDLE NODE CLICKS ---
 func _handle_node_click(index: int):
 	if is_sorting or sorting_complete:
@@ -667,6 +862,13 @@ func _handle_node_click(index: int):
 		if parent_val == 0:
 			status_label.text = "⚠ Parent is empty! Fill parent node first."
 			return
+	
+	# Highlight the index label temporarily
+	for i in range(index_labels.size()):
+		if i == index:
+			index_labels[i].add_theme_color_override("font_color", Color(1, 1, 0, 1))
+		else:
+			index_labels[i].add_theme_color_override("font_color", Color(1, 1, 1, 1))
 	
 	current_editing_index = index
 	node_spinbox.value = main_array[index]
