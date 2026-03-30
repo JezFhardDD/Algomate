@@ -168,7 +168,7 @@ var is_sorting: bool = false
 var is_auto_playing: bool = false
 
 var BLOCK_WIDTH: float = 64.0 
-var BLOCK_SPACING: float = 15.0
+var BLOCK_SPACING: float = 50.0
 var START_POSITION: Vector2 = Vector2(50, 80)
 var ANIM_SPEED: float = 1.0
 
@@ -180,6 +180,9 @@ var target_spinbox: SpinBox
 var tutorial_sequence = []
 var tutorial_sequence_index = 0
 var tutorial_in_progress = false
+
+var index_labels: Array[Label] = []
+var INDEX_LABEL_OFFSET: float = 100.0
 
 # Intro Text
 var intro_step: int = 0
@@ -561,6 +564,10 @@ func _reset_search_for_new_target(new_val: int):
 	sorting_complete = false
 	is_auto_playing = false
 	
+	# Reset all index label colors
+	for label in index_labels:
+		label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	
 	# Enable buttons
 	if auto_btn: auto_btn.disabled = false
 	if sort_btn: sort_btn.disabled = false
@@ -604,6 +611,7 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	
 	main_array = elements.duplicate()
 	block_nodes.clear()
+	index_labels.clear()  # Clear index labels
 	timeline_log.clear()
 	
 	# Add initial code line
@@ -623,7 +631,12 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 		child.queue_free()
 	
 	var current_x = START_POSITION.x
-	for val in main_array:
+	var block_width = 64.0
+	
+	for i in range(main_array.size()):
+		var val = main_array[i]
+		
+		# Create block
 		var new_block = BLOCK_SCENE.instantiate()
 		new_block.value = val
 		new_block.position = Vector2(current_x, START_POSITION.y)
@@ -637,7 +650,20 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 		
 		array_container.add_child(new_block)
 		block_nodes.append(new_block)
-		current_x += new_block.size.x + BLOCK_SPACING
+		
+		# Create index label below block
+		var index_label = Label.new()
+		index_label.text = str(i)
+		index_label.position = Vector2(current_x + 25, START_POSITION.y + INDEX_LABEL_OFFSET)
+		index_label.add_theme_font_override("font", load("res://assets/font/Planes_ValMore.ttf"))
+		index_label.add_theme_font_size_override("font_size", 28)
+		index_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		index_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+		index_label.add_theme_constant_override("outline_size", 4)
+		array_container.add_child(index_label)
+		index_labels.append(index_label)
+		
+		current_x += block_width + BLOCK_SPACING
 	
 	_ensure_connected(sort_btn, "pressed", _on_step_pressed)
 	_ensure_connected(auto_btn, "pressed", _on_auto_pressed)
@@ -654,6 +680,13 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 
 	_update_ui_labels()
 	if cpp_code_button: cpp_code_button.hide()
+
+func _update_index_labels():
+	var block_width = 64.0
+	for i in range(index_labels.size()):
+		var target_x = START_POSITION.x + i * (block_width + BLOCK_SPACING)
+		index_labels[i].position = Vector2(target_x + 25, START_POSITION.y + INDEX_LABEL_OFFSET)
+		index_labels[i].text = str(i)
 
 func _ensure_connected(node: Node, signal_name: String, method: Callable):
 	if node and not node.is_connected(signal_name, method):
@@ -692,11 +725,17 @@ func _on_block_dropped(dropped_block: Control) -> void:
 
 func _resnap_blocks() -> void:
 	var x = START_POSITION.x
+	var block_width = 64.0
+	
 	for i in range(block_nodes.size()):
 		var node = block_nodes[i]
 		var target_pos = Vector2(x, START_POSITION.y)
 		create_tween().tween_property(node, "position", target_pos, ANIM_SPEED)
 		x += node.size.x + BLOCK_SPACING
+	
+	# Update index labels after blocks reposition
+	_update_index_labels()
+
 
 # ==============================================
 #   LINEAR SEARCH LOGIC
@@ -726,8 +765,11 @@ func _perform_sort_step():
 	
 	_update_pointers(current_idx)
 	
+	# Highlight current block and its index label
 	if block_nodes[current_idx].has_method("set_highlight"):
 		block_nodes[current_idx].set_highlight(true)
+	if current_idx < index_labels.size():
+		index_labels[current_idx].add_theme_color_override("font_color", Color(1, 1, 0, 1))
 	
 	comparison_counter += 1
 	var val = main_array[current_idx]
@@ -744,11 +786,15 @@ func _perform_sort_step():
 		_add_code_line("FOUND", current_idx, val)
 		if block_nodes[current_idx].has_method("set_sorted_visual"):
 			block_nodes[current_idx].set_sorted_visual()
+		# Keep index label yellow for found element
 		_finish_simulation()
 	else:
 		status_label.text = "Not a match. Moving on."
 		if block_nodes[current_idx].has_method("set_highlight"):
 			block_nodes[current_idx].set_highlight(false)
+		# Reset index label color
+		if current_idx < index_labels.size():
+			index_labels[current_idx].add_theme_color_override("font_color", Color(1, 1, 1, 1))
 		current_idx += 1
 	
 	_update_ui_labels()
@@ -766,6 +812,10 @@ func _finish_simulation():
 	sorting_complete = true
 	is_auto_playing = false
 	
+	# Reset all index label colors
+	for label in index_labels:
+		label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	
 	if auto_btn: auto_btn.disabled = true
 	if sort_btn: sort_btn.disabled = true
 	if auto_search_btn: 
@@ -780,8 +830,6 @@ func _finish_simulation():
 	if cpp_code_button:
 		cpp_code_button.show()
 		if code_anim: code_anim.play("default")
-	
-	# Show result popup
 
 func _compute_grade() -> Dictionary:
 	var passed = search_found

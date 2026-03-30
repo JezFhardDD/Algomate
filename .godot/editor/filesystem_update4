@@ -2,3 +2,6 @@ res://scene/Dfs.tscn
 res://scene/Interpolation.tscn
 res://script/interpolation_sim.gd
 res://scene/Binary.tscn
+res://script/binary_sim.gd
+res://scene/Linear.tscn
+res://script/linear_sim.gd

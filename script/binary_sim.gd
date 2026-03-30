@@ -110,6 +110,9 @@ const RESULT_POPUP_SCENE := preload("res://scene/ResultPopup.tscn")
 @onready var java_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/Java_btn
 @onready var c_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/C_btn
 
+var index_labels: Array[Label] = []
+var INDEX_LABEL_OFFSET: float = 100.0
+
 # ==============================================
 #   COMPILER INTEGRATION - API KEYS
 # ==============================================
@@ -165,7 +168,7 @@ var back_result_btn: Button
 var translate_code_btn: Button
 
 var BLOCK_WIDTH: float = 64.0 
-var BLOCK_SPACING: float = 15.0
+var BLOCK_SPACING: float = 50.0
 var START_POSITION: Vector2 = Vector2(50, 80)
 var ANIM_SPEED: float = 2.0 
 
@@ -672,7 +675,7 @@ func _reset_search_for_new_target(new_val: int):
 		if block.has_method("reset_visuals"): block.reset_visuals()
 		block.modulate = Color(1, 1, 1, 1)
 		
-	_update_ui_labels()
+	_update_ui_labels()  # <-- ADD THIS LINE
 
 # ==============================================
 #   INITIALIZATION WITH VISUAL SORT
@@ -685,6 +688,7 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	
 	main_array = elements.duplicate()
 	block_nodes.clear()
+	index_labels.clear()
 	timeline_log.clear()
 	code_lines.clear()
 	
@@ -696,7 +700,12 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 		child.queue_free()
 	
 	var current_x = START_POSITION.x
-	for val in main_array:
+	var block_width = 64.0
+	
+	for i in range(main_array.size()):
+		var val = main_array[i]
+		
+		# Create block
 		var new_block = BLOCK_SCENE.instantiate()
 		new_block.value = val
 		new_block.position = Vector2(current_x, START_POSITION.y)
@@ -705,7 +714,20 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 		tween.tween_property(new_block, "modulate:a", 1.0, 0.5)
 		array_container.add_child(new_block)
 		block_nodes.append(new_block)
-		current_x += new_block.size.x + BLOCK_SPACING
+		
+		# Create index label below block
+		var index_label = Label.new()
+		index_label.text = str(i)
+		index_label.position = Vector2(current_x + 25, START_POSITION.y + INDEX_LABEL_OFFSET)
+		index_label.add_theme_font_override("font", load("res://assets/font/Planes_ValMore.ttf"))
+		index_label.add_theme_font_size_override("font_size", 28)
+		index_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		index_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+		index_label.add_theme_constant_override("outline_size", 4)
+		array_container.add_child(index_label)
+		index_labels.append(index_label)
+		
+		current_x += block_width + BLOCK_SPACING
 	
 	_ensure_connected(sort_btn, "pressed", _on_step_pressed)
 	_ensure_connected(auto_btn, "pressed", _on_auto_pressed)
@@ -727,6 +749,7 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 
 func _run_visual_bubble_sort():
 	var n = block_nodes.size()
+	var block_width = 64.0
 	
 	for i in range(n - 1):
 		for j in range(n - i - 1):
@@ -734,37 +757,63 @@ func _run_visual_bubble_sort():
 			block_nodes[j].modulate = Color(1, 1, 0, 1)
 			block_nodes[j+1].modulate = Color(1, 1, 0, 1)
 			
-			await get_tree().create_timer(1.0).timeout
+			await get_tree().create_timer(0.8).timeout
 			
 			if block_nodes[j].value > block_nodes[j+1].value:
 				var nodeA = block_nodes[j]
 				var nodeB = block_nodes[j+1]
-				var posA = nodeA.position
-				var posB = nodeB.position
 				
+				# Calculate target positions based on indices
+				var posA_target = START_POSITION.x + j * (block_width + BLOCK_SPACING)
+				var posB_target = START_POSITION.x + (j + 1) * (block_width + BLOCK_SPACING)
+				
+				# Animate both blocks to their new positions
 				var tw = create_tween().set_parallel(true)
-				tw.tween_property(nodeA, "position", posB, 1.0)
-				tw.tween_property(nodeB, "position", posA, 1.0)
+				tw.tween_property(nodeA, "position:x", posB_target, 0.5).set_trans(Tween.TRANS_CUBIC)
+				tw.tween_property(nodeB, "position:x", posA_target, 0.5).set_trans(Tween.TRANS_CUBIC)
 				await tw.finished
 				
+				# Snap to exact positions to prevent drift
+				nodeA.position.x = posB_target
+				nodeB.position.x = posA_target
+				
+				# Swap values in array
 				var temp_val = main_array[j]
 				main_array[j] = main_array[j+1]
 				main_array[j+1] = temp_val
 				
+				# Swap blocks in array
 				var temp_node = block_nodes[j]
 				block_nodes[j] = block_nodes[j+1]
 				block_nodes[j+1] = temp_node
+				
+				# Update block values
+				block_nodes[j].set("value", main_array[j])
+				block_nodes[j+1].set("value", main_array[j+1])
+				
+				# Update index labels positions
+				_update_index_labels()
 				
 				_add_code_line("SWAP", j, main_array[j])
 			
 			block_nodes[j].modulate = Color(1, 1, 1, 1)
 			block_nodes[j+1].modulate = Color(1, 1, 1, 1)
+			
+			await get_tree().create_timer(0.2).timeout
 	
 	search_target = 0
 	status_label.text = "Sorted! Click 'Find Element' to start."
 	_set_main_ui_enabled(true)
 	_update_ui_labels()
 
+func _update_index_labels():
+	var block_width = 64.0
+	for i in range(index_labels.size()):
+		# Calculate X position based on index and consistent spacing
+		var target_x = START_POSITION.x + i * (block_width + BLOCK_SPACING)
+		index_labels[i].position = Vector2(target_x + 25, START_POSITION.y + INDEX_LABEL_OFFSET)
+		index_labels[i].text = str(i)
+		
 func _ensure_connected(node: Node, signal_name: String, method: Callable):
 	if node and not node.is_connected(signal_name, method):
 		node.connect(signal_name, method)
@@ -820,7 +869,7 @@ func _perform_sort_step():
 		_add_code_line("MOVE_LEFT", mid_idx, val)
 		high_idx = mid_idx - 1
 	
-	_update_ui_labels()
+	_update_ui_labels()  # <-- THIS SHOULD ALREADY BE HERE
 	is_sorting = false
 
 func _update_pointers():
@@ -861,15 +910,32 @@ func _highlight_range():
 	for i in range(block_nodes.size()):
 		if i < low_idx or i > high_idx:
 			block_nodes[i].modulate = Color(0.3, 0.3, 0.3, 1)
+			# Dim index labels for excluded range
+			if i < index_labels.size():
+				index_labels[i].modulate = Color(0.5, 0.5, 0.5, 0.6)
 		else:
 			block_nodes[i].modulate = Color(1, 1, 1, 1)
+			# Keep index labels bright for active range
+			if i < index_labels.size():
+				index_labels[i].modulate = Color(1, 1, 1, 1)
 			
 	if mid_idx >= 0 and mid_idx < block_nodes.size():
 		block_nodes[mid_idx].modulate = Color(1, 1, 0, 1)
+		# Highlight the index label for mid as well
+		if mid_idx < index_labels.size():
+			index_labels[mid_idx].add_theme_color_override("font_color", Color(1, 1, 0, 1))
+	else:
+		# Reset any mid index label color
+		for i in range(index_labels.size()):
+			index_labels[i].add_theme_color_override("font_color", Color(1, 1, 1, 1))
 
 func _finish_simulation():
 	sorting_complete = true
 	is_auto_playing = false
+	
+	# Reset all index label colors
+	for label in index_labels:
+		label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
 	
 	if auto_btn: auto_btn.disabled = true
 	if sort_btn: sort_btn.disabled = true
@@ -886,7 +952,7 @@ func _finish_simulation():
 
 func _update_ui_labels():
 	compare_label.text = "Comparisons: %d" % [comparison_counter]
-
+	
 func _show_complete_popup() -> void:
 	if complete_popup:
 		var result_text = "Found" if search_found else "Not Found"
