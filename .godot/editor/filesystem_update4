@@ -31,3 +31,5 @@ res://script/ipsa.gd
 res://scene/ISA.tscn
 res://script/lsa.gd
 res://scene/LLA.tscn
+res://scene/MSA.tscn
+res://script/msa.gd
