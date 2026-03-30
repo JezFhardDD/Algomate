@@ -35,3 +35,6 @@ res://script/shell_sort_sim.gd
 res://script/stack_a.gd
 res://script/stack_sim.gd
 res://script/tree_bfsa.gd
+res://scene/MSA.tscn
+res://scene/CompilerOutput.tscn
+res://scripts/lectures.gd
