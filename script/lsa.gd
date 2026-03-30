@@ -1976,6 +1976,15 @@ func get_cpp_insertion_code(arr: String) -> String:
 #include <iostream>
 using namespace std;
 
+void printArray(int arr[], int n) {
+    cout << "[";
+    for (int i = 0; i < n; i++) {
+        cout << arr[i];
+        if (i < n - 1) cout << ", ";
+    }
+    cout << "]" << endl;
+}
+
 void insertionSort(int arr[], int n) {
     for (int i = 1; i < n; i++) {
         int key = arr[i];
@@ -1984,30 +1993,26 @@ void insertionSort(int arr[], int n) {
         while (j >= 0 && arr[j] > key) {
             arr[j + 1] = arr[j];
             j--;
+            cout << "After shifting: ";
+            printArray(arr, n);
         }
         arr[j + 1] = key;
+        cout << "After inserting " << key << " at position " << j + 1 << ": ";
+        printArray(arr, n);
     }
-}
-
-void printArray(int arr[], int n) {
-	cout << "[";
-    for (int i = 0; i < n; i++) {
-        cout << arr[i];
-		if (i < n - 1) cout << ", ";
-    }
-	cout << "]" << endl;
 }
 
 int main() {
     int arr[] = { %s };
     int n = sizeof(arr) / sizeof(arr[0]);
     
-	cout << "Initial array: ";
+    cout << "Initial array: ";
     printArray(arr, n);
+    cout << endl;
     
     insertionSort(arr, n);
     
-	cout << "Sorted array: ";
+    cout << endl << "Sorted array: ";
     printArray(arr, n);
     
     return 0;
@@ -2016,6 +2021,14 @@ int main() {
 func get_python_insertion_code(arr: String) -> String:
 	return """# Insertion Sort - Time Complexity: O(n^2), Space Complexity: O(1)
 
+def print_array(arr):
+    print("[", end="")
+    for i in range(len(arr)):
+        print(arr[i], end="")
+        if i < len(arr) - 1:
+            print(", ", end="")
+    print("]")
+
 def insertion_sort(arr):
     for i in range(1, len(arr)):
         key = arr[i]
@@ -2023,28 +2036,35 @@ def insertion_sort(arr):
         while j >= 0 and arr[j] > key:
             arr[j + 1] = arr[j]
             j -= 1
+            print("After shifting: ", end="")
+            print_array(arr)
         arr[j + 1] = key
-
-def print_array(arr):
-	print("[", end="")
-    for i in range(len(arr)):
-		print(arr[i], end="")
-        if i < len(arr) - 1:
-			print(", ", end="")
-	print("]")
+        print(f"After inserting {key} at position {j + 1}: ", end="")
+        print_array(arr)
 
 arr = [%s]
 print("Initial array: ", end="")
 print_array(arr)
+print()
 
 insertion_sort(arr)
 
+print()
 print("Sorted array: ", end="")
 print_array(arr)""" % arr
 
 func get_java_insertion_code(arr: String) -> String:
 	return """/* Insertion Sort - Time Complexity: O(n^2) */
 public class Main {
+    static void printArray(int arr[]) {
+        System.out.print("[");
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print(arr[i]);
+            if (i < arr.length - 1) System.out.print(", ");
+        }
+        System.out.println("]");
+    }
+    
     static void insertionSort(int arr[]) {
         int n = arr.length;
         for (int i = 1; i < n; i++) {
@@ -2053,29 +2073,26 @@ public class Main {
             while (j >= 0 && arr[j] > key) {
                 arr[j + 1] = arr[j];
                 j--;
+                System.out.print("After shifting: ");
+                printArray(arr);
             }
             arr[j + 1] = key;
+            System.out.print("After inserting " + key + " at position " + (j + 1) + ": ");
+            printArray(arr);
         }
-    }
-    
-    static void printArray(int arr[]) {
-		System.out.print("[");
-        for (int i = 0; i < arr.length; i++) {
-            System.out.print(arr[i]);
-			if (i < arr.length - 1) System.out.print(", ");
-        }
-		System.out.println("]");
     }
     
     public static void main(String args[]) {
         int arr[] = {%s};
         
-		System.out.print("Initial array: ");
+        System.out.print("Initial array: ");
         printArray(arr);
+        System.out.println();
         
         insertionSort(arr);
         
-		System.out.print("Sorted array: ");
+        System.out.println();
+        System.out.print("Sorted array: ");
         printArray(arr);
     }
 }""" % arr
@@ -2083,6 +2100,15 @@ public class Main {
 func get_c_insertion_code(arr: String) -> String:
 	return """/* Insertion Sort - Time Complexity: O(n^2) */
 #include <stdio.h>
+
+void printArray(int arr[], int n) {
+    printf("[");
+    for (int i = 0; i < n; i++) {
+        printf("%%d", arr[i]);
+        if (i < n - 1) printf(", ");
+    }
+    printf("]\\n");
+}
 
 void insertionSort(int arr[], int n) {
     int i, j, key;
@@ -2092,30 +2118,26 @@ void insertionSort(int arr[], int n) {
         while (j >= 0 && arr[j] > key) {
             arr[j + 1] = arr[j];
             j--;
+            printf("After shifting: ");
+            printArray(arr, n);
         }
         arr[j + 1] = key;
+        printf("After inserting %%d at position %%d: ", key, j + 1);
+        printArray(arr, n);
     }
-}
-
-void printArray(int arr[], int n) {
-	printf("[");
-    for (int i = 0; i < n; i++) {
-		printf("%d", arr[i]);
-		if (i < n - 1) printf(", ");
-    }
-	printf("]\\n");
 }
 
 int main() {
     int arr[] = {%s};
     int n = sizeof(arr) / sizeof(arr[0]);
     
-	printf("Initial array: ");
+    printf("Initial array: ");
     printArray(arr, n);
+    printf("\\n");
     
     insertionSort(arr, n);
     
-	printf("Sorted array: ");
+    printf("\\nSorted array: ");
     printArray(arr, n);
     
     return 0;

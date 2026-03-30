@@ -22,3 +22,12 @@ res://scene/ShellSort.tscn
 res://script/shell_sort_sim.gd
 res://scene/Linked.tscn
 res://script/linked_list_sim.gd
+res://scene/BBSA.tscn
+res://Bubblemain.gd
+res://script/bnysa.gd
+res://scene/BNYSA.tscn
+res://scene/IPSA.tscn
+res://script/ipsa.gd
+res://scene/ISA.tscn
+res://script/lsa.gd
+res://scene/LLA.tscn

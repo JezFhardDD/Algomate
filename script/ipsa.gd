@@ -2232,6 +2232,11 @@ int interpolationSearch(int arr[], int n, int target) {
 			return (arr[low] == target) ? low : -1;
 		}
 		
+		// Avoid division by zero
+		if (arr[high] == arr[low]) {
+			return -1;
+		}
+		
 		int pos = low + ((target - arr[low]) * (high - low) / (arr[high] - arr[low]));
 		
 		if (arr[pos] == target)
@@ -2248,33 +2253,31 @@ int interpolationSearch(int arr[], int n, int target) {
 void printArray(int arr[], int n) {
 	printf("[");
 	for (int i = 0; i < n; i++) {
-		printf("%d", arr[i]);
+		printf("%%d", arr[i]);
 		if (i < n - 1) printf(", ");
 	}
 	printf("]\\n");
 }
 
 int main() {
-	int arr[] = {ARR};
+	int arr[] = {%s};
 	int n = sizeof(arr) / sizeof(arr[0]);
-	int target = {TARGET};
+	int target = %d;
 	
 	printf("Array: ");
 	printArray(arr, n);
-	printf("Searching for: %d\\n", target);
+	printf("Searching for: %%d\\n", target);
 	
 	int result = interpolationSearch(arr, n, target);
 	
 	if (result != -1)
-		printf("Element found at index: %d\\n", result);
+		printf("Element found at index: %%d\\n", result);
 	else
-		printf("Element %d not found in the array\\n", target);
+		printf("Element %%d not found in the array\\n", target);
 	
 	return 0;
 }"""
-	code = code.replace("{ARR}", arr)
-	code = code.replace("{TARGET}", str(target))
-	return code
+	return code % [arr, target]
 
 # ==============================================
 #   COMPILER INTEGRATION (UPDATED with caching)

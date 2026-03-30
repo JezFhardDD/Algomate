@@ -1556,18 +1556,6 @@ func get_cpp_bubble_code(arr: String) -> String:
 #include <iostream>
 using namespace std;
 
-void bubbleSort(int arr[], int n) {
-	for (int i = 0; i < n - 1; i++) {
-		for (int j = 0; j < n - i - 1; j++) {
-			if (arr[j] > arr[j + 1]) {
-				int temp = arr[j];
-				arr[j] = arr[j + 1];
-				arr[j + 1] = temp;
-			}
-		}
-	}
-}
-
 void printArray(int arr[], int n) {
 	cout << "[";
 	for (int i = 0; i < n; i++) {
@@ -1577,16 +1565,31 @@ void printArray(int arr[], int n) {
 	cout << "]" << endl;
 }
 
+void bubbleSort(int arr[], int n) {
+	for (int i = 0; i < n - 1; i++) {
+		for (int j = 0; j < n - i - 1; j++) {
+			if (arr[j] > arr[j + 1]) {
+				int temp = arr[j];
+				arr[j] = arr[j + 1];
+				arr[j + 1] = temp;
+				cout << "After swapping indices " << j << " and " << j + 1 << ": ";
+				printArray(arr, n);
+			}
+		}
+	}
+}
+
 int main() {
 	int arr[] = { %s };
 	int n = sizeof(arr) / sizeof(arr[0]);
 	
 	cout << "Initial array: ";
 	printArray(arr, n);
+	cout << endl;
 	
 	bubbleSort(arr, n);
 	
-	cout << "Sorted array: ";
+	cout << endl << "Sorted array: ";
 	printArray(arr, n);
 	
 	return 0;
@@ -1594,13 +1597,6 @@ int main() {
 
 func get_python_bubble_code(arr: String) -> String:
 	return """# Bubble Sort - Time Complexity: O(n^2), Space Complexity: O(1)
-
-def bubble_sort(arr):
-	n = len(arr)
-	for i in range(n):
-		for j in range(0, n - i - 1):
-			if arr[j] > arr[j + 1]:
-				arr[j], arr[j + 1] = arr[j + 1], arr[j]
 
 def print_array(arr):
 	print("[", end="")
@@ -1610,29 +1606,29 @@ def print_array(arr):
 			print(", ", end="")
 	print("]")
 
+def bubble_sort(arr):
+	n = len(arr)
+	for i in range(n - 1):
+		for j in range(0, n - i - 1):
+			if arr[j] > arr[j + 1]:
+				arr[j], arr[j + 1] = arr[j + 1], arr[j]
+				print(f"After swapping indices {j} and {j + 1}: ", end="")
+				print_array(arr)
+
 arr = [%s]
 print("Initial array: ", end="")
 print_array(arr)
+print()
 
 bubble_sort(arr)
 
+print()
 print("Sorted array: ", end="")
 print_array(arr)""" % arr
 
 func get_java_bubble_code(arr: String) -> String:
 	return """/* Bubble Sort - Time Complexity: O(n^2) */
 public class Main {
-	static void bubbleSort(int arr[]) {
-		int n = arr.length;
-		for (int i = 0; i < n - 1; i++)
-			for (int j = 0; j < n - i - 1; j++)
-				if (arr[j] > arr[j + 1]) {
-					int temp = arr[j];
-					arr[j] = arr[j + 1];
-					arr[j + 1] = temp;
-				}
-	}
-	
 	static void printArray(int arr[]) {
 		System.out.print("[");
 		for (int i = 0; i < arr.length; i++) {
@@ -1642,14 +1638,31 @@ public class Main {
 		System.out.println("]");
 	}
 	
+	static void bubbleSort(int arr[]) {
+		int n = arr.length;
+		for (int i = 0; i < n - 1; i++) {
+			for (int j = 0; j < n - i - 1; j++) {
+				if (arr[j] > arr[j + 1]) {
+					int temp = arr[j];
+					arr[j] = arr[j + 1];
+					arr[j + 1] = temp;
+					System.out.print("After swapping indices " + j + " and " + (j + 1) + ": ");
+					printArray(arr);
+				}
+			}
+		}
+	}
+	
 	public static void main(String args[]) {
 		int arr[] = {%s};
 		
 		System.out.print("Initial array: ");
 		printArray(arr);
+		System.out.println();
 		
 		bubbleSort(arr);
 		
+		System.out.println();
 		System.out.print("Sorted array: ");
 		printArray(arr);
 	}
@@ -1658,19 +1671,6 @@ public class Main {
 func get_c_bubble_code(arr: String) -> String:
 	return """/* Bubble Sort - Time Complexity: O(n^2) */
 #include <stdio.h>
-
-void bubbleSort(int arr[], int n) {
-	int i, j, temp;
-	for (i = 0; i < n - 1; i++) {
-		for (j = 0; j < n - i - 1; j++) {
-			if (arr[j] > arr[j + 1]) {
-				temp = arr[j];
-				arr[j] = arr[j + 1];
-				arr[j + 1] = temp;
-			}
-		}
-	}
-}
 
 void printArray(int arr[], int n) {
 	printf("[");
@@ -1681,16 +1681,32 @@ void printArray(int arr[], int n) {
 	printf("]\\n");
 }
 
+void bubbleSort(int arr[], int n) {
+	int i, j, temp;
+	for (i = 0; i < n - 1; i++) {
+		for (j = 0; j < n - i - 1; j++) {
+			if (arr[j] > arr[j + 1]) {
+				temp = arr[j];
+				arr[j] = arr[j + 1];
+				arr[j + 1] = temp;
+				printf("After swapping indices %%d and %%d: ", j, j + 1);
+				printArray(arr, n);
+			}
+		}
+	}
+}
+
 int main() {
 	int arr[] = {%s};
 	int n = sizeof(arr) / sizeof(arr[0]);
 	
 	printf("Initial array: ");
 	printArray(arr, n);
+	printf("\\n");
 	
 	bubbleSort(arr, n);
 	
-	printf("Sorted array: ");
+	printf("\\nSorted array: ");
 	printArray(arr, n);
 	
 	return 0;

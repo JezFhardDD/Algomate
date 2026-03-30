@@ -181,8 +181,7 @@ var tutorial_in_progress = false
 
 # Intro Text - Updated for Binary Search
 var intro_texts = [
-	"""WELCOME TO BINARY SEARCH SIMULATION! 🔍
-Binary Search is a FAST searching algorithm that works on SORTED arrays:
+	"""WELCOME TO BINARY SEARCH SIMULATION! 🔍 Binary Search is a FAST searching algorithm that works on SORTED arrays:
 • It repeatedly divides the search interval in half
 • Time Complexity: O(log n) - VERY efficient!
 • Requires the array to be SORTED first
@@ -1847,7 +1846,7 @@ int binarySearch(int arr[], int left, int right, int target) {
 void printArray(int arr[], int n) {
 	printf("[");
 	for (int i = 0; i < n; i++) {
-		printf("%d", arr[i]);
+		printf("%%d", arr[i]);
 		if (i < n - 1) printf(", ");
 	}
 	printf("]\\n");
@@ -1860,14 +1859,14 @@ int main() {
 	
 	printf("Array: ");
 	printArray(arr, n);
-	printf("Searching for: %d\\n", target);
+	printf("Searching for: %%d\\n", target);
 	
 	int result = binarySearch(arr, 0, n - 1, target);
 	
 	if (result != -1)
-		printf("Element found at index: %d\\n", result);
+		printf("Element found at index: %%d\\n", result);
 	else
-		printf("Element %d not found in the array\\n", target);
+		printf("Element %%d not found in the array\\n", target);
 	
 	return 0;
 }"""
