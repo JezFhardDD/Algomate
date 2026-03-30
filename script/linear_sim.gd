@@ -806,7 +806,7 @@ func _update_pointers(idx: int):
 	if idx < block_nodes.size():
 		var node = block_nodes[idx]
 		if ptr_left:
-			ptr_left.global_position = node.global_position + Vector2(16, node.size.y + 10) 
+			ptr_left.global_position = node.global_position + Vector2(16, node.size.y -120) 
 
 func _finish_simulation():
 	sorting_complete = true
