@@ -20,3 +20,5 @@ res://scene/Selection.tscn
 res://script/selection_sim.gd
 res://scene/ShellSort.tscn
 res://script/shell_sort_sim.gd
+res://scene/Linked.tscn
+res://script/linked_list_sim.gd
