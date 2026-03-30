@@ -104,20 +104,20 @@ var tiktak_sound: AudioStreamPlayer
 # ==============================================
 const API_KEYS = {
 	"cpp": {
-		"clientId": "2401da4c28f2c97e0bed9ca3957a31c7",
-		"clientSecret": "6fdf1a280c510b6d61ba5f964a272a8fa30a5f207cbc395bdece31e781588e73"
+		"clientId": "f4fc8575ee6c45ca1baf697a28b9771e",
+		"clientSecret": "7d8b060459fb304352f243b2a95194c04bf10503b1a06126043bc4f3cada366e"
 	},
 	"c": {
-		"clientId": "1b1bc8decbed095d6bf0d7399224b9eb",
-		"clientSecret": "e520c9852647730c46853932941226b1c6c47badaf6409c4f34e0a89dcc8611a"
+		"clientId": "f4fc8575ee6c45ca1baf697a28b9771e",
+		"clientSecret": "7d8b060459fb304352f243b2a95194c04bf10503b1a06126043bc4f3cada366e"
 	},
 	"java": {
-		"clientId": "14e8bb1335d07711f04c72a2a81ad16e",
-		"clientSecret": "c59ca7898c39d69a3fa54a867e52ba35a950fb74707ef3e288d913bbf6a492af"
+		"clientId": "f4fc8575ee6c45ca1baf697a28b9771e",
+		"clientSecret": "7d8b060459fb304352f243b2a95194c04bf10503b1a06126043bc4f3cada366e"
 	},
 	"python": {
-		"clientId": "36c21fabf5976c192d192ab04af4c8f9",
-		"clientSecret": "a2d0c24c91d4ab4193a2f242307967d61d5f70a2a422734d7458d240c9c596c4"
+		"clientId": "f4fc8575ee6c45ca1baf697a28b9771e",
+		"clientSecret": "7d8b060459fb304352f243b2a95194c04bf10503b1a06126043bc4f3cada366e"
 	}
 }
 

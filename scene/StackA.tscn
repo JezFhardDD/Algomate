@@ -41,9 +41,6 @@ text = "Bottom"
 [node name="AnimatedSprite2D" parent="VBoxContainer/HBoxContainer" index="0"]
 position = Vector2(8, 17)
 
-[node name="ReplaceButton" parent="VBoxContainer" index="5"]
-visible = false
-
 [node name="QueueContainer" parent="." index="8"]
 anchors_preset = -1
 anchor_left = 0.44058976
