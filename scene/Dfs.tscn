@@ -1069,9 +1069,9 @@ text = "Current Status:"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 700.0
+offset_left = 650.0
 offset_top = 585.0
-offset_right = 789.0
+offset_right = 750.0
 offset_bottom = 625.0
 
 [node name="Label" type="Label" parent="HBoxContainer2"]

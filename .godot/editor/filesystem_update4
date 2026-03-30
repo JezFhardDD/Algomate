@@ -1,3 +1,4 @@
-res://scenes/navigation.tscn
-res://scene/BG.gdshader
-res://scenes/loading_screen.tscn
+res://scene/Dfs.tscn
+res://scene/Interpolation.tscn
+res://script/interpolation_sim.gd
+res://scene/Binary.tscn

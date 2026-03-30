@@ -1,6 +1,8 @@
 extends Control
 
-# --- 1. NODE REFERENCES ---
+# ==============================================
+#   NODE REFERENCES
+# ==============================================
 
 @onready var dequeue_btn: Button = $VBoxContainer/Searchstep
 @onready var timeline_btn: Button = $VBoxContainer/TimelineButton
@@ -10,7 +12,8 @@ extends Control
 # --- STATE VARIABLES ---
 var is_searching: bool = false
 var is_auto_playing: bool = false
-var has_target: bool = false  # Track if target is set
+var has_target: bool = false
+var simulation_ended: bool = false
 
 @onready var enqueue_label: Label = $HBoxContainer/Label
 @onready var dequeue_label: Label = $HBoxContainer2/Label
@@ -46,7 +49,7 @@ var has_target: bool = false  # Track if target is set
 # C++ Tutorial Nodes
 @onready var cpp_tutorial_panel: Panel = get_node_or_null("CppPopup/VBoxContainer/TutorialPanel")
 @onready var cpp_explanation_lbl: RichTextLabel = get_node_or_null("CppPopup/VBoxContainer/TutorialPanel/ExplanationText")
-@onready var cpp_next_btn: Button = get_node_or_null("CppPopup/VBoxContainer/TutorialPanel/CppNextButton")
+@onready var cpp_next_btn: Button = get_node_or_null("CppPopup/VBoxContainer/HBoxContainer2/CppNextButton")
 
 # Main Tutorial Nodes
 @onready var tutorial_overlay: CanvasLayer = $TutorialOverlay
@@ -87,6 +90,10 @@ var has_target: bool = false  # Track if target is set
 @onready var binary_high_icon: Sprite2D = get_node_or_null("TextureRect/BinaryHigh")
 @onready var binary_mid_icon: Sprite2D = get_node_or_null("TextureRect/BinaryMid")
 
+# Index Labels
+var index_labels: Array[Label] = []
+var INDEX_LABEL_OFFSET: float = 100.0
+
 @onready var audio_player = $bgm
 @onready var btn_sound = $btn_sound
 
@@ -101,11 +108,17 @@ var has_target: bool = false  # Track if target is set
 @onready var sim_yes: Button = $SimNewConfirmation/YesBtn
 @onready var sim_no: Button = $SimNewConfirmation/NoBtn
 
+# Sort Warning Popup
+var sort_warning_popup: PopupPanel = null
+
 # --- LANGUAGE BUTTONS ---
 @onready var cpp_lang_btn: Button = get_node_or_null("CppPopup/VBoxContainer/HBoxContainer/Cpp_btn")
 @onready var python_lang_btn: Button = get_node_or_null("CppPopup/VBoxContainer/HBoxContainer/Py_btn")
 @onready var java_lang_btn: Button = get_node_or_null("CppPopup/VBoxContainer/HBoxContainer/Java_btn")
 @onready var c_lang_btn: Button = get_node_or_null("CppPopup/VBoxContainer/HBoxContainer/C_btn")
+
+var sort_i: int = 0
+var sort_j: int = 0
 
 # ==============================================
 #   COMPILER INTEGRATION - API KEYS
@@ -198,7 +211,7 @@ var current_tutorial_data: Array = []
 
 var cpp_tutorial_data = [
 	{ "lines": [0, 1], "text": "1. Imports & Setup: Standard headers for input/output." },
-	{ "lines": [3], "text": "2. Complexity: [color=yellow]O(log(log n))[/color] Average Time and [color=green]O(1)[/color] Space." },
+	{ "lines": [3], "text": "2. Complexity: O(log(log n)) Average Time and O(1) Space." },
 	{ "lines": [5], "text": "3. Initialization: Start with 'low' at 0 and 'high' at the last index." },
 	{ "lines": [6], "text": "4. Loop Condition: Continue while target 'x' is within the bounds." },
 	{ "lines": [7, 8, 9, 10], "text": "5. Edge Case: If low equals high, check value to prevent division by zero." },
@@ -207,7 +220,7 @@ var cpp_tutorial_data = [
 ]
 
 var python_tutorial_data = [
-	{ "lines": [0], "text": "1. Complexity: [color=yellow]O(log(log n))[/color] Avg Time, [color=green]O(1)[/color] Space." },
+	{ "lines": [0], "text": "1. Complexity: O(log(log n)) Avg Time, O(1) Space." },
 	{ "lines": [1, 2], "text": "2. Setup: Define function and initialize low/high bounds." },
 	{ "lines": [3], "text": "3. Condition: Loop while target 'x' is logically within bounds." },
 	{ "lines": [4, 5, 6], "text": "4. Zero-Division Guard: If bounds are equal, check value and return." },
@@ -216,7 +229,7 @@ var python_tutorial_data = [
 ]
 
 var java_tutorial_data = [
-	{ "lines": [0], "text": "1. Complexity: [color=yellow]O(log(log n))[/color] Avg Time, [color=green]O(1)[/color] Space." },
+	{ "lines": [0], "text": "1. Complexity: O(log(log n)) Avg Time, O(1) Space." },
 	{ "lines": [1, 2, 3], "text": "2. Initialization: Method setup and defining low/high." },
 	{ "lines": [4], "text": "3. Loop: Check if target 'x' is within current bounds." },
 	{ "lines": [5, 6, 7, 8], "text": "4. Edge Case Guard: Prevent divide by zero error." },
@@ -225,20 +238,343 @@ var java_tutorial_data = [
 ]
 
 var c_tutorial_data = [
-	{ "lines": [0, 1], "text": "1. Setup & Complexity: Includes and [color=yellow]O(log(log n))[/color] Avg Time." },
+	{ "lines": [0, 1], "text": "1. Setup & Complexity: Includes and O(log(log n)) Avg Time." },
 	{ "lines": [2, 3], "text": "2. Setup: Standard array bounds initialization." },
 	{ "lines": [4, 5, 6, 7, 8], "text": "3. Condition & Edge Case: Ensure valid range and guard against zero division." },
 	{ "lines": [9], "text": "4. Formula: Compute estimated position." },
 	{ "lines": [10, 11, 12], "text": "5. Adjust: Shrink range or return match." }
 ]
 
-# --- 4. INITIALIZATION ---
+# ==============================================
+#   CREATE SORT WARNING POPUP
+# ==============================================
+func _create_sort_warning_popup():
+	sort_warning_popup = PopupPanel.new()
+	sort_warning_popup.size = Vector2i(450, 180)  # Changed to 180 (even shorter)
+	
+	var panel_style = StyleBoxTexture.new()
+	panel_style.texture = load("res://assets/CONTAINER.png")
+	panel_style.texture_margin_left = 20
+	panel_style.texture_margin_top = 20
+	panel_style.texture_margin_right = 20
+	panel_style.texture_margin_bottom = 20
+	sort_warning_popup.add_theme_stylebox_override("panel", panel_style)
+	
+	var main_vbox = VBoxContainer.new()
+	main_vbox.anchors_preset = 15
+	main_vbox.anchor_right = 1.0
+	main_vbox.anchor_bottom = 1.0
+	main_vbox.offset_left = 20
+	main_vbox.offset_top = 10
+	main_vbox.offset_right = -20
+	main_vbox.offset_bottom = -10
+	sort_warning_popup.add_child(main_vbox)
+	
+	var warning_label = Label.new()
+	warning_label.text = "⚠️ ARRAY NOT SORTED!\n\nInterpolation Search requires a SORTED array.\nClick OK to automatically sort using Bubble Sort."
+	warning_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	warning_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	warning_label.add_theme_font_override("font", load("res://assets/font/Planes_ValMore.ttf"))
+	warning_label.add_theme_font_size_override("font_size", 18)
+	warning_label.add_theme_color_override("font_color", Color(1, 1, 0, 1))
+	warning_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	warning_label.add_theme_constant_override("outline_size", 5)
+	main_vbox.add_child(warning_label)
+	
+	main_vbox.add_child(HSeparator.new())
+	
+	var ok_button = Button.new()
+	ok_button.text = "OK - SORT ARRAY"
+	ok_button.custom_minimum_size = Vector2(140, 45)
+	ok_button.add_theme_font_override("font", load("res://assets/font/Planes_ValMore.ttf"))
+	ok_button.add_theme_font_size_override("font_size", 18)
+	ok_button.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	ok_button.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	ok_button.add_theme_constant_override("outline_size", 5)
+	
+	var btn_style = StyleBoxTexture.new()
+	btn_style.texture = load("res://assets/BUTTON.png")
+	btn_style.texture_margin_left = 12
+	btn_style.texture_margin_top = 8
+	btn_style.texture_margin_right = 12
+	btn_style.texture_margin_bottom = 8
+	ok_button.add_theme_stylebox_override("normal", btn_style)
+	ok_button.add_theme_stylebox_override("pressed", btn_style)
+	ok_button.add_theme_stylebox_override("hover", btn_style)
+	
+	ok_button.pressed.connect(_on_sort_warning_ok)
+	
+	var hbox = HBoxContainer.new()
+	hbox.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	hbox.add_child(ok_button)
+	main_vbox.add_child(hbox)
+	
+	add_child(sort_warning_popup)
+
+func _style_search_modal():
+	if not search_modal:
+		return
+	
+	# Remove the default title bar
+	search_modal.borderless = true
+	
+	# Hide the default OK and Cancel buttons
+	var default_ok = search_modal.get_ok_button()
+	var default_cancel = search_modal.get_cancel_button()
+	if default_ok:
+		default_ok.hide()
+		default_ok.disabled = true
+	if default_cancel:
+		default_cancel.hide()
+		default_cancel.disabled = true
+	
+	# Set the modal size
+	search_modal.size = Vector2i(400, 220)
+	search_modal.min_size = Vector2i(400, 220)
+	
+	# Style the modal panel background
+	var panel_style = StyleBoxTexture.new()
+	panel_style.texture = load("res://assets/CONTAINER.png")
+	panel_style.texture_margin_left = 25
+	panel_style.texture_margin_top = 25
+	panel_style.texture_margin_right = 25
+	panel_style.texture_margin_bottom = 25
+	search_modal.add_theme_stylebox_override("panel", panel_style)
+	
+	# Clear existing custom content if any
+	for child in search_modal.get_children():
+		if child is Control and child != target_spinbox:
+			if child != default_ok and child != default_cancel:
+				child.queue_free()
+	
+	# Create a custom VBoxContainer for content
+	var vbox = VBoxContainer.new()
+	vbox.offset_left = 20
+	vbox.offset_top = 20
+	vbox.offset_right = -20
+	vbox.offset_bottom = -20
+	vbox.add_theme_constant_override("separation", 15)
+	search_modal.add_child(vbox)
+	
+	# Custom Title Label
+	var title_label = Label.new()
+	title_label.text = "ENTER TARGET VALUE"
+	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title_label.add_theme_font_override("font", load("res://assets/font/Planes_ValMore.ttf"))
+	title_label.add_theme_font_size_override("font_size", 28)
+	title_label.add_theme_color_override("font_color", Color(1, 1, 0, 1))
+	title_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	title_label.add_theme_constant_override("outline_size", 5)
+	vbox.add_child(title_label)
+	
+	# Add a spacer
+	vbox.add_child(HSeparator.new())
+	
+	# Create a container for the spinbox
+	var spinbox_container = CenterContainer.new()
+	spinbox_container.custom_minimum_size = Vector2(0, 80)
+	vbox.add_child(spinbox_container)
+	
+	# Style the SpinBox
+	if target_spinbox:
+		# Remove from old parent if any
+		if target_spinbox.get_parent():
+			target_spinbox.get_parent().remove_child(target_spinbox)
+		spinbox_container.add_child(target_spinbox)
+		
+		target_spinbox.custom_minimum_size = Vector2(200, 60)
+		target_spinbox.alignment = HORIZONTAL_ALIGNMENT_CENTER
+		target_spinbox.add_theme_constant_override("buttons_vertical_separation", 15)
+		target_spinbox.add_theme_constant_override("buttons_width", 40)
+		
+		# Style the spinbox background
+		var spinbox_style = StyleBoxTexture.new()
+		spinbox_style.texture = load("res://assets/CONTAINER.png")
+		spinbox_style.texture_margin_left = 10
+		spinbox_style.texture_margin_top = 10
+		spinbox_style.texture_margin_right = 10
+		spinbox_style.texture_margin_bottom = 10
+		target_spinbox.add_theme_stylebox_override("normal", spinbox_style)
+		
+		var line_edit = target_spinbox.get_line_edit()
+		if line_edit:
+			line_edit.add_theme_font_override("font", load("res://assets/font/Planes_ValMore.ttf"))
+			line_edit.add_theme_font_size_override("font_size", 24)
+			line_edit.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+			line_edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	
+	# Create button container
+	var button_hbox = HBoxContainer.new()
+	button_hbox.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	button_hbox.add_theme_constant_override("separation", 30)
+	vbox.add_child(button_hbox)
+	
+	# Create custom SEARCH button
+	var search_btn = Button.new()
+	search_btn.text = "SEARCH"
+	search_btn.custom_minimum_size = Vector2(120, 55)
+	search_btn.add_theme_font_override("font", load("res://assets/font/Planes_ValMore.ttf"))
+	search_btn.add_theme_font_size_override("font_size", 22)
+	search_btn.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	search_btn.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	search_btn.add_theme_constant_override("outline_size", 5)
+	
+	var btn_style = StyleBoxTexture.new()
+	btn_style.texture = load("res://assets/BUTTON.png")
+	btn_style.texture_margin_left = 20
+	btn_style.texture_margin_top = 12
+	btn_style.texture_margin_right = 20
+	btn_style.texture_margin_bottom = 12
+	search_btn.add_theme_stylebox_override("normal", btn_style)
+	search_btn.add_theme_stylebox_override("pressed", btn_style)
+	search_btn.add_theme_stylebox_override("hover", btn_style)
+	search_btn.pressed.connect(_on_target_confirmed)
+	search_btn.pressed.connect(func(): search_modal.hide())
+	button_hbox.add_child(search_btn)
+	
+	# Create custom CANCEL button
+	var cancel_btn = Button.new()
+	cancel_btn.text = "CANCEL"
+	cancel_btn.custom_minimum_size = Vector2(120, 55)
+	cancel_btn.add_theme_font_override("font", load("res://assets/font/Planes_ValMore.ttf"))
+	cancel_btn.add_theme_font_size_override("font_size", 22)
+	cancel_btn.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+	cancel_btn.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+	cancel_btn.add_theme_constant_override("outline_size", 5)
+	cancel_btn.add_theme_stylebox_override("normal", btn_style)
+	cancel_btn.add_theme_stylebox_override("pressed", btn_style)
+	cancel_btn.add_theme_stylebox_override("hover", btn_style)
+	cancel_btn.pressed.connect(func(): search_modal.hide())
+	button_hbox.add_child(cancel_btn)
+		
+func _on_sort_warning_ok():
+	sort_warning_popup.hide()
+	_bubble_sort_array()
+	# Re-enable buttons after sorting
+	_set_main_ui_enabled(true)
+	# Set target button should be enabled
+	if dequeue_btn:
+		dequeue_btn.disabled = false
+		dequeue_btn.text = "SET TARGET"
+	if auto_search_btn:
+		auto_search_btn.disabled = true
+	has_target = false
+	is_searching = false
+
+func _bubble_sort_array():
+	show_feedback("Sorting array with Bubble Sort...", Color.YELLOW, Vector2(200, 200))
+	_set_main_ui_enabled(false)
+	sort_i = 0
+	sort_j = 0
+	await _animate_bubble_sort()
+	# Re-enable after sorting fully completes
+	_set_main_ui_enabled(true)
+	simulation_ended = false  # reset this since _set_main_ui_enabled sets it true
+	if dequeue_btn:
+		dequeue_btn.disabled = false
+		dequeue_btn.text = "SET TARGET"
+	if auto_search_btn:
+		auto_search_btn.disabled = true
+	has_target = false
+	is_searching = false
+
+
+
+func _animate_bubble_sort():
+	var n = array_data.size()
+	var block_width = 64.0
+
+	for i in range(n - 1):
+		for j in range(n - i - 1):
+			# Reset all block colors
+			for child in queue_container.get_children():
+				if child is Control and not child is Label:
+					child.modulate = Color(1, 0.6, 0.2)
+
+			# Find blocks by their current visual X position
+			var slot_j  = START_POSITION.x + j * (block_width + BLOCK_SPACING)
+			var slot_j1 = START_POSITION.x + (j + 1) * (block_width + BLOCK_SPACING)
+
+			var blk1: Control = null
+			var blk2: Control = null
+			for child in queue_container.get_children():
+				if child is Control and not child is Label:
+					if absf(child.position.x - slot_j) < 5.0:
+						blk1 = child
+					elif absf(child.position.x - slot_j1) < 5.0:
+						blk2 = child
+
+			if blk1 == null or blk2 == null:
+				continue
+
+			# Highlight
+			blk1.modulate = Color(1, 0.9, 0.2)
+			blk2.modulate = Color(1, 0.9, 0.2)
+
+			var t1 = create_tween()
+			t1.tween_property(blk1, "scale", Vector2(1.1, 1.1), 0.12)
+			t1.tween_property(blk1, "scale", Vector2(1.0, 1.0), 0.12)
+			var t2 = create_tween()
+			t2.tween_property(blk2, "scale", Vector2(1.1, 1.1), 0.12)
+			t2.tween_property(blk2, "scale", Vector2(1.0, 1.0), 0.12)
+
+			log_history.append("Comparing arr[%d]=%d and arr[%d]=%d" % [j, array_data[j], j+1, array_data[j+1]])
+			await get_tree().create_timer(0.35).timeout
+
+			if array_data[j] > array_data[j + 1]:
+				var temp = array_data[j]
+				array_data[j] = array_data[j + 1]
+				array_data[j + 1] = temp
+
+				show_feedback("Swapping %d ↔ %d" % [array_data[j], array_data[j+1]], Color.YELLOW, Vector2(200, 200))
+
+				# Both blocks animate to correct slots
+				var swap_tween = create_tween().set_parallel(true)
+				swap_tween.tween_property(blk1, "position:x", slot_j1, 0.3).set_trans(Tween.TRANS_CUBIC)
+				swap_tween.tween_property(blk2, "position:x", slot_j, 0.3).set_trans(Tween.TRANS_CUBIC)
+				await swap_tween.finished
+
+				# Snap exact
+				blk1.position.x = slot_j1
+				blk2.position.x = slot_j
+
+				blk1.set("value", array_data[j + 1])
+				blk2.set("value", array_data[j])
+
+				_update_index_labels()
+				await get_tree().create_timer(0.2).timeout
+			else:
+				log_history.append("No swap: %d <= %d" % [array_data[j], array_data[j+1]])
+				await get_tree().create_timer(0.2).timeout
+
+	# Done
+	log_history.append("Sorted: %s" % _array_to_string(array_data))
+	show_feedback("Array sorted! Ready for Interpolation Search.", Color.GREEN, Vector2(200, 200))
+	for child in queue_container.get_children():
+		if child is Control and not child is Label:
+			child.modulate = Color(1, 0.6, 0.2)
+
+# ==============================================
+#   SET MAIN UI ENABLED/DISABLED
+# ==============================================
+func _set_main_ui_enabled(enabled: bool):
+	simulation_ended = not enabled
+	if dequeue_btn: dequeue_btn.disabled = not enabled
+	if auto_search_btn: auto_search_btn.disabled = not enabled
+	if timeline_btn: timeline_btn.disabled = not enabled
+
+# ==============================================
+#   INITIALIZATION
+# ==============================================
 func _ready() -> void:
 	var back_overlay = preload("res://scenes/back_button_overlay.tscn").instantiate()
 	add_child(back_overlay)
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
 	print("--- Interpolation Search Visualizer Started ---")
 	randomize()
+	
+	# Create sort warning popup
+	_create_sort_warning_popup()
 	
 	# Setup result popup
 	result_popup = RESULT_POPUP_SCENE.instantiate()
@@ -260,7 +596,7 @@ func _ready() -> void:
 	
 	if dequeue_btn: 
 		dequeue_btn.text = "SET TARGET"
-		dequeue_btn.disabled = true  # Disabled until array is ready
+		dequeue_btn.disabled = true
 	
 	if auto_search_btn:
 		auto_search_btn.text = "Auto Search"
@@ -280,7 +616,7 @@ func _ready() -> void:
 	config_modal.hide()
 	if config_size_modal: config_size_modal.hide()
 	if config_elements_modal: config_elements_modal.hide()
-	
+	_style_search_modal()
 	# Setup compiler
 	_setup_compiler()
 	
@@ -337,16 +673,14 @@ func _simulate_binary_search_step():
 	
 	var mid_val = array_data[binary_mid]
 	
-	# Add to log
 	log_history.append("🔍 BINARY SEARCH: Checking middle index %d = %d" % [binary_mid, mid_val])
 	
-	# Visual feedback
 	if binary_mid >= 0 and binary_mid < queue_container.get_child_count():
 		var blk = queue_container.get_child(binary_mid)
 		var tw = create_tween()
 		tw.tween_property(blk, "scale", Vector2(1.15, 1.15), 0.15)
 		tw.tween_property(blk, "scale", Vector2(1.0, 1.0), 0.15)
-		blk.modulate = Color(0.8, 0.8, 0.2)  # Yellow tint for binary search
+		blk.modulate = Color(0.8, 0.8, 0.2)
 	
 	if mid_val == target_value:
 		log_history.append("✅ BINARY SEARCH: Found at index %d!" % binary_mid)
@@ -377,7 +711,6 @@ func _exit_tree():
 #   COMPILER SETUP FUNCTIONS
 # ==============================================
 func _setup_compiler() -> void:
-	"""Setup compiler button and popup"""
 	if compile_btn:
 		if compile_btn.is_connected("pressed", _on_compile_button_pressed):
 			compile_btn.disconnect("pressed", _on_compile_button_pressed)
@@ -387,10 +720,8 @@ func _setup_compiler() -> void:
 		var popup_scene = preload("res://scene/CompilerOutput.tscn")
 		compiler_output_popup = popup_scene.instantiate()
 		add_child(compiler_output_popup)
-		
 		compiler_output_popup.recompile_requested.connect(_on_recompile_requested)
 		compiler_output_popup.closed.connect(_on_compiler_output_closed)
-
 
 func _on_compile_button_pressed() -> void:
 	if btn_sound: btn_sound.play()
@@ -409,7 +740,6 @@ func _on_compile_button_pressed() -> void:
 		show_feedback("Using cached result!", Color.YELLOW, Vector2(200, 200))
 	else:
 		_compile_code(code)
-
 
 func _compile_code(code: String) -> void:
 	show_feedback("Compiling...", Color.YELLOW, Vector2(200, 200))
@@ -436,14 +766,9 @@ func _compile_code(code: String) -> void:
 		"versionIndex": _get_version_index(current_code_language)
 	})
 	
-	print("=== Interpolation Search Compile Request ===")
-	print("Language: ", current_code_language, " → API: ", api_language)
-	print("Script preview: ", code.substr(0, 50) + "...")
-	
 	var error = http_request.request(url, headers, HTTPClient.METHOD_POST, body)
 	if error != OK:
 		show_feedback("Network error!", Color.RED, Vector2(200, 200))
-
 
 func _get_version_index(lang: String) -> String:
 	match lang:
@@ -452,7 +777,6 @@ func _get_version_index(lang: String) -> String:
 		"java": return "4"
 		"python": return "4"
 		_: return "0"
-
 
 func _on_compile_completed(result, response_code, headers, body, http_request, language: String) -> void:
 	http_request.queue_free()
@@ -473,15 +797,12 @@ func _on_compile_completed(result, response_code, headers, body, http_request, l
 	if compiler_output_popup:
 		compiler_output_popup.show_output(language, response, self, false)
 
-
 func _on_recompile_requested(language: String) -> void:
 	var code = generate_code_in_language(language, _array_to_string(array_data))
 	_compile_code(code)
 
-
 func _on_compiler_output_closed() -> void:
 	print("Compiler output closed")
-
 
 func reset_cache_for_scene() -> void:
 	if compiler_output_popup:
@@ -489,12 +810,14 @@ func reset_cache_for_scene() -> void:
 		print("Compiler cache reset for new simulation")
 
 func _connect_signals() -> void:
-	if not dequeue_btn.is_connected("pressed", _on_search_step_pressed): dequeue_btn.pressed.connect(_on_search_step_pressed)
-	if not timeline_btn.is_connected("pressed", _on_timeline_pressed): timeline_btn.pressed.connect(_on_timeline_pressed)
-	if not simulate_new_btn.is_connected("pressed", _on_reset_pressed): simulate_new_btn.pressed.connect(_on_reset_pressed)
-	if auto_search_btn:
-		if not auto_search_btn.is_connected("pressed", _on_auto_search_pressed):
-			auto_search_btn.pressed.connect(_on_auto_search_pressed)
+	if dequeue_btn and not dequeue_btn.is_connected("pressed", _on_search_step_pressed): 
+		dequeue_btn.pressed.connect(_on_search_step_pressed)
+	if timeline_btn and not timeline_btn.is_connected("pressed", _on_timeline_pressed): 
+		timeline_btn.pressed.connect(_on_timeline_pressed)
+	if simulate_new_btn and not simulate_new_btn.is_connected("pressed", _on_reset_pressed): 
+		simulate_new_btn.pressed.connect(_on_reset_pressed)
+	if auto_search_btn and not auto_search_btn.is_connected("pressed", _on_auto_search_pressed):
+		auto_search_btn.pressed.connect(_on_auto_search_pressed)
 	if yes_btn: yes_btn.pressed.connect(_on_config_yes)
 	if no_btn: no_btn.pressed.connect(_on_config_no)
 	if random_elements_btn: random_elements_btn.pressed.connect(_gen_random_config)
@@ -533,13 +856,16 @@ func _set_language(lang: String):
 	_show_cpp_popup()
 
 # --- 5. CONFIGURATION ---
-func _show_config_modal(): config_modal.show()
-func _on_config_yes(): config_modal.hide(); _show_detailed_config()
+func _show_config_modal(): 
+	_set_main_ui_enabled(false)
+	config_modal.show()
+	
+func _on_config_yes(): 
+	config_modal.hide()
+	_show_detailed_config()
 
 func _on_config_no():
-	# Reset cache for new simulation
 	reset_cache_for_scene()
-	
 	MAX_SIZE = randi_range(5, 7)
 	var rnd: Array[int] = []
 	for i in range(MAX_SIZE):
@@ -572,6 +898,7 @@ func _on_intro_next_pressed():
 		_update_intro_text()
 	else:
 		intro_popup.hide()
+		tutorial_overlay.hide()
 
 func _on_intro_prev_pressed():
 	if btn_sound: btn_sound.play()
@@ -582,6 +909,7 @@ func _on_intro_prev_pressed():
 func _on_intro_skip_pressed():
 	if btn_sound: btn_sound.play()
 	intro_popup.hide()
+	tutorial_overlay.hide()
 
 func _on_size_next_pressed() -> void:
 	if btn_sound: btn_sound.play()
@@ -651,7 +979,24 @@ func _on_elements_done_pressed() -> void:
 			arr.append(randi_range(1, 99))
 			
 	config_elements_modal.hide()
-	_init_simulation(arr)
+	
+	# Check if array is sorted
+	var is_sorted = true
+	for i in range(arr.size() - 1):
+		if arr[i] > arr[i + 1]:
+			is_sorted = false
+			break
+	
+	if not is_sorted:
+		# Store array data and show popup
+		array_data = arr
+		# Spawn blocks first so user can see them
+		_spawn_all_blocks()
+		_update_index_labels()
+		# Then show popup to trigger sorting
+		sort_warning_popup.popup_centered()
+	else:
+		_init_simulation(arr)
 
 func _on_elements_back_pressed() -> void:
 	if btn_sound: btn_sound.play()
@@ -683,34 +1028,30 @@ func _on_config_cancel():
 	config_modal.show()
 
 func _init_simulation(data: Array[int]):
-	# Reset cache for new simulation
 	reset_cache_for_scene()
-	
-	# Clear code lines
 	code_lines.clear()
 	
-	# Reset target and search state
 	has_target = false
 	is_searching = false
 	target_value = -1
+	simulation_ended = false
+	
+	_set_main_ui_enabled(true)
 	
 	if audio_player: audio_player.play()
 	
-	# Sort data immediately and push to array_data
+	# Sort data
 	data.sort()
 	array_data = data.duplicate()
 	log_history.clear()
 	log_history.append("Array generated and sorted: %s" % _array_to_string(array_data))
 	
-	# Reset binary search
 	_reset_binary_search()
-	
-	# Add initial code line
 	_add_code_line("INITIAL", 0, 0)
 	
 	_spawn_all_blocks()
+	_update_index_labels()
 	
-	# Enable set target button, disable search buttons
 	if dequeue_btn:
 		dequeue_btn.disabled = false
 		dequeue_btn.text = "SET TARGET"
@@ -721,13 +1062,19 @@ func _init_simulation(data: Array[int]):
 	if cpp_code_button: cpp_code_button.hide()
 
 func _spawn_all_blocks():
+	# Clear existing blocks and labels
+	for child in queue_container.get_children():
+		child.queue_free()
+	index_labels.clear()
+	
+	var block_width = 64.0
+	
 	for i in range(array_data.size()):
 		var val = array_data[i]
 		
 		var blk = BLOCK_SCENE.instantiate()
 		blk.set("value", val)
 		
-		var block_width = 64.0
 		var target_x = START_POSITION.x + i * (block_width + BLOCK_SPACING)
 		var target_pos = Vector2(target_x, START_POSITION.y)
 
@@ -737,31 +1084,44 @@ func _spawn_all_blocks():
 		
 		queue_container.add_child(blk)
 		
-		# Animate them appearing all at once with a slight drop effect
-		blk.position = target_pos + Vector2(0, -30)
-		blk.modulate.a = 0
+		# Set position directly
+		blk.position = target_pos
+		blk.modulate.a = 1.0
 		
-		var tw = create_tween().set_parallel(true)
-		tw.tween_property(blk, "position", target_pos, 0.4).set_trans(Tween.TRANS_CUBIC).set_delay(i * 0.05)
-		tw.tween_property(blk, "modulate:a", 1.0, 0.3).set_delay(i * 0.05)
+		# Create index label
+		var index_label = Label.new()
+		index_label.text = str(i)
+		index_label.position = Vector2(target_x + 25, START_POSITION.y + INDEX_LABEL_OFFSET)
+		index_label.add_theme_font_override("font", load("res://assets/font/Planes_ValMore.ttf"))
+		index_label.add_theme_font_size_override("font_size", 28)
+		index_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
+		index_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
+		index_label.add_theme_constant_override("outline_size", 4)
+		queue_container.add_child(index_label)
+		index_labels.append(index_label)
+
+func _update_index_labels():
+	var block_width = 64.0
+	for i in range(index_labels.size()):
+		var target_x = START_POSITION.x + i * (block_width + BLOCK_SPACING)
+		index_labels[i].position = Vector2(target_x + 25, START_POSITION.y + INDEX_LABEL_OFFSET)
+		index_labels[i].text = str(i)
 
 # --- 6. EDUCATIONAL INTERPOLATION SEARCH LOGIC ---
 
 func _on_search_step_pressed():
+	if simulation_ended: return
 	if array_data.size() < 1: return
 	
-	# If no target is set, open the modal to set target
 	if not has_target:
 		if search_modal:
 			search_modal.popup_centered()
 		return
 	
-	# If we're not searching but have target, start the search
 	if not is_searching:
 		_start_search_process()
 		return
 	
-	# If we're already searching, execute ONE step
 	if btn_sound: btn_sound.play()
 	_execute_search_step()
 
@@ -771,19 +1131,15 @@ func _on_target_confirmed():
 		target_value = int(target_spinbox.value)
 		has_target = true
 		
-		# Change button text to "SEARCH STEP"
 		if dequeue_btn:
 			dequeue_btn.text = "SEARCH STEP"
 		
-		# Enable auto search button
 		if auto_search_btn:
 			auto_search_btn.disabled = false
 		
-		# Show target value in UI
 		if enqueue_label:
-			enqueue_label.text = "🎯 Target: %d (Click Search Step to begin)" % target_value
+			enqueue_label.text = "🎯 Target: %d (Click SEARCH STEP to begin)" % target_value
 		
-		# Reset binary search for comparison
 		_reset_binary_search()
 		
 		show_feedback("Target set to %d! Click SEARCH STEP to begin." % target_value, Color.GREEN, Vector2(200, 200))
@@ -792,15 +1148,12 @@ func _start_search_process():
 	is_searching = true
 	comparison_count = 0
 	
-	# Reset binary search
 	_reset_binary_search()
 	
-	# Reset all block colors
 	for i in range(queue_container.get_child_count()):
 		var blk = queue_container.get_child(i)
 		blk.modulate = Color(1, 0.6, 0.2)
 	
-	# Add code line for target
 	_add_code_line("TARGET", 0, target_value)
 	
 	low = 0
@@ -819,14 +1172,11 @@ func _start_search_process():
 	_update_pointers()
 	_update_ui()
 	
-	# Show educational message - TELL USER WHAT TO DO NEXT
 	show_feedback("Ready! Click SEARCH STEP to see the first probe calculation.", Color.GREEN, Vector2(200, 200))
 
 func _execute_search_step():
-	# Check if we're still in a valid search range
 	if low <= high and target_value >= array_data[low] and target_value <= array_data[high]:
 		
-		# Calculate formula components for visualization
 		current_numerator = (target_value - array_data[low]) * (high - low)
 		current_denominator = array_data[high] - array_data[low]
 		
@@ -835,7 +1185,6 @@ func _execute_search_step():
 			current_ratio = 0.5
 			current_action_text = "⚠ All values equal in range - using middle position"
 		else:
-			# Calculate position using the interpolation formula
 			var pos_float = float(low) + (float(target_value - array_data[low]) * float(high - low)) / float(current_denominator)
 			pos = int(pos_float)
 			pos = clamp(pos, low, high)
@@ -844,7 +1193,6 @@ func _execute_search_step():
 		comparison_count += 1
 		var pos_val = array_data[pos]
 		
-		# BUILD EDUCATIONAL FORMULA DISPLAY - SHOW FULL CALCULATION
 		var formula_text = "📐 STEP %d - INTERPOLATION FORMULA:\n" % comparison_count
 		formula_text += "pos = low + ((target - arr[low]) × (high - low)) / (arr[high] - arr[low])\n"
 		formula_text += "    = %d + ((%d - %d) × (%d - %d)) / (%d - %d)\n" % [low, target_value, array_data[low], high, low, array_data[high], array_data[low]]
@@ -855,36 +1203,30 @@ func _execute_search_step():
 			formula_text += "    = %d + %.2f\n" % [low, current_ratio * (high - low)]
 			formula_text += "    = %.2f → [color=yellow]pos = %d[/color]" % [low + current_ratio * (high - low), pos]
 		
-		# Add to log
 		log_history.append(formula_text)
 		log_history.append("Checking arr[%d] = %d" % [pos, pos_val])
 		
-		# SIMULATE ONE BINARY SEARCH STEP FOR COMPARISON
 		var binary_found = _simulate_binary_search_step()
 		
-		# Add code line for probe
 		_add_code_line("PROBE", pos, pos_val)
 		
 		if probe_arrow: probe_arrow.show()
 		_update_pointers()
 		
-		# Visual feedback for current block
 		var blk = queue_container.get_child(pos)
 		var tw = create_tween()
 		tw.tween_property(blk, "scale", Vector2(1.2, 1.2), 0.2)
 		tw.tween_property(blk, "scale", Vector2(1.0, 1.0), 0.2)
-		blk.modulate = Color(1, 0.8, 0)  # Orange highlight
+		blk.modulate = Color(1, 0.8, 0)
 		
-		# Highlight the probe arrow with color based on ratio
 		if probe_arrow:
 			if current_ratio < 0.33:
-				probe_arrow.modulate = Color(1, 0.5, 0)  # Orange - left side
+				probe_arrow.modulate = Color(1, 0.5, 0)
 			elif current_ratio > 0.66:
-				probe_arrow.modulate = Color(1, 0, 0)  # Red - right side
+				probe_arrow.modulate = Color(1, 0, 0)
 			else:
-				probe_arrow.modulate = Color(1, 1, 0)  # Yellow - middle
+				probe_arrow.modulate = Color(1, 1, 0)
 		
-		# Check if found
 		if pos_val == target_value:
 			blk.modulate = Color(0.2, 1, 0.2)
 			log_history.append("✅ FOUND! Target %d at index %d" % [pos_val, pos])
@@ -903,8 +1245,6 @@ func _execute_search_step():
 			log_history.append(current_action_text)
 			_add_code_line("MOVE_RIGHT", pos, pos_val)
 			_dim_range(old_low, pos)
-			
-			# SHOW EDUCATIONAL MESSAGE - STOP HERE, WAIT FOR NEXT CLICK
 			show_feedback("✅ Step %d complete! Click SEARCH STEP to continue." % comparison_count, Color.YELLOW, Vector2(200, 200))
 			
 		else:
@@ -914,18 +1254,14 @@ func _execute_search_step():
 			log_history.append(current_action_text)
 			_add_code_line("MOVE_LEFT", pos, pos_val)
 			_dim_range(pos, old_high)
-			
-			# SHOW EDUCATIONAL MESSAGE - STOP HERE, WAIT FOR NEXT CLICK
 			show_feedback("✅ Step %d complete! Click SEARCH STEP to continue." % comparison_count, Color.YELLOW, Vector2(200, 200))
 		
 		_update_ui()
 		
 	else:
-		# Search is complete - not found
 		current_action_text = "❌ Target %d not in current range! Search complete." % target_value
 		log_history.append(current_action_text)
 		
-		# Complete binary search simulation
 		while binary_low <= binary_high:
 			_simulate_binary_search_step()
 		
@@ -941,10 +1277,12 @@ func _dim_range(from_idx: int, to_idx: int):
 			create_tween().tween_property(blk, "modulate", Color(0.3, 0.3, 0.3, 0.6), 0.3)
 
 func _finish_simulation(found: bool):
-	# Stop auto-play
 	is_searching = false
 	is_auto_playing = false
 	has_target = false
+	simulation_ended = true
+	
+	_set_main_ui_enabled(false)
 	
 	if auto_search_btn:
 		auto_search_btn.text = "Auto Search"
@@ -966,7 +1304,6 @@ func _finish_simulation(found: bool):
 	complete_popup.popup_centered()
 	if cpp_code_button: cpp_code_button.show()
 	
-	# Reset target for next search
 	target_value = -1
 	if enqueue_label:
 		enqueue_label.text = "Ready to Search"
@@ -988,27 +1325,47 @@ func _compute_grade(found: bool) -> Dictionary:
 # --- POINTER UPDATES ---
 func _update_pointers():
 	if not is_searching: return
-	
-	if low >= 0 and low < queue_container.get_child_count():
-		var block = queue_container.get_child(low)
-		var target_pos = block.global_position
-		target_pos.x += block.size.x / 2.0
-		target_pos.y -= 50
-		create_tween().tween_property(low_icon, "global_position", target_pos, 0.2).set_trans(Tween.TRANS_CUBIC)
-	
-	if high >= 0 and high < queue_container.get_child_count():
-		var block = queue_container.get_child(high)
-		var target_pos = block.global_position
-		target_pos.x += block.size.x / 2.0
-		target_pos.y -= 50
-		create_tween().tween_property(high_icon, "global_position", target_pos, 0.2).set_trans(Tween.TRANS_CUBIC)
-		
-	if probe_arrow and pos >= 0 and pos < queue_container.get_child_count():
-		var block = queue_container.get_child(pos)
-		var target_pos = block.global_position
-		target_pos.x += block.size.x / 2.0
-		target_pos.y -= 75
-		create_tween().tween_property(probe_arrow, "global_position", target_pos, 0.2).set_trans(Tween.TRANS_CUBIC)
+
+	var block_width = 64.0
+
+	# Find block at 'low' index by X position
+	var low_slot_x = START_POSITION.x + low * (block_width + BLOCK_SPACING)
+	var high_slot_x = START_POSITION.x + high * (block_width + BLOCK_SPACING)
+	var pos_slot_x = START_POSITION.x + pos * (block_width + BLOCK_SPACING)
+
+	var low_blk: Control = null
+	var high_blk: Control = null
+	var pos_blk: Control = null
+
+	for child in queue_container.get_children():
+		if child is Control and not child is Label:
+			if absf(child.position.x - low_slot_x) < 5.0:
+				low_blk = child
+			if absf(child.position.x - high_slot_x) < 5.0:
+				high_blk = child
+			if absf(child.position.x - pos_slot_x) < 5.0:
+				pos_blk = child
+
+	if low_blk and low_icon:
+		low_icon.visible = true
+		low_icon.global_position = Vector2(
+			queue_container.global_position.x + low_blk.position.x + block_width / 2.0 - low_icon.get_rect().size.x / 2.0,
+			queue_container.global_position.y + low_blk.position.y - 70
+		)
+
+	if high_blk and high_icon:
+		high_icon.visible = true
+		high_icon.global_position = Vector2(
+			queue_container.global_position.x + high_blk.position.x + block_width / 2.0 - high_icon.get_rect().size.x / 2.0,
+			queue_container.global_position.y + high_blk.position.y - 70
+		)
+
+	if pos_blk and probe_arrow:
+		probe_arrow.visible = true
+		probe_arrow.global_position = Vector2(
+			queue_container.global_position.x + pos_blk.position.x + block_width / 2.0,
+			queue_container.global_position.y + pos_blk.position.y - 90
+		)
 
 func _hide_pointers():
 	if low_icon: low_icon.hide()
@@ -1020,8 +1377,26 @@ func _on_reset_pressed():
 	if btn_sound: btn_sound.play()
 	sim_new_confirmation.show()
 
+func _on_yes_btn_pressed() -> void:
+	if btn_sound: btn_sound.play()
+	for c in queue_container.get_children(): c.queue_free()
+	array_data.clear(); log_history.clear()
+	comparison_count = 0; is_searching = false
+	has_target = false
+	low = 0; high = 0; pos = 0
+	target_value = -1
+	current_action_text = ""
+	_hide_pointers()
+	_show_config_modal()
+	sim_new_confirmation.hide()
+
+func _on_no_btn_pressed() -> void:
+	if btn_sound: btn_sound.play()
+	sim_new_confirmation.hide()
+
 # --- HELPER FUNCTIONS ---
 func _on_timeline_pressed():
+	if simulation_ended: return
 	var timeline_content = "=== INTERPOLATION SEARCH TIMELINE ===\n\n"
 	for entry in log_history:
 		timeline_content += entry + "\n"
@@ -1110,8 +1485,6 @@ func _scroll_to_highlight(line_index: int) -> void:
 
 # --- INTERPOLATION SEARCH CODE STRINGS ---
 
-# --- INTERPOLATION SEARCH CODE STRINGS WITH PROPER OUTPUT ---
-
 func generate_code_in_language(lang: String, arr_str: String) -> String:
 	match lang:
 		"python": return get_python_interp_code(arr_str)
@@ -1163,7 +1536,7 @@ int main() {
         cout << "Not found" << endl;
         
     return 0;
-}""" % [arr, target_value]
+}""" % [arr, target_value if target_value != -1 else 0]
 
 func get_python_interp_code(arr: String) -> String:
 	return """# Interpolation Search - O(log(log n)) average time
@@ -1201,7 +1574,7 @@ def main():
         print("Not found")
 
 if __name__ == "__main__":
-	main()""" % [arr, target_value]
+	main()""" % [arr, target_value if target_value != -1 else 0]
 
 func get_java_interp_code(arr: String) -> String:
 	return """/* Interpolation Search - O(log(log n)) average time */
@@ -1227,7 +1600,6 @@ public class InterpolationSearch {
         
         return -1;  // Not found
     }
-}
     
     public static void main(String[] args) {
         int[] arr = {%s};
@@ -1243,14 +1615,14 @@ public class InterpolationSearch {
         System.out.println("Searching for: " + target);
         System.out.println();
         
-        int result = search(arr, target);
+        int result = interpolationSearch(arr, target);
         
         if (result != -1)
             System.out.println("Found at index " + result);
         else
             System.out.println("Not found");
     }
-}""" % [arr, target_value]
+}""" % [arr, target_value if target_value != -1 else 0]
 
 func get_c_interp_code(arr: String) -> String:
 	return """#include <stdio.h>
@@ -1306,7 +1678,7 @@ int main() {
         printf("Not found\\n");
         
     return 0;
-}""" % [arr, target_value]
+}""" % [arr, target_value if target_value != -1 else 0]
 
 # --- UI UPDATES ---
 func _update_ui():
@@ -1331,15 +1703,14 @@ func _update_ui():
 
 # --- AUTO-PLAY ---
 func _on_auto_search_pressed():
+	if simulation_ended: return
 	if array_data.is_empty(): return
 	
-	# If no target set, open modal
 	if not has_target:
 		if search_modal:
 			search_modal.popup_centered()
 		return
 	
-	# Show warning that auto mode is not step-by-step
 	show_feedback("⚠️ Auto mode runs automatically. Use SEARCH STEP for step-by-step learning!", Color.ORANGE, Vector2(200, 200))
 	
 	if btn_sound: btn_sound.play()
@@ -1354,16 +1725,13 @@ func _on_auto_search_pressed():
 
 func _run_auto_search():
 	while is_auto_playing and is_searching:
-		# Only execute ONE step
 		_execute_search_step()
 		
-		# Check if search is complete
 		if not is_searching:
 			is_auto_playing = false
 			if auto_search_btn: auto_search_btn.text = "▶ Auto Search"
 			break
 		
-		# Wait longer between steps so students can see the formula
 		await get_tree().create_timer(2.5).timeout
 
 # --- TUTORIAL BOILERPLATE ---
@@ -1389,9 +1757,10 @@ func start_main_tutorial() -> void:
 		{ "node": null, "text": "🔍 INTERPOLATION SEARCH - LEARN STEP BY STEP\n\nWe'll go through each calculation one at a time so you can fully understand the formula!", "action": "next" },
 		{ "node": dequeue_btn, "text": "1️ SET TARGET: First, click here to choose a number to search for", "action": "next" },
 		{ "node": dequeue_btn, "text": "2️ SEARCH STEP: After setting target, click repeatedly to see each calculation step-by-step", "action": "next" },
-		{ "node": null, "text": "3 FORMULA: Each step shows the complete formula with actual numbers!\n\npos = low + ((target - arr[low]) × (high - low)) / (arr[high] - arr[low])", "action": "next" },
+		{ "node": auto_search_btn, "text": "3️ AUTO SEARCH: Automatically runs through all steps (for demonstration)", "action": "next" },
+		{ "node": null, "text": "4 FORMULA: Each step shows the complete formula with actual numbers!\n\npos = low + ((target - arr[low]) × (high - low)) / (arr[high] - arr[low])", "action": "next" },
 		{ "node": timeline_btn, "text": "5 TIMELINE: Shows the complete formula calculation history", "action": "next" },
-		{ "node": simulate_new_btn, "text": "7 SIMULATE NEW: Try different data to see when Interpolation Search works best!", "action": "end" }
+		{ "node": simulate_new_btn, "text": "6 SIMULATE NEW: Try different data to see when Interpolation Search works best!", "action": "end" }
 	]
 	show_tutorial_step()
 
@@ -1406,13 +1775,14 @@ func show_tutorial_step() -> void:
 	if node:
 		if pointer_sprite:
 			pointer_sprite.show()
-			# Fix: Use global_position for Sprite2D instead of get_global_rect()
 			if node is Control:
 				var node_pos = node.global_position
-				pointer_sprite.global_position = node_pos + Vector2(node.size.x / 2, 20)
+				# Adjust these values to control pointer position:
+				# - First number: horizontal offset (positive = right, negative = left)
+				# - Second number: vertical offset (positive = down, negative = up)
+				pointer_sprite.global_position = node_pos + Vector2(node.size.x + 30, node.size.y / 2)
 			else:
-				# For non-Control nodes, use their global_position
-				pointer_sprite.global_position = node.global_position + Vector2(0, 20)
+				pointer_sprite.global_position = node.global_position + Vector2(40, 20)
 		_highlight_node(node)
 	else:
 		if pointer_sprite: pointer_sprite.hide()
@@ -1426,7 +1796,6 @@ func show_tutorial_step() -> void:
 			tutorial_next.show()
 			tutorial_next.text = "Finish"
 
-# Also update the _highlight_node function to handle both Control and Node2D:
 func _highlight_node(node: Node):
 	_clear_highlights()
 	if node:
@@ -1462,23 +1831,6 @@ func end_main_tutorial() -> void:
 	tutorial_in_progress = false
 	if tutorial_overlay: tutorial_overlay.hide()
 	_clear_highlights()
-
-func _on_yes_btn_pressed() -> void:
-	if btn_sound: btn_sound.play()
-	for c in queue_container.get_children(): c.queue_free()
-	array_data.clear(); log_history.clear()
-	comparison_count = 0; is_searching = false
-	has_target = false
-	low = 0; high = 0; pos = 0
-	target_value = -1
-	current_action_text = ""
-	_hide_pointers()
-	_on_config_no()
-	sim_new_confirmation.hide()
-
-func _on_no_btn_pressed() -> void:
-	if btn_sound: btn_sound.play()
-	sim_new_confirmation.hide()
 
 func _on_close_pressed() -> void:
 	cpp_popup.hide()
