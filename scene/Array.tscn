@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://dt60pmkulclpg"]
+[gd_scene load_steps=28 format=3 uid="uid://dt60pmkulclpg"]
 
 [ext_resource type="PackedScene" uid="uid://cnlp6jn1v8wse" path="res://scene/BBSA.tscn" id="1_85hwj"]
 [ext_resource type="Script" uid="uid://63r0il4jv1uy" path="res://script/array.gd" id="2_sjaiv"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="8_2oo6p"]
 [ext_resource type="Texture2D" uid="uid://b31vqwe610avh" path="res://assets/circles2.png" id="10_x3etq"]
 [ext_resource type="Texture2D" uid="uid://dcpfk145a6qpt" path="res://assets/circles4.png" id="11_rsgdm"]
+[ext_resource type="Texture2D" uid="uid://0fwd6qe6w4m4" path="res://assets/LabelBg.png" id="12_rsgdm"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_njl6h"]
 shader = ExtResource("3_xywgn")
@@ -203,18 +204,17 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -216.0
-offset_top = 36.0
+offset_top = 6.630066
 offset_right = 220.0
-offset_bottom = 88.0
+offset_bottom = 173.63007
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0.145098, 0.823529, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 8
 theme_override_fonts/font = ExtResource("5_njl6h")
-theme_override_font_sizes/font_size = 40
-text = "Do you really
-want to end
-simulation?"
+theme_override_font_sizes/font_size = 30
+text = "Do you really want to 
+end simulation?"
 horizontal_alignment = 1
 vertical_alignment = 1
 justification_flags = 0
@@ -517,6 +517,51 @@ autowrap_mode = 2
 
 [node name="TextureRect" parent="MarginContainer/HBoxContainer2" index="0"]
 z_index = -1
+
+[node name="MarginContainer2" type="MarginContainer" parent="." index="35"]
+layout_mode = 0
+offset_left = 351.5
+offset_top = 20.0
+offset_right = 801.5
+offset_bottom = 90.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_bottom = 20
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer2" index="0"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer2/HBoxContainer2" index="0"]
+z_index = -1
+custom_minimum_size = Vector2(450, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("12_rsgdm")
+
+[node name="Label" type="Label" parent="MarginContainer2/HBoxContainer2/TextureRect" index="0"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -104.0
+offset_top = -12.0
+offset_right = 104.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("5_njl6h")
+theme_override_font_sizes/font_size = 24
+text = "Processes: 0"
+horizontal_alignment = 1
 
 [connection signal="pressed" from="End_simulation_confirmation/no" to="." method="_on_no_pressed"]
 [connection signal="pressed" from="End_simulation_confirmation/yes" to="." method="_on_yes_pressed"]

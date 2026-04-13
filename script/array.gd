@@ -2,6 +2,7 @@ extends Control
 
 # --- LABELS & CONTAINERS ---
 @onready var array_size_label: Label = $MarginContainer/HBoxContainer2/TextureRect/Label
+@onready var processes_label: Label = $MarginContainer2/HBoxContainer2/TextureRect/Label
 @onready var action_modal: Panel = $ArrayActionModal
 @onready var modal_title: Label = $ArrayActionModal/ModalContent/ModalTitle
 @onready var single_input_row: HBoxContainer = $ArrayActionModal/ModalContent/InputContainer/SingleInputRow
@@ -740,6 +741,7 @@ func _initialize_array(elements):
 	
 	_create_blocks_from_array()
 	_update_array_size_label()
+	_update_processes_label()
 	_update_indicators()
 	show_feedback("Array Simulation Ready", Color.GREEN, Vector2(500, 300))
 	_update_button_states()
@@ -836,9 +838,12 @@ func _update_index_labels():
 #   UI UPDATE FUNCTIONS
 # ==============================================
 func _update_array_size_label():
-	var label = get_node_or_null("MarginContainer/HBoxContainer2/TextureRect/Label")
-	if label:
-		label.text = "Array Size: %d/%d" % [current_array_size, max_array_size]
+	if array_size_label:
+		array_size_label.text = "Array Size: %d/%d" % [current_array_size, max_array_size]
+
+func _update_processes_label():
+	if processes_label:
+		processes_label.text = "Processes: %d" % action_count
 
 func _update_button_states():
 	# Buttons are ALWAYS fully visible - no visual indication of state
@@ -935,6 +940,7 @@ func _execute_access(index: int):
 	_highlight_block(index, 1.0)
 	show_feedback("Value at [%d] = %d" % [index, value], Color.YELLOW, block_nodes[index].global_position)
 	_update_array_size_label()
+	_update_processes_label()
 	_update_timeline_display()
 	_update_indicators()  # NEW: Update indicators
 
@@ -955,6 +961,7 @@ func _execute_insert_end(value: int):
 	show_feedback("Inserted %d at end" % value, Color.GREEN, Vector2(500, 350))
 	_update_button_states()
 	_update_array_size_label()
+	_update_processes_label()
 	_update_timeline_display()
 	_update_indicators()
 
@@ -978,6 +985,7 @@ func _execute_insert_at_index(value: int, index: int):
 	show_feedback("Inserted %d at index [%d]" % [value, index], Color.GREEN, Vector2(500, 350))
 	_update_button_states()
 	_update_array_size_label()
+	_update_processes_label()
 	_update_timeline_display()
 	_update_indicators()
 
@@ -1008,6 +1016,7 @@ func _execute_delete(index: int):
 	show_feedback("Deleted element at [%d]" % index, Color.ORANGE, Vector2(500, 350))
 	_update_button_states()
 	_update_array_size_label()
+	_update_processes_label()
 	_update_timeline_display()
 	_update_indicators()
 
@@ -1040,6 +1049,7 @@ func _execute_replace(index: int, value: int):
 	
 	show_feedback("Replaced [%d]: %d → %d" % [index, old_value, value], Color.CYAN, Vector2(500, 350))
 	_update_array_size_label()
+	_update_processes_label()
 	_update_timeline_display()
 	_update_indicators()
 
@@ -2054,7 +2064,7 @@ func start_tutorial():
 	
 	set_ui_enabled(false)
 	
-	# Updated tutorial nodes to include indicators
+	# Updated tutorial nodes to include indicators and processes label
 	tutorial_nodes = [
 		access_btn, 
 		insert_end_btn, 
@@ -2065,8 +2075,9 @@ func start_tutorial():
 		simulate_new_btn, 
 		timeline_btn, 
 		array_size_label,
-		get_node_or_null("isFull"),  # Added isFull indicator
-		get_node_or_null("isEmpty")   # Added isEmpty indicator
+		processes_label,  # NEW: Add processes label
+		get_node_or_null("isFull"),
+		get_node_or_null("isEmpty")
 	]
 	
 	tutorial_step = 0
@@ -2106,9 +2117,11 @@ func _show_tutorial_step():
 		6: tutorial_text.text = "END SIMULATION\n\nFinish and view action summary."
 		7: tutorial_text.text = "TIMELINE\n\nView history of all operations."
 		8: tutorial_text.text = "ARRAY SIZE\n\nShows current size vs max capacity."
-		9: tutorial_text.text = "FULL INDICATOR\n\nTurns GREEN when array reaches maximum capacity.\nTurns DARK when there's still space available."
-		10: tutorial_text.text = "EMPTY INDICATOR\n\nTurns RED when array has no elements.\nTurns DARK when the array contains data."
+		9: tutorial_text.text = "PROCESSES COUNTER\n\nTracks total number of operations performed.\nEach access, insert, delete, or replace increases the count."
+		10: tutorial_text.text = "FULL INDICATOR\n\nTurns GREEN when array reaches maximum capacity.\nTurns DARK when there's still space available."
+		11: tutorial_text.text = "EMPTY INDICATOR\n\nTurns RED when array has no elements.\nTurns DARK when the array contains data."
 	
+	# Keep the pointer sprite - it's helpful!
 	if pointer_sprite:
 		pointer_sprite.texture = load("res://assets/point_left.png")
 		pointer_sprite.show()
@@ -2131,7 +2144,7 @@ func _show_tutorial_step():
 	tutorial_text.visible = true
 	tutorial_next.visible = true
 	
-	# FIX: Make sure next button is always on top and clickable
+	# Make sure next button is always on top and clickable
 	tutorial_next.mouse_filter = Control.MOUSE_FILTER_STOP
 	tutorial_next.z_index = 10
 
