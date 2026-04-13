@@ -1,5 +1,6 @@
 extends Control
-
+var input_container: MarginContainer
+var input_textedit: TextEdit
 # API Keys
 const API_KEYS = {
 	"cpp": {
@@ -62,7 +63,84 @@ func _enter_tree():
 	var current_size = get_viewport().get_visible_rect().size
 	if current_size.x > current_size.y:  # Still thinks it's landscape
 		get_tree().root.content_scale_size = Vector2i(int(current_size.y), int(current_size.x))
+
+func _setup_input_field():
+	# Check if input container already exists
+	var existing_container = $TextureRect/VBoxContainer.get_node_or_null("InputContainer")
+	if existing_container:
+		# Get references to existing nodes
+		input_container = existing_container
+		input_textedit = input_container.get_node("InputTextEdit")
+		return
 	
+	# Create input container
+	input_container = MarginContainer.new()  # Use global variable, not local
+	input_container.name = "InputContainer"
+	input_container.custom_minimum_size = Vector2(0, 120)
+	
+	# Create VBox for input area
+	var input_vbox = VBoxContainer.new()
+	input_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	input_container.add_child(input_vbox)
+	
+	# Create label
+	var input_label = Label.new()
+	input_label.text = "Program Input (stdin):"
+	var my_font = load("res://assets/font/Planes_ValMore.ttf")
+	if my_font:
+		input_label.add_theme_font_override("font", my_font)
+	input_label.add_theme_font_size_override("font_size", 20)
+	input_label.add_theme_color_override("font_color", Color(0.8, 0.8, 0.8, 1))
+	input_vbox.add_child(input_label)
+	
+	# Create TextEdit for input
+	input_textedit = TextEdit.new()  # Use global variable, not local
+	input_textedit.name = "InputTextEdit"
+	input_textedit.placeholder_text = "Enter input here...\nEach line is sent in order when program calls input() / cin"
+	input_textedit.custom_minimum_size = Vector2(0, 70)
+	input_textedit.wrap_mode = TextEdit.LINE_WRAPPING_NONE
+	
+	# Style the TextEdit
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0.1, 0.1, 0.12, 1)
+	style.corner_radius_top_left = 4
+	style.corner_radius_top_right = 4
+	style.corner_radius_bottom_right = 4
+	style.corner_radius_bottom_left = 4
+	input_textedit.add_theme_stylebox_override("normal", style)
+	input_textedit.add_theme_stylebox_override("focus", style)
+	
+	if my_font:
+		input_textedit.add_theme_font_override("font", my_font)
+	input_textedit.add_theme_font_size_override("font_size", 18)
+	
+	input_vbox.add_child(input_textedit)
+	
+	# Add hint label
+	var hint_label = Label.new()
+	hint_label.text = "Tip: For multiple inputs, put each on a new line"
+	if my_font:
+		hint_label.add_theme_font_override("font", my_font)
+	hint_label.add_theme_font_size_override("font_size", 14)
+	hint_label.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5, 1))
+	input_vbox.add_child(hint_label)
+	
+	# Add clear button
+	var clear_btn = Button.new()
+	clear_btn.text = "Clear Input"
+	clear_btn.custom_minimum_size = Vector2(120, 40)
+	clear_btn.pressed.connect(_on_clear_input_pressed)
+	input_vbox.add_child(clear_btn)
+	
+	# Insert after EditorContainer (before BottomBar)
+	var editor_container = $TextureRect/VBoxContainer/EditorContainer
+	var editor_index = editor_container.get_index()
+	
+	$TextureRect/VBoxContainer.add_child(input_container)
+	$TextureRect/VBoxContainer.move_child(input_container, editor_index + 1)
+	
+	print("Input field added to compiler scene")
+
 func _ready():
 	# Connect tab buttons
 	for lang in tabs:
@@ -103,6 +181,7 @@ func _ready():
 	await get_tree().process_frame
 	$TextureRect.queue_redraw()
 	get_tree().root.propagate_notification(NOTIFICATION_RESIZED)
+	_setup_input_field()
 
 
 func _set_compiler_orientation():
@@ -221,24 +300,31 @@ func _on_compile_pressed():
 	var api_language = current_language
 	match current_language:
 		"python":
-			api_language = "python3"  # CRITICAL FIX: JDoodle expects "python3" not "python"
-		# C++ and C are fine as "cpp" and "c"
-		# Java is fine as "java"
+			api_language = "python3"
+	
+	# NEW: Get user input from input field
+	var stdin_input = ""
+	if input_textedit and input_textedit.text.strip_edges() != "":
+		stdin_input = input_textedit.text
+		print("User input provided: ", stdin_input)
+	else:
+		print("No user input provided")
 	
 	var body = JSON.new().stringify({
 		"clientId": keys["clientId"],
 		"clientSecret": keys["clientSecret"],
 		"script": code_editor.text,
-		"language": api_language,  # Use the mapped language
-		"versionIndex": _get_version_index(current_language)
+		"language": api_language,
+		"versionIndex": _get_version_index(current_language),
+		"stdin": stdin_input  # ADD THIS LINE
 	})
 	
 	print("=== JDoodle API Request ===")
 	print("URL: ", url)
 	print("Language: ", current_language, " → API Language: ", api_language)
 	print("Version Index: ", _get_version_index(current_language))
+	print("Stdin: ", stdin_input)
 	print("Script preview: ", code_editor.text.substr(0, 50) + "...")
-	print("Full request body: ", body)
 	
 	var error = http_request.request(url, headers, HTTPClient.METHOD_POST, body)
 	if error != OK:
@@ -336,3 +422,10 @@ func show_cached_output():
 			"cpu": cached.cpu
 		}
 		compiler_output_popup.show_output(current_language, fake_response, self)
+
+
+
+func _on_clear_input_pressed():
+	if input_textedit:
+		input_textedit.text = ""
+		_show_feedback("Input cleared", Color.GREEN)  # Remove the position argument

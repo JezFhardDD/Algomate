@@ -260,6 +260,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ErrorTab" type="Button" parent="Panel/VBoxContainer/TabBar"]
+visible = false
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxTexture_fci2k")
@@ -318,7 +319,6 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="OutputContainer" type="VBoxContainer" parent="Panel/VBoxContainer/ContentContainer"]
-visible = false
 layout_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer/ContentContainer/OutputContainer"]

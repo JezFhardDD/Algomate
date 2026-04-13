@@ -7,3 +7,5 @@ res://scene/BST.tscn
 res://script/bst.gd
 res://scene/Stack.tscn
 res://script/stack_sim.gd
+res://scene/Compiler.tscn
+res://script/compiler.gd
