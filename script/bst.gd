@@ -170,6 +170,11 @@ var search_spinbox: SpinBox
 var traverse_dialog: ConfirmationDialog
 var end_confirmation: ConfirmationDialog
 
+
+#state vars
+# BST state
+var operation_count: int = 0  # NEW: Track number of operations performed
+
 # Tutorial
 var tutorial_sequence = []
 var tutorial_sequence_index = 0
@@ -766,6 +771,7 @@ func _initialize_empty_tree():
 	code_lines.clear()
 	_add_code_line("INITIAL", 0, 0)
 	_update_timeline_display()  # ADD THIS LINE
+	_update_processes_label()
 	
 	if status_label:
 		status_label.text = "BST Ready - Insert values to start"
@@ -831,6 +837,7 @@ func _on_insert_confirmed():
 		show_feedback("Cannot insert - tree is full (max 7 nodes)!", Color.RED, get_global_mouse_position())
 		timeline_log.append("[color=red]Insert failed: Tree is full[/color]")
 		return
+	operation_count += 1
 	
 	# Find position to insert
 	var insert_index = _find_insert_position(value)
@@ -860,6 +867,7 @@ func _on_insert_confirmed():
 	
 	_update_stats_label()
 	_update_timeline_display()
+	_update_processes_label()
 	insert_dialog.hide()
 
 func _on_delete_confirmed():
@@ -878,6 +886,7 @@ func _on_delete_confirmed():
 		timeline_log.append("[color=red]Delete failed: %d not found[/color]" % value)
 		delete_dialog.hide()
 		return
+	operation_count += 1
 	
 	# Store old value for feedback
 	var old_value = main_array[node_index]
@@ -893,6 +902,7 @@ func _on_delete_confirmed():
 	
 	_update_stats_label()
 	_update_timeline_display()
+	_update_processes_label() 
 	delete_dialog.hide()
 
 func _on_search_confirmed():
@@ -902,6 +912,7 @@ func _on_search_confirmed():
 	if not is_simulation_active:
 		show_feedback("Simulation ended!", Color.YELLOW, get_global_mouse_position())
 		return
+	operation_count += 1 
 	
 	# Search for the value
 	var path = _search_path(value)
@@ -923,7 +934,7 @@ func _on_search_confirmed():
 	
 	if status_label:
 		status_label.text = "Found " + str(value) + " at node " + str(path[-1])
-	
+	_update_processes_label()
 	search_dialog.hide()
 
 func _start_traversal(method: String):
@@ -934,7 +945,7 @@ func _start_traversal(method: String):
 	if is_traversing:
 		show_feedback("Traversal already in progress!", Color.YELLOW, get_global_mouse_position())
 		return
-	
+	operation_count += 1
 	# Get root index (first non-empty node)
 	var root = 0
 	if main_array[0] == 0:
@@ -963,6 +974,7 @@ func _start_traversal(method: String):
 	
 	status_label.text = method.to_upper() + " traversal in progress..."
 	_next_traversal_step()
+	_update_processes_label()
 
 func _next_traversal_step():
 	if not is_traversing or traversal_queue.is_empty():
@@ -1000,10 +1012,11 @@ func _end_simulation():
 	
 	timeline_log.append("[color=red]--- SIMULATION ENDED ---[/color]")
 	_add_code_line("SIMULATION_END", 0, 0)
-	_update_timeline_display()  # ADD THIS LINE
+	_update_timeline_display()
+	_update_processes_label()  # Add this
 	
 	if status_label:
-		status_label.text = "Simulation ended. Click Simulate New to restart."
+		status_label.text = "Simulation ended. Total operations: %d" % operation_count
 	
 	# Show completion popup
 	if complete_popup:
@@ -1011,7 +1024,7 @@ func _end_simulation():
 		for val in main_array:
 			if val != 0:
 				node_count += 1
-		process_label.text = "Simulation Complete!\n\nTotal operations: " + str(len(timeline_log) - 1) + "\nNodes in tree: " + str(node_count)
+		process_label.text = "Simulation Complete!\n\nTotal operations: %d\nNodes in tree: %d" % [operation_count, node_count]
 		complete_popup.popup_centered()
 		
 		if cpp_code_button:
@@ -1276,7 +1289,7 @@ func _update_stats_label():
 		if val != 0:
 			count += 1
 	if compare_label:
-		compare_label.text = "Nodes: " + str(count) + " | Operations: " + str(len(timeline_log))
+		compare_label.text = "Nodes: %d" % count
 
 func _connect_buttons():
 	# Connect insert button
@@ -1323,6 +1336,7 @@ func _on_yes_pressed():
 	
 	_initialize_empty_tree()
 	is_simulation_active = true
+	operation_count = 0  # Reset operation count
 	insert_btn.disabled = false
 	delete_btn.disabled = false
 	search_btn.disabled = false
@@ -1334,7 +1348,8 @@ func _on_yes_pressed():
 	code_lines.clear()
 	_add_code_line("INITIAL", 0, 0)
 	_update_stats_label()
-	_update_timeline_display()  # Add this
+	_update_timeline_display()
+	_update_processes_label()  # Add this
 	
 	status_label.text = "BST Ready - Insert values to start"
 
@@ -1968,3 +1983,6 @@ func show_feedback(text: String, color: Color, position: Vector2):
 	anim_player.animation_finished.connect(_on_feedback_animation_finished.bind(label))
 func _on_feedback_animation_finished(_anim_name: String, label: Node):
 	label.queue_free()
+func _update_processes_label():
+	if status_label:
+		status_label.text = "Processes: %d" % operation_count

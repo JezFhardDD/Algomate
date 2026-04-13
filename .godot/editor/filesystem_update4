@@ -2,3 +2,6 @@ res://scene/CompilerOutput.tscn
 res://data/lessons.json
 res://scene/Array.tscn
 res://script/array.gd
+res://scene/Linked.tscn
+res://scene/BST.tscn
+res://script/bst.gd

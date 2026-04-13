@@ -1053,7 +1053,7 @@ theme_override_font_sizes/font_size = 26
 theme_override_styles/normal = SubResource("StyleBoxTexture_0auj7")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_141t2")
 theme_override_styles/hover = SubResource("StyleBoxTexture_2pgkw")
-text = "Update at Pos"
+text = "Update at pos"
 flat = false
 
 [node name="SortButton" type="Button" parent="VBoxContainer"]
