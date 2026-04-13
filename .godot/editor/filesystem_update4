@@ -5,3 +5,5 @@ res://script/array.gd
 res://scene/Linked.tscn
 res://scene/BST.tscn
 res://script/bst.gd
+res://scene/Stack.tscn
+res://script/stack_sim.gd

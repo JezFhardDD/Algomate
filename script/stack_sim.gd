@@ -784,7 +784,7 @@ func _on_peek_pressed() -> void:
 	
 	# FIX: Check empty first, give feedback, then return early — no modal shown
 	if queue.is_empty():
-		show_feedback("Cannot peek! Stack is empty.", Color.ORANGE, get_global_mouse_position())
+		show_feedback("Cannot peek! Stack Underflow.", Color.ORANGE, get_global_mouse_position())
 		return
 	
 	btn_sound.play()
@@ -995,7 +995,7 @@ func _on_enqueue_pressed() -> void:
 			anim_sprite.play("default")
 			var timer = get_tree().create_timer(2.0)
 			timer.timeout.connect(_hide_queue_full_panel)
-		show_feedback("Cannot push! Stack is full.", Color.ORANGE, get_global_mouse_position())
+		show_feedback("Cannot push! Stack Overflow.", Color.ORANGE, get_global_mouse_position())
 		return
 	
 	if waiting_elements.is_empty():
@@ -1056,7 +1056,7 @@ func _perform_tutorial_enqueue() -> void:
 
 func _perform_regular_enqueue() -> void:
 	if queue.size() >= MAX_QUEUE_SIZE:
-		show_feedback("Cannot push! Stack is full.", Color.ORANGE, get_global_mouse_position())
+		show_feedback("Cannot push! Stack Overflow.", Color.ORANGE, get_global_mouse_position())
 		return
 
 	if waiting_elements.is_empty():
@@ -1115,7 +1115,7 @@ func _on_dequeue_pressed() -> void:
 
 	# FIX: Check empty first, give feedback, return early — no modal
 	if queue.is_empty():
-		show_feedback("Cannot pop! Stack is empty.", Color.ORANGE, get_global_mouse_position())
+		show_feedback("Cannot pop! Stack Underflow.", Color.ORANGE, get_global_mouse_position())
 		return
 	
 	is_dequeuing_active = true
