@@ -50,7 +50,7 @@ func _create_tables():
 		"id":              {"data_type": "int",  "primary_key": true, "not_null": true, "auto_increment": true},
 		"name":            {"data_type": "text", "not_null": true},
 		"profile_picture": {"data_type": "text", "not_null": true},
-		"scs_coins":       {"data_type": "int",  "default": 5000}
+		"scs_coins":       {"data_type": "int",  "default": 0}
 	})
 
 	# Level progress table
@@ -151,7 +151,7 @@ func get_coins() -> int:
 	var result = db.query_result
 	if result.size() > 0:
 		return result[0]["scs_coins"]
-	return 5000
+	return 0
 
 # =============================================
 # LEVEL PROGRESS

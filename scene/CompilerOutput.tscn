@@ -135,7 +135,6 @@ animations = [{
 [node name="CompilerOutput" type="PopupPanel"]
 oversampling_override = 1.0
 size = Vector2i(800, 650)
-visible = true
 script = ExtResource("1_p6f33")
 
 [node name="Panel" type="Panel" parent="."]
@@ -144,8 +143,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
 offset_top = 4.0
-offset_right = -4.0
-offset_bottom = -4.0
+offset_right = 796.0
+offset_bottom = 646.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_jd2qm")
@@ -319,6 +318,7 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="OutputContainer" type="VBoxContainer" parent="Panel/VBoxContainer/ContentContainer"]
+visible = false
 layout_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBoxContainer/ContentContainer/OutputContainer"]

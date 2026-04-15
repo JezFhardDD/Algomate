@@ -10,7 +10,7 @@ var next_scene_path: String = ""
 # These stay for in-memory access / signals
 var purchased_pictures: Array = []
 var equipped_picture: String = ""
-var scs_coins: int = 5000
+var scs_coins: int = 0
 
 signal profile_updated
 signal profile_reset
@@ -32,11 +32,11 @@ func _sync_from_db():
 	if profile.size() > 0:
 		profile_data["profile_name"] = profile.get("name", "")
 		profile_data["profile_picture"] = profile.get("profile_picture", "")
-		scs_coins = profile.get("scs_coins", 5000)
+		scs_coins = profile.get("scs_coins", 0)
 		print("Profile loaded from DB: ", profile_data)
 	else:
 		profile_data = {}
-		scs_coins = 5000
+		scs_coins = 0
 		print("No profile in DB yet.")
 
 	var shop_items = DB.get_shop_items()
@@ -90,7 +90,7 @@ func reset_profile():
 	profile_data = {}
 	purchased_pictures = []
 	equipped_picture = ""
-	scs_coins = 5000
+	scs_coins = 0
 	DB.reset_all()
 	profile_reset.emit()
 	coins_updated.emit(scs_coins)

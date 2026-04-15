@@ -37,6 +37,7 @@ const SIM_SCENES = [
 	"res://scene/TreeDFSA.tscn",
 	"res://scene/Bfs.tscn",
 	"res://scene/TreeBFSa.tscn",
+	"res://scene/graph.tscn"
 ]
 
 func _ready():

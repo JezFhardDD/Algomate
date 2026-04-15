@@ -253,6 +253,7 @@ func _get_simulation_path() -> String:
 		"depth_first_search":   "res://scene/Dfs.tscn",
 		"breadth_first_search": "res://scene/Bfs.tscn",
 		"bst":   "res://scene/BST.tscn",  # ← add thi
+		"graph": "res://scene/graph.tscn"
 	}
 	return sim_map.get(lesson_id, "")
 

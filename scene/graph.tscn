@@ -1,0 +1,131 @@
+[gd_scene load_steps=12 format=3 uid="uid://3wh1dk1phopy"]
+
+[ext_resource type="PackedScene" uid="uid://bya6tfmre20j2" path="res://scene/BST.tscn" id="1_0nhvy"]
+[ext_resource type="Script" uid="uid://d0aqcjtpw7whv" path="res://script/graph.gd" id="2_l2nxt"]
+[ext_resource type="Texture2D" uid="uid://b31vqwe610avh" path="res://assets/circles2.png" id="3_2kst4"]
+[ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="4_7axnf"]
+[ext_resource type="FontFile" uid="uid://djb2uwjnv78q3" path="res://assets/font/Planes_ValMore.ttf" id="4_m2xsd"]
+[ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="5_bdqp6"]
+[ext_resource type="Texture2D" uid="uid://dcpfk145a6qpt" path="res://assets/circles4.png" id="5_ekds5"]
+[ext_resource type="Texture2D" uid="uid://dcxstyoycht1w" path="res://assets/BUTTON_HOVERED.png" id="6_k8ljj"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3dxm6"]
+texture = ExtResource("4_7axnf")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_devvj"]
+texture = ExtResource("5_bdqp6")
+modulate_color = Color(0.713726, 0.388235, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j4qnp"]
+texture = ExtResource("6_k8ljj")
+modulate_color = Color(0.54902, 1, 1, 1)
+
+[node name="Main" instance=ExtResource("1_0nhvy")]
+script = ExtResource("2_l2nxt")
+
+[node name="InsertButton" parent="VBoxContainer" index="0"]
+text = "Vertex Options"
+
+[node name="DeleteButton" parent="VBoxContainer" index="1"]
+text = "Edge Options"
+
+[node name="SortButton" parent="VBoxContainer" index="2"]
+text = "Traverse"
+
+[node name="WaitingElements" parent="VBoxContainer" index="3"]
+text = "Dijkstra's
+Shortest Path"
+
+[node name="Prim" type="Button" parent="VBoxContainer" index="4"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.0666667, 0.521569, 1, 1)
+theme_override_colors/font_outline_color = Color(1, 0.796078, 0.764706, 1)
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("4_m2xsd")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxTexture_3dxm6")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_devvj")
+theme_override_styles/hover = SubResource("StyleBoxTexture_j4qnp")
+text = "Prim's
+Spanning Tree"
+
+[node name="HBoxContainer2" parent="." index="8"]
+visible = true
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -50.0
+offset_top = 30.0
+offset_right = 50.0
+offset_bottom = 70.0
+grow_horizontal = 2
+
+[node name="Label" parent="ConfigChoiceModal" index="0"]
+text = "Do you want to configure graph size and its element ?"
+
+[node name="cycle" type="TextureRect" parent="." index="28"]
+modulate = Color(0.3, 0.3, 0.3, 1)
+layout_mode = 0
+offset_left = 922.0103
+offset_top = 12.915866
+offset_right = 1022.0102
+offset_bottom = 112.91583
+texture = ExtResource("3_2kst4")
+
+[node name="Label" type="Label" parent="cycle" index="0"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.74509805, 0.74509805, 0.74509805, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 3
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("4_m2xsd")
+theme_override_font_sizes/font_size = 20
+text = "cycle"
+
+[node name="connectivity" type="TextureRect" parent="." index="29"]
+modulate = Color(0.3, 0.3, 0.3, 1)
+self_modulate = Color(1, 1, 0, 1)
+layout_mode = 0
+offset_left = 815.01044
+offset_top = 13.925615
+offset_right = 915.01044
+offset_bottom = 113.92558
+texture = ExtResource("5_ekds5")
+
+[node name="Label" type="Label" parent="connectivity" index="0"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.74509805, 0.74509805, 0.74509805, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 3
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("4_m2xsd")
+theme_override_font_sizes/font_size = 20
+text = "connectivity"
