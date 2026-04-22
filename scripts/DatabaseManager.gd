@@ -147,7 +147,8 @@ func update_coins(new_total: int):
 		print("[DB] WARNING: No profile row exists, coins not saved!")
 
 func get_coins() -> int:
-	db.query("SELECT scs_coins FROM profile WHERE id = 1;")
+	# Gets the most recent profile instead of assuming the ID is 1
+	db.query("SELECT scs_coins FROM profile ORDER BY id DESC LIMIT 1;")
 	var result = db.query_result
 	if result.size() > 0:
 		return result[0]["scs_coins"]
@@ -291,7 +292,8 @@ func purchase_item(picture_path: String) -> bool:
 func equip_item(picture_path: String):
 	db.query("UPDATE shop_items SET is_equipped = 0;")  # unequip all
 	db.query("UPDATE shop_items SET is_equipped = 1 WHERE picture_path = '" + picture_path + "';")
-	db.update_rows("profile", "id = 1", {"profile_picture": picture_path})
+	# Updates the max/latest ID instead of assuming the ID is 1
+	db.query("UPDATE profile SET profile_picture = '" + picture_path + "' WHERE id = (SELECT MAX(id) FROM profile);")
 	Global.equipped_picture = picture_path
 	Global.profile_data["profile_picture"] = picture_path
 	print("[DB] Equipped: ", picture_path)
