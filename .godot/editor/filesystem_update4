@@ -1,7 +1,4 @@
-res://scene/BG.gdshader
-res://scene/graph.tscn
-res://script/graph.gd
-res://scripts/GlobalLoading.gd
+res://scenes/loading_screen.tscn
 res://scripts/lectures_bg.gdshader
+res://scene/BG.gdshader
 res://scripts/lecture_floating_buttons.gdshader
-res://scripts/lesson_view.gd

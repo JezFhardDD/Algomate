@@ -637,20 +637,20 @@ stretch_mode = 6
 
 [node name="Block60" type="TextureRect" parent="Blocks"]
 layout_mode = 0
-offset_left = 222.0
-offset_top = 1128.0
-offset_right = 306.0
-offset_bottom = 1212.0
+offset_left = 215.99997
+offset_top = 1137.0
+offset_right = 299.99997
+offset_bottom = 1221.0
 scale = Vector2(1.8371067, 1.8371067)
 texture = ExtResource("3_qygbf")
 stretch_mode = 6
 
 [node name="Block61" type="TextureRect" parent="Blocks"]
 layout_mode = 0
-offset_left = 369.00003
-offset_top = 1128.0
-offset_right = 453.00003
-offset_bottom = 1212.0
+offset_left = 363.0
+offset_top = 1137.0
+offset_right = 447.0
+offset_bottom = 1221.0
 scale = Vector2(1.8371067, 1.8371067)
 texture = ExtResource("4_pu4a1")
 stretch_mode = 6
@@ -687,20 +687,20 @@ stretch_mode = 6
 
 [node name="Block65" type="TextureRect" parent="Blocks"]
 layout_mode = 0
-offset_left = -75.99997
-offset_top = 1130.0
-offset_right = 8.0000305
-offset_bottom = 1214.0
+offset_left = -82.0
+offset_top = 1139.0
+offset_right = 2.0
+offset_bottom = 1223.0
 scale = Vector2(1.8371067, 1.8371067)
 texture = ExtResource("3_qygbf")
 stretch_mode = 6
 
 [node name="Block66" type="TextureRect" parent="Blocks"]
 layout_mode = 0
-offset_left = 71.00006
-offset_top = 1130.0
-offset_right = 155.00006
-offset_bottom = 1214.0
+offset_left = 65.00003
+offset_top = 1139.0
+offset_right = 149.00003
+offset_bottom = 1223.0
 scale = Vector2(1.8371067, 1.8371067)
 texture = ExtResource("4_pu4a1")
 stretch_mode = 6
@@ -727,10 +727,10 @@ stretch_mode = 6
 
 [node name="Block69" type="TextureRect" parent="Blocks"]
 layout_mode = 0
-offset_left = 517.99994
-offset_top = 1130.0
-offset_right = 601.99994
-offset_bottom = 1214.0
+offset_left = 511.9999
+offset_top = 1139.0
+offset_right = 595.9999
+offset_bottom = 1223.0
 scale = Vector2(1.8371067, 1.8371067)
 texture = ExtResource("3_qygbf")
 stretch_mode = 6
@@ -917,10 +917,164 @@ stretch_mode = 6
 
 [node name="Block86" type="TextureRect" parent="Blocks"]
 layout_mode = 0
-offset_left = 668.0
-offset_top = 1125.0
-offset_right = 752.0
-offset_bottom = 1209.0
+offset_left = 662.0
+offset_top = 1134.0
+offset_right = 746.0
+offset_bottom = 1218.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block93" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -208.0
+offset_top = 1260.0
+offset_right = -124.0
+offset_bottom = 1344.0
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block100" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -62.0
+offset_top = 1408.0
+offset_right = 22.0
+offset_bottom = 1492.0
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block101" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 228.99997
+offset_top = 1414.0
+offset_right = 312.99997
+offset_bottom = 1498.0
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block102" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 519.99994
+offset_top = 1419.9999
+offset_right = 603.99994
+offset_bottom = 1503.9999
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block105" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 519.99994
+offset_top = 1419.9999
+offset_right = 603.99994
+offset_bottom = 1503.9999
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block94" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 229.0
+offset_top = 1262.9999
+offset_right = 313.0
+offset_bottom = 1346.9999
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block103" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 81.0
+offset_top = 1417.0
+offset_right = 165.0
+offset_bottom = 1501.0
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block107" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -208.0
+offset_top = 1414.0
+offset_right = -124.0
+offset_bottom = 1498.0
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block104" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 371.99997
+offset_top = 1417.0
+offset_right = 455.99997
+offset_bottom = 1501.0
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block106" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 666.0
+offset_top = 1419.9999
+offset_right = 750.0
+offset_bottom = 1503.9999
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block95" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 78.0
+offset_top = 1265.0
+offset_right = 162.0
+offset_bottom = 1349.0
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block96" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -61.0
+offset_top = 1267.9999
+offset_right = 23.000015
+offset_bottom = 1351.9999
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block97" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 375.0
+offset_top = 1270.0
+offset_right = 459.0
+offset_bottom = 1354.0
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block98" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 656.99994
+offset_top = 1271.0
+offset_right = 740.99994
+offset_bottom = 1355.0
+rotation = 0.0054252637
 scale = Vector2(1.8371067, 1.8371067)
 texture = ExtResource("3_qygbf")
 stretch_mode = 6
@@ -931,6 +1085,92 @@ offset_left = 815.0
 offset_top = 1125.0
 offset_right = 899.0
 offset_bottom = 1209.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block99" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 513.0001
+offset_top = 1271.0
+offset_right = 597.0001
+offset_bottom = 1355.0
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block108" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -213.1628
+offset_top = 1553.0
+offset_right = -129.1628
+offset_bottom = 1637.0
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block109" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 223.8372
+offset_top = 1555.9999
+offset_right = 307.83722
+offset_bottom = 1639.9999
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block110" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 72.837204
+offset_top = 1558.0
+offset_right = 156.8372
+offset_bottom = 1642.0
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block111" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = -66.162796
+offset_top = 1560.9999
+offset_right = 17.83722
+offset_bottom = 1644.9999
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("4_pu4a1")
+stretch_mode = 6
+
+[node name="Block112" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 369.83722
+offset_top = 1563.0
+offset_right = 453.83722
+offset_bottom = 1647.0
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block113" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 651.83716
+offset_top = 1564.0
+offset_right = 735.83716
+offset_bottom = 1648.0
+rotation = 0.0054252637
+scale = Vector2(1.8371067, 1.8371067)
+texture = ExtResource("3_qygbf")
+stretch_mode = 6
+
+[node name="Block114" type="TextureRect" parent="Blocks"]
+layout_mode = 0
+offset_left = 507.83734
+offset_top = 1564.0
+offset_right = 591.83734
+offset_bottom = 1648.0
 scale = Vector2(1.8371067, 1.8371067)
 texture = ExtResource("4_pu4a1")
 stretch_mode = 6
