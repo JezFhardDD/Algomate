@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://n74hr1lti5wc"]
+[gd_scene load_steps=37 format=3 uid="uid://n74hr1lti5wc"]
 
 [ext_resource type="Script" uid="uid://bskopphl4nod1" path="res://scripts/progress_page.gd" id="1_823gq"]
 [ext_resource type="Shader" uid="uid://dm5tlgdpgj58y" path="res://scripts/lectures_bg.gdshader" id="1_fvj5j"]
@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://b2hkw0gkjb1ja" path="res://scenes/overall_assessment.tscn" id="7_a726w"]
 [ext_resource type="Texture2D" uid="uid://binxvpneifapc" path="res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/BACK_BUTTON_GREEN.png" id="9_a8fdb"]
 [ext_resource type="FontFile" uid="uid://bvq3t3k08atlq" path="res://assets/font/Minecraftchmc-dBlX.ttf" id="9_votil"]
-[ext_resource type="Texture2D" uid="uid://dvilfo7cosnfo" path="res://assets/question_mark.png" id="11_snn5b"]
+[ext_resource type="Texture2D" uid="uid://bx6xj3b1rmsve" path="res://assets/ui/Sprite-0001.png" id="11_votil"]
 [ext_resource type="Texture2D" uid="uid://cifj0g1mojmrs" path="res://assets/CONTAINER.png" id="11_xukm5"]
 [ext_resource type="Texture2D" uid="uid://cwqjbd1d3hksv" path="res://assets/BUTTON.png" id="12_q4d6n"]
 [ext_resource type="Texture2D" uid="uid://c516b2jrjpc4i" path="res://assets/BUTTON_PRESSED.png" id="13_votil"]
@@ -43,92 +43,85 @@ texture = ExtResource("3_nfqvn")
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_f5loa"]
 texture = ExtResource("12_q4d6n")
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_08k7p"]
-atlas = ExtResource("11_snn5b")
+[sub_resource type="AtlasTexture" id="AtlasTexture_snn5b"]
+atlas = ExtResource("11_votil")
 region = Rect2(0, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_8cuns"]
-atlas = ExtResource("11_snn5b")
+[sub_resource type="AtlasTexture" id="AtlasTexture_2w6ts"]
+atlas = ExtResource("11_votil")
 region = Rect2(32, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_gjnlk"]
-atlas = ExtResource("11_snn5b")
+[sub_resource type="AtlasTexture" id="AtlasTexture_qsoc1"]
+atlas = ExtResource("11_votil")
 region = Rect2(64, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_kxuod"]
-atlas = ExtResource("11_snn5b")
+[sub_resource type="AtlasTexture" id="AtlasTexture_wrkln"]
+atlas = ExtResource("11_votil")
 region = Rect2(96, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_1dr5g"]
-atlas = ExtResource("11_snn5b")
+[sub_resource type="AtlasTexture" id="AtlasTexture_f5loa"]
+atlas = ExtResource("11_votil")
 region = Rect2(128, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_wosyn"]
-atlas = ExtResource("11_snn5b")
+[sub_resource type="AtlasTexture" id="AtlasTexture_dxeg5"]
+atlas = ExtResource("11_votil")
 region = Rect2(160, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_uiejy"]
-atlas = ExtResource("11_snn5b")
+[sub_resource type="AtlasTexture" id="AtlasTexture_vtuao"]
+atlas = ExtResource("11_votil")
 region = Rect2(192, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_dq3mc"]
-atlas = ExtResource("11_snn5b")
+[sub_resource type="AtlasTexture" id="AtlasTexture_gcmg2"]
+atlas = ExtResource("11_votil")
 region = Rect2(224, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_hmh3n"]
-atlas = ExtResource("11_snn5b")
+[sub_resource type="AtlasTexture" id="AtlasTexture_ly2k4"]
+atlas = ExtResource("11_votil")
 region = Rect2(256, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_tgqhd"]
-atlas = ExtResource("11_snn5b")
+[sub_resource type="AtlasTexture" id="AtlasTexture_o5104"]
+atlas = ExtResource("11_votil")
 region = Rect2(288, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_puvaq"]
-atlas = ExtResource("11_snn5b")
+[sub_resource type="AtlasTexture" id="AtlasTexture_yxh5u"]
+atlas = ExtResource("11_votil")
 region = Rect2(320, 0, 32, 32)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_lcaa3"]
-atlas = ExtResource("11_snn5b")
-region = Rect2(352, 0, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_dxeg5"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_08k7p")
+"texture": SubResource("AtlasTexture_snn5b")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_8cuns")
+"texture": SubResource("AtlasTexture_2w6ts")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_gjnlk")
+"texture": SubResource("AtlasTexture_qsoc1")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_kxuod")
+"texture": SubResource("AtlasTexture_wrkln")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_1dr5g")
+"texture": SubResource("AtlasTexture_f5loa")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_wosyn")
+"texture": SubResource("AtlasTexture_dxeg5")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_uiejy")
+"texture": SubResource("AtlasTexture_vtuao")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_dq3mc")
+"texture": SubResource("AtlasTexture_gcmg2")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_hmh3n")
+"texture": SubResource("AtlasTexture_ly2k4")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_tgqhd")
+"texture": SubResource("AtlasTexture_o5104")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_puvaq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_lcaa3")
+"texture": SubResource("AtlasTexture_yxh5u")
 }],
 "loop": true,
 "name": &"default",
@@ -670,10 +663,12 @@ theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxTexture_f5loa")
 
 [node name="Q_mark_anim_sprites" type="AnimatedSprite2D" parent="MainScroll/MarginContainer/MainVBox/PuzzleSection/PuzzleHeader/PuzzleHelpButton"]
+self_modulate = Color(0.7891721, 0.7891721, 0.78917205, 1)
 position = Vector2(49, 18)
-scale = Vector2(1.64062, 1.34375)
+scale = Vector2(2.066, 1.692)
 sprite_frames = SubResource("SpriteFrames_dxeg5")
 autoplay = "default"
+frame_progress = 0.60385656
 
 [node name="PuzzleCenter" type="CenterContainer" parent="MainScroll/MarginContainer/MainVBox/PuzzleSection"]
 custom_minimum_size = Vector2(100, 800)
