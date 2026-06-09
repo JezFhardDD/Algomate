@@ -113,27 +113,6 @@ const RESULT_POPUP_SCENE := preload("res://scene/ResultPopup.tscn")
 @onready var java_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/Java_btn
 @onready var c_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/C_btn
 
-# ==============================================
-#   COMPILER INTEGRATION - API KEYS
-# ==============================================
-const API_KEYS = {
-	"cpp": {
-		"clientId": "f4fc8575ee6c45ca1baf697a28b9771e",
-		"clientSecret": "7d8b060459fb304352f243b2a95194c04bf10503b1a06126043bc4f3cada366e"
-	},
-	"c": {
-		"clientId": "f4fc8575ee6c45ca1baf697a28b9771e",
-		"clientSecret": "7d8b060459fb304352f243b2a95194c04bf10503b1a06126043bc4f3cada366e"
-	},
-	"java": {
-		"clientId": "f4fc8575ee6c45ca1baf697a28b9771e",
-		"clientSecret": "7d8b060459fb304352f243b2a95194c04bf10503b1a06126043bc4f3cada366e"
-	},
-	"python": {
-		"clientId": "f4fc8575ee6c45ca1baf697a28b9771e",
-		"clientSecret": "7d8b060459fb304352f243b2a95194c04bf10503b1a06126043bc4f3cada366e"
-	}
-}
 
 # --- LINEAR SEARCH VARIABLES ---
 var main_array: Array[int] = []
@@ -348,7 +327,7 @@ func _on_compile_button_pressed() -> void:
 func _compile_code(code: String) -> void:
 	show_feedback("Compiling...", Color.YELLOW, Vector2(200, 200))
 	
-	var keys = API_KEYS[current_code_language]
+	var keys =  APIManager.get_keys("KEY_D")
 	
 	var http_request = HTTPRequest.new()
 	add_child(http_request)

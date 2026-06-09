@@ -120,27 +120,7 @@ var sort_warning_popup: PopupPanel = null
 var sort_i: int = 0
 var sort_j: int = 0
 
-# ==============================================
-#   COMPILER INTEGRATION - API KEYS
-# ==============================================
-const API_KEYS = {
-	"cpp": {
-		"clientId": "acec24bcf83167f159858257587a25d6",
-		"clientSecret": "23a87ab11bf0c1fc5693044a0b7d13268911f11330a8c206788d94c669334fc2"
-	},
-	"c": {
-		"clientId": "acec24bcf83167f159858257587a25d6",
-		"clientSecret": "23a87ab11bf0c1fc5693044a0b7d13268911f11330a8c206788d94c669334fc2"
-	},
-	"java": {
-		"clientId": "acec24bcf83167f159858257587a25d6",
-		"clientSecret": "23a87ab11bf0c1fc5693044a0b7d13268911f11330a8c206788d94c669334fc2"
-	},
-	"python": {
-		"clientId": "acec24bcf83167f159858257587a25d6",
-		"clientSecret": "23a87ab11bf0c1fc5693044a0b7d13268911f11330a8c206788d94c669334fc2"
-	}
-}
+
 
 # --- 2. CONFIGURATION ---
 const BLOCK_SCENE := preload("res://BubbleBlock.tscn")
@@ -744,7 +724,7 @@ func _on_compile_button_pressed() -> void:
 func _compile_code(code: String) -> void:
 	show_feedback("Compiling...", Color.YELLOW, Vector2(200, 200))
 	
-	var keys = API_KEYS[current_code_language]
+	var keys = APIManager.get_keys("KEY_C")
 	
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
@@ -1885,7 +1865,7 @@ func show_feedback(text: String, color: Color, position: Vector2):
 	anim_player.animation_finished.connect(func(_a): label.queue_free())
 
 func check_jdoodle_credits():
-	var keys = API_KEYS[current_code_language]
+	var keys = APIManager.get_keys("KEY_C")
 	
 	var http_request = HTTPRequest.new()
 	add_child(http_request)

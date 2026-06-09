@@ -1338,27 +1338,7 @@ int main() {
 	code = code.replace("TARGET_PLACEHOLDER", str(target))
 	return code
 
-# ==============================================
-#   COMPILER INTEGRATION (UPDATED with caching)
-# ==============================================
-const API_KEYS = {
-	"cpp": {
-		"clientId": "acec24bcf83167f159858257587a25d6",
-		"clientSecret": "23a87ab11bf0c1fc5693044a0b7d13268911f11330a8c206788d94c669334fc2"
-	},
-	"c": {
-		"clientId": "acec24bcf83167f159858257587a25d6",
-		"clientSecret": "23a87ab11bf0c1fc5693044a0b7d13268911f11330a8c206788d94c669334fc2"
-	},
-	"java": {
-		"clientId": "acec24bcf83167f159858257587a25d6",
-		"clientSecret": "23a87ab11bf0c1fc5693044a0b7d13268911f11330a8c206788d94c669334fc2"
-	},
-	"python": {
-		"clientId": "acec24bcf83167f159858257587a25d6",
-		"clientSecret": "23a87ab11bf0c1fc5693044a0b7d13268911f11330a8c206788d94c669334fc2"
-	}
-}
+
 
 func _setup_compiler():
 	"""Setup compiler button and popup"""
@@ -1416,7 +1396,7 @@ func _compile_code(code: String):
 	show_feedback("Compiling...", Color.YELLOW, Vector2(200, 200))
 	
 	# Get API keys for current language
-	var keys = API_KEYS[current_code_language]
+	var keys = APIManager.get_keys("KEY_C")
 	
 	# Prepare API request
 	var http_request = HTTPRequest.new()

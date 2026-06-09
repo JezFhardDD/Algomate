@@ -1512,29 +1512,6 @@ int main() {
 }""" % arr
 
 
-# ==============================================
-#   COMPILER INTEGRATION
-# ==============================================
-
-# API Keys (copy these from your compiler.gd)
-const API_KEYS = {
-	"cpp": {
-		"clientId": "29cb443cb807bccf8958679fa40067dc",
-		"clientSecret": "ac4b99a6102b8b472e8da670798941ddbbd47148e97a554eccce100246ccb1ad"
-	},
-	"c": {
-		"clientId": "29cb443cb807bccf8958679fa40067dc",
-		"clientSecret": "ac4b99a6102b8b472e8da670798941ddbbd47148e97a554eccce100246ccb1ad"
-	},
-	"java": {
-		"clientId": "29cb443cb807bccf8958679fa40067dc",
-		"clientSecret": "ac4b99a6102b8b472e8da670798941ddbbd47148e97a554eccce100246ccb1ad"
-	},
-	"python": {
-		"clientId": "29cb443cb807bccf8958679fa40067dc",
-		"clientSecret": "ac4b99a6102b8b472e8da670798941ddbbd47148e97a554eccce100246ccb1ad"
-	}
-}
 
 func _setup_compiler():
 	"""Setup compiler button and popup"""
@@ -1593,7 +1570,7 @@ func _compile_code(code: String):
 	show_feedback("Compiling...", Color.YELLOW, Vector2(200, 200))
 	
 	# Get API keys for current language
-	var keys = API_KEYS[current_code_language]
+	var keys = APIManager.get_keys("KEY_B")
 	
 	# Prepare API request
 	var http_request = HTTPRequest.new()

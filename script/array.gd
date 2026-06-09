@@ -171,27 +171,6 @@ var cpp_walkthrough_step: int = 0
 var cpp_walkthrough_steps: Array = [] 
 var tutorial_in_progress: bool = false
 
-# ==============================================
-#   COMPILER INTEGRATION - API KEYS
-# ==============================================
-const API_KEYS = {
-	"cpp": {
-		"clientId": "3c11a7c85254e2f154ea9c2bbf3d1356",
-		"clientSecret": "918e597d99f55dc0972e92971189ed76d47f3a84541678a60f65a978728934cc"
-	},
-	"c": {
-		"clientId": "3c11a7c85254e2f154ea9c2bbf3d1356",
-		"clientSecret": "918e597d99f55dc0972e92971189ed76d47f3a84541678a60f65a978728934cc"
-	},
-	"java": {
-		"clientId": "3c11a7c85254e2f154ea9c2bbf3d1356",
-		"clientSecret": "918e597d99f55dc0972e92971189ed76d47f3a84541678a60f65a978728934cc"
-	},
-	"python": {
-		"clientId": "3c11a7c85254e2f154ea9c2bbf3d1356",
-		"clientSecret": "918e597d99f55dc0972e92971189ed76d47f3a84541678a60f65a978728934cc"
-	}
-}
 
 enum ActionType { ACCESS, INSERT_AT_END, INSERT_AT_INDEX, DELETE, REPLACE } 
 
@@ -329,7 +308,7 @@ func _compile_code(code: String):
 	"""Send code to JDoodle API"""
 	show_feedback("Compiling...", Color.YELLOW, Vector2(200, 200))
 	
-	var keys = API_KEYS[current_language]
+	var keys = APIManager.get_keys("KEY_A")
 	
 	var http_request = HTTPRequest.new()
 	add_child(http_request)

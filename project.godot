@@ -23,6 +23,7 @@ Global="*res://scripts/Global.gd"
 SceneManager="*res://scripts/SceneManager.gd"
 AudioManager="*res://autoloads/AudioManager.gd"
 GlobalLoading="*res://scripts/GlobalLoading.gd"
+APIManager="*res://autoloads/APIManager..gd"
 
 [display]
 

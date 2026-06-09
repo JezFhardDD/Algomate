@@ -107,27 +107,7 @@ const RESULT_POPUP_SCENE := preload("res://scene/ResultPopup.tscn")
 var index_labels: Array[Label] = []
 var INDEX_LABEL_OFFSET: float = 100.0
 var current_tween: Tween = null
-# ==============================================
-#   COMPILER INTEGRATION - API KEYS
-# ==============================================
-const API_KEYS = {
-	"cpp": {
-		"clientId": "29cb443cb807bccf8958679fa40067dc",
-		"clientSecret": "ac4b99a6102b8b472e8da670798941ddbbd47148e97a554eccce100246ccb1ad"
-	},
-	"c": {
-		"clientId": "29cb443cb807bccf8958679fa40067dc",
-		"clientSecret": "ac4b99a6102b8b472e8da670798941ddbbd47148e97a554eccce100246ccb1ad"
-	},
-	"java": {
-		"clientId": "29cb443cb807bccf8958679fa40067dc",
-		"clientSecret": "ac4b99a6102b8b472e8da670798941ddbbd47148e97a554eccce100246ccb1ad"
-	},
-	"python": {
-		"clientId": "29cb443cb807bccf8958679fa40067dc",
-		"clientSecret": "ac4b99a6102b8b472e8da670798941ddbbd47148e97a554eccce100246ccb1ad"
-	}
-}
+
 
 # --- SELECTION SORT VARIABLES ---
 var main_array: Array[int] = []
@@ -344,7 +324,7 @@ func _on_compile_button_pressed() -> void:
 func _compile_code(code: String) -> void:
 	show_feedback("Compiling...", Color.YELLOW, Vector2(200, 200))
 	
-	var keys = API_KEYS[current_code_language]
+	var keys = APIManager.get_keys("KEY_B")
 	
 	var http_request = HTTPRequest.new()
 	add_child(http_request)

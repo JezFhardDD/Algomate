@@ -1919,28 +1919,6 @@ public class Main {
 }"""
 	return code % [arr, target]
 
-# ==============================================
-#   COMPILER INTEGRATION (UPDATED with caching)
-# ==============================================
-
-const API_KEYS = {
-	"cpp": {
-		"clientId": "3c11a7c85254e2f154ea9c2bbf3d1356",
-		"clientSecret": "918e597d99f55dc0972e92971189ed76d47f3a84541678a60f65a978728934cc"
-	},
-	"c": {
-		"clientId": "3c11a7c85254e2f154ea9c2bbf3d1356",
-		"clientSecret": "918e597d99f55dc0972e92971189ed76d47f3a84541678a60f65a978728934cc"
-	},
-	"java": {
-		"clientId": "3c11a7c85254e2f154ea9c2bbf3d1356",
-		"clientSecret": "918e597d99f55dc0972e92971189ed76d47f3a84541678a60f65a978728934cc"
-	},
-	"python": {
-		"clientId": "3c11a7c85254e2f154ea9c2bbf3d1356",
-		"clientSecret": "918e597d99f55dc0972e92971189ed76d47f3a84541678a60f65a978728934cc"
-	}
-}
 
 func _setup_compiler():
 	"""Setup compiler button and popup"""
@@ -1998,7 +1976,7 @@ func _compile_code(code: String):
 	show_feedback("Compiling...", Color.YELLOW, Vector2(200, 200))
 	
 	# Get API keys for current language
-	var keys = API_KEYS[current_code_language]
+	var keys = APIManager.get_keys("KEY_A")
 	
 	# Prepare API request
 	var http_request = HTTPRequest.new()

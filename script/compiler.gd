@@ -1,25 +1,6 @@
 extends Control
 var input_container: MarginContainer
 var input_textedit: TextEdit
-# API Keys
-const API_KEYS = {
-	"cpp": {
-		"clientId": "acec24bcf83167f159858257587a25d6",
-		"clientSecret": "23a87ab11bf0c1fc5693044a0b7d13268911f11330a8c206788d94c669334fc2"
-	},
-	"c": {
-		"clientId": "acec24bcf83167f159858257587a25d6",
-		"clientSecret": "23a87ab11bf0c1fc5693044a0b7d13268911f11330a8c206788d94c669334fc2"
-	},
-	"java": {
-		"clientId": "acec24bcf83167f159858257587a25d6",
-		"clientSecret": "23a87ab11bf0c1fc5693044a0b7d13268911f11330a8c206788d94c669334fc2"
-	},
-	"python": {
-		"clientId": "acec24bcf83167f159858257587a25d6",
-		"clientSecret": "23a87ab11bf0c1fc5693044a0b7d13268911f11330a8c206788d94c669334fc2"
-	}
-}
 
 # Node references
 @onready var tabs = {
@@ -286,7 +267,7 @@ func _on_compile_pressed():
 	_show_feedback("Compiling...", Color.YELLOW)
 	
 	# Get API keys
-	var keys = API_KEYS[current_language]
+	var keys = APIManager.get_keys("KEY_C")
 	
 	# Prepare API request
 	var http_request = HTTPRequest.new()

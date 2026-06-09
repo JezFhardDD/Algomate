@@ -111,27 +111,7 @@ const RESULT_POPUP_SCENE := preload("res://scene/ResultPopup.tscn")
 @onready var java_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/Java_btn
 @onready var c_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/C_btn
 
-# ==============================================
-#   COMPILER INTEGRATION - API KEYS
-# ==============================================
-const API_KEYS = {
-	"cpp": {
-		"clientId": "acec24bcf83167f159858257587a25d6",
-		"clientSecret": "23a87ab11bf0c1fc5693044a0b7d13268911f11330a8c206788d94c669334fc2"
-	},
-	"c": {
-		"clientId": "acec24bcf83167f159858257587a25d6",
-		"clientSecret": "23a87ab11bf0c1fc5693044a0b7d13268911f11330a8c206788d94c669334fc2"
-	},
-	"java": {
-		"clientId": "acec24bcf83167f159858257587a25d6",
-		"clientSecret": "23a87ab11bf0c1fc5693044a0b7d13268911f11330a8c206788d94c669334fc2"
-	},
-	"python": {
-		"clientId": "acec24bcf83167f159858257587a25d6",
-		"clientSecret": "23a87ab11bf0c1fc5693044a0b7d13268911f11330a8c206788d94c669334fc2"
-	}
-}
+
 
 # --- DFS VARIABLES ---
 var main_array: Array[int] = []
@@ -371,7 +351,7 @@ func _on_compile_button_pressed() -> void:
 func _compile_code(code: String) -> void:
 	show_feedback("Compiling...", Color.YELLOW, Vector2(200, 200))
 	
-	var keys = API_KEYS[current_code_language]
+	var keys = APIManager.get_keys("KEY_C")
 	
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
