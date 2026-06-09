@@ -15,8 +15,8 @@ extends Control
 @onready var insert_index_spin: SpinBox = find_child("InsertIndexSpinBox", true, false)
 
 # --- MAIN BUTTONS (Repurposed) ---
-@onready var end_sim_btn: Button = $VBoxContainer/SortButton  # Former Undo button
-@onready var simulate_new_btn: Button = $VBoxContainer/WaitingElements  # Former Redo button
+@onready var end_sim_btn: Button = $VBoxContainer/SortButton 
+@onready var simulate_new_btn: Button = $VBoxContainer/WaitingElements 
 @onready var timeline_btn: Button = $VBoxContainer/TimelineButton
 
 # --- NEW ARRAY SIMULATION BUTTONS ---
@@ -24,15 +24,15 @@ extends Control
 @onready var insert_end_btn: Button = $VBoxContainer/InsertAtEndButton
 @onready var insert_i_btn: Button = $VBoxContainer/InsertAtIButton
 @onready var delete_btn: Button = $VBoxContainer/DeleteButton
-@onready var replace_btn: Button = $VBoxContainer/ReplaceButton  # NEW: Replace button
+@onready var replace_btn: Button = $VBoxContainer/ReplaceButton  
 
 # --- LABELS & CONTAINERS ---
 @onready var array_container: Control = $QueueContainer
 @onready var dequeued_container: Control = $DequeuedContainer
 
 # --- INDICATORS ---
-@onready var is_full_indicator: TextureRect = $IsFull  # NEW: isFull indicator
-@onready var is_empty_indicator: TextureRect = $IsEmpty  # NEW: isEmpty indicator
+@onready var is_full_indicator: TextureRect = $IsFull 
+@onready var is_empty_indicator: TextureRect = $IsEmpty 
 
 # --- POPUPS & MODALS ---
 @onready var waiting_popup: Popup = $WaitingPopup
@@ -121,43 +121,32 @@ const RESULT_POPUP_SCENE := preload("res://scene/ResultPopup.tscn")
 @onready var java_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/Java_btn
 @onready var c_lang_btn: Button = $CppPopup/VBoxContainer/HBoxContainer/C_btn
 
-# ADD these new onready vars at the top with the others:
 @onready var end_sim_confirmation: Panel = get_node_or_null("End_simulation_confirmation")
 @onready var end_sim_yes_btn: Button = get_node_or_null("End_simulation_confirmation/yes")
 @onready var end_sim_no_btn: Button = get_node_or_null("End_simulation_confirmation/no")
 
 @onready var cpp_scroll: ScrollContainer = get_node_or_null("CppPopup/VBoxContainer/ScrollContainer")
 
-# --- ARRAY SIMULATION VARIABLES ---
 var main_array: Array[int] = []
 var block_nodes: Array[Control] = []
-var index_labels: Array[Label] = []  # NEW: Store index label nodes
+var index_labels: Array[Label] = []  
 var timeline_log: Array[String] = []
-var action_count: int = 0  # Total actions performed
-var max_array_size: int = 7  # Default max, will be set during config
+var action_count: int = 0  
+var max_array_size: int = 7  
 var current_array_size: int = 0
-
-# Animation constants
 var BLOCK_WIDTH: float = 64.0
 var BLOCK_SPACING: float = 15.0
 var START_POSITION: Vector2 = Vector2(50, 80)
-var INDEX_LABEL_OFFSET: float = 100.0 # NEW: Vertical offset for index labels
+var INDEX_LABEL_OFFSET: float = 100.0 
 var ANIM_SPEED: float = 0.3
-
-# Store code lines with operation type and array state
-var code_operations: Array = []  # Store {type, details, array_state}
-
-# For animations
+var code_operations: Array = []  
 var is_animating: bool = false
 var current_tween: Tween = null
-
-# For code generation
 var code_lines: Array[String] = []
 var current_language: String = "cpp"
-var ui_enabled: bool = true  # Track UI state
+var ui_enabled: bool = true  
 var tutorial_step: int = 0
 var tutorial_nodes = []
-# Add these with the other variable declarations around line 100-120
 var intro_step: int = 0
 var intro_texts = [
 	"WELCOME TO ARRAY SIMULATION!\n\nLearn how arrays work through interactive visualization. Arrays are fundamental data structures that store elements in contiguous memory locations.",
@@ -177,9 +166,9 @@ var intro_texts = [
 	"CODE TRANSLATION:\n\nEvery action you perform is translated to real code!\nClick the CODE button to view your simulation in:\n• C++\n• Python\n• Java\n• C"
 ]
 var simulation_ended: bool = false
-var _highlight_timers: Dictionary = {}  # track active highlight timers per index
+var _highlight_timers: Dictionary = {} 
 var cpp_walkthrough_step: int = 0
-var cpp_walkthrough_steps: Array = []  # Will be built dynamically
+var cpp_walkthrough_steps: Array = [] 
 var tutorial_in_progress: bool = false
 
 # ==============================================
@@ -204,8 +193,7 @@ const API_KEYS = {
 	}
 }
 
-# Enum for action modal
-enum ActionType { ACCESS, INSERT_AT_END, INSERT_AT_INDEX, DELETE, REPLACE }  # NEW: Added REPLACE
+enum ActionType { ACCESS, INSERT_AT_END, INSERT_AT_INDEX, DELETE, REPLACE } 
 
 # ==============================================
 #   READY FUNCTION
@@ -216,12 +204,11 @@ func _ready() -> void:
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
 	print("Array Simulation starting...")
 	randomize()
-	
-	# Play background music
+
 	if audio_player:
 		audio_player.stream = load("res://assets/sfx/bgm.mp3")
 		audio_player.play()
-		audio_player.bus = "Music"  # Optional: set audio bus
+		audio_player.bus = "Music" 
 	
 	$DiificultyLabel.hide()
 	$VBoxContainer/HBoxContainer/AnimatedSprite2D.hide()
@@ -237,7 +224,7 @@ func _ready() -> void:
 	
 	_setup_array_buttons()
 	_setup_action_modal()
-	_setup_compiler()  # Add compiler setup
+	_setup_compiler()  
 	action_modal.set_main_scene(self)
 	
 	config_modal.hide()
@@ -254,7 +241,6 @@ func _ready() -> void:
 	if sim_yes_btn: sim_yes_btn.pressed.connect(_on_sim_yes_pressed)
 	if sim_no_btn: sim_no_btn.pressed.connect(_on_sim_no_pressed)
 	
-	# Connect end simulation confirmation buttons
 	if end_sim_yes_btn: end_sim_yes_btn.pressed.connect(_on_end_sim_yes_pressed)
 	if end_sim_no_btn: end_sim_no_btn.pressed.connect(_on_end_sim_no_pressed)
 	
@@ -273,11 +259,10 @@ func _ready() -> void:
 	if cpp_close_btn: cpp_close_btn.pressed.connect(_on_cpp_close_pressed)
 	if show_cpp_btn: show_cpp_btn.pressed.connect(_on_show_cpp_pressed)
 	
-	# FIX: Clean single connection for each button
 	if end_sim_btn:
-		end_sim_btn.pressed.connect(_on_simulate_new_pressed)  # SortButton = Simulate New
+		end_sim_btn.pressed.connect(_on_simulate_new_pressed)  
 	if simulate_new_btn:
-		simulate_new_btn.pressed.connect(_on_end_simulation_pressed)  # WaitingElements = End Simulation
+		simulate_new_btn.pressed.connect(_on_end_simulation_pressed)  
 	
 	_connect_language_buttons()
 	
@@ -292,16 +277,15 @@ func _ready() -> void:
 	call_deferred("show_introduction")
 	
 	_update_array_size_label()
-	_update_indicators()  # NEW: Update indicators on start
+	_update_indicators()  
 
 func _enter_tree():
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
 	await get_tree().process_frame
 	await get_tree().process_frame
 	
-	# Swap width and height to match landscape
 	var current_size = get_viewport().get_visible_rect().size
-	if current_size.y > current_size.x:  # Still thinks it's portrait
+	if current_size.y > current_size.x: 
 		get_tree().root.content_scale_size = Vector2i(int(current_size.y), int(current_size.x))
 		
 # ==============================================
@@ -310,18 +294,15 @@ func _enter_tree():
 func _setup_compiler():
 	"""Setup compiler button and popup"""
 	if compile_btn:
-		# Disconnect any existing connections to avoid duplicates
 		if compile_btn.is_connected("pressed", _on_compile_button_pressed):
 			compile_btn.disconnect("pressed", _on_compile_button_pressed)
 		compile_btn.pressed.connect(_on_compile_button_pressed)
 	
-	# Load the compiler output popup
 	if compiler_output_popup == null:
 		var popup_scene = preload("res://scene/CompilerOutput.tscn")
 		compiler_output_popup = popup_scene.instantiate()
 		add_child(compiler_output_popup)
 		
-		# Connect signals
 		compiler_output_popup.recompile_requested.connect(_on_recompile_requested)
 		compiler_output_popup.closed.connect(_on_compiler_output_closed)
 
@@ -329,12 +310,9 @@ func _on_compile_button_pressed():
 	"""Called when Compile button is pressed in the code popup"""
 	btn_sound.play()
 	
-	# Get the current code based on selected language
 	var code = _generate_code_for_language(current_language)
 	
-	# Check if we have cached result for this language
 	if compiler_output_popup and compiler_output_popup.has_cached_result(current_language):
-		# Show cached result without recompiling
 		var cached = compiler_output_popup.get_cached_result(current_language)
 		var fake_response = {
 			"output": cached.output,
@@ -345,17 +323,14 @@ func _on_compile_button_pressed():
 		compiler_output_popup.show_output(current_language, fake_response, self, false)
 		show_feedback("Using cached result!", Color.YELLOW, Vector2(200, 200))
 	else:
-		# Compile the code
 		_compile_code(code)
 
 func _compile_code(code: String):
 	"""Send code to JDoodle API"""
 	show_feedback("Compiling...", Color.YELLOW, Vector2(200, 200))
 	
-	# Get API keys for current language
 	var keys = API_KEYS[current_language]
 	
-	# Prepare API request
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
 	http_request.request_completed.connect(_on_compile_completed.bind(http_request, current_language))
@@ -363,11 +338,10 @@ func _compile_code(code: String):
 	var url = "https://api.jdoodle.com/v1/execute"
 	var headers = ["Content-Type: application/json"]
 	
-	# Map language to JDoodle API expected format
 	var api_language = current_language
 	match current_language:
 		"python":
-			api_language = "python3"  # JDoodle expects "python3" not "python"
+			api_language = "python3" 
 	
 	var body = JSON.new().stringify({
 		"clientId": keys["clientId"],
@@ -387,10 +361,10 @@ func _compile_code(code: String):
 
 func _get_version_index(lang: String) -> String:
 	match lang:
-		"cpp": return "5"     # C++17
-		"c": return "4"       # C17
-		"java": return "4"    # Java 17
-		"python": return "4"  # Python 3
+		"cpp": return "5"   
+		"c": return "4"      
+		"java": return "4"  
+		"python": return "4"  
 		_: return "0"
 
 func _on_compile_completed(result, response_code, headers, body, http_request, language: String):
@@ -410,13 +384,11 @@ func _on_compile_completed(result, response_code, headers, body, http_request, l
 	
 	var response = json.data
 	
-	# Show the output popup (false = from simulation, so landscape sizing)
 	if compiler_output_popup:
 		compiler_output_popup.show_output(language, response, self, false)
 
 func _on_recompile_requested(language: String):
 	"""Handle recompile request from popup"""
-	# Get the current code and recompile
 	var code = _generate_code_for_language(language)
 	_compile_code(code)
 
@@ -437,7 +409,7 @@ func set_ui_enabled(enabled: bool):
 	ui_enabled = enabled
 	
 	var buttons = [
-		access_btn, insert_end_btn, insert_i_btn, delete_btn, replace_btn,  # NEW: Added replace_btn
+		access_btn, insert_end_btn, insert_i_btn, delete_btn, replace_btn,  
 		end_sim_btn, simulate_new_btn, timeline_btn, help_btn,
 		cpp_code_button
 	]
@@ -448,7 +420,7 @@ func set_ui_enabled(enabled: bool):
 
 func _set_config_ui_disabled(disabled: bool):
 	var buttons = [
-		access_btn, insert_end_btn, insert_i_btn, delete_btn, replace_btn,  # NEW: Added replace_btn
+		access_btn, insert_end_btn, insert_i_btn, delete_btn, replace_btn,  
 		end_sim_btn, simulate_new_btn, timeline_btn
 	]
 	for btn in buttons:
@@ -461,9 +433,9 @@ func _apply_simulation_ended_state():
 	if insert_end_btn: insert_end_btn.disabled = true
 	if insert_i_btn: insert_i_btn.disabled = true
 	if delete_btn: delete_btn.disabled = true
-	if replace_btn: replace_btn.disabled = true  # NEW: Disable replace
-	if simulate_new_btn: simulate_new_btn.disabled = true  # This is End Simulation btn
-	if end_sim_btn: end_sim_btn.disabled = false   # Simulate New - still enabled
+	if replace_btn: replace_btn.disabled = true  
+	if simulate_new_btn: simulate_new_btn.disabled = true  
+	if end_sim_btn: end_sim_btn.disabled = false  
 	if timeline_btn: timeline_btn.disabled = false
 
 # ==============================================
@@ -503,7 +475,7 @@ func _setup_array_buttons():
 		delete_btn.text = "DELETE [i]"
 		delete_btn.pressed.connect(_on_delete_button_pressed)
 	
-	if replace_btn:  # NEW: Setup replace button
+	if replace_btn: 
 		replace_btn.text = "REPLACE [i]"
 		replace_btn.pressed.connect(_on_replace_button_pressed)
 
@@ -514,17 +486,16 @@ func _setup_action_modal():
 		print("Warning: action_modal not found")
 		return
 	if action_modal:
-		# Optionally connect to any custom signals from the modal
+
 		pass
 	if cancel_btn:
 		cancel_btn.pressed.connect(_on_action_modal_cancel)
 	if confirm_btn:
 		confirm_btn.pressed.connect(_on_action_modal_confirm)
-	
-	# Check and configure spin boxes with null safety
+
 	if index_spin:
 		index_spin.min_value = 0
-		index_spin.max_value = 0  # Will be updated dynamically
+		index_spin.max_value = 0  
 		index_spin.step = 1
 		index_spin.rounded = true
 	else:
@@ -546,7 +517,6 @@ func _setup_action_modal():
 	else:
 		print("Warning: insert_index_spin not found")
 	
-	# Hide modal initially
 	if action_modal:
 		action_modal.hide()
 
@@ -562,12 +532,9 @@ func _connect_configuration_buttons():
 	if elements_done_btn: elements_done_btn.pressed.connect(_on_elements_done_pressed)
 
 func _show_config_modal():
-	# FIX 3: Do NOT call set_ui_enabled(false) here — _input will block
-	# left-side buttons anyway since ui_enabled stays false from sim flow.
-	# Instead just disable the left buttons directly and keep modal clickable.
 	_set_config_ui_disabled(true)
 	
-	# Reconnect every time to fix simulate-new flow
+
 	if yes_btn:
 		if yes_btn.pressed.is_connected(_on_config_yes_pressed):
 			yes_btn.pressed.disconnect(_on_config_yes_pressed)
@@ -582,7 +549,6 @@ func _show_config_modal():
 func _on_config_yes_pressed():
 	btn_sound.play()
 	config_modal.hide()
-	# FIX 3: Reconnect size modal next button too
 	if size_next_btn:
 		if size_next_btn.pressed.is_connected(_on_size_next_pressed):
 			size_next_btn.pressed.disconnect(_on_size_next_pressed)
@@ -609,7 +575,6 @@ func _on_size_next_pressed():
 	btn_sound.play()
 	max_array_size = int(size_input.value)
 	config_size_modal.hide()
-	# FIX 3: Reconnect elements modal buttons too
 	if elements_done_btn:
 		if elements_done_btn.pressed.is_connected(_on_elements_done_pressed):
 			elements_done_btn.pressed.disconnect(_on_elements_done_pressed)
@@ -627,13 +592,12 @@ func _on_size_back_pressed():
 	config_modal.show()
 
 
-# FIX: Bigger inputs, 2 per row using GridContainer columns = 2
 func _show_config_elements_modal():
 	for child in elements_container.get_children():
 		child.queue_free()
 	
 	var grid = GridContainer.new()
-	grid.columns = 2  # 2 per row
+	grid.columns = 2  
 	grid.add_theme_constant_override("h_separation", 20)
 	grid.add_theme_constant_override("v_separation", 20)
 	elements_container.add_child(grid)
@@ -699,7 +663,7 @@ func _on_elements_done_pressed():
 	_set_config_ui_disabled(false)
 	_initialize_array(arr)
 	set_ui_enabled(true)
-	simulation_ended = false  # Reset ended state on new simulation
+	simulation_ended = false
 
 func _on_elements_back_pressed():
 	btn_sound.play()
@@ -724,17 +688,16 @@ func _initialize_array(elements):
 	index_labels.clear()
 	timeline_log.clear()
 	action_count = 0
-	code_operations.clear()  # Clear operations list
+	code_operations.clear()
 	code_lines.clear()
 	
-	# Reset cache for new simulation
+
 	reset_cache_for_scene()
 	
-	# FIX 2: Log initial state to timeline
 	timeline_log.append("[color=cyan]--- Simulation Started ---[/color]")
 	timeline_log.append("[color=cyan]Initial array: [%s] (size %d/%d)[/color]" % [_array_to_string(main_array), current_array_size, max_array_size])
 	
-	# Store initial array state
+
 	_add_code_line("Initial list = " + _array_to_string(main_array), main_array.duplicate())
 	
 	await get_tree().process_frame
@@ -749,16 +712,15 @@ func _initialize_array(elements):
 
 func _create_blocks_from_array():
 	var current_x = START_POSITION.x
-	var index_font = load("res://assets/font/Planes_ValMore.ttf")  # NEW: Load font for indices
+	var index_font = load("res://assets/font/Planes_ValMore.ttf")  
 	
 	for i in range(main_array.size()):
 		# Create block
 		var new_block = BLOCK_SCENE.instantiate()
 		new_block.value = main_array[i]
 		new_block.position = Vector2(current_x, START_POSITION.y)
-		new_block.draggable = false  # Blocks not draggable in array simulation
-		
-		# Fade in animation
+		new_block.draggable = false  
+
 		new_block.modulate.a = 0.0
 		var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 		tween.tween_property(new_block, "modulate:a", 1.0, 0.5)
@@ -766,13 +728,12 @@ func _create_blocks_from_array():
 		array_container.add_child(new_block)
 		block_nodes.append(new_block)
 		
-		# NEW: Create index label below the block
 		var index_label = Label.new()
 		index_label.text = str(i)
 		index_label.position = Vector2(current_x + (new_block.size.x / 2) - 15, START_POSITION.y + INDEX_LABEL_OFFSET)
 		index_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		index_label.add_theme_font_override("font", index_font)
-		index_label.add_theme_font_size_override("font_size", 32)  # Large font size (32)
+		index_label.add_theme_font_size_override("font_size", 32) 
 		index_label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
 		index_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 1))
 		index_label.add_theme_constant_override("outline_size", 4)
@@ -781,12 +742,7 @@ func _create_blocks_from_array():
 		
 		current_x += new_block.size.x + BLOCK_SPACING
 
-# NEW: Update indicator colors based on array state
-# NEW: Update indicator colors based on array state
-# Update indicator colors based on array state
-# Update indicator colors based on array state (with debug)
 func _update_indicators():
-	# Get the nodes
 	var is_full_node = get_node_or_null("isFull") as TextureRect
 	var is_empty_node = get_node_or_null("isEmpty") as TextureRect
 	
@@ -797,27 +753,20 @@ func _update_indicators():
 		print("ERROR: Could not find indicator nodes!")
 		return
 	
-	# Update isFull indicator
 	if current_array_size >= max_array_size:
-		# Array is FULL: bright green
 		is_full_node.modulate = Color(0, 1, 0, 1)
 		print("Array FULL - setting isFull to green")
 	else:
-		# Array NOT full: dark gray
 		is_full_node.modulate = Color(0.3, 0.3, 0.3, 1)
 		print("Array NOT full - setting isFull to dark gray")
 	
-	# Update isEmpty indicator
 	if current_array_size == 0:
-		# Array is EMPTY: bright pink
 		is_empty_node.modulate = Color(1, 0.5, 0.8, 1)
 		print("Array EMPTY - setting isEmpty to pink")
 	else:
-		# Array NOT empty: dark gray
 		is_empty_node.modulate = Color(0.3, 0.3, 0.3, 1)
 		print("Array NOT empty - setting isEmpty to dark gray")
 
-# NEW: Update index label positions (called after animations)
 func _update_index_labels():
 	var current_x = START_POSITION.x
 	var index_font = load("res://assets/font/Planes_ValMore.ttf")
@@ -826,10 +775,8 @@ func _update_index_labels():
 		var block = block_nodes[i]
 		var label = index_labels[i]
 		
-		# Update label text (index might have changed after insert/delete)
 		label.text = str(i)
-		
-		# Update position to stay below block
+
 		label.position = Vector2(current_x + (block.size.x / 2) - 15, START_POSITION.y + INDEX_LABEL_OFFSET)
 		
 		current_x += block.size.x + BLOCK_SPACING
@@ -846,9 +793,8 @@ func _update_processes_label():
 		processes_label.text = "Processes: %d" % action_count
 
 func _update_button_states():
-	# Buttons are ALWAYS fully visible - no visual indication of state
 	if insert_end_btn:
-		insert_end_btn.modulate = Color(1, 1, 1, 1.0)  # Always full opacity
+		insert_end_btn.modulate = Color(1, 1, 1, 1.0)
 	
 	if insert_i_btn:
 		insert_i_btn.modulate = Color(1, 1, 1, 1.0)
@@ -859,18 +805,16 @@ func _update_button_states():
 	if access_btn:
 		access_btn.modulate = Color(1, 1, 1, 1.0)
 	
-	if replace_btn:  # NEW: Replace button always visible
+	if replace_btn: 
 		replace_btn.modulate = Color(1, 1, 1, 1.0)
 	
-	# Don't disable buttons - they should always be clickable
 	insert_end_btn.disabled = false
 	insert_i_btn.disabled = false
 	delete_btn.disabled = false
 	access_btn.disabled = false
-	replace_btn.disabled = false  # NEW: Always enabled, validation happens in action
+	replace_btn.disabled = false  
 
 func show_status_message(message: String):
-	# Fix this - it was hardcoded to "Array Simulation Ready"
 	show_feedback(message, Color.GREEN, Vector2(500, 300))
 
 # ==============================================
@@ -912,7 +856,6 @@ func _on_delete_button_pressed():
 	action_modal.show_for_action(ActionType.DELETE, current_array_size - 1,
 		func(index): _execute_delete(index))
 
-# NEW: Replace button handler
 func _on_replace_button_pressed():
 	btn_sound.play()
 	if current_array_size == 0:
@@ -926,8 +869,6 @@ func _execute_access(index: int):
 	if index < 0 or index >= current_array_size:
 		show_feedback("Index out of bounds!", Color.RED, Vector2(500, 300))
 		return
-	
-	# Extra safety: block_nodes must also have this index
 	if index >= block_nodes.size():
 		show_feedback("Index out of bounds!", Color.RED, Vector2(500, 300))
 		return
@@ -942,7 +883,7 @@ func _execute_access(index: int):
 	_update_array_size_label()
 	_update_processes_label()
 	_update_timeline_display()
-	_update_indicators()  # NEW: Update indicators
+	_update_indicators()
 
 func _execute_insert_end(value: int):
 	if current_array_size >= max_array_size:
@@ -955,7 +896,6 @@ func _execute_insert_end(value: int):
 	_animate_insert_end(value)
 	timeline_log.append("[color=green]Inserted %d at end[/color]" % value)
 	
-	# Store operation with array state AFTER the operation
 	_add_code_line("After insert %d at end = %s" % [value, _array_to_string(main_array)], main_array.duplicate())
 	
 	show_feedback("Inserted %d at end" % value, Color.GREEN, Vector2(500, 350))
@@ -979,7 +919,6 @@ func _execute_insert_at_index(value: int, index: int):
 	_animate_insert_at_index(index, value)
 	timeline_log.append("[color=green]Inserted %d at index [%d][/color]" % [value, index])
 	
-	# Store operation with array state AFTER the operation
 	_add_code_line("After insert %d at index[%d] = %s" % [value, index, _array_to_string(main_array)], main_array.duplicate())
 	
 	show_feedback("Inserted %d at index [%d]" % [value, index], Color.GREEN, Vector2(500, 350))
@@ -994,12 +933,10 @@ func _execute_delete(index: int):
 		show_feedback("Index out of bounds!", Color.RED, Vector2(500, 300))
 		return
 	
-	# FIX 4: Cancel any active highlight timer for this block
 	if _highlight_timers.has(index):
 		if is_instance_valid(_highlight_timers[index]):
 			_highlight_timers[index].cancel()
 		_highlight_timers.erase(index)
-		# Also turn off highlight before deletion
 		if index < block_nodes.size() and is_instance_valid(block_nodes[index]):
 			block_nodes[index].set_highlight(false)
 	
@@ -1010,7 +947,6 @@ func _execute_delete(index: int):
 	_animate_delete(index)
 	timeline_log.append("[color=red]Deleted element at [%d]: %d[/color]" % [index, deleted_value])
 	
-	# Store operation with array state AFTER the operation
 	_add_code_line("After delete at index[%d] = %s" % [index, _array_to_string(main_array)], main_array.duplicate())
 	
 	show_feedback("Deleted element at [%d]" % index, Color.ORANGE, Vector2(500, 350))
@@ -1020,7 +956,6 @@ func _execute_delete(index: int):
 	_update_timeline_display()
 	_update_indicators()
 
-# NEW: Execute replace operation
 func _execute_replace(index: int, value: int):
 	if index < 0 or index >= current_array_size:
 		show_feedback("Index out of bounds!", Color.RED, Vector2(500, 300))
@@ -1034,17 +969,14 @@ func _execute_replace(index: int, value: int):
 	var old_value = main_array[index]
 	main_array[index] = value
 	
-	# Update block visual
 	if index < block_nodes.size():
 		block_nodes[index].value = value
-		# Flash animation for replace
 		var flash_tween = create_tween().set_parallel()
 		flash_tween.tween_property(block_nodes[index], "modulate", Color.YELLOW, 0.1)
 		flash_tween.tween_property(block_nodes[index], "modulate", Color.WHITE, 0.2).set_delay(0.1)
 	
 	timeline_log.append("[color=cyan]Replaced element at [%d]: %d → %d[/color]" % [index, old_value, value])
 	
-	# Store operation with array state AFTER the operation
 	_add_code_line("After replace at index[%d] from %d to %d = %s" % [index, old_value, value, _array_to_string(main_array)], main_array.duplicate())
 	
 	show_feedback("Replaced [%d]: %d → %d" % [index, old_value, value], Color.CYAN, Vector2(500, 350))
@@ -1059,20 +991,17 @@ func _execute_replace(index: int, value: int):
 func _animate_insert_end(value: int):
 	is_animating = true
 	
-	# Calculate position for new block
 	var new_x = START_POSITION.x
-	for i in range(main_array.size() - 1):  # Skip the new one
+	for i in range(main_array.size() - 1):  
 		new_x += block_nodes[i].size.x + BLOCK_SPACING
 	
-	# Create new block off-screen to the right
 	var new_block = BLOCK_SCENE.instantiate()
 	new_block.value = value
-	new_block.position = Vector2(new_x + 200, START_POSITION.y)  # Start off-screen
+	new_block.position = Vector2(new_x + 200, START_POSITION.y)  
 	new_block.modulate.a = 1.0
 	new_block.draggable = false
 	array_container.add_child(new_block)
 	
-	# NEW: Create index label for new block
 	var index_label = Label.new()
 	index_label.text = str(block_nodes.size())
 	index_label.position = Vector2(new_x + (new_block.size.x / 2) - 15, START_POSITION.y + INDEX_LABEL_OFFSET)
@@ -1084,12 +1013,10 @@ func _animate_insert_end(value: int):
 	index_label.add_theme_constant_override("outline_size", 4)
 	array_container.add_child(index_label)
 	
-	# Slide in animation
 	var tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(new_block, "position:x", new_x, ANIM_SPEED)
 	tween.parallel().tween_property(index_label, "position:x", new_x + (new_block.size.x / 2) - 15, ANIM_SPEED)
 	
-	# Fade in (already visible, but we'll do a quick scale pop)
 	tween.parallel().tween_property(new_block, "scale", Vector2(1.2, 1.2), 0.1)
 	tween.tween_property(new_block, "scale", Vector2(1.0, 1.0), 0.1)
 	
@@ -1099,38 +1026,32 @@ func _animate_insert_end(value: int):
 	await tween.finished
 	is_animating = false
 	
-	# Update all index labels after insertion
 	_update_index_labels()
 
 func _animate_insert_at_index(index: int, value: int):
 	is_animating = true
 	
-	# Shift existing blocks to the right first
 	var tweens = []
 	for i in range(index, block_nodes.size()):
 		var block = block_nodes[i]
 		var target_x = START_POSITION.x
-		for j in range(i + 1):  # +1 because we're inserting before them
+		for j in range(i + 1): 
 			target_x += block_nodes[j].size.x + BLOCK_SPACING
 		var tween = create_tween().set_trans(Tween.TRANS_CUBIC)
 		tween.tween_property(block, "position:x", target_x, ANIM_SPEED * 0.7)
 		tweens.append(tween)
 		
-		# Also shift index labels
 		var label = index_labels[i]
 		var label_target_x = target_x + (block.size.x / 2) - 15
 		tween.parallel().tween_property(label, "position:x", label_target_x, ANIM_SPEED * 0.7)
 	
-	# Wait for shifts to complete
 	if tweens.size() > 0:
 		await tweens[-1].finished
 	
-	# Calculate position for new block
 	var new_x = START_POSITION.x
 	for i in range(index):
 		new_x += block_nodes[i].size.x + BLOCK_SPACING
 	
-	# Create new block above
 	var new_block = BLOCK_SCENE.instantiate()
 	new_block.value = value
 	new_block.position = Vector2(new_x, START_POSITION.y - 100)  # Start above
@@ -1138,7 +1059,6 @@ func _animate_insert_at_index(index: int, value: int):
 	new_block.draggable = false
 	array_container.add_child(new_block)
 	
-	# Create index label for new block
 	var index_label = Label.new()
 	index_label.text = str(index)
 	index_label.position = Vector2(new_x + (new_block.size.x / 2) - 15, START_POSITION.y + INDEX_LABEL_OFFSET - 100)
@@ -1150,11 +1070,10 @@ func _animate_insert_at_index(index: int, value: int):
 	index_label.add_theme_constant_override("outline_size", 4)
 	array_container.add_child(index_label)
 	
-	# Insert into block_nodes and index_labels
 	block_nodes.insert(index, new_block)
 	index_labels.insert(index, index_label)
 	
-	# Drop down animation
+	
 	var tween = create_tween().set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
 	tween.tween_property(new_block, "position:y", START_POSITION.y, ANIM_SPEED)
 	tween.parallel().tween_property(index_label, "position:y", START_POSITION.y + INDEX_LABEL_OFFSET, ANIM_SPEED)
@@ -1164,7 +1083,6 @@ func _animate_insert_at_index(index: int, value: int):
 	await tween.finished
 	is_animating = false
 	
-	# Update all index labels after insertion
 	_update_index_labels()
 
 func _animate_delete(index: int):
@@ -1173,7 +1091,6 @@ func _animate_delete(index: int):
 	var deleted_block = block_nodes[index]
 	var deleted_label = index_labels[index]
 	
-	# Fade out and slide down animation
 	var tween = create_tween().set_parallel()
 	tween.tween_property(deleted_block, "modulate:a", 0.0, ANIM_SPEED)
 	tween.tween_property(deleted_block, "position:y", START_POSITION.y + 100, ANIM_SPEED)
@@ -1183,13 +1100,12 @@ func _animate_delete(index: int):
 	
 	await tween.finished
 	
-	# Remove the block and label
+	
 	deleted_block.queue_free()
 	deleted_label.queue_free()
 	block_nodes.remove_at(index)
 	index_labels.remove_at(index)
 	
-	# Shift remaining blocks left
 	var tweens = []
 	for i in range(index, block_nodes.size()):
 		var block = block_nodes[i]
@@ -1200,7 +1116,7 @@ func _animate_delete(index: int):
 		shift_tween.tween_property(block, "position:x", target_x, ANIM_SPEED)
 		tweens.append(shift_tween)
 		
-		# Shift labels
+		
 		var label = index_labels[i]
 		var label_target_x = target_x + (block.size.x / 2) - 15
 		shift_tween.parallel().tween_property(label, "position:x", label_target_x, ANIM_SPEED)
@@ -1210,7 +1126,6 @@ func _animate_delete(index: int):
 	
 	is_animating = false
 	
-	# Update index labels after deletion
 	_update_index_labels()
 
 func _highlight_block(index: int, duration: float):
@@ -1221,7 +1136,6 @@ func _highlight_block(index: int, duration: float):
 	if not is_instance_valid(block):
 		return
 	
-	# Cancel any existing highlight timer for this index
 	if _highlight_timers.has(index):
 		if is_instance_valid(_highlight_timers[index]):
 			_highlight_timers[index].cancel()
@@ -1229,7 +1143,6 @@ func _highlight_block(index: int, duration: float):
 	
 	block.set_highlight(true)
 	
-	# Shake animation
 	var original_x = block.position.x
 	var shake_tween = create_tween().set_parallel(false)
 	for i in range(3):
@@ -1237,13 +1150,11 @@ func _highlight_block(index: int, duration: float):
 		shake_tween.tween_property(block, "position:x", original_x + offset, 0.05)
 		shake_tween.tween_property(block, "position:x", original_x, 0.05)
 	
-	# Use a stored timer so we can cancel it if block gets deleted
 	var timer = get_tree().create_timer(duration)
 	_highlight_timers[index] = timer
 	
 	await timer.timeout
 	
-	# Only remove highlight if block still exists
 	if is_instance_valid(block):
 		block.set_highlight(false)
 	
@@ -1254,7 +1165,6 @@ func _highlight_block(index: int, duration: float):
 #   ACTION MODAL FUNCTIONS
 # ==============================================
 func _on_action_modal_confirm():
-	# This is handled by the callbacks in the button handlers
 	action_modal.hide()
 
 func _on_action_modal_cancel():
@@ -1269,7 +1179,6 @@ func _on_end_simulation_pressed():
 	if end_sim_confirmation:
 		end_sim_confirmation.show()
 	else:
-		# Fallback if node not found
 		_show_summary_popup()
 
 func _on_simulate_new_pressed():
@@ -1281,7 +1190,6 @@ func _on_sim_yes_pressed():
 	sim_confirmation.hide()
 	sim_success.show()
 	simulation_ended = false
-	# FIX 1: Hide code button on new simulation
 	if cpp_code_button:
 		cpp_code_button.hide()
 	show_feedback("Creating new simulation...", Color.GREEN, Vector2(500, 300))
@@ -1301,7 +1209,6 @@ func _on_end_sim_yes_pressed():
 	_update_timeline_display()
 	_show_summary_popup()
 	_apply_simulation_ended_state()
-	# FIX 1: Show code button now
 	if cpp_code_button:
 		cpp_code_button.show()
 		if code_anim: code_anim.play("default")
@@ -1313,18 +1220,15 @@ func _on_end_sim_no_pressed():
 func _show_summary_popup():
 	if not complete_popup:
 		return
-	
-	# Update process label with summary
+
 	var summary = "Total Actions: %d\n\nFinal Array: %s" % [action_count, _array_to_string(main_array)]
 	if process_label:
 		process_label.text = summary
 	
-	# Update code view with final state
 	_add_code_line("Simulation ended. Final array = " + _array_to_string(main_array))
 	
 	complete_popup.popup_centered()
 	
-	# Show code button
 	if cpp_code_button:
 		cpp_code_button.show()
 		if code_anim: code_anim.play("default")
@@ -1340,7 +1244,6 @@ func _on_timeline_pressed():
 		timeline_popup.hide()
 		return
 	
-	# FIX 2: Always rebuild from timeline_log when opening
 	if timeline_label:
 		timeline_label.bbcode_enabled = true
 		if timeline_log.is_empty():
@@ -1374,7 +1277,6 @@ func _update_timeline_display():
 #   CODE GENERATION & TRANSLATION
 # ==============================================
 func _add_code_line(line: String, array_state: Array = []):
-	# Store the operation with the array state at that moment
 	var operation = {
 		"line": line,
 		"array": array_state.duplicate() if array_state.size() > 0 else []
@@ -1392,7 +1294,6 @@ func _array_to_string(arr: Array) -> String:
 	return result
 
 func _update_code_view():
-	# This will be called when generating code for any language
 	var code = _generate_code_for_language(current_language)
 	if cpp_text:
 		cpp_text.text = code
@@ -1412,8 +1313,6 @@ func _generate_code_for_language(lang: String) -> String:
 	
 	return code
 
-# FIXED: Proper C++ code generation with correct formatting
-# FIXED: Proper C++ code generation with clean operation messages
 func _generate_cpp_code() -> String:
 	var code = "/* Array Simulation Log */\n"
 	code += "#include <iostream>\n"
@@ -1430,7 +1329,6 @@ func _generate_cpp_code() -> String:
 	code += "int main() {\n"
 	code += "    vector<int> arr;\n\n"
 	
-	# Generate actual array operations from stored operations
 	for op in code_operations:
 		var line = op["line"]
 		var array_state = op["array"]
@@ -1443,7 +1341,6 @@ func _generate_cpp_code() -> String:
 			code += "    printArray(arr);\n\n"
 		
 		elif line.begins_with("After insert") and "end" in line:
-			# Extract value from "After insert 42 at end = ..."
 			var value = line.split(" ")[2]
 			code += "    // " + line + "\n"
 			code += "    arr.push_back(" + value + ");\n"
@@ -1451,10 +1348,9 @@ func _generate_cpp_code() -> String:
 			code += "    printArray(arr);\n\n"
 		
 		elif line.begins_with("After insert") and "index" in line:
-			# Extract value and index from "After insert 45 at index[2] = ..."
 			var parts = line.split(" ")
-			var value = parts[2]  # "45"
-			var index_part = parts[4]  # "index[2]"
+			var value = parts[2]  
+			var index_part = parts[4]  
 			var index = index_part.replace("index[", "").replace("]", "")
 			code += "    // " + line + "\n"
 			code += "    arr.insert(arr.begin() + " + index + ", " + value + ");\n"
@@ -1462,9 +1358,8 @@ func _generate_cpp_code() -> String:
 			code += "    printArray(arr);\n\n"
 		
 		elif line.begins_with("After delete"):
-			# Extract index from "After delete at index[2] = ..."
 			var parts = line.split(" ")
-			var index_part = parts[3]  # "index[2]"
+			var index_part = parts[3] 
 			var index = index_part.replace("index[", "").replace("]", "")
 			code += "    // " + line + "\n"
 			code += "    arr.erase(arr.begin() + " + index + ");\n"
@@ -1472,21 +1367,19 @@ func _generate_cpp_code() -> String:
 			code += "    printArray(arr);\n\n"
 		
 		elif line.begins_with("After replace"):
-			# Extract index and values from "After replace at index[2] from 45 to 90 = ..."
 			var parts = line.split(" ")
-			var index_part = parts[3]  # "index[2]"
+			var index_part = parts[3]  
 			var index = index_part.replace("index[", "").replace("]", "")
-			var old_val = parts[5]  # "45"
-			var new_val = parts[7]  # "90"
+			var old_val = parts[5]  
+			var new_val = parts[7]  
 			code += "    // " + line + "\n"
 			code += "    arr[" + index + "] = " + new_val + ";\n"
 			code += "    cout << \"After replace at index[\" << " + index + " << \"] from " + old_val + " to " + new_val + ": \";\n"
 			code += "    printArray(arr);\n\n"
 		
 		elif line.begins_with("Access"):
-			# Extract index from "Access at index[3] = 4"
 			var parts = line.split(" ")
-			var index_part = parts[2]  # "index[3]"
+			var index_part = parts[2]  # "
 			var index = index_part.replace("index[", "").replace("]", "")
 			code += "    // " + line + "\n"
 			code += "    cout << \"Access at index[\" << " + index + " << \"] = \" << arr[" + index + "] << endl;\n\n"
@@ -1495,7 +1388,6 @@ func _generate_cpp_code() -> String:
 	code += "}"
 	return code
 
-# FIXED: Proper Python code generation with clean operation messages
 func _generate_python_code() -> String:
 	var code = "# Array Simulation Log\n\n"
 	code += "def print_array(arr):\n"
@@ -1566,7 +1458,6 @@ func _generate_python_code() -> String:
 	code += "    main()"
 	return code
 
-# FIXED: Proper Java code generation with clean operation messages
 func _generate_java_code() -> String:
 	var code = "/* Array Simulation Log */\n"
 	code += "import java.util.*;\n\n"
@@ -1645,7 +1536,6 @@ func _generate_java_code() -> String:
 	code += "}"
 	return code
 
-# FIXED: Proper C code generation with clean operation messages
 func _generate_c_code() -> String:
 	var code = "/* Array Simulation Log */\n"
 	code += "#include <stdio.h>\n\n"
@@ -1808,7 +1698,6 @@ func _update_cpp_walkthrough():
 	var highlight_lines = step["lines"]
 	var explanation = step["explanation"]
 	
-	# Update explanation
 	if cpp_explanation_lbl:
 		cpp_explanation_lbl.bbcode_enabled = true
 		cpp_explanation_lbl.text = explanation
@@ -1817,7 +1706,6 @@ func _update_cpp_walkthrough():
 		var code = _generate_code_for_language(current_language)
 		var lines = code.split("\n")
 		
-		# Build highlighted code
 		var highlighted_lines = lines.duplicate()
 		for line_idx in highlight_lines:
 			if line_idx >= 0 and line_idx < highlighted_lines.size():
@@ -1826,7 +1714,6 @@ func _update_cpp_walkthrough():
 		cpp_text.bbcode_enabled = true
 		cpp_text.text = "\n".join(highlighted_lines)
 		
-		# Scroll to highlighted line
 		if highlight_lines.size() > 0:
 			var target_line = highlight_lines[0] if highlight_lines is Array else highlight_lines
 			await get_tree().process_frame
@@ -1849,7 +1736,6 @@ func _build_walkthrough_steps(lang: String) -> Array:
 				"lines": [15, 16],
 				"explanation": "[b]Main Function & Array Init[/b]\nDeclares a dynamic vector<int>.\nAll operations happen on this vector."
 			})
-			# Dynamic steps per action
 			for i in range(code_lines.size()):
 				var line = code_lines[i]
 				if line.begins_with("Initial list"):
@@ -1888,7 +1774,6 @@ func _build_walkthrough_steps(lang: String) -> Array:
 				"lines": [12, 13],
 				"explanation": "[b]Main & Init[/b]\nDefines main() and creates empty list."
 			})
-			# Dynamic steps per action
 			for i in range(code_lines.size()):
 				var line = code_lines[i]
 				if line.begins_with("Initial list"):
@@ -1908,7 +1793,6 @@ func _build_walkthrough_steps(lang: String) -> Array:
 					})
 		
 		"java", "c":
-			# Generic structural steps
 			steps.append({
 				"lines": range(0, 3),
 				"explanation": "[b]Imports & Setup[/b]\nImports necessary libraries."
@@ -1921,7 +1805,6 @@ func _build_walkthrough_steps(lang: String) -> Array:
 				"lines": range(12, 15),
 				"explanation": "[b]Main & Init[/b]\nEntry point and array declaration."
 			})
-			# Dynamic steps per action
 			for i in range(code_lines.size()):
 				var line = code_lines[i]
 				if line.begins_with("Initial list"):
@@ -1952,12 +1835,11 @@ func show_feedback(text: String, color: Color, position: Vector2):
 	label.modulate = color
 	label.global_position = position
 	
-	# Create or get a high-layer CanvasLayer for feedback
 	var feedback_layer = get_node_or_null("FeedbackLayer")
 	if not feedback_layer:
 		feedback_layer = CanvasLayer.new()
 		feedback_layer.name = "FeedbackLayer"
-		feedback_layer.layer = 100  # High layer to appear above everything
+		feedback_layer.layer = 100
 		add_child(feedback_layer)
 	
 	feedback_layer.add_child(label)
@@ -1981,13 +1863,12 @@ func show_introduction():
 
 	tutorial_overlay.show()
 	
-	# FIX: Make sure these don't eat mouse input
 	if dim_bg:
 		dim_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	tutorial_overlay.layer = 10  # Ensure it's on top visually
+	tutorial_overlay.layer = 10
 	
 	intro_popup.show()
-	intro_popup.mouse_filter = Control.MOUSE_FILTER_STOP  # Popup itself catches input
+	intro_popup.mouse_filter = Control.MOUSE_FILTER_STOP
 	
 	intro_step = 0
 	_update_intro_text()
@@ -2031,7 +1912,6 @@ func _on_intro_next_pressed():
 		intro_step += 1
 		_update_intro_text()
 	else:
-		# Last page - close intro
 		intro_popup.hide()
 		set_ui_enabled(true)
 		print("Introduction finished")
@@ -2064,7 +1944,6 @@ func start_tutorial():
 	
 	set_ui_enabled(false)
 	
-	# Updated tutorial nodes to include indicators and processes label
 	tutorial_nodes = [
 		access_btn, 
 		insert_end_btn, 
@@ -2075,7 +1954,7 @@ func start_tutorial():
 		simulate_new_btn, 
 		timeline_btn, 
 		array_size_label,
-		processes_label,  # NEW: Add processes label
+		processes_label, 
 		get_node_or_null("isFull"),
 		get_node_or_null("isEmpty")
 	]
@@ -2089,7 +1968,6 @@ func start_tutorial():
 	tutorial_box.show()
 	tutorial_box.mouse_filter = Control.MOUSE_FILTER_STOP
 	
-	# Force next button to be on top and clickable
 	tutorial_next.mouse_filter = Control.MOUSE_FILTER_STOP
 	tutorial_next.z_index = 100
 	tutorial_next.disabled = false
@@ -2121,7 +1999,6 @@ func _show_tutorial_step():
 		10: tutorial_text.text = "FULL INDICATOR\n\nTurns GREEN when array reaches maximum capacity.\nTurns DARK when there's still space available."
 		11: tutorial_text.text = "EMPTY INDICATOR\n\nTurns RED when array has no elements.\nTurns DARK when the array contains data."
 	
-	# Keep the pointer sprite - it's helpful!
 	if pointer_sprite:
 		pointer_sprite.texture = load("res://assets/point_left.png")
 		pointer_sprite.show()
@@ -2144,7 +2021,6 @@ func _show_tutorial_step():
 	tutorial_text.visible = true
 	tutorial_next.visible = true
 	
-	# Make sure next button is always on top and clickable
 	tutorial_next.mouse_filter = Control.MOUSE_FILTER_STOP
 	tutorial_next.z_index = 10
 
@@ -2162,7 +2038,6 @@ func _end_tutorial():
 		if pointer_sprite.has_meta("tween"):
 			pointer_sprite.get_meta("tween").kill()
 	
-	# FIX: Restore correct state depending on whether simulation is ended or not
 	if simulation_ended:
 		_apply_simulation_ended_state()
 	else:
@@ -2171,4 +2046,3 @@ func _end_tutorial():
 	show_feedback("Tutorial complete! Start experimenting!", Color.GREEN, Vector2(500, 300))
 func _exit_tree():
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_PORTRAIT)
-	# Swap back to portrait dimensions

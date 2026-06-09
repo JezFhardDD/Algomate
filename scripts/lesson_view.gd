@@ -236,7 +236,7 @@ func _apply_lesson() -> void:
 
 func _get_simulation_path() -> String:
 	var sim_map = {
-		"array":                "res://scene/Array.tscn",  # Changed from "scene" to "scene"
+		"array":                "res://scene/Array.tscn",  
 		"linked_list":          "res://scene/Linked.tscn",
 		"doubly_linked_list":   "res://scene/Linked.tscn",
 		"stack":                "res://scene/Stack.tscn",
@@ -252,7 +252,7 @@ func _get_simulation_path() -> String:
 		"interpolation_search": "res://scene/Interpolation.tscn",
 		"depth_first_search":   "res://scene/Dfs.tscn",
 		"breadth_first_search": "res://scene/Bfs.tscn",
-		"bst":   "res://scene/BST.tscn",  # ← add thi
+		"bst":   "res://scene/BST.tscn",  
 		"graph": "res://scene/graph.tscn"
 	}
 	return sim_map.get(lesson_id, "")
