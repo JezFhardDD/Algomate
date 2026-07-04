@@ -51,7 +51,7 @@ The application aims to help students visualize complex DSA concepts while keepi
 - Insertion Sort
 - Quick Sort
 - Merge Sort
-- 
+
 
 ---
 
@@ -137,7 +137,7 @@ Supported languages include:
 # 👨‍💻 Developers
 
 **Capstone Project**
-
+<img src="assets/DEVELOPERS/jezreel.jpg" width="180">
 Jezreel Villanueva:
 - Project Leader
 - Full-Stack Developer
