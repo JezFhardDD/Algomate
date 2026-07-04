@@ -38,15 +38,20 @@ The application aims to help students visualize complex DSA concepts while keepi
 # ✨ Features
 
 ## 📚 Learning Modules
-
-- Binary Search
-- Linear Search
-- Bubble Sort
-- Selection Sort
-- Insertion Sort
 - Stack
 - Queue
 - Linked List
+- Trees
+- Graphs
+- Linear Search
+- Binary Search
+- Interpolation Search
+- Bubble Sort
+- Selection Sort
+- Insertion Sort
+- Quick Sort
+- Merge Sort
+- 
 
 ---
 
@@ -60,7 +65,6 @@ Students can watch elements move, compare values, and understand how each algori
 
 ## 📝 Assessments
 
-- ✅ Multiple-choice quizzes
 - 🎯 Three difficulty levels
     - Easy
     - Medium
@@ -75,7 +79,6 @@ Spend earned coins to unlock:
 
 - 👤 Pixel-art profile pictures
 - 🔊 Unique Text-to-Speech voices
-- 🎨 Cosmetic profile customization
 
 ---
 
@@ -84,7 +87,6 @@ Spend earned coins to unlock:
 - Lesson completion
 - Assessment scores
 - Difficulty progress
-- Attempt history
 - Coin balance
 - Statistics dashboard
 
@@ -136,12 +138,24 @@ Supported languages include:
 
 **Capstone Project**
 
-Project Leader & Full-Stack Developer
-
-- Development
-- UI/UX Design
+Jezreel Villanueva:
+- Project Leader
+- Full-Stack Developer
 - Database Design
-- Documentation
+- Planning
+- Documentatiom
+- Tester
+- Asset Designer
+
+Ryan Dumali:
+- Programmer (Modules)
+
+John Lawrence Rivera:
+-Programmer (Modules)
+
+Ace York Buban:
+-Programmer (Menu)
+-UI/UX Design
 
 ---
 
@@ -159,6 +173,7 @@ This project was developed for academic purposes.
 - 🌙 Dark mode
 - 📊 More analytics
 - 🌍 Additional programming languages
+- Consolidation of Simulations
 
 ---
 
