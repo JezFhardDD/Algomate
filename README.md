@@ -137,25 +137,75 @@ Supported languages include:
 # 👨‍💻 Developers
 
 **Capstone Project**
-<img src="assets/DEVELOPERS/jezreel.jpg" width="180">
-Jezreel Villanueva:
+
+<table>
+<tr>
+<td width="180" align="center">
+<img src="assets/DEVELOPERS/jezreel.jpg" width="160"><br><br>
+<b>Jezreel Villanueva</b>
+</td>
+<td>
+
 - Project Leader
 - Full-Stack Developer
 - Database Design
 - Planning
-- Documentatiom
+- Documentation
 - Tester
 - Asset Designer
 
-Ryan Dumali:
+</td>
+</tr>
+
+<tr>
+<td width="180" align="center">
+<img src="assets/DEVELOPERS/Ryan.png" width="160"><br><br>
+<b>Ryan Dumali</b>
+</td>
+<td>
+
 - Programmer (Modules)
 
-John Lawrence Rivera:
--Programmer (Modules)
+</td>
+</tr>
 
-Ace York Buban:
--Programmer (Menu)
--UI/UX Design
+<tr>
+<td width="180" align="center">
+<img src="assets/DEVELOPERS/Lawrencee.png" width="160"><br><br>
+<b>John Lawrence Rivera</b>
+</td>
+<td>
+
+- Programmer (Modules)
+
+</td>
+</tr>
+
+<tr>
+<td width="180" align="center">
+<img src="assets/DEVELOPERS/BUBAN, ACE YORK.png" width="160"><br><br>
+<b>Ace York Buban</b>
+</td>
+<td>
+
+- Programmer (Menu)
+- UI/UX Design
+
+</td>
+</tr>
+
+<tr>
+<td width="180" align="center">
+<img src="assets/DEVELOPERS/janeil.jpg" width="160"><br><br>
+<b>Janeil</b>
+</td>
+<td>
+
+- Documentation
+
+</td>
+</tr>
+</table>
 
 ---
 
