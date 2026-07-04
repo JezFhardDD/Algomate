@@ -4,7 +4,7 @@
 
 ### *Learn Data Structures & Algorithms through Interactive Simulations*
 
-<img src="assets/logo.png" width="180">
+<img src="icon.svg" width="180">
 
 ![Platform](https://img.shields.io/badge/Platform-Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 ![Engine](https://img.shields.io/badge/Engine-Godot-478CBF?style=for-the-badge&logo=godot-engine&logoColor=white)
