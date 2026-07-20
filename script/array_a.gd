@@ -81,11 +81,11 @@ extends Control
 @onready var compiler_output_popup: PopupPanel = null
 @onready var compile_btn: Button = get_node_or_null("CppPopup/VBoxContainer/HBoxContainer2/CompileButton")
 
-# ADD code walkthrough variables:
+
 var current_code_language: String = "cpp"
 var cpp_walkthrough_steps: Array = []
 var cpp_walkthrough_step: int = 0
-var code_lines: Array[String] = []  # Tracks operations for code generation
+var code_lines: Array[String] = []
 
 # --- RESULT POPUP ---
 const RESULT_POPUP_SCENE := preload("res://scene/ResultPopup.tscn")
@@ -120,34 +120,23 @@ var START_POSITION: Vector2 = Vector2(60, 80)
 # --- COMMAND SYSTEM ---
 enum CommandType { INSERT, DELETE, ACCESS }
 
-var command_queue: Array = []       # All commands for this session
-var current_command_index: int = 0  # Which command we're on
+var command_queue: Array = []      
+var current_command_index: int = 0  
 var commands_total: int = 0
 var correct_moves: int = 0
 var bad_moves: int = 0
 var has_completed: bool = false
 var completion_type: String = ""
 
-# Each command: { "type": CommandType, "index": int, "value": int }
-# value only used for INSERT commands
+
 
 # --- SPAWN STACK ---
-# All INSERT blocks are pre-instantiated and stacked in spawn area
-var spawn_stack: Array[Control] = []  # Index 0 = current (top), rest stacked below
-const SPAWN_STACK_OFFSET: Vector2 = Vector2(4, 6)  # Slight offset per stacked block
+var spawn_stack: Array[Control] = [] 
+const SPAWN_STACK_OFFSET: Vector2 = Vector2(4, 6) 
 
 # --- UNDO / REDO ---
 var undo_stack: Array = []
 var redo_stack: Array = []
-
-# Each undo entry: {
-#   "array": Array[int],
-#   "block_values": Array[int],
-#   "command_index": int,
-#   "correct_moves": int,
-#   "bad_moves": int,
-#   "was_correct_move": bool   # whether this state change was a correct move
-# }
 
 # --- TIMELINE ---
 var timeline_log: Array[String] = []
@@ -179,16 +168,14 @@ func _ready() -> void:
 	add_child(back_overlay)
 	difficulty = Global.current_difficulty
 	if difficulty == 0:
-		difficulty = 1  # fallback to easy if somehow not set
+		difficulty = 1
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_LANDSCAPE)
 	randomize()
 
-	# Setup tiktak
 	tiktak_sound = AudioStreamPlayer.new()
 	tiktak_sound.stream = TIKTAK_SFX
 	add_child(tiktak_sound)
 
-	# Debug node check
 	print("=== NODE CHECK ===")
 	print("array_container: ", array_container)
 	print("spawn_area: ", spawn_area)
@@ -201,7 +188,6 @@ func _ready() -> void:
 	print("garbage_sprite: ", garbage_sprite)
 	print("=================")
 
-	# Setup result popup
 	result_popup = RESULT_POPUP_SCENE.instantiate()
 	add_child(result_popup)
 	result_title = result_popup.get_node("TextureRect/VBoxContainer/ResultTitle")
@@ -215,47 +201,39 @@ func _ready() -> void:
 	try_again_result_btn.pressed.connect(_on_try_again_pressed)
 	back_result_btn.pressed.connect(_on_back_pressed)
 
-	# Connect translate code btn from result popup
 	var translate_btn = result_popup.get_node_or_null("TextureRect/VBoxContainer/translate_code_btn")
 	if translate_btn:
 		translate_btn.pressed.connect(_on_translate_code_pressed)
 
-	# Hide unused buttons
 	insert_end_btn.hide()
 	access_btn.hide()
 	end_sim_btn.hide()
 	simulate_new_btn.hide()
 
-	# Repurpose buttons
 	undo_btn.text = "UNDO"
 	redo_btn.text = "REDO"
 	if try_again_btn_root:
 		try_again_btn_root.pressed.connect(_on_try_again_root_pressed)
-	# Hide CppCodeButton and TryAgainButton by default
 	if cpp_code_button:
 		cpp_code_button.hide()
 	if try_again_btn_root:
 		try_again_btn_root.hide()
 
-	# Show timer elements
 	timer_label.show()
 	clock.show()
 	difficulty_label.show()
 
-	# Connect main buttons
 	undo_btn.pressed.connect(_on_undo_pressed)
 	redo_btn.pressed.connect(_on_redo_pressed)
 	timeline_btn.pressed.connect(_on_timeline_pressed)
 	if timeline_close_btn:
 		timeline_close_btn.pressed.connect(_on_timeline_close_pressed)
 
-	# Connect TimeUpPopup buttons
 	if time_up_try_again_btn:
 		time_up_try_again_btn.pressed.connect(_on_time_up_try_again_pressed)
 	if time_up_back_btn:
 		time_up_back_btn.pressed.connect(_on_time_up_back_pressed)
 
-	# Connect CppCodeButton and popup
 	if cpp_code_button:
 		cpp_code_button.pressed.connect(_on_cpp_code_button_pressed)
 	if cpp_close_btn:
@@ -264,13 +242,11 @@ func _ready() -> void:
 		if not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
 			cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
 
-	# Connect language buttons
 	if cpp_lang_btn: cpp_lang_btn.pressed.connect(func(): _set_language("cpp"))
 	if python_lang_btn: python_lang_btn.pressed.connect(func(): _set_language("python"))
 	if java_lang_btn: java_lang_btn.pressed.connect(func(): _set_language("java"))
 	if c_lang_btn: c_lang_btn.pressed.connect(func(): _set_language("c"))
 
-	# Connect tutorial
 	if tutorial_next:
 		if not tutorial_next.is_connected("pressed", _on_tutorial_next_pressed):
 			tutorial_next.pressed.connect(_on_tutorial_next_pressed)
@@ -278,18 +254,14 @@ func _ready() -> void:
 	if help_btn:
 		help_btn.pressed.connect(_on_help_pressed)
 
-	# Connect intro buttons
 	_ensure_connected(intro_next_btn, "pressed", _on_intro_next_pressed)
 	_ensure_connected(intro_prev_btn, "pressed", _on_intro_prev_pressed)
 	_ensure_connected(intro_skip_btn, "pressed", _on_intro_skip_pressed)
 
-	# Setup compiler
 	_setup_compiler()
 
-	# Update labels
 	_update_difficulty_label()
 
-	# Start
 	_start_assessment()
 	call_deferred("show_introduction")
 
@@ -316,7 +288,7 @@ func _get_command_count() -> int:
 
 func _get_time_limit() -> float:
 	match difficulty:
-		1: return 0.0    # No timer
+		1: return 0.0
 		2: return 60.0
 		3: return 60.0
 	return 60.0
@@ -336,18 +308,15 @@ func _update_difficulty_label() -> void:
 func _setup_compiler() -> void:
 	"""Setup compiler button and popup"""
 	if compile_btn:
-		# Disconnect any existing connections to avoid duplicates
 		if compile_btn.is_connected("pressed", _on_compile_button_pressed):
 			compile_btn.disconnect("pressed", _on_compile_button_pressed)
 		compile_btn.pressed.connect(_on_compile_button_pressed)
 	
-	# Load the compiler output popup
 	if compiler_output_popup == null:
 		var popup_scene = preload("res://scene/CompilerOutput.tscn")
 		compiler_output_popup = popup_scene.instantiate()
 		add_child(compiler_output_popup)
 		
-		# Connect signals
 		compiler_output_popup.recompile_requested.connect(_on_recompile_requested)
 		compiler_output_popup.closed.connect(_on_compiler_output_closed)
 
@@ -355,12 +324,9 @@ func _on_compile_button_pressed() -> void:
 	"""Called when Compile button is pressed in the code popup"""
 	btn_sound.play()
 	
-	# Get the current code based on selected language
 	var code = _generate_code_for_language(current_code_language)
 	
-	# Check if we have cached result for this language
 	if compiler_output_popup and compiler_output_popup.has_cached_result(current_code_language):
-		# Show cached result without recompiling
 		var cached = compiler_output_popup.get_cached_result(current_code_language)
 		var fake_response = {
 			"output": cached.output,
@@ -371,17 +337,14 @@ func _on_compile_button_pressed() -> void:
 		compiler_output_popup.show_output(current_code_language, fake_response, self, false)
 		show_feedback("Using cached result!", Color.YELLOW, Vector2(200, 200))
 	else:
-		# Compile the code
 		_compile_code(code)
 
 func _compile_code(code: String) -> void:
 	"""Send code to JDoodle API"""
 	show_feedback("Compiling...", Color.YELLOW, Vector2(200, 200))
 	
-	# Get API keys for current language
 	var keys = APIManager.get_keys("KEY_A")
 	
-	# Prepare API request
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
 	http_request.request_completed.connect(_on_compile_completed.bind(http_request, current_code_language))
@@ -389,11 +352,10 @@ func _compile_code(code: String) -> void:
 	var url = "https://api.jdoodle.com/v1/execute"
 	var headers = ["Content-Type: application/json"]
 	
-	# Map language to JDoodle API expected format
 	var api_language = current_code_language
 	match current_code_language:
 		"python":
-			api_language = "python3"  # JDoodle expects "python3" not "python"
+			api_language = "python3" 
 	
 	var body = JSON.new().stringify({
 		"clientId": keys["clientId"],
@@ -413,10 +375,10 @@ func _compile_code(code: String) -> void:
 
 func _get_version_index(lang: String) -> String:
 	match lang:
-		"cpp": return "5"     # C++17
-		"c": return "4"       # C17
-		"java": return "4"    # Java 17
-		"python": return "4"  # Python 3
+		"cpp": return "5"  
+		"c": return "4"       
+		"java": return "4"   
+		"python": return "4"  
 		_: return "0"
 
 func _on_compile_completed(result, response_code, headers, body, http_request, language: String) -> void:
@@ -436,13 +398,11 @@ func _on_compile_completed(result, response_code, headers, body, http_request, l
 	
 	var response = json.data
 	
-	# Show the output popup (false = from assessment, so landscape sizing)
 	if compiler_output_popup:
 		compiler_output_popup.show_output(language, response, self, false)
 
 func _on_recompile_requested(language: String) -> void:
 	"""Handle recompile request from popup"""
-	# Get the current code and recompile
 	var code = _generate_code_for_language(language)
 	_compile_code(code)
 
@@ -461,21 +421,17 @@ func reset_cache_for_scene() -> void:
 # ==============================================
 
 func _start_assessment() -> void:
-	# Null check
 	if not spawn_slot:
 		push_error("spawn_slot is null! Check node path.")
 		for child in get_children():
 			print(child.name, " (", child.get_class(), ")")
 		return
 
-	# Reset cache for new assessment
 	reset_cache_for_scene()
 
-	# Stop timer immediately
 	timer_running = false
 	time_remaining = 0.0
 
-	# Reset state
 	main_array.clear()
 	block_nodes.clear()
 	timeline_log.clear()
@@ -493,23 +449,19 @@ func _start_assessment() -> void:
 	cpp_walkthrough_step = 0
 	cpp_walkthrough_steps.clear()
 
-	# Hide buttons that appear on completion
 	if cpp_code_button:
 		cpp_code_button.hide()
 	if try_again_btn_root:
 		try_again_btn_root.hide()
 
-	# Clear containers
 	for child in array_container.get_children():
 		child.queue_free()
 	for child in spawn_slot.get_children():
 		child.queue_free()
 
-	# Set actual time AFTER reset
 	assessment_time_limit = _get_time_limit()
 	time_remaining = assessment_time_limit
 
-	# Timer and clock setup
 	if difficulty == 1:
 		timer_label.hide()
 		clock.hide()
@@ -517,28 +469,22 @@ func _start_assessment() -> void:
 	else:
 		timer_label.show()
 		clock.show()
-		clock.stop()  # Don't play yet — wait for intro to finish
-		_update_timer_display()  # Show correct time immediately
+		clock.stop() 
+		_update_timer_display()
 
-	# Pre-fill array with 3-4 random values
 	var initial_size = randi_range(3, 4)
 	for i in range(initial_size):
 		main_array.append(randi_range(1, 99))
 
-	# Log initial array to code lines
 	_add_code_line("INITIAL", 0, 0)
 
-	# Generate command queue
 	_generate_commands()
 	commands_total = command_queue.size()
 
-	# Build initial blocks
 	_rebuild_blocks_from_array()
-
-	# Build spawn stack for all INSERT commands
+	
 	_build_spawn_stack()
 
-	# Show first command
 	_show_current_command()
 	_update_progress_label()
 	_update_correct_moves_label()
@@ -560,7 +506,6 @@ func _generate_commands() -> void:
 	var total = _get_command_count()
 	var simulated_array: Array[int] = main_array.duplicate()
 
-	# Weight command types based on current simulated state
 	for i in range(total):
 		var available: Array[CommandType] = []
 
@@ -628,7 +573,6 @@ func _build_spawn_stack() -> void:
 		await get_tree().process_frame
 		block.original_position = block.global_position
 
-		# Connect without .bind
 		block.block_dropped.connect(_on_spawn_block_dropped)
 
 		spawn_stack.push_front(block)
@@ -645,7 +589,7 @@ func _refresh_spawn_stack_visuals() -> void:
 		if i == 0:
 			block.visible = true
 			block.modulate = Color(1, 1, 1, 1.0)
-			block.z_index = total + 10  # Highest z_index for top block
+			block.z_index = total + 10
 		elif i == 1:
 			block.visible = true
 			block.modulate = Color(1, 1, 1, 0.6)
@@ -682,7 +626,6 @@ func _show_current_command() -> void:
 		CommandType.ACCESS:
 			target_label.text = "Access index %d" % cmd["index"]
 
-	# Highlight target block for DELETE and ACCESS
 	_clear_all_highlights()
 	if cmd["type"] == CommandType.DELETE or cmd["type"] == CommandType.ACCESS:
 		if cmd["index"] < block_nodes.size() and is_instance_valid(block_nodes[cmd["index"]]):
@@ -690,7 +633,6 @@ func _show_current_command() -> void:
 				Color.ORANGE if cmd["type"] == CommandType.DELETE else Color.CYAN
 			)
 
-	# Show/fade spawn area based on whether current cmd is INSERT
 	var current_is_insert = (cmd["type"] == CommandType.INSERT)
 	var spawn_block = _get_current_spawn_block()
 	if spawn_block:
@@ -820,32 +762,29 @@ func _on_spawn_block_dropped(block: Control) -> void:
 
 
 func _get_drop_index(dropped_block: Control) -> int:
-	var drop_x = dropped_block.global_position.x + 32.0  # center of dropped block
+	var drop_x = dropped_block.global_position.x + 32.0
 
 	if block_nodes.is_empty():
 		return 0
 
-	# Build list of block center x positions
+
 	var centers: Array[float] = []
 	for b in block_nodes:
 		if is_instance_valid(b):
 			centers.append(b.global_position.x + 32.0)
 
-	# Before first block
+
 	if drop_x <= centers[0]:
 		return 0
 
-	# After last block
 	if drop_x >= centers[centers.size() - 1]:
 		return centers.size()
 
-	# Between blocks — find which gap
+
 	for i in range(centers.size() - 1):
 		var left = centers[i]
 		var right = centers[i + 1]
 		if drop_x > left and drop_x < right:
-			# Closer to left = insert at i+1, closer to right = insert at i+1
-			# Either way inserting between i and i+1 means index i+1
 			return i + 1
 
 	return block_nodes.size()
@@ -939,7 +878,7 @@ func _animate_block_into_trash(block: Control) -> void:
 
 
 func _animate_trash_eat() -> void:
-	var original_scale = garbage_sprite.scale  # Store original first
+	var original_scale = garbage_sprite.scale
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
 	tween.tween_property(garbage_sprite, "scale", original_scale * 1.3, 0.15)
@@ -999,7 +938,6 @@ func _on_undo_pressed() -> void:
 		return
 	btn_sound.play()
 
-	# Save current state to redo
 	redo_stack.append({
 		"array": main_array.duplicate(),
 		"command_index": current_command_index,
@@ -1024,7 +962,6 @@ func _on_redo_pressed() -> void:
 		return
 	btn_sound.play()
 
-	# Save current state to undo
 	undo_stack.append({
 		"array": main_array.duplicate(),
 		"command_index": current_command_index,
@@ -1044,7 +981,6 @@ func _on_redo_pressed() -> void:
 	_update_correct_moves_label()
 
 func _restore_full_state(state: Dictionary) -> void:
-	# Restore data
 	main_array = state["array"].duplicate()
 	current_command_index = state["command_index"]
 	correct_moves = state["correct_moves"]
@@ -1052,7 +988,6 @@ func _restore_full_state(state: Dictionary) -> void:
 	timeline_log = state["timeline"].duplicate()
 	code_lines = state["code_lines"].duplicate()
 
-	# Clear and rebuild array blocks
 	for child in array_container.get_children():
 		child.queue_free()
 	block_nodes.clear()
@@ -1073,7 +1008,6 @@ func _restore_full_state(state: Dictionary) -> void:
 		block.block_pressed.connect(_on_block_pressed)
 		current_x += 64.0 + BLOCK_SPACING
 
-	# Rebuild spawn stack to match restored command index
 	for child in spawn_slot.get_children():
 		child.queue_free()
 	spawn_stack.clear()
@@ -1119,8 +1053,6 @@ func _restore_state(state: Dictionary) -> void:
 
 
 func _rebuild_spawn_stack_to_command() -> void:
-	# Rebuild spawn stack to reflect how many INSERT commands remain
-	# from current_command_index onward
 	for child in spawn_slot.get_children():
 		child.queue_free()
 	spawn_stack.clear()
@@ -1210,7 +1142,7 @@ func _process(delta: float) -> void:
 			if not tiktak_sound.playing:
 				tiktak_sound.play()
 
-	_check_drag_hover()  # Renamed from _check_garbage_hover
+	_check_drag_hover()
 
 func _check_drag_hover() -> void:
 	if has_completed:
@@ -1223,14 +1155,12 @@ func _check_drag_hover() -> void:
 	var dragged_block: Control = null
 	var dragged_array_index: int = -1
 
-	# Check spawn blocks
 	for block in spawn_stack:
 		if is_instance_valid(block) and block._dragging:
 			dragging_spawn = true
 			dragged_block = block
 			break
 
-	# Check array blocks
 	if not dragging_spawn:
 		for i in range(block_nodes.size()):
 			var block = block_nodes[i]
@@ -1240,7 +1170,6 @@ func _check_drag_hover() -> void:
 				dragged_array_index = i
 				break
 
-	# Gap opening — only during INSERT command with spawn block dragging
 	if dragging_spawn and current_command_index < command_queue.size():
 		var cmd = command_queue[current_command_index]
 		if cmd["type"] == CommandType.INSERT:
@@ -1251,7 +1180,6 @@ func _check_drag_hover() -> void:
 	else:
 		_close_gap()
 
-	# Garbage hover color
 	var any_hovering = dragged_block != null and _is_over_garbage(dragged_block)
 	if any_hovering:
 		var cmd = command_queue[current_command_index] if current_command_index < command_queue.size() else null
@@ -1322,7 +1250,6 @@ func _compute_grade() -> Dictionary:
 	if passed:
 		coins_earned = DB.complete_level(Global.current_topic, difficulty)
 	else:
-		# Still record the attempt even on fail
 		DB.record_attempt(Global.current_topic, difficulty)
 
 	return {
@@ -1353,26 +1280,20 @@ func _show_result_popup(result: String, grade: Dictionary) -> void:
 	if result == "PASS":
 		result_title.text = "PASSED!"
 		result_title.modulate = Color.GREEN
-		# Show code button on pass
 		if cpp_code_button:
 			cpp_code_button.show()
 			if code_anim: code_anim.play("default")
-		# Show translate button on pass
 		if translate_btn:
 			translate_btn.show()
-		# Hide try again on pass
 		if try_again_btn_root:
 			try_again_btn_root.hide()
 	else:
 		result_title.text = "FAILED!"
 		result_title.modulate = Color.RED
-		# Hide code button on fail
 		if cpp_code_button:
 			cpp_code_button.hide()
-		# Hide translate button on fail
 		if translate_btn:
 			translate_btn.hide()
-		# Show try again on fail
 		if try_again_btn_root:
 			try_again_btn_root.show()
 
@@ -1525,9 +1446,7 @@ func _on_intro_next_pressed() -> void:
 		tutorial_overlay.hide()
 		if difficulty != 1:
 			timer_running = true
-			clock.play()  # NOW start the clock animation
-
-
+			clock.play() 
 
 func _on_intro_prev_pressed() -> void:
 	btn_sound.play()
@@ -1542,7 +1461,7 @@ func _on_intro_skip_pressed() -> void:
 	tutorial_overlay.hide()
 	if difficulty != 1:
 		timer_running = true
-		clock.play()  # NOW start the clock animation
+		clock.play()
 
 
 # ==============================================
@@ -1590,7 +1509,6 @@ func _show_tutorial_step() -> void:
 		4: tutorial_text.text = "TRASH\n\nDrag the correct block here during DELETE commands."
 		5: tutorial_text.text = "COMMAND LABEL\n\nShows your current task.\nRead carefully before acting!"
 
-	# Special case: Area2D has no size property, handle separately
 	if tutorial_step == 4:
 		if pointer_sprite:
 			pointer_sprite.texture = load("res://assets/point_left.png")
@@ -1609,9 +1527,8 @@ func _show_tutorial_step() -> void:
 		tutorial_box.visible = true
 		tutorial_text.visible = true
 		tutorial_next.visible = true
-		return  # Skip the generic pointer code below
+		return
 
-	# Generic pointer code for all other steps
 	var node = tutorial_nodes[tutorial_step]
 	if node and pointer_sprite:
 		pointer_sprite.texture = load("res://assets/point_left.png")
@@ -1837,7 +1754,6 @@ func _gen_c() -> String:
 	code += "    return 0;\n}"
 	return code
 	
-# CODE WALKTHROUGH
 func _build_walkthrough_steps(lang: String) -> Array:
 	var steps = []
 	# Step 1: Header/setup
@@ -1845,7 +1761,6 @@ func _build_walkthrough_steps(lang: String) -> Array:
 		"lines": [0, 1, 2, 3],
 		"explanation": "[b]Setup[/b]\nIncludes and initial array declaration with your starting values."
 	})
-	# Dynamic steps per operation
 	var line_offset = 5
 	for line in code_lines:
 		var parts = line.split("|")
@@ -1961,7 +1876,7 @@ func _add_code_line(op: String, index: int, value: int) -> void:
 
 func _open_gap_at(gap_index: int) -> void:
 	if _hovered_gap_index == gap_index:
-		return  # Already open at this gap, no need to redo
+		return
 	_hovered_gap_index = gap_index
 
 	if _gap_tween:
@@ -1975,9 +1890,9 @@ func _open_gap_at(gap_index: int) -> void:
 		var base_x = START_POSITION.x + i * (64.0 + BLOCK_SPACING)
 		var target_x: float
 		if i < gap_index:
-			target_x = base_x - GAP_OPEN_AMOUNT * 0.5  # Shift left
+			target_x = base_x - GAP_OPEN_AMOUNT * 0.5
 		else:
-			target_x = base_x + GAP_OPEN_AMOUNT * 0.5  # Shift right
+			target_x = base_x + GAP_OPEN_AMOUNT * 0.5
 		_gap_tween.tween_property(block, "position:x", target_x, 0.2)
 
 
@@ -2007,7 +1922,7 @@ func _save_undo_state(was_correct: bool) -> void:
 		"code_lines": code_lines.duplicate(),
 		"was_correct_move": was_correct
 	})
-	redo_stack.clear()  # Any new action clears redo
+	redo_stack.clear()
 
 func _on_try_again_root_pressed() -> void:
 	btn_sound.play()
