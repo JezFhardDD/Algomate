@@ -114,16 +114,16 @@ const RESULT_POPUP_SCENE := preload("res://scene/ResultPopup.tscn")
 
 # --- BFS VARIABLES ---
 var main_array: Array[int] = []
-var tree_nodes: Array = [] # Stores Node Instances (or null)
+var tree_nodes: Array = [] 
 var timeline_log: Array[String] = []
 var node_positions: Array = []
 
 var index_labels: Array[Label] = []
-var INDEX_LABEL_OFFSET_X: float = 100.0  # Offset to the right of the node
-var INDEX_LABEL_OFFSET_Y: float = 25.0   # Vertical offset to center with node
+var INDEX_LABEL_OFFSET_X: float = 100.0  
+var INDEX_LABEL_OFFSET_Y: float = 25.0  
 
 # BFS State
-var bfs_queue: Array[int] = [] # Queue of INDICES
+var bfs_queue: Array[int] = [] 
 var visited: Array[int] = []
 var target_value: int = -1
 var search_found: bool = false
@@ -180,7 +180,6 @@ var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
 var current_tutorial_data: Array = [] 
 
-# 1. C++ DATA
 var cpp_tutorial_data = [
 	{ "lines": [0, 1, 2, 3], "text": "1. Imports & Setup:\nIncludes <vector> for the graph and <queue> for the BFS queue." },
 	{ "lines": [5, 6, 7, 8], "text": "2. Complexity Analysis:\nTime is [color=green]O(V + E)[/color] and Space is [color=orange]O(V)[/color] for the queue and visited array." },
@@ -190,7 +189,6 @@ var cpp_tutorial_data = [
 	{ "lines": [21, 22, 23], "text": "6. Enqueue Children:\nAdd the Left (2*i+1) and Right (2*i+2) children to the back of the queue." }
 ]
 
-# 2. PYTHON DATA
 var python_tutorial_data = [
 	{ "lines": [0], "text": "1. Imports:\nWe use `deque` from collections for an efficient O(1) queue." },
 	{ "lines": [2, 3], "text": "2. Initialization:\nCreate a queue starting with the source node (index 0)." },
@@ -199,7 +197,6 @@ var python_tutorial_data = [
 	{ "lines": [15, 16], "text": "5. Neighbors:\nAdd Left and Right children indices to the queue." }
 ]
 
-# 3. JAVA DATA
 var java_tutorial_data = [
 	{ "lines": [0, 1], "text": "1. Imports:\nImport java.util for Queue and LinkedList." },
 	{ "lines": [5, 6, 7], "text": "2. Initialization:\nCreate a LinkedList as our Queue and add the root." },
@@ -208,7 +205,6 @@ var java_tutorial_data = [
 	{ "lines": [15, 16], "text": "5. Explore:\nAdd left and right child indices to the queue." }
 ]
 
-# 4. C DATA
 var c_tutorial_data = [
 	{ "lines": [0, 1, 2], "text": "1. Setup:\nStandard C libraries and simple array Queue setup." },
 	{ "lines": [8, 9], "text": "2. Initialization:\nEnqueue the root node (0) to start." },
@@ -227,7 +223,6 @@ func _ready() -> void:
 	print("Program started — initializing BFS visualizer...")
 	randomize()
 	
-	# Setup result popup
 	result_popup = RESULT_POPUP_SCENE.instantiate()
 	add_child(result_popup)
 	result_title = result_popup.get_node("TextureRect/VBoxContainer/ResultTitle")
@@ -240,14 +235,11 @@ func _ready() -> void:
 	back_result_btn = result_popup.get_node("TextureRect/VBoxContainer/HBoxContainer2/BackButton")
 	translate_code_btn = result_popup.get_node("TextureRect/VBoxContainer/translate_code_btn")
 	
-	# Connect result buttons
 	try_again_result_btn.pressed.connect(_on_try_again_pressed)
 	back_result_btn.pressed.connect(_on_back_pressed)
 	translate_code_btn.pressed.connect(_on_translate_code_pressed)
 	
 	_define_tree_positions()
-	
-	# --- FIX: FORCE CONTAINERS TO IGNORE MOUSE ---
 	if dequeued_container: dequeued_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if array_container: array_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var tex_rect = get_node_or_null("TextureRect")
@@ -273,7 +265,6 @@ func _ready() -> void:
 	
 	_connect_configuration_buttons()
 	
-	# Setup compiler
 	_setup_compiler()
 	
 	_show_config_modal() 
@@ -428,7 +419,6 @@ func _create_target_input_dialog():
 	target_input_dialog.min_size = Vector2(500, 280)
 	target_input_dialog.exclusive = true
 	
-	# Style the title font
 	if my_font:
 		target_input_dialog.add_theme_font_override("title_font", my_font)
 	target_input_dialog.add_theme_font_size_override("title_font_size", 28)
@@ -484,7 +474,6 @@ func _create_target_input_dialog():
 		btn.add_theme_stylebox_override("pressed", btn_pressed)
 		btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	
-	# --- MAIN CONTAINER ---
 	var margin_container = MarginContainer.new()
 	margin_container.add_theme_constant_override("margin_top", 30)
 	margin_container.add_theme_constant_override("margin_left", 35)
@@ -497,7 +486,6 @@ func _create_target_input_dialog():
 	main_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	margin_container.add_child(main_vbox)
 	
-	# --- TITLE LABEL (Custom styled) ---
 	var title_label = Label.new()
 	title_label.text = "Enter Target Value"
 	if my_font:
@@ -527,7 +515,7 @@ func _create_target_input_dialog():
 	target_spinbox.add_theme_constant_override("buttons_vertical_separation", 18)
 	target_spinbox.add_theme_constant_override("buttons_width", 50)
 	
-	# Style spinbox background
+	
 	var spinbox_style = StyleBoxTexture.new()
 	spinbox_style.texture = load("res://assets/containers/CONTAINER.png")
 	spinbox_style.texture_margin_left = 12
@@ -536,7 +524,7 @@ func _create_target_input_dialog():
 	spinbox_style.texture_margin_bottom = 12
 	target_spinbox.add_theme_stylebox_override("normal", spinbox_style)
 	
-	# Style the up/down buttons
+	
 	var up_btn_style = StyleBoxTexture.new()
 	up_btn_style.texture = load("res://assets/BUTTON.png")
 	up_btn_style.texture_margin_left = 8
@@ -551,12 +539,12 @@ func _create_target_input_dialog():
 		if my_font:
 			line_edit.add_theme_font_override("font", my_font)
 		line_edit.add_theme_font_size_override("font_size", 32)
-		# Make text WHITE so it's visible on dark background
+		
 		line_edit.add_theme_color_override("font_color", Color(1, 1, 1, 1))
 		line_edit.add_theme_color_override("font_placeholder_color", Color(0.7, 0.7, 0.7, 1))
 		line_edit.alignment = HORIZONTAL_ALIGNMENT_CENTER
 		line_edit.custom_minimum_size = Vector2(0, 65)
-		# Set background color for the line edit to be slightly transparent
+		
 		var line_edit_style = StyleBoxFlat.new()
 		line_edit_style.bg_color = Color(0, 0, 0, 0.5)
 		line_edit_style.corner_radius_top_left = 8
@@ -572,7 +560,7 @@ func _create_target_input_dialog():
 	button_hbox.add_theme_constant_override("separation", 40)
 	main_vbox.add_child(button_hbox)
 	
-	# Re-add the buttons to our custom container
+	
 	ok_btn.get_parent().remove_child(ok_btn)
 	cancel_btn.get_parent().remove_child(cancel_btn)
 	button_hbox.add_child(ok_btn)
@@ -581,7 +569,7 @@ func _create_target_input_dialog():
 	add_child(target_input_dialog)
 	target_input_dialog.confirmed.connect(_on_target_confirmed)
 	
-	# Connect cancel button to hide dialog
+	
 	cancel_btn.pressed.connect(func(): target_input_dialog.hide())
 
 func _create_node_input_dialog():
@@ -613,10 +601,10 @@ func _on_node_value_confirmed():
 		var val = int(node_spinbox.value)
 		main_array[current_editing_index] = val
 		
-		# Add code line for node edit
+		
 		_add_code_line("EDIT", current_editing_index, val)
 		
-		# Update Visuals
+		
 		var node = tree_nodes[current_editing_index]
 		if node:
 			if val != 0:
@@ -626,7 +614,7 @@ func _on_node_value_confirmed():
 				node.set_value(0)
 				node.modulate = Color(0.5, 0.5, 0.5, 0.5)
 		
-		# Reset index label colors
+		
 		for i in range(index_labels.size()):
 			index_labels[i].add_theme_color_override("font_color", Color(1, 1, 1, 1))
 		
@@ -642,7 +630,7 @@ func _reset_search_for_new_target(new_val: int):
 	status_label.text = "Target: %d" % target_value
 	compare_label.text = "Queue: [Root]"
 	
-	# Reset index label colors
+	
 	for i in range(index_labels.size()):
 		index_labels[i].add_theme_color_override("font_color", Color(1, 1, 1, 1))
 	
@@ -652,7 +640,7 @@ func _reset_search_for_new_target(new_val: int):
 	timeline_log.clear()
 	timeline_log.append("New Search Started. Target: " + str(target_value))
 	
-	# Add code line for target
+	
 	_add_code_line("TARGET", 0, target_value)
 	
 	sorting_complete = false
@@ -705,10 +693,10 @@ func _define_tree_positions():
 # ==============================================
 
 func _initialize_with_elements(elements: Array[int]) -> void:
-	# Reset cache for new simulation
+	
 	reset_cache_for_scene()
 	
-	# Clear code lines
+	
 	code_lines.clear()
 	
 	print("Initializing Tree with:", elements)
@@ -721,7 +709,7 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	tree_nodes.resize(7)
 	tree_nodes.fill(null)
 	
-	# Clear index labels
+	
 	for label in index_labels:
 		if is_instance_valid(label):
 			label.queue_free()
@@ -730,7 +718,7 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	timeline_log.clear()
 	code_lines.clear()
 	
-	# Add initial code line
+	
 	_add_code_line("INITIAL", 0, 0)
 	
 	bfs_queue.clear()
@@ -774,7 +762,7 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 			
 			tree_nodes[i] = node
 			
-			# Create index label to the RIGHT of the node
+			
 			var index_label = Label.new()
 			index_label.text = str(i)
 			index_label.position = node.position + Vector2(INDEX_LABEL_OFFSET_X, INDEX_LABEL_OFFSET_Y)
@@ -787,7 +775,7 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 			index_labels.append(index_label)
 		else:
 			tree_nodes[i] = null
-			# Add placeholder for index label (will be dimmed)
+			
 			var index_label = Label.new()
 			index_label.text = str(i)
 			index_label.modulate.a = 0.5
@@ -834,7 +822,7 @@ func _handle_node_click(index: int):
 		status_label.text = "Reset Simulation to edit nodes!"
 		return
 
-	# Validation
+	
 	if index > 0:
 		var parent_idx = (index - 1) / 2
 		var parent_val = main_array[parent_idx]
@@ -842,7 +830,7 @@ func _handle_node_click(index: int):
 			status_label.text = "⚠ Parent is empty! Fill parent node first."
 			return
 	
-	# Highlight the index label temporarily
+	
 	for i in range(index_labels.size()):
 		if i == index:
 			index_labels[i].add_theme_color_override("font_color", Color(1, 1, 0, 1))
@@ -1014,7 +1002,7 @@ func _gen_cpp_code() -> String:
 	code += "int main() {\n"
 	code += "    int tree[7] = {"
 	
-	# Add tree values
+	
 	for i in range(7):
 		if i < main_array.size() and tree_nodes[i] != null:
 			code += str(main_array[i])
@@ -1029,7 +1017,7 @@ func _gen_cpp_code() -> String:
 	code += "    printTree(tree, size);\n"
 	code += "    cout << \"Searching for target: \" << target << endl;\n\n"
 	
-	# BFS Implementation
+	
 	code += "    // BFS Implementation\n"
 	code += "    queue<int> q;\n"
 	code += "    bool visited[7] = {false};\n"
@@ -1070,7 +1058,7 @@ func _gen_python_code() -> String:
 	code += "    print('Tree values:', [x for x in tree if x != -1])\n\n"
 	code += "tree = ["
 	
-	# Add tree values
+	
 	for i in range(7):
 		if i < main_array.size() and tree_nodes[i] != null:
 			code += str(main_array[i])
@@ -1085,7 +1073,7 @@ func _gen_python_code() -> String:
 	code += "print_tree(tree)\n"
 	code += "print(f'Searching for target: {target}')\n\n"
 	
-	# BFS Implementation
+	
 	code += "# BFS Implementation\n"
 	code += "queue = deque([0])\n"
 	code += "visited = [False] * 7\n"
@@ -1125,7 +1113,7 @@ func _gen_java_code() -> String:
 	code += "    public static void main(String[] args) {\n"
 	code += "        int[] tree = {"
 	
-	# Add tree values
+	
 	for i in range(7):
 		if i < main_array.size() and tree_nodes[i] != null:
 			code += str(main_array[i])
@@ -1140,7 +1128,7 @@ func _gen_java_code() -> String:
 	code += "        printTree(tree, size);\n"
 	code += "        System.out.println(\"Searching for target: \" + target);\n\n"
 	
-	# BFS Implementation
+	
 	code += "        // BFS Implementation\n"
 	code += "        Queue<Integer> queue = new LinkedList<>();\n"
 	code += "        boolean[] visited = new boolean[7];\n"
@@ -1192,7 +1180,6 @@ func _gen_c_code() -> String:
 	code += "int main() {\n"
 	code += "    int tree[7] = {"
 	
-	# Add tree values
 	for i in range(7):
 		if i < main_array.size() and tree_nodes[i] != null:
 			code += str(main_array[i])
@@ -1207,7 +1194,6 @@ func _gen_c_code() -> String:
 	code += "    printTree(tree, size);\n"
 	code += "    printf(\"Searching for target: %d\\n\\n\", target);\n\n"
 	
-	# BFS Implementation
 	code += "    // BFS Implementation\n"
 	code += "    front = rear = 0;\n"
 	code += "    bool visited[7] = {false};\n"
@@ -1257,24 +1243,21 @@ func _on_show_cpp_pressed() -> void:
 	_show_cpp_popup()
 
 func _show_cpp_popup() -> void:
-	# 1. Determine active language data
 	match current_code_language:
 		"cpp": current_tutorial_data = cpp_tutorial_data
 		"python": current_tutorial_data = python_tutorial_data
 		"java": current_tutorial_data = java_tutorial_data
 		"c": current_tutorial_data = c_tutorial_data
 	
-	# 2. Generate Code
 	var code = _generate_code_for_language(current_code_language)
-	
-	# 3. Setup UI
+
 	if cpp_label:
 		cpp_label.bbcode_enabled = true
 		cpp_label.text = code
 	
 	cpp_popup.popup_centered()
 	
-	# 4. Reset tutorial step
+	
 	cpp_tutorial_step = 0
 	if cpp_next_btn and not cpp_next_btn.is_connected("pressed", _on_cpp_next_pressed):
 		cpp_next_btn.pressed.connect(_on_cpp_next_pressed)
@@ -1396,7 +1379,6 @@ func _on_config_yes_pressed() -> void:
 func _show_config_size_modal() -> void:
 	config_size_modal.show()
 
-# --- Tree Hierarchy Input ---
 func _on_size_next_pressed() -> void:
 	btn_sound.play()
 	config_size_modal.hide()
@@ -1407,7 +1389,6 @@ func _show_config_elements_modal() -> void:
 	for child in elements_container.get_children(): 
 		child.queue_free()
 
-	# Use a VBox to stack the levels of the tree
 	var tree_vbox = VBoxContainer.new()
 	tree_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	tree_vbox.add_theme_constant_override("separation", 20)
@@ -1418,12 +1399,10 @@ func _show_config_elements_modal() -> void:
 	var current_index = 0
 	var level = 0
 
-	# Build the tree inputs layer by layer
 	while current_index < count:
 		var nodes_in_level = pow(2, level)
 		var h_box = HBoxContainer.new()
 		h_box.alignment = BoxContainer.ALIGNMENT_CENTER
-		# Nodes get closer together at lower levels
 		h_box.add_theme_constant_override("separation", max(10, 50 - (level * 15))) 
 
 		for i in range(nodes_in_level):
@@ -1445,15 +1424,14 @@ func _show_config_elements_modal() -> void:
 			le.alignment = HORIZONTAL_ALIGNMENT_CENTER
 			le.custom_minimum_size = Vector2(100, 70)
 			
-			# --- LIMIT TO 3 DIGITS MAX ---
+
 			le.max_length = 3 
 			
 			node_vbox.add_child(le)
 			h_box.add_child(node_vbox)
 			
 			element_inputs.append(le)
-			
-			# --- CONNECT TO NEW VALIDATION FUNCTION ---
+
 			le.text_changed.connect(_on_element_input_changed.bind(le))
 
 			current_index += 1
@@ -1472,12 +1450,9 @@ func _on_element_input_changed(new_text: String, line_edit: LineEdit) -> void:
 			if char >= "0" and char <= "9":
 				filtered_text += char
 		
-		# Update the box with ONLY the numbers
 		line_edit.text = filtered_text
-		# Move the typing cursor to the end of the text
 		line_edit.caret_column = filtered_text.length()
 		
-	# 2. Run your existing parent-child locking logic
 	_validate_tree_inputs("")
 
 func _validate_tree_inputs(_ignored_text: String):
@@ -1577,7 +1552,7 @@ func start_tutorial() -> void:
 	
 	tutorial_sequence = [
 		{
-			"node": array_container, # Points to tree area
+			"node": array_container,
 			"title": "TREE EDITOR",
 			"text": "Click on any node to change its number.\nREMEMBER: You must set the parent node first!",
 			"action": "highlight"
