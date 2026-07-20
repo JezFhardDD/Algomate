@@ -213,9 +213,7 @@ var c_tutorial_data = [
 	{ "lines": [24, 25, 26, 27], "text": "6. Ignore Right Half:\nIf arr[mid] > target, element must be in left half. high = mid - 1." }
 ]
 
-# ==============================================
-#   READY
-# ==============================================
+
 # ==============================================
 #   READY
 # ==============================================
@@ -226,7 +224,6 @@ func _ready() -> void:
 	print("Program started — initializing Binary Search...")
 	randomize()
 	
-	# Setup result popup
 	result_popup = RESULT_POPUP_SCENE.instantiate()
 	add_child(result_popup)
 	result_title = result_popup.get_node("TextureRect/VBoxContainer/ResultTitle")
@@ -239,7 +236,6 @@ func _ready() -> void:
 	back_result_btn = result_popup.get_node("TextureRect/VBoxContainer/HBoxContainer2/BackButton")
 	translate_code_btn = result_popup.get_node("TextureRect/VBoxContainer/translate_code_btn")
 	
-	# Connect result buttons
 	try_again_result_btn.pressed.connect(_on_try_again_pressed)
 	back_result_btn.pressed.connect(_on_back_pressed)
 	translate_code_btn.pressed.connect(_on_translate_code_pressed)
@@ -249,7 +245,6 @@ func _ready() -> void:
 	config_elements_modal.hide()
 	if Queue_full: Queue_full.hide()
 	
-	# Initial pointer visibility
 	if ptr_low: ptr_low.hide()
 	if ptr_high: ptr_high.hide()
 	if ptr_mid: ptr_mid.hide()
@@ -270,13 +265,11 @@ func _ready() -> void:
 	_create_sort_info_popup() 
 	
 	_connect_configuration_buttons()
-	
-	# Setup compiler
+
 	_setup_compiler()
 	
 	_show_config_modal() 
-	
-	# ---> APPLIES YOUR PIXEL ART THEME GLOBALLY <---
+
 	_apply_global_styles()
 	
 	call_deferred("show_introduction")
@@ -447,8 +440,6 @@ func _run_auto_sort() -> void:
 			await _perform_sort_step()
 			await get_tree().create_timer(ANIM_SPEED).timeout
 
-# --- POPUP CREATION ---
-# --- POPUP CREATION ---
 func _create_target_input_dialog():
 	var my_font = load("res://assets/font/Planes_ValMore.ttf") 
 	
@@ -464,7 +455,6 @@ func _create_target_input_dialog():
 	texture_style.content_margin_bottom = 25 
 	target_input_dialog.add_theme_stylebox_override("panel", texture_style)
 	
-	# --- HIDE & DISABLE THE 'X' BUTTON ---
 	var empty_icon = PlaceholderTexture2D.new()
 	empty_icon.size = Vector2(0, 0)
 	target_input_dialog.add_theme_icon_override("close", empty_icon)
@@ -483,7 +473,6 @@ func _create_target_input_dialog():
 	btn_texture.texture_margin_right = 6
 	btn_texture.texture_margin_top = 6
 	btn_texture.texture_margin_bottom = 6
-	# ---> FORCE BUTTON SIZE WITH INTERNAL PADDING <---
 	btn_texture.content_margin_left = 35
 	btn_texture.content_margin_right = 35
 	btn_texture.content_margin_top = 15
@@ -496,7 +485,7 @@ func _create_target_input_dialog():
 
 	for btn in [ok_btn, cancel_btn]:
 		if my_font: btn.add_theme_font_override("font", my_font)
-		btn.add_theme_font_size_override("font_size", 26) # Bigger text
+		btn.add_theme_font_size_override("font_size", 26)
 		btn.add_theme_stylebox_override("normal", btn_texture)
 		btn.add_theme_stylebox_override("hover", btn_hover)
 		btn.add_theme_stylebox_override("pressed", btn_pressed)
@@ -547,7 +536,6 @@ func _create_target_input_dialog():
 	add_child(target_input_dialog)
 	target_input_dialog.confirmed.connect(_on_target_confirmed)
 
-# --- SORTING POPUP (TEXTURE BOX + BIG TEXTURE BUTTON) ---
 func _create_sort_info_popup():
 	var my_font = load("res://assets/font/Planes_ValMore.ttf") 
 	
@@ -559,7 +547,6 @@ func _create_sort_info_popup():
 	if my_font: sort_info_popup.add_theme_font_override("title_font", my_font)
 	sort_info_popup.add_theme_font_size_override("title_font_size", 24)
 	
-	# --- TEXTURE BACKGROUND ---
 	var texture_style = StyleBoxTexture.new()
 	texture_style.texture = load("res://assets/containers/CONTAINER.png")
 	texture_style.texture_margin_left = 12
@@ -569,7 +556,6 @@ func _create_sort_info_popup():
 	texture_style.content_margin_bottom = 30 
 	sort_info_popup.add_theme_stylebox_override("panel", texture_style)
 	
-	# --- HIDE & DISABLE THE 'X' BUTTON ---
 	var empty_icon = PlaceholderTexture2D.new()
 	empty_icon.size = Vector2(0, 0)
 	sort_info_popup.add_theme_icon_override("close", empty_icon)
@@ -582,21 +568,18 @@ func _create_sort_info_popup():
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.add_theme_color_override("font_color", Color.WHITE)
 	
-	# --- BIGGER TEXTURE BUTTON ---
 	var ok_btn = sort_info_popup.get_ok_button()
 	if my_font: ok_btn.add_theme_font_override("font", my_font)
-	ok_btn.add_theme_font_size_override("font_size", 30) # Massive font
+	ok_btn.add_theme_font_size_override("font_size", 30)
 	
 	var btn_texture = StyleBoxTexture.new()
 	btn_texture.texture = load("res://assets/BUTTON.png")
 	
-	# 9-slice margins to keep borders crisp
 	btn_texture.texture_margin_left = 6
 	btn_texture.texture_margin_right = 6
 	btn_texture.texture_margin_top = 6
 	btn_texture.texture_margin_bottom = 6
 	
-	# ---> FORCE BUTTON SIZE WITH INTERNAL PADDING <---
 	btn_texture.content_margin_left = 60
 	btn_texture.content_margin_right = 60
 	btn_texture.content_margin_top = 15
@@ -653,7 +636,7 @@ func _reset_search_for_new_target(new_val: int):
 		if block.has_method("reset_visuals"): block.reset_visuals()
 		block.modulate = Color(1, 1, 1, 1)
 		
-	_update_ui_labels()  # <-- ADD THIS LINE
+	_update_ui_labels()
 
 # ==============================================
 #   INITIALIZATION WITH VISUAL SORT
@@ -683,7 +666,6 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	for i in range(main_array.size()):
 		var val = main_array[i]
 		
-		# Create block
 		var new_block = BLOCK_SCENE.instantiate()
 		new_block.value = val
 		new_block.position = Vector2(current_x, START_POSITION.y)
@@ -692,8 +674,7 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 		tween.tween_property(new_block, "modulate:a", 1.0, 0.5)
 		array_container.add_child(new_block)
 		block_nodes.append(new_block)
-		
-		# Create index label below block
+	
 		var index_label = Label.new()
 		index_label.text = str(i)
 		index_label.position = Vector2(current_x + 25, START_POSITION.y + INDEX_LABEL_OFFSET)
@@ -722,7 +703,6 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 
 	if cpp_code_button: cpp_code_button.hide()
 	
-	# Show Popup and wait for OK to sort
 	sort_info_popup.popup_centered()
 
 func _run_visual_bubble_sort():
@@ -741,35 +721,29 @@ func _run_visual_bubble_sort():
 				var nodeA = block_nodes[j]
 				var nodeB = block_nodes[j+1]
 				
-				# Calculate target positions based on indices
+				
 				var posA_target = START_POSITION.x + j * (block_width + BLOCK_SPACING)
 				var posB_target = START_POSITION.x + (j + 1) * (block_width + BLOCK_SPACING)
 				
-				# Animate both blocks to their new positions
 				var tw = create_tween().set_parallel(true)
 				tw.tween_property(nodeA, "position:x", posB_target, 0.5).set_trans(Tween.TRANS_CUBIC)
 				tw.tween_property(nodeB, "position:x", posA_target, 0.5).set_trans(Tween.TRANS_CUBIC)
 				await tw.finished
-				
-				# Snap to exact positions to prevent drift
+
 				nodeA.position.x = posB_target
 				nodeB.position.x = posA_target
-				
-				# Swap values in array
+
 				var temp_val = main_array[j]
 				main_array[j] = main_array[j+1]
 				main_array[j+1] = temp_val
-				
-				# Swap blocks in array
+
 				var temp_node = block_nodes[j]
 				block_nodes[j] = block_nodes[j+1]
 				block_nodes[j+1] = temp_node
-				
-				# Update block values
+
 				block_nodes[j].set("value", main_array[j])
 				block_nodes[j+1].set("value", main_array[j+1])
-				
-				# Update index labels positions
+
 				_update_index_labels()
 				
 				_add_code_line("SWAP", j, main_array[j])
@@ -787,7 +761,7 @@ func _run_visual_bubble_sort():
 func _update_index_labels():
 	var block_width = 64.0
 	for i in range(index_labels.size()):
-		# Calculate X position based on index and consistent spacing
+
 		var target_x = START_POSITION.x + i * (block_width + BLOCK_SPACING)
 		index_labels[i].position = Vector2(target_x + 25, START_POSITION.y + INDEX_LABEL_OFFSET)
 		index_labels[i].text = str(i)
@@ -847,7 +821,7 @@ func _perform_sort_step():
 		_add_code_line("MOVE_LEFT", mid_idx, val)
 		high_idx = mid_idx - 1
 	
-	_update_ui_labels()  # <-- THIS SHOULD ALREADY BE HERE
+	_update_ui_labels()
 	is_sorting = false
 
 func _update_pointers():
@@ -888,22 +862,18 @@ func _highlight_range():
 	for i in range(block_nodes.size()):
 		if i < low_idx or i > high_idx:
 			block_nodes[i].modulate = Color(0.3, 0.3, 0.3, 1)
-			# Dim index labels for excluded range
 			if i < index_labels.size():
 				index_labels[i].modulate = Color(0.5, 0.5, 0.5, 0.6)
 		else:
 			block_nodes[i].modulate = Color(1, 1, 1, 1)
-			# Keep index labels bright for active range
 			if i < index_labels.size():
 				index_labels[i].modulate = Color(1, 1, 1, 1)
 			
 	if mid_idx >= 0 and mid_idx < block_nodes.size():
 		block_nodes[mid_idx].modulate = Color(1, 1, 0, 1)
-		# Highlight the index label for mid as well
 		if mid_idx < index_labels.size():
 			index_labels[mid_idx].add_theme_color_override("font_color", Color(1, 1, 0, 1))
 	else:
-		# Reset any mid index label color
 		for i in range(index_labels.size()):
 			index_labels[i].add_theme_color_override("font_color", Color(1, 1, 1, 1))
 
@@ -911,7 +881,6 @@ func _finish_simulation():
 	sorting_complete = true
 	is_auto_playing = false
 	
-	# Reset all index label colors
 	for label in index_labels:
 		label.add_theme_color_override("font_color", Color(1, 1, 1, 1))
 	
