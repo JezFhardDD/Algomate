@@ -11,8 +11,8 @@ extends Control
 # --- MAIN BUTTONS (Updated for BST) ---
 @onready var insert_btn: Button = $VBoxContainer/InsertButton
 @onready var delete_btn: Button = $VBoxContainer/DeleteButton
-@onready var search_btn: Button = $VBoxContainer/SortButton  # Reused as Search
-@onready var traverse_btn: Button = $VBoxContainer/WaitingElements  # Reused as Traverse
+@onready var search_btn: Button = $VBoxContainer/SortButton 
+@onready var traverse_btn: Button = $VBoxContainer/WaitingElements  
 @onready var timeline_btn: Button = $VBoxContainer/TimelineButton
 @onready var simulate_new_btn: Button = $VBoxContainer/SimulateNew
 @onready var end_sim_btn: Button = $VBoxContainer/EndSimulationButton
@@ -60,7 +60,7 @@ const BLOCK_SCENE := preload("res://TreeNode.tscn")
 const POINTER_TEX := preload("res://assets/point_left.png")
 const RESULT_POPUP_SCENE := preload("res://scene/ResultPopup.tscn")
 
-# --- POINTERS (Hidden for Tree) ---
+# --- POINTERS ---
 @onready var ptr_left: Node = $TextureRect/front
 @onready var ptr_right: Node = $TextureRect/rear
 @onready var unused_ptr1: Node = $TextureRect/front2
@@ -87,7 +87,7 @@ const RESULT_POPUP_SCENE := preload("res://scene/ResultPopup.tscn")
 @onready var clock = $AnimatedSprite2D
 @onready var time_up_popup: PopupPanel = $TimeUpPopup
 
-# --- CONFIGURATION MODALS (Hidden in Lecture) ---
+# --- CONFIGURATION MODALS  ---
 @onready var config_modal: Panel = $ConfigChoiceModal
 @onready var yes_btn: Button = $ConfigChoiceModal/yesButton
 @onready var no_btn: Button = $ConfigChoiceModal/NoButton
@@ -117,9 +117,9 @@ const RESULT_POPUP_SCENE := preload("res://scene/ResultPopup.tscn")
 # =======================================================
 
 # Tree data
-var main_array: Array[int] = []  # Values at each index (0 = empty)
-var tree_nodes: Array = []  # Node instances
-var node_positions: Array = []  # Pre-calculated positions
+var main_array: Array[int] = []  
+var tree_nodes: Array = []  
+var node_positions: Array = [] 
 var index_labels: Array[Label] = []
 
 # BST state
@@ -128,7 +128,7 @@ var timeline_log: Array[String] = []
 var code_lines: Array[String] = []
 var current_code_language: String = "cpp"
 
-# Animation
+# Animation 
 var ANIM_SPEED: float = 0.2
 var is_animating: bool = false
 var traversal_timer: SceneTreeTimer = null
@@ -150,9 +150,8 @@ var traverse_dialog: ConfirmationDialog
 var end_confirmation: ConfirmationDialog
 
 
-#state vars
-# BST state
-var operation_count: int = 0  # NEW: Track number of operations performed
+
+var operation_count: int = 0  
 
 # Tutorial
 var tutorial_sequence = []
@@ -348,7 +347,6 @@ func _ready() -> void:
 	print("BST Lecture Mode initialized")
 	randomize()
 	
-	# Setup result popup
 	result_popup = RESULT_POPUP_SCENE.instantiate()
 	add_child(result_popup)
 	result_title = result_popup.get_node("TextureRect/VBoxContainer/ResultTitle")
@@ -367,13 +365,11 @@ func _ready() -> void:
 	
 	_define_tree_positions()
 	
-	# Setup containers
 	if dequeued_container: dequeued_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if array_container: array_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var tex_rect = get_node_or_null("TextureRect")
 	if tex_rect: tex_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	
-	# Hide pointers
+
 	if ptr_left: ptr_left.hide()
 	if ptr_right: ptr_right.hide()
 	if unused_ptr1: unused_ptr1.hide()
@@ -403,16 +399,16 @@ func _ready() -> void:
 		timeline_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 		timeline_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		timeline_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	# Setup buttons
+
 	_create_input_dialogs()
 	_connect_buttons()
 	_connect_language_buttons()
 	_setup_compiler()
 	
-	# Initialize empty tree
+
 	_initialize_empty_tree()
 	
-	# Show intro
+
 	call_deferred("show_introduction")
 	
 	if q_mark_sprite: q_mark_sprite.play("default")
@@ -439,7 +435,7 @@ func _create_input_dialogs():
 	var bg_texture = load("res://assets/BUTTON.png")
 	var btn_texture = load("res://assets/BUTTON.png")
 
-	# Create INSERT Dialog
+
 	insert_dialog = style_dialog(ConfirmationDialog.new(), "Insert Value", my_font, bg_texture)
 	var insert_vbox = add_content(insert_dialog)
 
@@ -478,7 +474,7 @@ func _create_input_dialogs():
 	insert_dialog.confirmed.connect(_on_insert_confirmed)
 	insert_cancel.pressed.connect(_on_insert_cancel)
 
-	# Create DELETE Dialog
+	
 	delete_dialog = style_dialog(ConfirmationDialog.new(), "Delete Value", my_font, bg_texture)
 	var delete_vbox = add_content(delete_dialog)
 
@@ -517,7 +513,7 @@ func _create_input_dialogs():
 	delete_dialog.confirmed.connect(_on_delete_confirmed)
 	delete_cancel.pressed.connect(_on_delete_cancel)
 
-	# Create SEARCH Dialog
+	
 	search_dialog = style_dialog(ConfirmationDialog.new(), "Search Value", my_font, bg_texture)
 	var search_vbox = add_content(search_dialog)
 
@@ -556,11 +552,11 @@ func _create_input_dialogs():
 	search_dialog.confirmed.connect(_on_search_confirmed)
 	search_cancel.pressed.connect(_on_search_cancel)
 
-	# Create TRAVERSE Dialog - HIDE DEFAULT OK/CANCEL BUTTONS
+	
 	traverse_dialog = style_dialog(ConfirmationDialog.new(), "Traversal Options", my_font, bg_texture)
 	traverse_dialog.min_size = Vector2(500, 350)
 	
-	# Hide the default OK/Cancel buttons
+	
 	var traverse_ok = traverse_dialog.get_ok_button()
 	var traverse_cancel_btn = traverse_dialog.get_cancel_button()
 	if traverse_ok:
@@ -608,7 +604,7 @@ func _create_input_dialogs():
 
 	add_child(traverse_dialog)
 
-	# Create END Confirmation Dialog
+	
 	end_confirmation = style_dialog(ConfirmationDialog.new(), "End Simulation", my_font, bg_texture)
 	var end_vbox = add_content(end_confirmation)
 
@@ -701,9 +697,9 @@ func _define_tree_positions():
 func _initialize_empty_tree():
 	main_array = []
 	for i in range(7):
-		main_array.append(0)  # 0 means empty
+		main_array.append(0) 
 	
-	# Clear existing nodes
+	
 	for child in array_container.get_children():
 		child.queue_free()
 	
@@ -722,7 +718,7 @@ func _initialize_empty_tree():
 		node.set_value("")
 		node.modulate = Color(0.3, 0.3, 0.3, 0.5)
 		
-		# Invisible button overlay for click editing
+		
 		var click_btn = Button.new()
 		click_btn.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		click_btn.modulate.a = 0.0
@@ -732,7 +728,7 @@ func _initialize_empty_tree():
 		
 		tree_nodes.append(node)
 		
-		# Index label
+		
 		var index_label = Label.new()
 		index_label.text = str(i)
 		index_label.position = node_positions[i] + Vector2(INDEX_LABEL_OFFSET_X, INDEX_LABEL_OFFSET_Y)
@@ -749,7 +745,7 @@ func _initialize_empty_tree():
 	timeline_log.clear()
 	code_lines.clear()
 	_add_code_line("INITIAL", 0, 0)
-	_update_timeline_display()  # ADD THIS LINE
+	_update_timeline_display()
 	_update_processes_label()
 	
 	if status_label:
@@ -768,7 +764,6 @@ func _handle_node_click(index: int):
 		show_feedback("Node already has value " + str(main_array[index]) + "!", Color.YELLOW, tree_nodes[index].global_position)
 		return
 	
-	# Suggest inserting a value here
 	show_feedback("Click INSERT button to add a value here!", Color.CYAN, tree_nodes[index].global_position)
 
 func _draw():
@@ -805,37 +800,31 @@ func _on_insert_confirmed():
 		show_feedback("Simulation ended!", Color.YELLOW, get_global_mouse_position())
 		return
 	
-	# Check if value already exists
 	if _value_exists(value):
 		show_feedback("Value " + str(value) + " already exists in tree!", Color.RED, get_global_mouse_position())
 		timeline_log.append("[color=red]Insert failed: %d already exists[/color]" % value)
 		return
-	
-	# Check if tree is full
+
 	if _is_tree_full():
 		show_feedback("Cannot insert - tree is full (max 7 nodes)!", Color.RED, get_global_mouse_position())
 		timeline_log.append("[color=red]Insert failed: Tree is full[/color]")
 		return
 	operation_count += 1
-	
-	# Find position to insert
+
 	var insert_index = _find_insert_position(value)
 	
 	if insert_index == -1:
 		show_feedback("Cannot insert - no valid position!", Color.RED, get_global_mouse_position())
 		return
 	
-	# Check if inserting at index would create 4th level node (index >= 7)
 	if insert_index >= 7:
 		show_feedback("Value would create 4th level node - not enough space on screen!", Color.RED, get_global_mouse_position())
 		timeline_log.append("[color=red]Insert failed: Would create 4th level node[/color]")
 		return
 	
-	# Insert the value
 	main_array[insert_index] = value
 	_update_node_visual(insert_index, value)
 	
-	# Animate
 	_animate_node(insert_index)
 	
 	timeline_log.append("[color=green]Inserted %d at node %d[/color]" % [value, insert_index])
@@ -857,7 +846,6 @@ func _on_delete_confirmed():
 		show_feedback("Simulation ended!", Color.YELLOW, get_global_mouse_position())
 		return
 	
-	# Find node with the value
 	var node_index = _find_node_by_value(value)
 	
 	if node_index == -1:
@@ -867,10 +855,8 @@ func _on_delete_confirmed():
 		return
 	operation_count += 1
 	
-	# Store old value for feedback
 	var old_value = main_array[node_index]
 	
-	# Perform deletion
 	_delete_node(node_index)
 	
 	timeline_log.append("[color=orange]Deleted %d from node %d[/color]" % [old_value, node_index])
@@ -893,23 +879,21 @@ func _on_search_confirmed():
 		return
 	operation_count += 1 
 	
-	# Search for the value
 	var path = _search_path(value)
 	
 	if path.is_empty():
 		show_feedback("Value " + str(value) + " not found in tree!", Color.RED, get_global_mouse_position())
 		timeline_log.append("[color=red]Search: %d not found[/color]" % value)
 		_add_code_line("SEARCH_NOT_FOUND", 0, value)
-		_update_timeline_display()  # ADD THIS LINE
+		_update_timeline_display()
 		search_dialog.hide()
 		return
 	
-	# Highlight the path
 	_highlight_path(path)
 	
 	timeline_log.append("[color=green]Search: Found %d at node %d[/color]" % [value, path[-1]])
 	_add_code_line("SEARCH_FOUND", path[-1], value)
-	_update_timeline_display()  # ADD THIS LINE
+	_update_timeline_display()
 	
 	if status_label:
 		status_label.text = "Found " + str(value) + " at node " + str(path[-1])
@@ -925,13 +909,13 @@ func _start_traversal(method: String):
 		show_feedback("Traversal already in progress!", Color.YELLOW, get_global_mouse_position())
 		return
 	operation_count += 1
-	# Get root index (first non-empty node)
+
 	var root = 0
 	if main_array[0] == 0:
 		show_feedback("Tree is empty!", Color.YELLOW, get_global_mouse_position())
 		return
 	
-	# Generate traversal order
+
 	var order: Array[int] = []
 	match method:
 		"inorder":
@@ -949,7 +933,7 @@ func _start_traversal(method: String):
 	
 	timeline_log.append("[color=purple]Starting %s traversal[/color]" % method.to_upper())
 	_add_code_line("TRAVERSE_START", 0, 0)
-	_update_timeline_display()  # ADD THIS LINE
+	_update_timeline_display()  
 	
 	status_label.text = method.to_upper() + " traversal in progress..."
 	_next_traversal_step()
@@ -973,14 +957,14 @@ func _finish_traversal():
 	traversal_queue.clear()
 	timeline_log.append("[color=purple]Traversal complete[/color]")
 	_add_code_line("TRAVERSE_END", 0, 0)
-	_update_timeline_display()  # Add this
+	_update_timeline_display()
 	status_label.text = "Traversal complete!"
 
 func _end_simulation():
 	btn_sound.play()
 	is_simulation_active = false
 	
-	# Disable all buttons
+
 	insert_btn.disabled = true
 	delete_btn.disabled = true
 	search_btn.disabled = true
@@ -992,12 +976,11 @@ func _end_simulation():
 	timeline_log.append("[color=red]--- SIMULATION ENDED ---[/color]")
 	_add_code_line("SIMULATION_END", 0, 0)
 	_update_timeline_display()
-	_update_processes_label()  # Add this
+	_update_processes_label() 
 	
 	if status_label:
 		status_label.text = "Simulation ended. Total operations: %d" % operation_count
 	
-	# Show completion popup
 	if complete_popup:
 		var node_count = 0
 		for val in main_array:
@@ -1070,46 +1053,39 @@ func _find_node_by_value(value: int) -> int:
 func _delete_node(index: int):
 	var value = main_array[index]
 	
-	# Count children
+
 	var left = 2 * index + 1
 	var right = 2 * index + 2
 	var has_left = left < 7 and main_array[left] != 0
 	var has_right = right < 7 and main_array[right] != 0
 	
 	if not has_left and not has_right:
-		# Leaf node - simply delete
+
 		main_array[index] = 0
 		_update_node_visual(index, 0)
 	elif has_left and not has_right:
-		# Only left child - replace with left subtree
 		_move_subtree(left, index)
 		_clear_subtree(left)
 	elif not has_left and has_right:
-		# Only right child - replace with right subtree
 		_move_subtree(right, index)
 		_clear_subtree(right)
 	else:
-		# Two children - find inorder successor (smallest in right subtree)
 		var successor = _find_inorder_successor(right)
 		if successor != -1:
-			# Copy successor value to current node
+
 			main_array[index] = main_array[successor]
 			_update_node_visual(index, main_array[index])
 			
-			# Store the successor's children BEFORE deleting it
 			var succ_left = 2 * successor + 1
 			var succ_right = 2 * successor + 2
 			
-			# Delete the successor node
 			main_array[successor] = 0
 			_update_node_visual(successor, 0)
 			
-			# Move successor's children to its position if they exist
 			if succ_left < 7 and main_array[succ_left] != 0:
 				_move_subtree(succ_left, successor)
 				_clear_subtree(succ_left)
 			if succ_right < 7 and main_array[succ_right] != 0:
-				# This shouldn't happen for inorder successor, but just in case
 				_move_subtree(succ_right, successor)
 				_clear_subtree(succ_right)
 
@@ -1226,12 +1202,12 @@ func _highlight_path_sequential(path: Array[int], index: int):
 		var node = tree_nodes[node_idx]
 		var original_scale = node.scale
 		
-		# Pulse animation
+
 		var tween = create_tween()
 		tween.tween_property(node, "scale", original_scale * 1.4, 0.2)
 		tween.tween_property(node, "scale", original_scale, 0.2)
 		
-		# If last node (found), also change color
+
 		if index == path.size() - 1:
 			var color_tween = create_tween().set_parallel(true)
 			color_tween.tween_property(node, "modulate", Color(0, 1, 0, 1), 0.3)
@@ -1240,7 +1216,7 @@ func _highlight_path_sequential(path: Array[int], index: int):
 			color_tween.tween_property(node, "modulate", Color(1, 1, 1, 1), 0.3)
 			color_tween.tween_property(node, "scale", original_scale, 0.3)
 	
-	# Wait 1 second before next node
+
 	await get_tree().create_timer(1.0).timeout
 	_highlight_path_sequential(path, index + 1)
 	
@@ -1271,31 +1247,28 @@ func _update_stats_label():
 		compare_label.text = "Nodes: %d" % count
 
 func _connect_buttons():
-	# Connect insert button
 	if insert_btn:
 		insert_btn.pressed.connect(_on_insert_button_pressed)
 	
-	# Connect delete button
 	if delete_btn:
 		delete_btn.pressed.connect(_on_delete_button_pressed)
 	
-	# Connect search button
+
 	if search_btn:
 		search_btn.pressed.connect(_on_search_button_pressed)
 	
-	# Connect traverse button
+
 	if traverse_btn:
 		traverse_btn.pressed.connect(_on_traverse_button_pressed)
 	
-	# Connect timeline button
+
 	if timeline_btn:
 		timeline_btn.pressed.connect(_on_timeline_pressed)
-	
-	# Connect simulate new button
+
 	if simulate_new_btn:
 		simulate_new_btn.pressed.connect(_on_simulate_new_pressed)
 	
-	# Connect end simulation button
+
 	if end_sim_btn:
 		end_sim_btn.pressed.connect(_on_end_sim_button_pressed)
 
@@ -1304,7 +1277,7 @@ func _on_simulate_new_pressed():
 		show_feedback("Simulation already ended!", Color.YELLOW, get_global_mouse_position())
 		return
 	
-	# Show confirmation popup
+
 	sim_confirmation.show()
 
 func _on_yes_pressed():
@@ -1315,7 +1288,7 @@ func _on_yes_pressed():
 	
 	_initialize_empty_tree()
 	is_simulation_active = true
-	operation_count = 0  # Reset operation count
+	operation_count = 0  
 	insert_btn.disabled = false
 	delete_btn.disabled = false
 	search_btn.disabled = false
@@ -1328,7 +1301,7 @@ func _on_yes_pressed():
 	_add_code_line("INITIAL", 0, 0)
 	_update_stats_label()
 	_update_timeline_display()
-	_update_processes_label()  # Add this
+	_update_processes_label() 
 	
 	status_label.text = "BST Ready - Insert values to start"
 
@@ -1349,29 +1322,28 @@ func _on_timeline_pressed():
 			display_log.append("No operations yet")
 		else:
 			for entry in timeline_log:
-				# Keep BBCode for RichTextLabel
 				display_log.append(entry)
 		
 		if timeline_label:
-			# Make sure label is visible
+			
 			timeline_label.visible = true
-			# Set bbcode text
+			
 			timeline_label.bbcode_enabled = true
 			timeline_label.bbcode_text = "\n".join(display_log)
 			
-			# Debug: print what we're trying to show
+
 			print("Timeline entries count: ", display_log.size())
 			if display_log.size() > 0:
 				print("First entry: ", display_log[0])
 		
-		# Show popup
+		
 		timeline_popup.popup_centered()
 		
-		# Wait for popup to be visible
+
 		await get_tree().process_frame
 		await get_tree().process_frame
 		
-		# Scroll to bottom - FIXED: use max_value instead of max
+
 		var scroll_container = timeline_popup.get_node_or_null("MainVBox/ScrollContainer")
 		if scroll_container:
 			var v_scroll = scroll_container.get_v_scroll_bar()
@@ -1379,7 +1351,7 @@ func _on_timeline_pressed():
 				scroll_container.scroll_vertical = v_scroll.max_value
 
 func _update_timeline_display():
-	# Just update the stored timeline, no auto-show
+
 	pass
 
 func _on_timeline_close_pressed():
@@ -1491,7 +1463,7 @@ func _gen_cpp_code() -> String:
 	code += "    \n"
 	code += "    // BST Operations Simulation\n"
 	
-	# Add operations from code_lines
+	
 	for line in code_lines:
 		var parts = line.split("|")
 		if parts[0] == "INSERT":
