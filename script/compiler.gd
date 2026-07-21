@@ -2,7 +2,7 @@ extends Control
 var input_container: MarginContainer
 var input_textedit: TextEdit
 
-# Node references
+
 @onready var tabs = {
 	"cpp": $TextureRect/VBoxContainer/TabContainer/HBoxContainer/Tab_Cpp,
 	"c": $TextureRect/VBoxContainer/TabContainer/HBoxContainer/Tab_C,
@@ -14,7 +14,7 @@ var input_textedit: TextEdit
 @onready var back_button: Button = $TextureRect/VBoxContainer/TopBar/Button
 @onready var compile_button: Button = $TextureRect/VBoxContainer/BottomBar/CompileButton
 @onready var compiler_output_popup: PopupPanel = null
-# Current language and code persistence
+
 var current_language: String = "cpp"
 var saved_code: Dictionary = {
 	"cpp": "",
@@ -23,7 +23,6 @@ var saved_code: Dictionary = {
 	"python": ""
 }
 
-# Default code templates
 var code_templates = {
 	"cpp": '#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "Hello, World!" << endl;\n    return 0;\n}',
 	"c": '#include <stdio.h>\n\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}',
@@ -31,7 +30,6 @@ var code_templates = {
 	"python": 'print("Hello, World!")'
 }
 
-# Orientation tracking
 var previous_orientation: int
 var orientation_locked: bool = true
 
@@ -39,32 +37,27 @@ func _enter_tree():
 	DisplayServer.screen_set_orientation(DisplayServer.SCREEN_PORTRAIT)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	
-	# Swap width and height to match portrait
+
 	var current_size = get_viewport().get_visible_rect().size
-	if current_size.x > current_size.y:  # Still thinks it's landscape
+	if current_size.x > current_size.y: 
 		get_tree().root.content_scale_size = Vector2i(int(current_size.y), int(current_size.x))
 
 func _setup_input_field():
-	# Check if input container already exists
 	var existing_container = $TextureRect/VBoxContainer.get_node_or_null("InputContainer")
 	if existing_container:
-		# Get references to existing nodes
 		input_container = existing_container
 		input_textedit = input_container.get_node("InputTextEdit")
 		return
-	
-	# Create input container
-	input_container = MarginContainer.new()  # Use global variable, not local
+
+	input_container = MarginContainer.new() 
 	input_container.name = "InputContainer"
 	input_container.custom_minimum_size = Vector2(0, 120)
 	
-	# Create VBox for input area
+
 	var input_vbox = VBoxContainer.new()
 	input_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	input_container.add_child(input_vbox)
-	
-	# Create label
+
 	var input_label = Label.new()
 	input_label.text = "Program Input (stdin):"
 	var my_font = load("res://assets/font/Planes_ValMore.ttf")
@@ -73,15 +66,14 @@ func _setup_input_field():
 	input_label.add_theme_font_size_override("font_size", 20)
 	input_label.add_theme_color_override("font_color", Color(0.8, 0.8, 0.8, 1))
 	input_vbox.add_child(input_label)
-	
-	# Create TextEdit for input
-	input_textedit = TextEdit.new()  # Use global variable, not local
+
+	input_textedit = TextEdit.new() 
 	input_textedit.name = "InputTextEdit"
 	input_textedit.placeholder_text = "Enter input here...\nEach line is sent in order when program calls input() / cin"
 	input_textedit.custom_minimum_size = Vector2(0, 70)
 	input_textedit.wrap_mode = TextEdit.LINE_WRAPPING_NONE
 	
-	# Style the TextEdit
+
 	var style = StyleBoxFlat.new()
 	style.bg_color = Color(0.1, 0.1, 0.12, 1)
 	style.corner_radius_top_left = 4
@@ -96,8 +88,7 @@ func _setup_input_field():
 	input_textedit.add_theme_font_size_override("font_size", 18)
 	
 	input_vbox.add_child(input_textedit)
-	
-	# Add hint label
+
 	var hint_label = Label.new()
 	hint_label.text = "Tip: For multiple inputs, put each on a new line"
 	if my_font:
@@ -106,14 +97,13 @@ func _setup_input_field():
 	hint_label.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5, 1))
 	input_vbox.add_child(hint_label)
 	
-	# Add clear button
+
 	var clear_btn = Button.new()
 	clear_btn.text = "Clear Input"
 	clear_btn.custom_minimum_size = Vector2(120, 40)
 	clear_btn.pressed.connect(_on_clear_input_pressed)
 	input_vbox.add_child(clear_btn)
-	
-	# Insert after EditorContainer (before BottomBar)
+
 	var editor_container = $TextureRect/VBoxContainer/EditorContainer
 	var editor_index = editor_container.get_index()
 	
@@ -123,38 +113,32 @@ func _setup_input_field():
 	print("Input field added to compiler scene")
 
 func _ready():
-	# Connect tab buttons
 	for lang in tabs:
 		tabs[lang].pressed.connect(_on_tab_pressed.bind(lang))
 	
-	# Connect other buttons
+
 	back_button.pressed.connect(_on_back_pressed)
 	compile_button.pressed.connect(_on_compile_pressed)
 	
-	# Set initial code
+
 	_load_code_for_language(current_language)
 	
-	# Highlight current tab
 	_update_tab_highlight()
-	
-	# Force EditorContainer to take available space
+
 	var editor_container = $TextureRect/VBoxContainer/EditorContainer
 	editor_container.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	
-	# Make sure FloatingBlocks fills its parent
+
 	var floating_blocks = $TextureRect/VBoxContainer/EditorContainer/FloatingBlocks
 	if floating_blocks:
 		floating_blocks.anchor_right = 1.0
 		floating_blocks.anchor_bottom = 1.0
 		floating_blocks.offset_right = 0
 		floating_blocks.offset_bottom = 0
-	
-	# --- ORIENTATION HANDLING ---
-	# Store current orientation and switch to portrait
+
 	previous_orientation = DisplayServer.screen_get_orientation()
 	_set_compiler_orientation()
 	
-	# Connect to visibility changes (in case scene is shown/hidden)
+
 	self.visibility_changed.connect(_on_visibility_changed)
 	
 	print("Compiler scene ready - orientation set to portrait")
@@ -167,38 +151,36 @@ func _ready():
 
 func _set_compiler_orientation():
 	if orientation_locked:
-		# Lock to portrait (won't auto-rotate)
+
 		DisplayServer.screen_set_orientation(DisplayServer.SCREEN_SENSOR_PORTRAIT)
 		print("Orientation locked to portrait")
 	else:
-		# Allow both portrait orientations (can flip 180°)
+
 		DisplayServer.screen_set_orientation(DisplayServer.SCREEN_PORTRAIT)
 		print("Orientation set to portrait (auto-rotate allowed)")
 
 func _on_visibility_changed():
 	if self.visible:
-		# Scene became visible - ensure portrait mode
+
 		_set_compiler_orientation()
 	else:
-		# Scene hidden - restore previous orientation
+
 		_restore_orientation()
 
 func _restore_orientation():
-	# Only restore if we're not visible (prevents flickering)
+
 	if not self.visible:
 		DisplayServer.screen_set_orientation(previous_orientation)
 		print("Restored previous orientation: ", previous_orientation)
 
 func _exit_tree():
-	# Clean up when scene is destroyed
+
 	_restore_orientation()
 
-# Optional: Method to toggle orientation lock (can be called from a settings button)
 func toggle_orientation_lock():
 	orientation_locked = !orientation_locked
 	_set_compiler_orientation()
 
-# Optional: Get current orientation as string
 func get_orientation_string() -> String:
 	var current = DisplayServer.screen_get_orientation()
 	match current:
@@ -220,16 +202,14 @@ func get_orientation_string() -> String:
 			return "Unknown"
 
 func _on_tab_pressed(lang: String):
-	# Save current code before switching
+
 	saved_code[current_language] = code_editor.text
-	
-	# Switch language
+
 	current_language = lang
-	
-	# Load saved code for new language (or template if empty)
+
 	_load_code_for_language(lang)
 	
-	# Update tab highlighting
+
 	_update_tab_highlight()
 
 func _load_code_for_language(lang: String):
@@ -239,11 +219,11 @@ func _load_code_for_language(lang: String):
 		code_editor.text = saved_code[lang]
 
 func _update_tab_highlight():
-	# Reset all tabs to gray
+
 	for lang in tabs:
 		tabs[lang].self_modulate = Color(0.5, 0.5, 0.5, 1)
 	
-	# Highlight current tab with its specific color
+
 	if current_language in tabs:
 		match current_language:
 			"cpp": 
@@ -260,16 +240,15 @@ func _update_tab_highlight():
 				tabs[current_language].modulate = Color(1, 1, 1, 1)
 
 func _on_compile_pressed():
-	# Save current code
+
 	saved_code[current_language] = code_editor.text
 	
-	# Show feedback
+
 	_show_feedback("Compiling...", Color.YELLOW)
-	
-	# Get API keys
+
 	var keys = APIManager.get_keys("KEY_C")
 	
-	# Prepare API request
+
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
 	http_request.request_completed.connect(_on_compile_completed.bind(http_request))
@@ -277,13 +256,11 @@ func _on_compile_pressed():
 	var url = "https://api.jdoodle.com/v1/execute"
 	var headers = ["Content-Type: application/json"]
 	
-	# Map language to JDoodle API expected format
 	var api_language = current_language
 	match current_language:
 		"python":
 			api_language = "python3"
 	
-	# NEW: Get user input from input field
 	var stdin_input = ""
 	if input_textedit and input_textedit.text.strip_edges() != "":
 		stdin_input = input_textedit.text
@@ -297,7 +274,7 @@ func _on_compile_pressed():
 		"script": code_editor.text,
 		"language": api_language,
 		"versionIndex": _get_version_index(current_language),
-		"stdin": stdin_input  # ADD THIS LINE
+		"stdin": stdin_input
 	})
 	
 	print("=== JDoodle API Request ===")
@@ -313,10 +290,10 @@ func _on_compile_pressed():
 
 func _get_version_index(lang: String) -> String:
 	match lang:
-		"cpp": return "5"  # C++17
-		"c": return "4"     # C17
-		"java": return "4"  # Java 17
-		"python": return "4" # Python 3
+		"cpp": return "5" 
+		"c": return "4"    
+		"java": return "4"  
+		"python": return "4"
 		_: return "0"
 
 func _on_compile_completed(result, response_code, headers, body, http_request):
@@ -335,21 +312,17 @@ func _on_compile_completed(result, response_code, headers, body, http_request):
 	
 	var response = json.data
 	
-	# Show CompilerOutput popup with results
 	_show_compiler_output(response)
 
 func _show_compiler_output(response: Dictionary):
-	# Load the popup scene if not already loaded
 	if compiler_output_popup == null:
 		var popup_scene = preload("res://scene/CompilerOutput.tscn")
 		compiler_output_popup = popup_scene.instantiate()
 		add_child(compiler_output_popup)
 		
-		# Connect signals
 		compiler_output_popup.recompile_requested.connect(_on_recompile_requested)
 		compiler_output_popup.closed.connect(_on_output_closed)
 	
-	# Pass true to indicate this is from the Compiler scene (portrait mode)
 	compiler_output_popup.show_output(current_language, response, self, true)
 
 func _show_feedback(text: String, color: Color):
@@ -370,29 +343,24 @@ func _on_back_pressed():
 	AudioManager.play_back_sound()
 	SceneManager.go_back()
 
-# Public method to set initial code (for when opened from simulation)
+
 func set_initial_code(lang: String, code: String):
 	current_language = lang
 	saved_code[lang] = code
 	_load_code_for_language(lang)
 	_update_tab_highlight()
 
-# Public method to reset cache (will be called from simulation scenes)
 func reset_cache_for_scene():
-	# This will be implemented when we create the CompilerOutput cache system
 	print("Cache reset called - to be implemented with CompilerOutput")
 func _on_recompile_requested(language: String):
-	# User wants to recompile the same code
 	_on_compile_pressed()
 func _on_output_closed():
-	# Output popup closed - do any cleanup if needed
 	print("Compiler output closed")
 func has_cached_output() -> bool:
 	if compiler_output_popup == null:
 		return false
 	return compiler_output_popup.has_cached_result(current_language)
 
-# Optional: Method to show cached output without recompiling
 func show_cached_output():
 	if compiler_output_popup != null and has_cached_output():
 		var cached = compiler_output_popup.get_cached_result(current_language)
@@ -409,4 +377,4 @@ func show_cached_output():
 func _on_clear_input_pressed():
 	if input_textedit:
 		input_textedit.text = ""
-		_show_feedback("Input cleared", Color.GREEN)  # Remove the position argument
+		_show_feedback("Input cleared", Color.GREEN)
