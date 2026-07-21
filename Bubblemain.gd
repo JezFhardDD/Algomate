@@ -161,8 +161,8 @@ var initial_array: Array[int] = []
 var block_nodes: Array[Control] = []
 var timeline_log: Array[String] = []
 
-var sort_i: int = 0  # Pass counter (how many elements sorted at end)
-var sort_j: int = 0  # Current comparison index (starts at 0 each pass)
+var sort_i: int = 0  
+var sort_j: int = 0 
 var comparison_counter: int = 0
 var swap_counter: int = 0
 var sorting_complete: bool = false
@@ -714,7 +714,7 @@ func _update_current_highlight() -> void:
 		highlight_tween.kill()
 		highlight_tween = null
 	
-	# Reset all highlights and scales first
+	
 	for i in range(block_nodes.size()):
 		if not is_instance_valid(block_nodes[i]):
 			continue
@@ -724,16 +724,16 @@ func _update_current_highlight() -> void:
 		if block_nodes[i].has_method("set_sorted_visual"):
 			block_nodes[i].set_sorted_visual(false)
 	
-	# Find the first index where inversion exists (arr[i] > arr[i+1])
+	
 	var highlight_index = -1
 	for i in range(main_array.size() - 1):
 		if main_array[i] > main_array[i + 1]:
 			highlight_index = i
 			break
 	
-	# If no inversion found, array is sorted
+	
 	if highlight_index == -1:
-		# Mark all as sorted
+		
 		for i in range(block_nodes.size()):
 			if not is_instance_valid(block_nodes[i]):
 				continue
@@ -744,10 +744,10 @@ func _update_current_highlight() -> void:
 		sorting_complete = true
 		return
 	
-	# Update sort_j to the highlight index for tracking
+	
 	sort_j = highlight_index
 	
-	# Highlight the element that needs to be swapped right
+	
 	if highlight_index < block_nodes.size() and is_instance_valid(block_nodes[highlight_index]):
 		if block_nodes[highlight_index].has_method("set_highlight"):
 			block_nodes[highlight_index].set_highlight(true)
@@ -792,8 +792,7 @@ func _on_block_dropped(dropped_block: Control) -> void:
 	var old_index: int = block_nodes.find(dropped_block)
 	if old_index == -1:
 		return
-	
-	# Calculate drop position to determine new index
+
 	var center_x: float = dropped_block.position.x + dropped_block.size.x * 0.5
 	var new_index: int = 0
 	
@@ -805,25 +804,20 @@ func _on_block_dropped(dropped_block: Control) -> void:
 		if center_x > c_center:
 			new_index += 1
 	
-	# If dropped in same position, just snap back
 	if old_index == new_index:
 		_resnap_blocks()
 		return
 	
-	# Get values for logging
 	var moved_val = main_array[old_index]
 	var target_val = main_array[new_index] if new_index < main_array.size() else null
 	
-	# Determine if this is a GOOD move
-	# Condition: The highlighted block (sort_j) is swapped with the block to its RIGHT (index + 1)
+
 	var is_valid = false
 	var validation_message = ""
 	
-	# Check if the dropped block is the highlighted one
 	if old_index == sort_j:
-		# Check if it was swapped with the block to its right
+		
 		if new_index == sort_j + 1:
-			# Check if it's actually an inversion (left > right)
 			if main_array[sort_j] > main_array[sort_j + 1]:
 				is_valid = true
 				validation_message = "Good move! Swapping %d with %d fixes inversion" % [main_array[sort_j], main_array[sort_j + 1]]
@@ -840,7 +834,6 @@ func _on_block_dropped(dropped_block: Control) -> void:
 	_save_undo_state()
 	redo_stack.clear()
 	
-	# ALWAYS perform the swap (even if bad move)
 	var val = main_array.pop_at(old_index)
 	main_array.insert(new_index, val)
 	
@@ -848,7 +841,6 @@ func _on_block_dropped(dropped_block: Control) -> void:
 	block_nodes.remove_at(old_index)
 	block_nodes.insert(new_index, moving_block)
 	
-	# Record move
 	var move_data = {
 		"old_index": old_index,
 		"new_index": new_index,
@@ -871,14 +863,12 @@ func _on_block_dropped(dropped_block: Control) -> void:
 	
 	comparison_counter += 1
 	
-	# Update visuals
 	_resnap_blocks()
 	_update_current_highlight()
 	_update_ui_labels()
 	_update_timeline_display()
 	_update_undo_redo_buttons()
 	
-	# Check if sorted
 	if _check_if_sorted() and not has_completed_assessment:
 		_end_assessment("sorted")
 
