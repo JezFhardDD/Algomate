@@ -5,8 +5,8 @@ extends Control
 @onready var compile_btn: Button = $CppPopup/VBoxContainer/HBoxContainer2/CompileButton
 
 # --- MAIN BUTTONS ---
-@onready var undo_btn: Button = $VBoxContainer/SortButton  # Repurposed as UNDO
-@onready var redo_btn: Button = $VBoxContainer/WaitingElements  # Repurposed as REDO
+@onready var undo_btn: Button = $VBoxContainer/SortButton
+@onready var redo_btn: Button = $VBoxContainer/WaitingElements
 @onready var timeline_btn: Button = $VBoxContainer/TimelineButton
 @onready var match_btn: Button = $VBoxContainer/MatchButton
 @onready var discard_left_btn: Button = $VBoxContainer/DiscardLeftButton
@@ -57,7 +57,7 @@ const BLOCK_SCENE := preload("res://BubbleBlock.tscn")
 const POINTER_TEX := preload("res://assets/point_left.png")
 const RESULT_POPUP_SCENE := preload("res://scene/ResultPopup.tscn")
 
-# --- POINTERS (Not heavily used but kept for compatibility) ---
+# --- POINTERS --
 @onready var ptr_left: Node = $TextureRect/front
 @onready var ptr_right: Node = $TextureRect/rear
 @onready var unused_ptr1: Node = $TextureRect/front2
@@ -147,8 +147,8 @@ var timeline_log: Array[String] = []
 
 var target_value: int = 0
 var current_mid_index: int = -1
-var revealed_indices: Array[bool] = []  # Track which blocks are revealed
-var discarded_indices: Array[bool] = []  # Track which blocks are discarded (greyed out)
+var revealed_indices: Array[bool] = [] 
+var discarded_indices: Array[bool] = []  
 var target_found: bool = false
 var target_found_index: int = -1
 
@@ -171,7 +171,7 @@ var BLOCK_WIDTH: float = 64.0
 var BLOCK_SPACING: float = 15.0
 var START_POSITION: Vector2 = Vector2(50, 80)
 
-# Add tween tracking for cleanup
+
 var current_tween: Tween = null
 
 # Tutorial Vars
@@ -179,7 +179,7 @@ var tutorial_sequence = []
 var tutorial_sequence_index = 0
 var tutorial_in_progress = false
 
-# Intro Text - Updated for Binary Search
+
 var intro_texts = [
 	"""WELCOME TO BINARY SEARCH SIMULATION! 🔍 Binary Search is a FAST searching algorithm that works on SORTED arrays:
 • It repeatedly divides the search interval in half
@@ -248,13 +248,12 @@ EASY:
 Press buttons carefully - each decision counts!"""
 ]
 
-# --- CODE TUTORIAL DATA (Updated for Binary Search) ---
+
 var current_code_language: String = "cpp"
 var element_inputs: Array[LineEdit] = []
 var cpp_tutorial_step: int = 0
 var current_tutorial_data: Array = []
 
-# 1. C++ DATA (Binary Search)
 var cpp_tutorial_data = [
 	{ "lines": [0, 1], "text": "1. Function Definition:\nTakes sorted array, left, right, and target." },
 	{ "lines": [2], "text": "2. While Loop:\nContinue while left <= right." },
@@ -265,7 +264,7 @@ var cpp_tutorial_data = [
 	{ "lines": [10], "text": "7. Not Found:\nReturn -1 if target not in array." }
 ]
 
-# 2. PYTHON DATA (Binary Search)
+
 var python_tutorial_data = [
 	{ "lines": [0, 1], "text": "1. Function Definition:\nTakes sorted array and target." },
 	{ "lines": [2, 3], "text": "2. Initialize Pointers:\nLeft and right boundaries." },
@@ -276,7 +275,7 @@ var python_tutorial_data = [
 	{ "lines": [10], "text": "7. Not Found:\nReturn -1 after loop." }
 ]
 
-# 3. JAVA DATA (Binary Search)
+
 var java_tutorial_data = [
 	{ "lines": [0, 1], "text": "1. Method Signature:\nStatic method returning integer index." },
 	{ "lines": [2, 3], "text": "2. Initialize Pointers:\nLeft and right boundaries." },
@@ -287,7 +286,7 @@ var java_tutorial_data = [
 	{ "lines": [10], "text": "7. Not Found:\nReturn -1 after loop." }
 ]
 
-# 4. C DATA (Binary Search)
+
 var c_tutorial_data = [
 	{ "lines": [0, 1], "text": "1. Function:\nReturns index or -1 if not found." },
 	{ "lines": [2], "text": "2. While Loop:\nContinue while left <= right." },
@@ -300,7 +299,7 @@ var c_tutorial_data = [
 
 enum SimMode { LECTURE, ASSESSMENT }
 var sim_mode: SimMode = SimMode.ASSESSMENT
-var difficulty: int = 2  # Will be overridden by Global
+var difficulty: int = 2 
 
 var time_remaining: float = 0.0
 var timer_running: bool = false
@@ -312,7 +311,6 @@ var redo_stack: Array = []
 var move_history: Array = []
 var move_redo_stack: Array = []
 
-# Grade tracking
 var has_completed_assessment: bool = false
 var time_when_completed: float = 0.0
 var coins_earned: int = 0
@@ -342,9 +340,9 @@ func _get_array_size() -> int:
 
 func _get_time_limit() -> float:
 	match difficulty:
-		1: return 0.0   # Easy - No timer
-		2: return 90.0   # Medium - 90 seconds
-		3: return 60.0   # Hard - 60 seconds
+		1: return 0.0   
+		2: return 90.0   
+		3: return 60.0  
 	return 90.0
 
 # ==============================================
@@ -353,12 +351,11 @@ func _get_time_limit() -> float:
 func _ready() -> void:
 	var back_overlay = preload("res://scenes/back_button_overlay.tscn").instantiate()
 	add_child(back_overlay)
-	# ADDED: Get difficulty from Global
 	difficulty = Global.current_difficulty
 	if difficulty == 0:
-		difficulty = 1  # fallback to medium if not set
+		difficulty = 1 
 	
-	# Setup audio
+
 	tiktak_sound = AudioStreamPlayer.new()
 	tiktak_sound.stream = TIKTAK_SFX
 	add_child(tiktak_sound)
@@ -367,7 +364,7 @@ func _ready() -> void:
 	print("Program started — initializing Binary Search visualizer...")
 	randomize()
 	
-	# Initialize result popup
+
 	result_popup = RESULT_POPUP_SCENE.instantiate()
 	add_child(result_popup)
 	result_title = result_popup.get_node("TextureRect/VBoxContainer/ResultTitle")
@@ -386,7 +383,7 @@ func _ready() -> void:
 	timer_running = false
 	set_process(true)
 	
-	# Setup binary search buttons
+
 	if match_btn:
 		match_btn.text = "MATCH"
 		match_btn.pressed.connect(_on_match_pressed)
@@ -399,18 +396,18 @@ func _ready() -> void:
 		discard_right_btn.text = "DISCARD RIGHT"
 		discard_right_btn.pressed.connect(_on_discard_right_pressed)
 	
-	# Setup current highlight
+
 	if current_highlight:
 		current_highlight.hide()
-		current_highlight.color = Color(1, 1, 0, 0.3)  # Semi-transparent yellow
+		current_highlight.color = Color(1, 1, 0, 0.3) 
 	
-	# Hide all modals initially
+
 	config_modal.hide()
 	config_size_modal.hide()
 	config_elements_modal.hide()
 	if Queue_full: Queue_full.hide()
 	
-	# Hide pointers
+
 	if ptr_left: ptr_left.hide()
 	if ptr_right: ptr_right.hide()
 	if unused_ptr1: unused_ptr1.hide()
@@ -428,7 +425,7 @@ func _ready() -> void:
 	
 	_connect_language_buttons()
 	
-	# ADDED: Connect time up popup buttons
+
 	if time_up_try_again_btn:
 		if not time_up_try_again_btn.is_connected("pressed", _on_time_up_try_again_pressed):
 			time_up_try_again_btn.pressed.connect(_on_time_up_try_again_pressed)
@@ -450,8 +447,7 @@ func _ready() -> void:
 	
 	clock.centered = true
 	clock.position = Vector2(0, 18)
-	
-	# Connect result popup buttons
+
 	if try_again_result_btn:
 		if not try_again_result_btn.is_connected("pressed", _on_try_again_result_pressed):
 			try_again_result_btn.pressed.connect(_on_try_again_result_pressed)
@@ -461,8 +457,7 @@ func _ready() -> void:
 	if translate_code_btn:
 		if not translate_code_btn.is_connected("pressed", _on_translate_code_pressed):
 			translate_code_btn.pressed.connect(_on_translate_code_pressed)
-	
-	# Connect main buttons
+
 	if undo_btn:
 		if not undo_btn.is_connected("pressed", _on_undo_pressed):
 			undo_btn.pressed.connect(_on_undo_pressed)
@@ -475,26 +470,22 @@ func _ready() -> void:
 	if try_again_btn_root:
 		if not try_again_btn_root.is_connected("pressed", _on_try_again_root_pressed):
 			try_again_btn_root.pressed.connect(_on_try_again_root_pressed)
-	
-	# Connect help button
+
 	if help_btn:
 		if not help_btn.is_connected("pressed", _on_help_button_pressed):
 			help_btn.pressed.connect(_on_help_button_pressed)
 	
-	# Connect intro buttons
 	_ensure_connected(intro_next_btn, "pressed", _on_intro_next_pressed)
 	_ensure_connected(intro_prev_btn, "pressed", _on_intro_prev_pressed)
 	_ensure_connected(intro_skip_btn, "pressed", _on_intro_skip_pressed)
 	
-	# Connect complete popup buttons
 	if complete_ok_btn:
 		if not complete_ok_btn.is_connected("pressed", _on_complete_ok_pressed):
 			complete_ok_btn.pressed.connect(_on_complete_ok_pressed)
 	if show_cpp_btn:
 		if not show_cpp_btn.is_connected("pressed", _on_show_cpp_pressed):
 			show_cpp_btn.pressed.connect(_on_show_cpp_pressed)
-	
-	# Connect code popup buttons
+
 	if cpp_close_btn:
 		if not cpp_close_btn.is_connected("pressed", _on_cpp_close_pressed):
 			cpp_close_btn.pressed.connect(_on_cpp_close_pressed)
@@ -504,8 +495,7 @@ func _ready() -> void:
 	
 	_update_difficulty_label()
 	_setup_timeline_popup_for_mobile()
-	
-	# Setup compiler
+
 	_setup_compiler()
 
 func _ensure_connected(node: Node, sig: String, callable: Callable) -> void:
@@ -526,13 +516,12 @@ func _setup_timeline_popup_for_mobile():
 #   ASSESSMENT START (UPDATED)
 # ==============================================
 func _start_assessment_mode():
-	# ADDED: Reset cache for new assessment
 	reset_cache_for_scene()
 	
 	try_again_btn_root.visible = false
 	has_completed_assessment = false
 	
-	# Show and enable all buttons
+
 	if match_btn:
 		match_btn.show()
 		match_btn.disabled = false
@@ -548,30 +537,28 @@ func _start_assessment_mode():
 		discard_right_btn.disabled = false
 		discard_right_btn.modulate = Color(1, 1, 1, 1)
 	
-	# Kill any existing animations
+
 	if current_tween:
 		current_tween.kill()
 		current_tween = null
-	
-	# Reset timer FIRST
+
 	assessment_time_limit = _get_time_limit()
 	time_remaining = assessment_time_limit
-	
-	# Set clock based on difficulty
+
 	if difficulty == 1:
 		timer_label.hide()
 		clock.visible = false
 		clock.modulate = Color(1,1,1,0)
 		clock.stop()
-		timer_running = false  # Easy mode - no timer
+		timer_running = false 
 	else:
 		timer_label.show()
 		clock.visible = true
 		clock.modulate = Color(1, 1, 1, 1)
-		clock.stop()  # Don't play yet - wait for intro
-		timer_running = false  # Start false, will be enabled after intro
+		clock.stop()  
+		timer_running = false  
 
-	# Reset all tracking variables
+
 	mistake_counter = 0
 	correct_moves = 0
 	target_found = false
@@ -586,8 +573,7 @@ func _start_assessment_mode():
 	
 	if current_highlight:
 		current_highlight.hide()
-	
-	# Reset any lingering block animations
+
 	for block in block_nodes:
 		if block.has_meta("pulse_tween"):
 			var tween = block.get_meta("pulse_tween")
@@ -609,24 +595,20 @@ func _start_assessment_mode():
 	# Generate new array
 	var size: int = _get_array_size()
 	var arr: Array[int] = []
-	
-	# Generate sorted random array (BINARY SEARCH REQUIRES SORTED ARRAY)
+
 	for i in range(size):
 		arr.append(randi_range(1, 99))
-	arr.sort()  # CRITICAL: Sort the array for binary search
+	arr.sort()
 	
-	# Select random target from array
 	target_value = arr[randi() % arr.size()]
 	
 	_initialize_with_elements(arr)
-	
-	# Show target in target label
+
 	_update_target_label()
 	
 	if status_label:
 		status_label.text = "Phase 1: Pick the MIDDLE element"
 	
-	# Log initial state
 	timeline_log.append("[color=cyan]--- Assessment Started ---[/color]")
 	timeline_log.append("[color=cyan]Initial sorted array: [%s][/color]" % _array_to_string(main_array))
 	timeline_log.append("[color=gold]Target: %d[/color]" % target_value)
@@ -648,10 +630,10 @@ func _update_target_label():
 			if current_range_size % 2 == 0:
 				even_hint = " (pick LOWER mid)"
 			target_label.text = "TARGET: %d | Pick MIDDLE%s" % [target_value, even_hint]
-		else:  # DECISION phase
+		else:
 			target_label.text = "TARGET: %d | MID = %d | Choose: MATCH, DISCARD LEFT, or DISCARD RIGHT" % [target_value, main_array[current_mid_index]]
 		
-		target_label.add_theme_color_override("font_color", Color(1, 0.8, 0, 1))  # Gold color
+		target_label.add_theme_color_override("font_color", Color(1, 0.8, 0, 1))
 		target_label.add_theme_font_size_override("font_size", 40)
 
 func _initialize_with_elements(elements: Array[int]) -> void:
@@ -663,18 +645,15 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	block_nodes.clear()
 	timeline_log.clear()
 	
-	# Initialize tracking arrays
 	revealed_indices.resize(main_array.size())
 	discarded_indices.resize(main_array.size())
 	for i in range(main_array.size()):
 		revealed_indices[i] = false
 		discarded_indices[i] = false
 	
-	# Set initial boundaries
 	left_boundary = 0
 	right_boundary = main_array.size() - 1
 	
-	# Kill any existing animations
 	if current_tween:
 		current_tween.kill()
 		current_tween = null
@@ -691,14 +670,11 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 		new_block.value = val
 		new_block.position = Vector2(current_x, START_POSITION.y)
 		
-		# Blocks are NOT draggable in Binary Search
 		new_block.draggable = false
 		
-		# Connect block pressed signal
 		if not new_block.is_connected("block_pressed", _on_block_pressed):
 			new_block.connect("block_pressed", _on_block_pressed)
 		
-		# Initially hide the number
 		new_block.hide_number(true)
 		
 		new_block.modulate.a = 0.0
@@ -722,7 +698,6 @@ func _initialize_with_elements(elements: Array[int]) -> void:
 	_update_ui_labels()
 	if cpp_code_button: cpp_code_button.hide()
 	
-	# Apply initial discard states (none yet)
 	_apply_discard_visuals()
 
 func _safe_connect(node: Node, signal_name: String, method: Callable):
@@ -766,7 +741,6 @@ func _on_block_pressed(block: Control) -> void:
 	if index == -1:
 		return
 	
-	# Check if block is discarded
 	if discarded_indices[index]:
 		show_feedback(
 			"This element is discarded!",
@@ -775,7 +749,6 @@ func _on_block_pressed(block: Control) -> void:
 		)
 		return
 	
-	# Only allow picking middle during PICK_MID phase
 	if current_phase != BinarySearchPhase.PICK_MID:
 		show_feedback(
 			"Now in DECISION phase! Use the buttons to MATCH or DISCARD",
@@ -784,7 +757,6 @@ func _on_block_pressed(block: Control) -> void:
 		)
 		return
 	
-	# Check if block is within current search boundaries
 	if index < left_boundary or index > right_boundary:
 		show_feedback(
 			"This element is outside the current search range!",
@@ -793,21 +765,17 @@ func _on_block_pressed(block: Control) -> void:
 		)
 		return
 	
-	# Save state for undo
 	_save_state()
 	redo_stack.clear()
 	
-	# Calculate the correct middle index for current range
 	var correct_mid = _calculate_mid_index()
 	var is_correct_mid = (index == correct_mid)
 	
 	if is_correct_mid:
-		# Correct middle pick
 		current_mid_index = index
 		_reveal_block(index)
 		_update_current_highlight(index)
 		
-		# Move to decision phase
 		current_phase = BinarySearchPhase.DECISION
 		correct_moves += 1
 		
@@ -820,7 +788,6 @@ func _on_block_pressed(block: Control) -> void:
 			"[color=green]Good: Picked correct middle index[%d]: %d[/color]" % [index, main_array[index]]
 		)
 		
-		# Track history
 		var pick_data = {
 			"type": "pick_mid",
 			"index": index,
@@ -829,14 +796,11 @@ func _on_block_pressed(block: Control) -> void:
 		}
 		mid_pick_history.append(pick_data)
 		move_history.append(pick_data)
-		
-		# Update target label for decision phase
 		_update_target_label()
 		
 		if status_label:
 			status_label.text = "Phase 2: Choose MATCH, DISCARD LEFT, or DISCARD RIGHT"
 	else:
-		# Wrong middle pick
 		mistake_counter += 1
 		
 		var range_size = right_boundary - left_boundary + 1
@@ -855,8 +819,7 @@ func _on_block_pressed(block: Control) -> void:
 		timeline_log.append(
 			"[color=red]Bad: Picked wrong middle index[%d] (should be %d)[/color]" % [index, correct_mid]
 		)
-		
-		# Track history
+
 		var pick_data = {
 			"type": "pick_mid",
 			"index": index,
@@ -871,16 +834,14 @@ func _on_block_pressed(block: Control) -> void:
 	_update_undo_redo_buttons()
 
 func _calculate_mid_index() -> int:
-	# Returns the LOWER middle index for even-sized ranges
 	return left_boundary + floor((right_boundary - left_boundary) / 2.0)
 
 func _reveal_block(index: int):
 	if index >= 0 and index < block_nodes.size() and not revealed_indices[index]:
-		block_nodes[index].hide_number(false)  # Show the number
+		block_nodes[index].hide_number(false)
 		revealed_indices[index] = true
 
 func _update_current_highlight(index: int):
-	# First, stop any existing animation on previously selected block
 	if current_mid_index != -1 and current_mid_index < block_nodes.size():
 		var old_block = block_nodes[current_mid_index]
 		if old_block.has_meta("pulse_tween"):
@@ -889,20 +850,16 @@ func _update_current_highlight(index: int):
 				old_tween.kill()
 		old_block.scale = Vector2(1.0, 1.0)
 	
-	# Update current mid index
 	current_mid_index = index
 	
-	# Apply visual feedback to new selected block
 	if index >= 0 and index < block_nodes.size():
 		var block = block_nodes[index]
 		
-		# Pulse animation
-		var tween = create_tween().set_loops()  # Infinite loops
+		var tween = create_tween().set_loops()
 		tween.tween_property(block, "scale", Vector2(1.1, 1.1), 0.4)
 		tween.tween_property(block, "scale", Vector2(1.0, 1.0), 0.4)
 		block.set_meta("pulse_tween", tween)
 		
-		# Also position highlight rectangle (optional backup)
 		if current_highlight:
 			current_highlight.global_position = block.global_position - Vector2(5, 5)
 			current_highlight.size = block.size + Vector2(10, 10)
@@ -911,7 +868,6 @@ func _update_current_highlight(index: int):
 		current_highlight.hide()
 
 func _discard_range(discard_left: bool) -> bool:
-	# Returns true if discard was correct, false otherwise
 	if current_phase != BinarySearchPhase.DECISION:
 		show_feedback("Not in decision phase!", Color.ORANGE, get_global_mouse_position())
 		return false
@@ -924,35 +880,28 @@ func _discard_range(discard_left: bool) -> bool:
 	var is_correct: bool
 	
 	if discard_left:
-		# Discard left means mid < target (we want to search right half)
 		is_correct = (mid_value < target_value)
 	else:
-		# Discard right means mid > target (we want to search left half)
 		is_correct = (mid_value > target_value)
 	
 	if is_correct:
-		# Correct discard
 		if discard_left:
-			# Discard everything from left_boundary to current_mid_index
 			for i in range(left_boundary, current_mid_index + 1):
 				if not discarded_indices[i]:
 					discarded_indices[i] = true
-					# Reveal discarded elements
+					
 					_reveal_block(i)
-			# Update left boundary
+			
 			left_boundary = current_mid_index + 1
 			show_feedback("Correct! Discarding left half", Color.GREEN, get_global_mouse_position())
 			timeline_log.append(
 				"[color=green]Good: Discarded left (mid %d < target %d)[/color]" % [mid_value, target_value]
 			)
 		else:
-			# Discard everything from current_mid_index to right_boundary
 			for i in range(current_mid_index, right_boundary + 1):
 				if not discarded_indices[i]:
 					discarded_indices[i] = true
-					# Reveal discarded elements
 					_reveal_block(i)
-			# Update right boundary
 			right_boundary = current_mid_index - 1
 			show_feedback("Correct! Discarding right half", Color.GREEN, get_global_mouse_position())
 			timeline_log.append(
@@ -961,7 +910,6 @@ func _discard_range(discard_left: bool) -> bool:
 		
 		correct_moves += 1
 		
-		# Track history
 		var decision_data = {
 			"type": "discard",
 			"discard_left": discard_left,
@@ -972,22 +920,18 @@ func _discard_range(discard_left: bool) -> bool:
 		decision_history.append(decision_data)
 		move_history.append(decision_data)
 		
-		# Apply visual changes
 		_apply_discard_visuals()
 		
-		# Check if search space is empty
 		if left_boundary > right_boundary:
 			show_feedback("Search space empty! Target not found?", Color.ORANGE, get_global_mouse_position())
-			_end_assessment("sorted")  # This will trigger grade calculation
+			_end_assessment("sorted")
 			return true
 		
-		# Reset to PICK_MID phase
 		current_phase = BinarySearchPhase.PICK_MID
 		current_mid_index = -1
 		if current_highlight:
 			current_highlight.hide()
 		
-		# Update target label for pick mid phase
 		_update_target_label()
 		
 		if status_label:
@@ -995,7 +939,6 @@ func _discard_range(discard_left: bool) -> bool:
 		
 		return true
 	else:
-		# Wrong discard
 		mistake_counter += 1
 		
 		var feedback_msg = ""
@@ -1009,7 +952,6 @@ func _discard_range(discard_left: bool) -> bool:
 			"[color=red]Bad: Wrong discard decision (mid %d, target %d)[/color]" % [mid_value, target_value]
 		)
 		
-		# Track history
 		var decision_data = {
 			"type": "discard",
 			"discard_left": discard_left,
@@ -1025,12 +967,9 @@ func _discard_range(discard_left: bool) -> bool:
 func _apply_discard_visuals():
 	for i in range(block_nodes.size()):
 		if discarded_indices[i]:
-			# Make discarded blocks grey and unclickable
-			block_nodes[i].modulate = Color(0.5, 0.5, 0.5, 0.7)  # Grey with some transparency
-			# Also reveal their numbers if not already revealed
+			block_nodes[i].modulate = Color(0.5, 0.5, 0.5, 0.7) 
 			_reveal_block(i)
 		else:
-			# Keep non-discarded blocks normal (unless they're the current mid, handled separately)
 			if i != current_mid_index:
 				block_nodes[i].modulate = Color.WHITE
 
@@ -1049,7 +988,6 @@ func _on_match_pressed():
 		show_feedback("No middle element selected!", Color.ORANGE, get_global_mouse_position())
 		return
 	
-	# Save state for undo
 	_save_state()
 	redo_stack.clear()
 	
@@ -1067,20 +1005,17 @@ func _on_match_pressed():
 	move_history.append(match_data)
 	
 	if is_match:
-		# SUCCESS! Target found
 		target_found = true
 		target_found_index = index
 		correct_moves += 1
 		
-		# Stop any animations on this block
 		if block_nodes[index].has_meta("pulse_tween"):
 			var tween = block_nodes[index].get_meta("pulse_tween")
 			if tween and tween.is_running():
 				tween.kill()
 		
-		# Highlight the found block in gold
-		block_nodes[index].modulate = Color(1, 0.8, 0, 1)  # Gold color
-		block_nodes[index].scale = Vector2(1.1, 1.1)  # Slightly larger
+		block_nodes[index].modulate = Color(1, 0.8, 0, 1)
+		block_nodes[index].scale = Vector2(1.1, 1.1)
 		
 		show_feedback(
 			"CORRECT! Target %d found!" % target_value,
@@ -1094,14 +1029,11 @@ func _on_match_pressed():
 		if status_label:
 			status_label.text = "Target found! Well done!"
 		
-		# Hide highlight
 		if current_highlight:
 			current_highlight.hide()
 		
-		# End the assessment
 		_end_assessment("sorted")
 	else:
-		# Wrong match attempt
 		mistake_counter += 1
 		show_feedback(
 			"Wrong! Value %d is not the target %d" % [value, target_value],
@@ -1137,7 +1069,7 @@ func _save_state() -> void:
 		"target_found_index": target_found_index,
 		"mistakes": mistake_counter,
 		"correct": correct_moves,
-		"timeline": timeline_log.duplicate()  # ADDED: Save timeline
+		"timeline": timeline_log.duplicate() 
 	}
 	undo_stack.append(state)
 
@@ -1153,11 +1085,11 @@ func _restore_state(state: Dictionary) -> void:
 	target_found_index = state["target_found_index"]
 	mistake_counter = state["mistakes"]
 	correct_moves = state["correct"]
-	timeline_log = state.get("timeline", timeline_log).duplicate()  # ADDED: Restore timeline
+	timeline_log = state.get("timeline", timeline_log).duplicate()  
 	
 	_rebuild_blocks_from_array()
 	
-	# Restore revealed and discarded states
+	
 	for i in range(block_nodes.size()):
 		block_nodes[i].hide_number(not revealed_indices[i])
 		if discarded_indices[i]:
@@ -1168,7 +1100,7 @@ func _restore_state(state: Dictionary) -> void:
 		else:
 			block_nodes[i].modulate = Color.WHITE
 	
-	# Restore current selection visual
+	
 	if current_mid_index >= 0 and not target_found:
 		_update_current_highlight(current_mid_index)
 	
@@ -1222,7 +1154,7 @@ func _process(delta: float) -> void:
 		tiktak_sound.stop()
 		_on_time_up()
 	
-	# Update timer display
+	
 	_update_timer_display()
 	
 	if time_remaining <= 10.0 and timer_running:
@@ -1302,7 +1234,7 @@ func _update_timeline_display() -> void:
 #   UNDO/REDO FUNCTIONS (UPDATED)
 # ==============================================
 
-func _on_undo_pressed() -> void:  # Undo
+func _on_undo_pressed() -> void:  
 	if not _can_undo():
 		return
 	
@@ -1311,7 +1243,7 @@ func _on_undo_pressed() -> void:  # Undo
 	
 	btn_sound.play()
 	
-	# Save current state to redo
+	
 	redo_stack.append({
 		"array": main_array.duplicate(),
 		"revealed": revealed_indices.duplicate(),
@@ -1327,7 +1259,7 @@ func _on_undo_pressed() -> void:  # Undo
 		"timeline": timeline_log.duplicate()
 	})
 	
-	# Restore previous state
+	
 	var state = undo_stack.pop_back()
 	_restore_state(state)
 	
@@ -1336,7 +1268,7 @@ func _on_undo_pressed() -> void:  # Undo
 	_update_undo_redo_buttons()
 	_update_ui_labels()
 
-func _on_redo_pressed() -> void:  # Redo
+func _on_redo_pressed() -> void:  
 	if not _can_redo():
 		return
 	
@@ -1345,7 +1277,6 @@ func _on_redo_pressed() -> void:  # Redo
 	
 	btn_sound.play()
 	
-	# Save current state to undo
 	undo_stack.append({
 		"array": main_array.duplicate(),
 		"revealed": revealed_indices.duplicate(),
@@ -1361,7 +1292,6 @@ func _on_redo_pressed() -> void:  # Redo
 		"timeline": timeline_log.duplicate()
 	})
 	
-	# Restore next state
 	var state = redo_stack.pop_back()
 	_restore_state(state)
 	
@@ -1394,7 +1324,6 @@ func _update_undo_redo_buttons():
 	undo_btn.disabled = not undo_allowed
 	redo_btn.disabled = not redo_allowed
 	
-	# Visual feedback
 	if undo_btn.disabled:
 		undo_btn.modulate = Color(0.5, 0.5, 0.5, 0.5)
 	else:
@@ -1439,7 +1368,7 @@ func _compute_grade() -> Dictionary:
 		"correct_moves": correct_moves,
 		"mistake_counter": mistake_counter,
 		"time_used": time_used,
-		"coins": 0,  # Will be overwritten if passed
+		"coins": 0, 
 		"required": required_threshold
 	}
 
@@ -1450,7 +1379,7 @@ func _end_assessment(reason: String) -> void:
 	has_completed_assessment = true
 	completion_type = reason
 	
-	# Kill any animations but DON'T clear the blocks/state
+
 	if current_tween:
 		current_tween.kill()
 		current_tween = null
@@ -1458,15 +1387,13 @@ func _end_assessment(reason: String) -> void:
 	timer_running = false
 	tiktak_sound.stop()
 	
-	# REVEAL ALL BLOCKS - regardless of pass/fail
+
 	for i in range(block_nodes.size()):
 		if not revealed_indices[i]:
-			_reveal_block(i)  # Show the number
-		# If block is discarded but number not shown, reveal it too
+			_reveal_block(i) 
 		if discarded_indices[i] and not revealed_indices[i]:
 			_reveal_block(i)
 	
-	# Disable all interactive buttons but leave blocks visible
 	if undo_btn:
 		undo_btn.disabled = true
 	if redo_btn:
@@ -1478,19 +1405,16 @@ func _end_assessment(reason: String) -> void:
 	if discard_right_btn:
 		discard_right_btn.disabled = true
 	
-	# Stop any block animations but keep their revealed/discarded state
 	for block in block_nodes:
 		if block.has_meta("pulse_tween"):
 			var tween = block.get_meta("pulse_tween")
 			if tween and tween.is_running():
 				tween.kill()
-		# Don't reset block visuals - keep them as they are
-	
-	# Log completion
+
 	timeline_log.append("[color=orange]--- Assessment Ended: %s ---[/color]" % reason.to_upper())
 	_update_timeline_display()
 	
-	# FIXED: Database integration - record attempt always, complete level only on pass
+
 	if reason == "timeout":
 		DB.record_attempt(Global.current_topic, difficulty)
 		_show_result_popup("FAIL", {})
@@ -1499,7 +1423,6 @@ func _end_assessment(reason: String) -> void:
 	else:
 		var grade = _compute_grade()
 		if grade["passed"]:
-			# complete_level handles attempts internally
 			coins_earned = DB.complete_level(Global.current_topic, difficulty)
 			grade["coins"] = coins_earned
 		else:
@@ -1513,16 +1436,13 @@ func _show_result_popup(result: String, grade_data: Dictionary = {}) -> void:
 	if complete_popup and complete_popup.visible:
 		complete_popup.hide()
 	
-	# Configure result popup based on outcome
 	if result == "PASS":
 		result_title.text = "PASSED!"
 		result_title.modulate = Color(0, 1, 0)
 		
-		# Show translate code button only on PASS
 		if translate_code_btn:
 			translate_code_btn.show()
 		
-		# Show CppCodeButton only on PASS
 		if cpp_code_button:
 			cpp_code_button.show()
 			if code_anim: code_anim.play("default")
@@ -1532,17 +1452,14 @@ func _show_result_popup(result: String, grade_data: Dictionary = {}) -> void:
 		result_title.text = "FAILED!"
 		result_title.modulate = Color(1, 0, 0)
 		
-		# Hide translate code button on FAIL
 		if translate_code_btn:
 			translate_code_btn.hide()
 		
-		# Hide CppCodeButton on FAIL
 		if cpp_code_button:
 			cpp_code_button.hide()
 		
 		try_again_btn_root.visible = true
 	
-	# Update timeline one last time to include all reveals
 	_update_timeline_display()
 	
 	if completion_type == "timeout":
@@ -1554,7 +1471,6 @@ func _show_result_popup(result: String, grade_data: Dictionary = {}) -> void:
 		time_used_label.text = "Time: %02d:%02d" % [minutes, seconds]
 		coins_label.text = "+0"
 		
-		# ADDED: Ensure code buttons are hidden on timeout
 		if translate_code_btn:
 			translate_code_btn.hide()
 		if cpp_code_button:
@@ -1607,9 +1523,6 @@ func _on_time_up_try_again_pressed() -> void:
 func _on_back_result_pressed():
 	btn_sound.play()
 	result_popup.hide()
-	# DO NOT reset the game - just close the popup so player can review
-	
-	# Ensure buttons are disabled since game is over
 	if undo_btn:
 		undo_btn.disabled = true
 	if redo_btn:
@@ -1625,7 +1538,7 @@ func _on_time_up_back_pressed() -> void:
 	btn_sound.play()
 	if time_up_popup: time_up_popup.hide()
 
-# ADDED: Helper function to clean up block animations
+
 func _cleanup_block_animations() -> void:
 	if current_tween:
 		current_tween.kill()
@@ -1641,7 +1554,7 @@ func _cleanup_block_animations() -> void:
 func _on_translate_code_pressed() -> void:
 	btn_sound.play()
 	result_popup.hide()
-	# Small delay to ensure popup is hidden before showing code viewer
+	
 	await get_tree().process_frame
 	_show_cpp_popup()
 
@@ -1927,13 +1840,13 @@ func _setup_compiler():
 			compile_btn.disconnect("pressed", _on_compile_button_pressed)
 		compile_btn.pressed.connect(_on_compile_button_pressed)
 	
-	# Load the compiler output popup
+	
 	if compiler_output_popup == null:
 		var popup_scene = preload("res://scene/CompilerOutput.tscn")
 		compiler_output_popup = popup_scene.instantiate()
 		add_child(compiler_output_popup)
 		
-		# Connect signals
+		
 		compiler_output_popup.recompile_requested.connect(_on_recompile_requested)
 		compiler_output_popup.closed.connect(_on_compiler_output_closed)
 
@@ -1941,7 +1854,6 @@ func _on_compile_button_pressed():
 	"""Called when Compile button is pressed in the code popup"""
 	btn_sound.play()
 	
-	# Get the current code based on selected language
 	var code = ""
 	var arr_str = ", ".join(initial_array.map(func(x): return str(x)))
 	
@@ -1955,9 +1867,8 @@ func _on_compile_button_pressed():
 		"python":
 			code = get_python_binary_code(arr_str, target_value)
 	
-	# Check if we have cached result for this language
 	if compiler_output_popup and compiler_output_popup.has_cached_result(current_code_language):
-		# Show cached result without recompiling
+		
 		var cached = compiler_output_popup.get_cached_result(current_code_language)
 		var fake_response = {
 			"output": cached.output,
@@ -1968,17 +1879,14 @@ func _on_compile_button_pressed():
 		compiler_output_popup.show_output(current_code_language, fake_response, self, false)
 		show_feedback("Using cached result!", Color.YELLOW, Vector2(200, 200))
 	else:
-		# Compile the code
 		_compile_code(code)
 
 func _compile_code(code: String):
 	"""Send code to JDoodle API"""
 	show_feedback("Compiling...", Color.YELLOW, Vector2(200, 200))
 	
-	# Get API keys for current language
 	var keys = APIManager.get_keys("KEY_A")
 	
-	# Prepare API request
 	var http_request = HTTPRequest.new()
 	add_child(http_request)
 	http_request.request_completed.connect(_on_compile_completed.bind(http_request, current_code_language))
@@ -1986,11 +1894,10 @@ func _compile_code(code: String):
 	var url = "https://api.jdoodle.com/v1/execute"
 	var headers = ["Content-Type: application/json"]
 	
-	# Map language to JDoodle API expected format
 	var api_language = current_code_language
 	match current_code_language:
 		"python":
-			api_language = "python3"  # JDoodle expects "python3" not "python"
+			api_language = "python3" 
 	
 	var body = JSON.new().stringify({
 		"clientId": keys["clientId"],
@@ -2010,10 +1917,10 @@ func _compile_code(code: String):
 
 func _get_version_index(lang: String) -> String:
 	match lang:
-		"cpp": return "5"     # C++17
-		"c": return "4"       # C17
-		"java": return "4"    # Java 17
-		"python": return "4"  # Python 3
+		"cpp": return "5"   
+		"c": return "4"      
+		"java": return "4"   
+		"python": return "4" 
 		_: return "0"
 
 func _on_compile_completed(result, response_code, headers, body, http_request, language: String):
@@ -2033,7 +1940,6 @@ func _on_compile_completed(result, response_code, headers, body, http_request, l
 	
 	var response = json.data
 	
-	# Show the output popup (false = from simulation, so landscape sizing)
 	if compiler_output_popup:
 		compiler_output_popup.show_output(language, response, self, false)
 
@@ -2058,7 +1964,6 @@ func _on_compiler_output_closed():
 	"""Called when compiler output popup is closed"""
 	print("Compiler output closed")
 
-# ADDED: reset_cache_for_scene function
 func reset_cache_for_scene():
 	"""Reset compiler cache when starting new simulation"""
 	if compiler_output_popup:
@@ -2267,18 +2172,16 @@ func _on_elements_done_pressed() -> void:
 			val = randi_range(1, 99)
 		arr.append(val)
 	
-	# CRITICAL: Sort the array for binary search
 	arr.sort()
 	
 	config_elements_modal.hide()
 	_set_main_ui_enabled(true)
 	help_btn.show()
 	
-	# Select random target from custom array
 	target_value = arr[randi() % arr.size()]
 	_initialize_with_elements(arr)
 	
-	# Update target label
+	
 	_update_target_label()
 
 func _on_config_no_pressed() -> void:
@@ -2288,17 +2191,14 @@ func _on_config_no_pressed() -> void:
 	var arr: Array[int] = []
 	for i in count: arr.append(randi_range(1, 99))
 	
-	# CRITICAL: Sort the array for binary search
 	arr.sort()
 	
 	_set_main_ui_enabled(true)
 	help_btn.show()
 	
-	# Select random target from generated array
 	target_value = arr[randi() % arr.size()]
 	_initialize_with_elements(arr)
 	
-	# Update target label
 	_update_target_label()
 
 func _on_size_back_pressed(): config_size_modal.hide(); config_modal.show()
@@ -2331,7 +2231,6 @@ func _on_intro_next_pressed():
 	else:
 		intro_popup.hide()
 		_set_main_ui_enabled(true)
-		# Resume timer
 		if difficulty != 1:
 			timer_running = true
 			clock.play()
@@ -2346,7 +2245,6 @@ func _on_intro_skip_pressed():
 	btn_sound.play()
 	intro_popup.hide()
 	_set_main_ui_enabled(true)
-	# Resume timer
 	if difficulty != 1:
 		timer_running = true
 		clock.play()

@@ -1,5 +1,5 @@
 72322a848ab928aa5c89f0cb78209805
-::res://::1784549980
+::res://::1784631179
 Bubble.gd::GDScript::7727429846494266339::1774424805::0::1::::<>Control<><>0<>0<><>::
 BubbleBlock.tscn::PackedScene::5390563363869836520::1774424805::0::1::::<><><>0<>0<><>::uid://didhv1rmj3v4f::::res://Bubble.gd<>uid://dat8hni5cmx8c::::res://assets/BLOCK_ORANGE.png<>uid://djb2uwjnv78q3::::res://assets/font/Planes_ValMore.ttf
 Bubblemain.gd::GDScript::8828934027561779115::1774864387::0::1::::<>Control<><>0<>0<><>::
@@ -12,10 +12,11 @@ linked_block.gd::GDScript::5590743661304683887::1774424806::0::1::::<>Control<><
 new_label_settings.tres::LabelSettings::2876351819558083998::1774424806::0::1::::<><><>0<>0<><>::uid://djb2uwjnv78q3::::res://assets/font/Planes_ValMore.ttf
 new_system_font.tres::FontFile::4125301974600759527::1774424806::0::1::::<><><>0<>0<><>::uid://djb2uwjnv78q3::::res://assets/font/Planes_ValMore.ttf
 parallax_background.gd::GDScript::1289381677243410707::1774424806::0::1::::<>ParallaxBackground<><>0<>0<><>::
+README.md::TextFile::-1::1784551145::0::1::::<><><>0<>0<><>::
 TreeNode.tscn::PackedScene::2563824088114510736::1774424805::0::1::::<><><>0<>0<><>::uid://x2upktbmotni::::res://tree_node.gd<>uid://b31vqwe610avh::::res://assets/circles2.png
 tree_node.gd::GDScript::1671323284445090974::1774424806::0::1::::<>Panel<><>0<>0<><>::
 ::res://addons/::1774424805
-::res://addons/gdsqlite/::1784549972
+::res://addons/gdsqlite/::1784631172
 gdsqlite.gdextension::GDExtension::5055043570204576505::1774424805::0::1::::<><><>0<>0<><>::
 ::res://assets/::1774767927
 alert.png::CompressedTexture2D::2511079495476710548::1774424806::1774424985::1::::<><><>0<>0<>18fc062eb3a3277952047b5b352e8ba9<>res://.godot/imported/alert.png-80ba7f10797724f12dd77fabb3e00409.ctex::
@@ -219,12 +220,12 @@ APIManager..gd::GDScript::8385407751887134618::1781001527::0::1::::<>Node<><>0<>
 AudioManager.gd::GDScript::1367703891870243507::1774424806::0::1::::<>Node<><>0<>0<><>::
 ::res://data/::1776084196
 lessons.json::JSON::-1::1776084196::0::1::::<><><>0<>0<><>::
-::res://scene/::1781008708
+::res://scene/::1784552642
 Array.tscn::PackedScene::8558391148957252464::1781008708::0::1::::<><><>0<>0<><>::uid://cnlp6jn1v8wse::::res://scene/BBSA.tscn<>uid://63r0il4jv1uy::::res://script/array.gd<>uid://cifj0g1mojmrs::::res://assets/CONTAINER.png<>uid://bwo8f725t8nm5::::res://scenes/assessment_map.gdshader<>uid://bs2yddbychbqq::::res://script/array_action_modal.gd<>uid://djb2uwjnv78q3::::res://assets/font/Planes_ValMore.ttf<>uid://dcxstyoycht1w::::res://assets/BUTTON_HOVERED.png<>uid://c516b2jrjpc4i::::res://assets/BUTTON_PRESSED.png<>uid://cwqjbd1d3hksv::::res://assets/BUTTON.png<>uid://b31vqwe610avh::::res://assets/circles2.png<>uid://dcpfk145a6qpt::::res://assets/circles4.png<>uid://0fwd6qe6w4m4::::res://assets/LabelBg.png
 ArrayA.tscn::PackedScene::8346524927893196751::1776237162::0::1::::<><><>0<>0<><>::uid://dt60pmkulclpg::::res://scene/Array.tscn<>uid://cpntyh86bqj0e::::res://script/array_a.gd<>uid://djb2uwjnv78q3::::res://assets/font/Planes_ValMore.ttf<>uid://cwqjbd1d3hksv::::res://assets/BUTTON.png<>uid://5airignmj45l::::res://assets/trashcan.png<>uid://c516b2jrjpc4i::::res://assets/BUTTON_PRESSED.png<>uid://dcxstyoycht1w::::res://assets/BUTTON_HOVERED.png
-BBSA.tscn::PackedScene::5708971098481145240::1774864448::0::1::::<><><>0<>0<><>::uid://dx12ivb8i1dwd::::res://Bubblemain.gd<>uid://cifj0g1mojmrs::::res://assets/CONTAINER.png<>uid://djb2uwjnv78q3::::res://assets/font/Planes_ValMore.ttf<>uid://dcxstyoycht1w::::res://assets/BUTTON_HOVERED.png<>uid://c516b2jrjpc4i::::res://assets/BUTTON_PRESSED.png<>uid://cwqjbd1d3hksv::::res://assets/BUTTON.png<>uid://bb1nd27pe7mu3::::res://assets/alert.png<>uid://b2q0owni5kbm8::::res://scene/BG.gdshader<>uid://bwo8f725t8nm5::::res://scenes/assessment_map.gdshader<>uid://doo4unotakvkq::::res://assets/point_left.png<>uid://dr0xlyatjnld8::::res://assets/clock-Sheet.png<>uid://c7pesy50pmngs::::res://assets/C++_CONTAINER.png<>uid://bcq6c0avdo2sr::::res://assets/close.png<>uid://innpkq1wqdv6::::res://assets/next.png<>uid://dbln651yvmlp7::::res://assets/compile.png<>uid://bvq3t3k08atlq::::res://assets/font/Minecraftchmc-dBlX.ttf<>uid://bbm311qanr7lp::::res://assets/code.png<>uid://fcjb45m26xlx::::res://assets/restart-Sheet.png<>uid://dvilfo7cosnfo::::res://assets/question_mark.png<>uid://bemnu780b65s5::::res://scene/parallax_background.tscn<>uid://da13h00j85al::::res://assets/sfx/bgm.mp3<>uid://c20huhk71ynr4::::res://assets/sfx/b1.mp3<>uid://g3gxwo4kpabr::::res://assets/SCS LOGO 2.png<>uid://0fwd6qe6w4m4::::res://assets/LabelBg.png
+BBSA.tscn::PackedScene::5708971098481145240::1784552642::0::1::::<><><>0<>0<><>::uid://dx12ivb8i1dwd::::res://Bubblemain.gd<>uid://cifj0g1mojmrs::::res://assets/CONTAINER.png<>uid://djb2uwjnv78q3::::res://assets/font/Planes_ValMore.ttf<>uid://dcxstyoycht1w::::res://assets/BUTTON_HOVERED.png<>uid://c516b2jrjpc4i::::res://assets/BUTTON_PRESSED.png<>uid://cwqjbd1d3hksv::::res://assets/BUTTON.png<>uid://bb1nd27pe7mu3::::res://assets/alert.png<>uid://b2q0owni5kbm8::::res://scene/BG.gdshader<>uid://bwo8f725t8nm5::::res://scenes/assessment_map.gdshader<>uid://doo4unotakvkq::::res://assets/point_left.png<>uid://dr0xlyatjnld8::::res://assets/clock-Sheet.png<>uid://c7pesy50pmngs::::res://assets/C++_CONTAINER.png<>uid://bcq6c0avdo2sr::::res://assets/close.png<>uid://innpkq1wqdv6::::res://assets/next.png<>uid://dbln651yvmlp7::::res://assets/compile.png<>uid://bvq3t3k08atlq::::res://assets/font/Minecraftchmc-dBlX.ttf<>uid://bbm311qanr7lp::::res://assets/code.png<>uid://fcjb45m26xlx::::res://assets/restart-Sheet.png<>uid://dvilfo7cosnfo::::res://assets/question_mark.png<>uid://bemnu780b65s5::::res://scene/parallax_background.tscn<>uid://da13h00j85al::::res://assets/sfx/bgm.mp3<>uid://c20huhk71ynr4::::res://assets/sfx/b1.mp3<>uid://g3gxwo4kpabr::::res://assets/SCS LOGO 2.png<>uid://0fwd6qe6w4m4::::res://assets/LabelBg.png
 Bfs.tscn::PackedScene::6825988880503537491::1774899254::0::1::::<><><>0<>0<><>::uid://b8v7604rmgw02::::res://script/bfs_sim.gd<>uid://cifj0g1mojmrs::::res://assets/CONTAINER.png<>uid://b2q0owni5kbm8::::res://scene/BG.gdshader<>uid://djb2uwjnv78q3::::res://assets/font/Planes_ValMore.ttf<>uid://bvq3t3k08atlq::::res://assets/font/Minecraftchmc-dBlX.ttf<>uid://bb1nd27pe7mu3::::res://assets/alert.png<>uid://doo4unotakvkq::::res://assets/point_left.png<>uid://dcxstyoycht1w::::res://assets/BUTTON_HOVERED.png<>uid://c7pesy50pmngs::::res://assets/C++_CONTAINER.png<>uid://bwo8f725t8nm5::::res://scenes/assessment_map.gdshader<>uid://bemnu780b65s5::::res://scene/parallax_background.tscn<>uid://c516b2jrjpc4i::::res://assets/BUTTON_PRESSED.png<>uid://cwqjbd1d3hksv::::res://assets/BUTTON.png<>uid://da13h00j85al::::res://assets/sfx/bgm.mp3<>uid://bbm311qanr7lp::::res://assets/code.png<>uid://c20huhk71ynr4::::res://assets/sfx/b1.mp3<>uid://bcq6c0avdo2sr::::res://assets/close.png<>uid://dvilfo7cosnfo::::res://assets/question_mark.png<>uid://g3gxwo4kpabr::::res://assets/SCS LOGO 2.png<>uid://innpkq1wqdv6::::res://assets/next.png<>uid://dbln651yvmlp7::::res://assets/compile.png
-BG.gdshader::Shader::4316093607918890669::1781001527::0::1::::<><><>0<>0<><>::
+BG.gdshader::Shader::4316093607918890669::1784550852::0::1::::<><><>0<>0<><>::
 Binary.tscn::PackedScene::1623438282728587781::1774848889::0::1::::<><><>0<>0<><>::uid://nt6d8b2rcudq::::res://script/binary_sim.gd<>uid://cifj0g1mojmrs::::res://assets/CONTAINER.png<>uid://b2q0owni5kbm8::::res://scene/BG.gdshader<>uid://djb2uwjnv78q3::::res://assets/font/Planes_ValMore.ttf<>uid://bvq3t3k08atlq::::res://assets/font/Minecraftchmc-dBlX.ttf<>uid://bb1nd27pe7mu3::::res://assets/alert.png<>uid://doo4unotakvkq::::res://assets/point_left.png<>uid://dcxstyoycht1w::::res://assets/BUTTON_HOVERED.png<>uid://c7pesy50pmngs::::res://assets/C++_CONTAINER.png<>uid://bwo8f725t8nm5::::res://scenes/assessment_map.gdshader<>uid://bemnu780b65s5::::res://scene/parallax_background.tscn<>uid://c516b2jrjpc4i::::res://assets/BUTTON_PRESSED.png<>uid://cwqjbd1d3hksv::::res://assets/BUTTON.png<>uid://da13h00j85al::::res://assets/sfx/bgm.mp3<>uid://bbm311qanr7lp::::res://assets/code.png<>uid://c20huhk71ynr4::::res://assets/sfx/b1.mp3<>uid://bcq6c0avdo2sr::::res://assets/close.png<>uid://dvilfo7cosnfo::::res://assets/question_mark.png<>uid://g3gxwo4kpabr::::res://assets/SCS LOGO 2.png<>uid://innpkq1wqdv6::::res://assets/next.png<>uid://dbln651yvmlp7::::res://assets/compile.png
 BNYSA.tscn::PackedScene::9031312230511635065::1774864690::0::1::::<><><>0<>0<><>::uid://vtb5uh7swqkq::::res://scene/LSA.tscn<>uid://doc6omux6yril::::res://script/bnysa.gd<>uid://djb2uwjnv78q3::::res://assets/font/Planes_ValMore.ttf<>uid://bwo8f725t8nm5::::res://scenes/assessment_map.gdshader<>uid://dcxstyoycht1w::::res://assets/BUTTON_HOVERED.png<>uid://c516b2jrjpc4i::::res://assets/BUTTON_PRESSED.png<>uid://cwqjbd1d3hksv::::res://assets/BUTTON.png
 BST.tscn::PackedScene::4072869369799073385::1776086938::0::1::::<><><>0<>0<><>::uid://c4itbl0mcpa48::::res://scene/Bfs.tscn<>uid://dky07lo06ui16::::res://script/bst.gd<>uid://djb2uwjnv78q3::::res://assets/font/Planes_ValMore.ttf<>uid://cwqjbd1d3hksv::::res://assets/BUTTON.png<>uid://c516b2jrjpc4i::::res://assets/BUTTON_PRESSED.png<>uid://dcxstyoycht1w::::res://assets/BUTTON_HOVERED.png
@@ -283,13 +284,13 @@ selection.tscn::PackedScene::2072603264335681396::1774424806::0::1::::<><><>0<>0
 settings.tscn::PackedScene::6110261522005510370::1774839553::0::1::::<><><>0<>0<><>::uid://bwugsn5xfm5ie::::res://scripts/settings.gd<>uid://dm5tlgdpgj58y::::res://scripts/lectures_bg.gdshader<>uid://dfk7vwkjwqw12::::res://assets/SETTINGS/container settings.png<>uid://dr1kkgyo3rgvj::::res://assets/SETTINGS/music.png<>uid://dv8tr48kxb46x::::res://assets/SETTINGS/Sound fx.png<>uid://pw1kjcephyld::::res://scenes/navigation.tscn<>uid://djb2uwjnv78q3::::res://assets/font/Planes_ValMore.ttf<>uid://cwqjbd1d3hksv::::res://assets/BUTTON.png<>uid://binxvpneifapc::::res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/BACK_BUTTON_GREEN.png<>uid://c516b2jrjpc4i::::res://assets/BUTTON_PRESSED.png<>uid://dcxstyoycht1w::::res://assets/BUTTON_HOVERED.png<>uid://cifj0g1mojmrs::::res://assets/CONTAINER.png
 shop.tscn::PackedScene::3686079879489476410::1774424806::0::1::::<><><>0<>0<><>::uid://bpvf113nkcdkk::::res://scripts/shop.gd<>res://scripts/lectures_bg.gdshader<>uid://by1ledwhotv64::::res://new_system_font.tres<>uid://djb2uwjnv78q3::::res://assets/font/Planes_ValMore.ttf<>uid://pw1kjcephyld::::res://scenes/navigation.tscn<>uid://caigeuovsqr7v::::res://assets/profile_pics/cat1.jpg<>uid://bg8ldg6sc3s0e::::res://new_label_settings.tres<>uid://bqdaj3uy6nw62::::res://assets/ui/scsCoin.png<>uid://qpr5ic3i4i4n::::res://assets/profile_pics/wildboar1.png<>uid://c3e7l2fqv0wku::::res://assets/ui/buy_button.png<>uid://binxvpneifapc::::res://assets/HOMEPAGE/LECTURES_DATA_STRUCTURES_GREEN/BACK_BUTTON_GREEN.png<>uid://cnlkpprxlc8m1::::res://assets/profile_pics/bread1.png<>uid://cutwgd8nj1o3a::::res://assets/profile_pics/fishpfp1.png<>uid://btqtsw116y7wq::::res://assets/profile_pics/robot1.png<>uid://bb527jdfbq41b::::res://assets/profile_pics/girlCCT2.jpeg<>uid://cbb303ij0hip7::::res://assets/profile_pics/boyCCT2.jpg
 SIDEBAR.png::CompressedTexture2D::4979505914458011484::1774424806::1774424986::1::::<><><>0<>0<>0f03ba612fa6e7a2f753763df19b309d<>res://.godot/imported/SIDEBAR.png-220df744a1ac9a13ef11753266112330.ctex::
-::res://script/::1781007898
+::res://script/::1784552632
 array.gd::GDScript::2234734002127490112::1781001904::0::1::::<>Control<><>0<>0<><>::
-array_a.gd::GDScript::5853707834728216618::1781002706::0::1::::<>Control<><>0<>0<><>::
+array_a.gd::GDScript::5853707834728216618::1784551145::0::1::::<>Control<><>0<>0<><>::
 array_action_modal.gd::GDScript::3707020793953662284::1774545558::0::1::::<>Panel<><>0<>0<><>::
 back_button_overlay.gd::GDScript::803730825516135035::1774444006::0::1::::<>CanvasLayer<><>0<>0<><>::
-bfs_sim.gd::GDScript::4748004118634785685::1781003044::0::1::::<>Control<><>0<>0<><>::
-binary_sim.gd::GDScript::953567464843966982::1781003045::0::1::::<>Control<><>0<>0<><>::
+bfs_sim.gd::GDScript::4748004118634785685::1784551814::0::1::::<>Control<><>0<>0<><>::
+binary_sim.gd::GDScript::953567464843966982::1784552632::0::1::::<>Control<><>0<>0<><>::
 bnysa.gd::GDScript::8147942507673999471::1781003093::0::1::::<>Control<><>0<>0<><>::
 bst.gd::GDScript::7912271224343401571::1781003157::0::1::::<>Control<><>0<>0<><>::
 bubble_lec.gd::GDScript::8098231958862011125::1781003159::0::1::::<>Control<><>0<>0<><>::
@@ -323,7 +324,7 @@ treedf_saa.gd::GDScript::1132898892705706901::1774424806::0::1::::<>Control<><>0
 tree_bfsa.gd::GDScript::4987890189990865809::1781007341::0::1::::<>Control<><>0<>0<><>::
 tree_dfsa.gd::GDScript::552572934423902216::1781003240::0::1::::<>Control<><>0<>0<><>::
 tree_node.gd::GDScript::3185887143081099353::1774424806::0::1::::<>Panel<><>0<>0<><>::
-::res://scripts/::1781001527
+::res://scripts/::1784550852
 about_page.gd::GDScript::4443636893273133691::1774424806::0::1::::<>Control<><>0<>0<><>::
 array_script.gd::GDScript::570687419745312764::1774424806::0::1::::<>TextureButton<><>0<>0<><>::
 assessment.gd::GDScript::3344534523280549494::1774424806::0::1::::<>Control<><>0<>0<><>::
@@ -343,8 +344,8 @@ homepage.gd::GDScript::5882314787312435::1774424806::0::1::::<>Control<><>0<>0<>
 intro.gd::GDScript::5819073077689040398::1774424806::0::1::::<>Control<><>0<>0<><>::
 intro.gdshader::Shader::8498690921867709122::1774424806::0::1::::<><><>0<>0<><>::
 lectures.gd::GDScript::4499413521672557105::1774906209::0::1::::<>Control<><>0<>0<><>::
-lectures_bg.gdshader::Shader::8064633094417454778::1781001526::0::1::::<><><>0<>0<><>::
-lecture_floating_buttons.gdshader::Shader::2855331607381454412::1781001527::0::1::::<><><>0<>0<><>::
+lectures_bg.gdshader::Shader::8064633094417454778::1784550852::0::1::::<><><>0<>0<><>::
+lecture_floating_buttons.gdshader::Shader::2855331607381454412::1784550852::0::1::::<><><>0<>0<><>::
 lesson_view.gd::GDScript::4002358918601385098::1780409816::0::1::::<>Control<><>0<>0<><>::
 lesson_view_BG.gdshader::Shader::2747925960597108075::1774424806::0::1::::<><><>0<>0<><>::
 linked_list.gd::GDScript::3744262592354136323::1774424806::0::1::::<>TextureButton<><>0<>0<><>::

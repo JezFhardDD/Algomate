@@ -2,6 +2,4 @@ res://scene/BBSA.tscn
 res://scripts/lectures_bg.gdshader
 res://scene/BG.gdshader
 res://scripts/lecture_floating_buttons.gdshader
-res://script/array_a.gd
-res://script/bfs_sim.gd
-res://script/binary_sim.gd
+res://script/bnysa.gd
